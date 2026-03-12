@@ -8,6 +8,9 @@ output/
 *.dxf
 *.svg
 
+# But do track the screenshot source file used for fit testing
+!default.svg
+
 # OpenSCAD auto-save / backup files
 *.scad~
 *.scad.bak

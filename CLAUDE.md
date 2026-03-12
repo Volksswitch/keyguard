@@ -1,13 +1,25 @@
-# OpenSCAD Project — Claude Code Context
+# Keyguard Designer — Claude Code Context
 
 ## Project Overview
 
-> **TODO:** Fill in this section before sharing with Claude Code.
->
-> - **What does this project model?** (e.g., "A parametric enclosure for a Raspberry Pi")
-> - **Main output files:** (e.g., `enclosure.scad`, `lid.scad`)
-> - **Key parameters / design intent:** (e.g., "All wall thicknesses are driven by the `wall` variable")
-> - **Target use:** (e.g., FDM 3D printing on a Prusa MK4, 0.2 mm layers, no supports)
+**What does this project model?**
+A parametric keyguard designer. Keyguards are physical overlays with precision cutouts that mount
+over tablet screens (iPads, Surface, AAC communication devices, etc.) to help users with motor
+impairments interact with touchscreen apps. The designer supports grid-based, free-form, and hybrid
+layouts, and outputs either 3D-printed or laser-cut keyguards.
+
+**Author:** Volksswitch (www.volksswitch.org) — released to the public domain (CC0)
+
+**Current version:** 76 (`keyguard_v76.scad`)
+
+**Main output files:**
+- `keyguard_v76.scad` — the entire parametric designer (single file)
+- `keyguard_v76.json` — named Customizer parameter sets (saved configurations)
+- `openings_and_additions.txt` — user-edited include file defining custom screen/case openings
+- `default.svg` — optional screenshot import (used for fit testing; only loaded when
+  `include_screenshot = "yes"`)
+
+**Target use:** FDM 3D printing and laser cutting
 
 ---
 
@@ -37,7 +49,7 @@ openscad --version
 
 ### Render to STL (full geometry, for printing)
 ```bash
-openscad -o output.stl your_file.scad
+openscad -o output.stl keyguard_v76.scad
 ```
 
 ### Render to PNG (quick visual check)
@@ -46,17 +58,20 @@ openscad -o preview.png \
   --camera=0,0,0,55,0,25,200 \
   --imgsize=1024,768 \
   --colorscheme=Tomorrow \
-  your_file.scad
+  keyguard_v76.scad
 ```
 
 ### Check for syntax errors without rendering
 ```bash
-openscad --hardwarnings your_file.scad 2>&1 | head -40
+openscad --hardwarnings keyguard_v76.scad 2>&1 | head -40
 ```
 
 ### Pass parameters on the command line
 ```bash
-openscad -o output.stl -D 'wall=3' -D 'height=50' your_file.scad
+openscad -o output.stl \
+  -D 'type_of_tablet="iPad 9th generation"' \
+  -D 'orientation="landscape"' \
+  keyguard_v76.scad
 ```
 
 ### Helper scripts
@@ -66,52 +81,109 @@ See `scripts/render.sh` and `scripts/preview.sh` for convenient wrappers.
 
 ## Project File Structure
 
-> **TODO:** Update this to reflect your actual project layout.
-
 ```
 .
-├── CLAUDE.md               ← This file
-├── main.scad               ← Top-level entry point (update name as needed)
-├── lib/                    ← Reusable modules/libraries (if any)
+├── CLAUDE.md                        ← This file
+├── keyguard_v76.scad                ← Complete parametric designer (single file)
+├── keyguard_v76.json                ← Named Customizer parameter sets
+├── openings_and_additions.txt       ← Included by the .scad file; defines custom openings
+├── default.svg                      ← Optional screenshot for fit testing
 ├── docs/
-│   └── openscad-reference.md  ← OpenSCAD tips for Claude Code
-└── scripts/
-    ├── render.sh           ← Render all parts to STL
-    └── preview.sh          ← Generate PNG previews
+│   └── openscad-reference.md        ← OpenSCAD tips for Claude Code
+├── scripts/
+│   ├── render.sh                    ← Render to STL
+│   └── preview.sh                   ← Render to PNG
+└── output/                          ← Created by scripts; not committed to Git
+    ├── stl/
+    └── preview/
 ```
 
 ---
 
-## Code Conventions Used in This Project
+## Key Parameters
 
-> **TODO:** Document your own conventions here. Examples below — keep, edit, or remove as appropriate.
+All user-tunable parameters are declared near the top of `keyguard_v76.scad`. The most
+commonly adjusted ones are:
 
-- **Module naming:** `snake_case` for modules, e.g. `lid_panel()`, `mounting_boss()`
-- **Variable naming:** `snake_case` for parameters; uppercase for physical constants (e.g., `NOZZLE_D = 0.4`)
-- **Parameters:** All user-tunable values are declared at the top of the file in a clearly marked section
-- **Tolerances:** Fit tolerances are defined as named variables (e.g., `fit = 0.2`) — do not hardcode them
-- **Units:** All dimensions are in **millimetres** unless otherwise noted
-- **$fn:** Set per-object using a named variable (e.g., `$fn = CIRCLE_DETAIL`) rather than globally, to allow fast preview vs. high-quality render
-- **Comments:** Each module has a comment block describing its parameters and purpose
+| Parameter | Default | Purpose |
+|---|---|---|
+| `type_of_keyguard` | `"3D-Printed"` | `"3D-Printed"` or `"Laser-Cut"` |
+| `generate` | `"keyguard"` | What to output (keyguard, frame, cell insert, clip, SVG layer, etc.) |
+| `type_of_tablet` | `"iPad 9th generation"` | Selects built-in tablet dimensions; supports 100+ devices |
+| `orientation` | `"landscape"` | `"portrait"` or `"landscape"` |
+| `have_a_case` | `"yes"` | Whether the tablet is in a case |
+| `keyguard_thickness` | `4.0` | Overall keyguard thickness in mm |
+| `include_screenshot` | `"no"` | Set to `"yes"` to import `default.svg` as a fit-test layer |
+| `screenshot_file` | `"default.svg"` | Filename of the SVG screenshot to import |
 
 ---
 
-## Known Issues / Current Work
+## How `openings_and_additions.txt` Works
 
-> **TODO:** List any known bugs, geometry problems, or active areas of improvement.
+This file is pulled into the main `.scad` at line 1816 via:
+```openscad
+include <openings_and_additions.txt>
+```
 
-- [ ] Example: `lid.scad` — screw boss height is 0.5 mm too tall; needs adjustment
-- [ ] Example: `enclosure.scad` — `difference()` leaves a non-manifold edge at the USB cutout
+It defines four OpenSCAD vectors that the designer uses to place custom cutouts and additions:
+
+- `screen_openings` — openings positioned relative to the screen area
+- `case_openings` — openings positioned relative to the case opening
+- `tablet_openings` — openings positioned relative to the tablet
+- `case_additions` — solid shapes added on top of the case opening
+
+Each row in the vectors specifies: ID, x, y, width, height, shape, slopes, corner radius, and
+other options. The file also contains a large reference comment block explaining all available
+special variables (screen dimensions, grid dimensions, cell sizes, camera/home button locations,
+etc.).
+
+**Do not rename or move this file** — it is referenced by name with no path prefix, so it must
+remain in the same directory as `keyguard_v76.scad`.
+
+---
+
+## How `default.svg` Works
+
+When `include_screenshot = "yes"`, the designer imports `default.svg` (a screenshot of the
+tablet app the keyguard is being designed for) as a 2D layer to help verify that cutout
+positions align with the on-screen targets.
+
+**The file must be named exactly `default.svg`** (hardcoded in `screenshot_file`).
+It only needs to be present when this feature is in use.
+
+---
+
+## Code Conventions
+
+- **Single-file design:** The entire designer lives in `keyguard_v76.scad`. There are no
+  external library dependencies — all modules and functions are self-contained.
+- **Variable naming:** `snake_case` throughout
+- **Parameters:** All user-tunable values are declared near the top in a clearly marked section
+  with Customizer-compatible `// [option1, option2]` comments
+- **Units:** All dimensions in **millimetres**
+- **`$fn`:** Controlled by the `number_of_facets` parameter (default 90) rather than hardcoded
+- **Version history:** Extensively documented in comments at the top of the file (76 versions)
 
 ---
 
 ## Design Constraints & Non-Negotiables
 
-> **TODO:** Document things Claude should NOT change without explicit permission.
+- **Do not alter built-in tablet dimension data** — the tablet database is carefully measured
+  and any changes could produce ill-fitting keyguards
+- **Do not rename `openings_and_additions.txt` or `default.svg`** — they are referenced by
+  hardcoded filename in the `.scad` code
+- **Do not add external library dependencies** — the designer is intentionally self-contained
+  so end users only need a single `.scad` file
+- **Maintain backward compatibility** of the `openings_and_additions.txt` vector format —
+  users may have saved copies of this file with their own custom openings
 
-- The overall external dimensions (`width`, `depth`, `height`) are fixed — do not alter these defaults
-- The mounting hole pattern must remain compatible with the VESA 75×75 standard
-- Avoid `minkowski()` on large objects — it is extremely slow to render
+---
+
+## Known Issues / Current Work
+
+> Add any known bugs or active work here as you go.
+
+- [ ] (none logged yet)
 
 ---
 
@@ -123,13 +195,11 @@ See `docs/openscad-reference.md` for a full reference. Critical points:
    later geometry. Use conditional expressions or modules instead.
 2. **`use` vs `include`:** `use <lib.scad>` imports only modules/functions (not variables).
    `include <lib.scad>` is like a literal copy-paste — it brings in variables too.
-3. **`children()` and `$children`:** Modules can receive child geometry and pass it through.
-   Be careful not to break modules that rely on children when refactoring.
-4. **Preview vs render:** The F5 preview uses OpenCSG (fast but approximate). F6/`-o .stl` uses
-   CGAL (slow but exact). A model can look fine in preview and fail to render — always test with
-   a full render after significant changes.
-5. **Non-manifold geometry is silent:** OpenSCAD will silently produce broken STLs if geometry
-   is non-manifold. Always check rendered STLs in a slicer or mesh repair tool.
+   `openings_and_additions.txt` uses `include` so its vector variables are available globally.
+3. **Preview vs render:** The F5 preview uses OpenCSG (fast but approximate). F6/`-o .stl` uses
+   CGAL (slow but exact). A model can look fine in preview and fail to render.
+4. **Non-manifold geometry is silent:** OpenSCAD will silently produce broken STLs if geometry
+   is non-manifold. Always check rendered STLs in a slicer after significant changes.
 
 ---
 
@@ -137,8 +207,9 @@ See `docs/openscad-reference.md` for a full reference. Critical points:
 
 Suggested prompts:
 
-- *"Render `main.scad` and show me any errors or warnings."*
-- *"Refactor the `mounting_boss` module to accept a `diameter` parameter instead of hardcoding 5."*
-- *"The lid doesn't fit the body — the `fit` tolerance might be wrong. Check and fix it."*
-- *"Add a `chamfer` parameter to the `enclosure` module that bevels the top four vertical edges."*
-- *"Add docstring comments to every module in `main.scad`."*
+- *"Render `keyguard_v76.scad` and show me any errors or warnings."*
+- *"The cutout for the home button is 1 mm too narrow. Find and fix the relevant code."*
+- *"Add a new tablet — the Acme Tab X with screen dimensions 180 × 240 mm."*
+- *"Explain how the `screen_openings` vector in `openings_and_additions.txt` is processed."*
+- *"Add a parameter to control the chamfer depth on the top edges of all openings."*
+- *"Generate a PNG preview of the current design and show it to me."*
