@@ -1,0 +1,61 @@
+# ── OpenSCAD ──────────────────────────────────────────────────────────────────
+
+# Rendered output (regenerate these from source rather than tracking them)
+output/
+*.stl
+*.amf
+*.3mf
+*.dxf
+*.svg
+
+# OpenSCAD auto-save / backup files
+*.scad~
+*.scad.bak
+
+# OpenSCAD cache
+.openscad_cache/
+
+
+# ── Windows ───────────────────────────────────────────────────────────────────
+
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+
+# ── OneDrive ──────────────────────────────────────────────────────────────────
+
+# OneDrive temporary / conflict files
+*.tmp
+~$*
+*.~*
+desktop.ini
+
+
+# ── macOS (if you ever open this on a Mac) ───────────────────────────────────
+
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+
+# ── Editors ───────────────────────────────────────────────────────────────────
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
