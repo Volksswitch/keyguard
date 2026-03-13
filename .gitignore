@@ -52,6 +52,12 @@ desktop.ini
 ._*
 
 
+# ── Claude Code ───────────────────────────────────────────────────────────────
+
+# Local Claude Code settings (machine-specific permissions, not for sharing)
+.claude/
+
+
 # ── Editors ───────────────────────────────────────────────────────────────────
 
 # VS Code
