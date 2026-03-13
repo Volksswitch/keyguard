@@ -2,6 +2,11 @@
 
 # Rendered output (regenerate these from source rather than tracking them)
 output/
+
+# ── Tests ─────────────────────────────────────────────────────────────────────
+
+# Current-run test outputs (gitignored; only tests/references/*.png are tracked)
+tests/results/
 *.stl
 *.amf
 *.3mf
