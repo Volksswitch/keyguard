@@ -87,20 +87,30 @@ Use `scripts/test.sh` to validate changes. It has five layers, selectable via fl
 | `--syntax` | 2 | Fast | OpenSCAD `--hardwarnings` parse check |
 | `--smoke` | 3 | Minutes | Render default config to STL |
 | `--regression` | 4 | Slow | Render all 51 named configs; compare checksums to baseline |
-| `--visual` | 5 | Slow | Render all 51 named configs to PNG for manual review |
+| `--visual` | 5 | Slow | Run `test.json` cases in `tests/cases/`; compare PNGs against references |
 | `--all` | 1–5 | Slow | All of the above |
 | _(no flag)_ | 1–3 | Fast | Lint + syntax + smoke (good for quick checks during development) |
 
 ```bash
-./scripts/test.sh                   # Fast default (lint + syntax + smoke)
-./scripts/test.sh --all             # Full suite
-./scripts/test.sh --regression      # Regression only
-./scripts/test.sh --update-baseline # Re-render all configs and save new baseline
+./scripts/test.sh                        # Fast default (lint + syntax + smoke)
+./scripts/test.sh --all                  # Full suite
+./scripts/test.sh --regression           # Regression only
+./scripts/test.sh --update-baseline      # Re-render all configs and save new STL baseline
+./scripts/test.sh --capture-references   # Re-render all visual tests and save new reference PNGs
 ```
 
 **Regression baseline:** `tests/baseline.sha256` stores SHA-256 checksums of all 51
 named-config STL renders. It is committed to Git. Run `--update-baseline` after any
 intentional change to geometry to record the new expected output.
+
+**Visual test cases:** `tests/cases/` contains one subfolder per test case. Each folder
+holds a `test.json` describing a sequence of render steps (parameters, camera position,
+expected PNG). See `tests/cases/README.md` for the full format. Reference PNGs are
+committed to Git. Run `--capture-references` after adding a new test case or after an
+intentional visual change.
+
+**PNG comparison:** Uses ImageMagick `compare` (RMSE < 1.0 threshold) if available;
+falls back to exact SHA-256 hash comparison.
 
 **sca2d ignored codes:**
 - `I3001, I0006, I1002, I0004, I1001, I4001, I4002, I0003, I4003` — user-configured
@@ -124,13 +134,20 @@ intentional change to geometry to record the new expected output.
 │   ├── preview.sh                   ← Render to PNG
 │   └── test.sh                      ← Multi-layer test runner
 ├── tests/
-│   └── baseline.sha256              ← Regression baseline checksums (committed)
+│   ├── baseline.sha256              ← Regression baseline checksums (committed)
+│   └── cases/                       ← Visual test cases (committed)
+│       ├── README.md                ← Test case format documentation
+│       └── Test Case NN/            ← One folder per test case
+│           ├── test.json            ← Steps, params, camera, expected filenames
+│           ├── openings.txt         ← Custom openings file (optional)
+│           ├── *.svg                ← SVG source file(s) (optional)
+│           └── stepN_expected.png   ← Committed reference renders
 └── output/                          ← Created by scripts; not committed to Git
     ├── stl/
     ├── preview/
-    └── test/                        ← Test artefacts (STLs, PNGs)
-        ├── regression/
-        └── visual/
+    └── test/                        ← Test artefacts
+        ├── regression/              ← STL renders for regression layer
+        └── visual/                  ← PNG renders + diff images for visual layer
 ```
 
 ---

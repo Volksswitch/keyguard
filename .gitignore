@@ -15,6 +15,10 @@ lint.txt
 # But do track the screenshot source file used for fit testing
 !default.svg
 
+# Track SVG and PNG files committed inside test case folders
+!tests/cases/**/*.svg
+!tests/cases/**/*.png
+
 # OpenSCAD auto-save / backup files
 *.scad~
 *.scad.bak
