@@ -10,11 +10,11 @@ layouts, and outputs either 3D-printed or laser-cut keyguards.
 
 **Author:** Volksswitch (www.volksswitch.org) — released to the public domain (CC0)
 
-**Current version:** 76 (`keyguard_v76.scad`)
+**Current version:** 76 (`keyguard.scad`)
 
 **Main output files:**
-- `keyguard_v76.scad` — the entire parametric designer (single file)
-- `keyguard_v76.json` — named Customizer parameter sets (saved configurations)
+- `keyguard.scad` — the entire parametric designer (single file)
+- `keyguard.json` — named Customizer parameter sets (saved configurations)
 - `openings_and_additions.txt` — user-edited include file defining custom screen/case openings
 - `default.svg` — optional screenshot import (used for fit testing; only loaded when
   `include_screenshot = "yes"`)
@@ -49,7 +49,7 @@ openscad --version
 
 ### Render to STL (full geometry, for printing)
 ```bash
-openscad -o output.stl keyguard_v76.scad
+openscad -o output.stl keyguard.scad
 ```
 
 ### Render to PNG (quick visual check)
@@ -58,12 +58,12 @@ openscad -o preview.png \
   --camera=0,0,0,55,0,25,200 \
   --imgsize=1024,768 \
   --colorscheme=Tomorrow \
-  keyguard_v76.scad
+  keyguard.scad
 ```
 
 ### Check for syntax errors without rendering
 ```bash
-openscad --hardwarnings keyguard_v76.scad 2>&1 | head -40
+openscad --hardwarnings keyguard.scad 2>&1 | head -40
 ```
 
 ### Pass parameters on the command line
@@ -71,7 +71,7 @@ openscad --hardwarnings keyguard_v76.scad 2>&1 | head -40
 openscad -o output.stl \
   -D 'type_of_tablet="iPad 9th generation"' \
   -D 'orientation="landscape"' \
-  keyguard_v76.scad
+  keyguard.scad
 ```
 
 ### Helper scripts
@@ -84,8 +84,8 @@ See `scripts/render.sh` and `scripts/preview.sh` for convenient wrappers.
 ```
 .
 ├── CLAUDE.md                        ← This file
-├── keyguard_v76.scad                ← Complete parametric designer (single file)
-├── keyguard_v76.json                ← Named Customizer parameter sets
+├── keyguard.scad                ← Complete parametric designer (single file)
+├── keyguard.json                ← Named Customizer parameter sets
 ├── openings_and_additions.txt       ← Included by the .scad file; defines custom openings
 ├── default.svg                      ← Optional screenshot for fit testing
 ├── docs/
@@ -102,7 +102,7 @@ See `scripts/render.sh` and `scripts/preview.sh` for convenient wrappers.
 
 ## Key Parameters
 
-All user-tunable parameters are declared near the top of `keyguard_v76.scad`. The most
+All user-tunable parameters are declared near the top of `keyguard.scad`. The most
 commonly adjusted ones are:
 
 | Parameter | Default | Purpose |
@@ -138,7 +138,7 @@ special variables (screen dimensions, grid dimensions, cell sizes, camera/home b
 etc.).
 
 **Do not rename or move this file** — it is referenced by name with no path prefix, so it must
-remain in the same directory as `keyguard_v76.scad`.
+remain in the same directory as `keyguard.scad`.
 
 ---
 
@@ -155,7 +155,7 @@ It only needs to be present when this feature is in use.
 
 ## Code Conventions
 
-- **Single-file design:** The entire designer lives in `keyguard_v76.scad`. There are no
+- **Single-file design:** The entire designer lives in `keyguard.scad`. There are no
   external library dependencies — all modules and functions are self-contained.
 - **Variable naming:** `snake_case` throughout
 - **Parameters:** All user-tunable values are declared near the top in a clearly marked section
@@ -207,7 +207,7 @@ See `docs/openscad-reference.md` for a full reference. Critical points:
 
 Suggested prompts:
 
-- *"Render `keyguard_v76.scad` and show me any errors or warnings."*
+- *"Render `keyguard.scad` and show me any errors or warnings."*
 - *"The cutout for the home button is 1 mm too narrow. Find and fix the relevant code."*
 - *"Add a new tablet — the Acme Tab X with screen dimensions 180 × 240 mm."*
 - *"Explain how the `screen_openings` vector in `openings_and_additions.txt` is processed."*
