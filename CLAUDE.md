@@ -73,7 +73,38 @@ openscad -o output.stl \
 ```
 
 ### Helper scripts
-See `scripts/render.sh` and `scripts/preview.sh` for convenient wrappers.
+See `scripts/render.sh`, `scripts/preview.sh`, and `scripts/test.sh` for convenient wrappers.
+
+---
+
+## Running Tests
+
+Use `scripts/test.sh` to validate changes. It has five layers, selectable via flags:
+
+| Flag | Layer | Speed | What it checks |
+|---|---|---|---|
+| `--lint` | 1 | Fast | sca2d static analysis — fails on fatal errors only |
+| `--syntax` | 2 | Fast | OpenSCAD `--hardwarnings` parse check |
+| `--smoke` | 3 | Minutes | Render default config to STL |
+| `--regression` | 4 | Slow | Render all 51 named configs; compare checksums to baseline |
+| `--visual` | 5 | Slow | Render all 51 named configs to PNG for manual review |
+| `--all` | 1–5 | Slow | All of the above |
+| _(no flag)_ | 1–3 | Fast | Lint + syntax + smoke (good for quick checks during development) |
+
+```bash
+./scripts/test.sh                   # Fast default (lint + syntax + smoke)
+./scripts/test.sh --all             # Full suite
+./scripts/test.sh --regression      # Regression only
+./scripts/test.sh --update-baseline # Re-render all configs and save new baseline
+```
+
+**Regression baseline:** `tests/baseline.sha256` stores SHA-256 checksums of all 51
+named-config STL renders. It is committed to Git. Run `--update-baseline` after any
+intentional change to geometry to record the new expected output.
+
+**sca2d ignored codes:**
+- `I3001, I0006, I1002, I0004, I1001, I4001, I4002, I0003, I4003` — user-configured
+- `E2003` — false positive: sca2d doesn't recognise `assert()` as an OpenSCAD built-in
 
 ---
 
@@ -90,10 +121,16 @@ See `scripts/render.sh` and `scripts/preview.sh` for convenient wrappers.
 │   └── openscad-reference.md        ← OpenSCAD tips for Claude Code
 ├── scripts/
 │   ├── render.sh                    ← Render to STL
-│   └── preview.sh                   ← Render to PNG
+│   ├── preview.sh                   ← Render to PNG
+│   └── test.sh                      ← Multi-layer test runner
+├── tests/
+│   └── baseline.sha256              ← Regression baseline checksums (committed)
 └── output/                          ← Created by scripts; not committed to Git
     ├── stl/
-    └── preview/
+    ├── preview/
+    └── test/                        ← Test artefacts (STLs, PNGs)
+        ├── regression/
+        └── visual/
 ```
 
 ---
