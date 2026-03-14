@@ -10,8 +10,6 @@ layouts, and outputs either 3D-printed or laser-cut keyguards.
 
 **Author:** Volksswitch (www.volksswitch.org) — released to the public domain (CC0)
 
-**Current version:** 76 (`keyguard.scad`)
-
 **Main output files:**
 - `keyguard.scad` — the entire parametric designer (single file)
 - `keyguard.json` — named Customizer parameter sets (saved configurations)
@@ -162,7 +160,7 @@ It only needs to be present when this feature is in use.
   with Customizer-compatible `// [option1, option2]` comments
 - **Units:** All dimensions in **millimetres**
 - **`$fn`:** Controlled by the `number_of_facets` parameter (default 90) rather than hardcoded
-- **Version history:** Extensively documented in comments at the top of the file (76 versions)
+- **Version history:** Extensively documented in comments at the top of the file
 
 ---
 
