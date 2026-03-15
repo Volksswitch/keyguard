@@ -1,0 +1,16 @@
+{
+  "description": "emboss and engrave",
+  "openings": "openings_and_additions.txt",
+  "assets": ["butterfly.svg"],
+  "steps": [
+    {
+      "label": "full view",
+      "params": "Test Case 15",
+      "vpt": [5.27851, -8.21182, -13.8148],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
+

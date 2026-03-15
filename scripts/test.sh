@@ -83,9 +83,23 @@ find_compare() {
     echo ""
 }
 
+find_python() {
+    command -v python3 &>/dev/null && python3 -c "import sys; sys.exit(0)" 2>/dev/null && echo "python3" && return
+    command -v python &>/dev/null && echo "python" && return
+    command -v py &>/dev/null && echo "py" && return
+    echo ""
+}
+
+# Convert a path for use inside Python strings on Windows.
+# Uses cygpath -m (Windows drive letter + forward slashes) to avoid backslash escaping.
+py_path() {
+    command -v cygpath &>/dev/null && cygpath -m "$1" || echo "$1"
+}
+
 OPENSCAD="$(find_openscad)"
 SCA2D="$(find_sca2d)"
 COMPARE="$(find_compare)"
+PYTHON="$(find_python)"
 
 # ── Argument parsing ───────────────────────────────────────────────────────────
 
@@ -116,21 +130,14 @@ fi
 
 # List all named configs from keyguard.json
 get_configs() {
-    python3 - <<'PYEOF'
-import json, sys
-with open(sys.argv[1]) as f:
-    data = json.load(f)
-for name in data.get('parameterSets', {}).keys():
-    print(name)
-PYEOF
-}
-get_configs() { python3 -c "
+    local _p; _p=$(py_path "$JSON_FILE")
+    $PYTHON -c "
 import json
-with open('$JSON_FILE') as f:
+with open('$_p') as f:
     data = json.load(f)
 for name in data.get('parameterSets', {}).keys():
     print(name)
-"; }
+" | tr -d '\r'; }
 
 # List test case folders that contain a test.json
 get_test_cases() {
@@ -151,10 +158,11 @@ build_camera() {
 parse_step() {
     local test_json="$1"
     local step_idx="$2"
-    python3 -c "
+    local _p; _p=$(py_path "$test_json")
+    $PYTHON -c "
 import json, sys
 
-with open('$test_json') as f:
+with open('$_p') as f:
     test = json.load(f)
 
 steps = test.get('steps', [])
@@ -194,38 +202,41 @@ print(f'STEP_VPR={json.dumps(vpr)}')
 print(f'STEP_VPD={json.dumps(vpd)}')
 print(f'STEP_EXPECTED={json.dumps(expected)}')
 print(f'STEP_D_FLAGS={json.dumps(\" \".join(d_flags))}')
-"
+" | tr -d '\r'
 }
 
 # Count steps in a test.json
 count_steps() {
-    python3 -c "
+    local _p; _p=$(py_path "$1")
+    $PYTHON -c "
 import json
-with open('$1') as f:
+with open('$_p') as f:
     test = json.load(f)
 print(len(test.get('steps', [])))
-"
+" | tr -d '\r'
 }
 
 # Get top-level string field from test.json
 get_test_field() {
-    python3 -c "
+    local _p; _p=$(py_path "$1")
+    $PYTHON -c "
 import json
-with open('$1') as f:
+with open('$_p') as f:
     test = json.load(f)
 print(test.get('$2', ''))
-"
+" | tr -d '\r'
 }
 
 # Get assets list from test.json (one filename per line)
 get_test_assets() {
-    python3 -c "
+    local _p; _p=$(py_path "$1")
+    $PYTHON -c "
 import json
-with open('$1') as f:
+with open('$_p') as f:
     test = json.load(f)
 for a in test.get('assets', []):
     print(a)
-"
+" | tr -d '\r'
 }
 
 # ── Layer 1: sca2d lint ────────────────────────────────────────────────────────
@@ -356,7 +367,7 @@ compare_png() {
         local rmse
         rmse=$("$COMPARE" -metric RMSE "$rendered" "$expected" "$diff_out" 2>&1 | grep -oE '^[0-9.]+' || echo "999")
         # Treat as identical if RMSE < 1 (allows for minor version-to-version variation)
-        python3 -c "import sys; sys.exit(0 if float('$rmse') < 1.0 else 1)" 2>/dev/null
+        $PYTHON -c "import sys; sys.exit(0 if float('$rmse') < 1.0 else 1)" 2>/dev/null
     else
         # Fallback: exact hash comparison
         local h1 h2
@@ -526,6 +537,7 @@ cd "$PROJECT_ROOT"
 echo -e "${BOLD}Keyguard Designer — Test Suite${RESET}"
 echo    "==============================="
 info "OpenSCAD:    ${OPENSCAD:-NOT FOUND}"
+info "Python:      ${PYTHON:-NOT FOUND}"
 info "sca2d:       ${SCA2D:-NOT FOUND}"
 info "ImageMagick: ${COMPARE:-not found (will use hash comparison)}"
 
