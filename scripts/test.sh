@@ -207,13 +207,24 @@ print(len(test.get('steps', [])))
 "
 }
 
-# Get top-level field from test.json
+# Get top-level string field from test.json
 get_test_field() {
     python3 -c "
 import json
 with open('$1') as f:
     test = json.load(f)
 print(test.get('$2', ''))
+"
+}
+
+# Get assets list from test.json (one filename per line)
+get_test_assets() {
+    python3 -c "
+import json
+with open('$1') as f:
+    test = json.load(f)
+for a in test.get('assets', []):
+    print(a)
 "
 }
 
@@ -385,9 +396,11 @@ run_visual() {
         local openings_override; openings_override=$(get_test_field "$test_json" "openings")
         local svg_source;        svg_source=$(get_test_field       "$test_json" "screenshot")
         local step_count;        step_count=$(count_steps "$test_json")
+        local asset_list;        mapfile -t asset_list < <(get_test_assets "$test_json")
 
         # ── Setup: save originals and put test-specific files in place ──────────
         local saved_openings="" saved_svg=""
+        local copied_assets=()   # track which assets were copied so we can remove them
 
         if [[ -n "$openings_override" && -f "$case_dir/$openings_override" ]]; then
             saved_openings=$(mktemp)
@@ -402,6 +415,17 @@ run_visual() {
             cp "$case_dir/$svg_source" "$DEFAULT_SVG"
             info "Using $svg_source as default.svg"
         fi
+
+        # Copy each asset to the project root under its original name
+        for asset in "${asset_list[@]}"; do
+            if [[ -f "$case_dir/$asset" ]]; then
+                cp "$case_dir/$asset" "$PROJECT_ROOT/$asset"
+                copied_assets+=("$PROJECT_ROOT/$asset")
+                info "Asset: $asset"
+            else
+                warn "Asset '$asset' listed in test.json but not found in $case_dir"
+            fi
+        done
 
         # ── Run each step ───────────────────────────────────────────────────────
         local case_ok=true
@@ -476,6 +500,10 @@ run_visual() {
             fi
             rm -f "$saved_svg"
         fi
+        # Remove copied assets from the project root
+        for asset_path in "${copied_assets[@]}"; do
+            rm -f "$asset_path"
+        done
 
         "$case_ok" || test_failures=$((test_failures + 1))
     done

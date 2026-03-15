@@ -16,7 +16,8 @@ the committed reference image.
 | `test.json` | **Yes** | Describes the test steps (see format below) |
 | `step1_expected.png`, `step2_expected.png`, … | **Yes** | Committed reference renders; one per step |
 | `openings.txt` | No | Custom `openings_and_additions.txt` for this test; if absent the project-level file is used |
-| `*.svg` | No | SVG file(s) used by this test; the one named in `test.json` is copied to `default.svg` before rendering and restored afterwards |
+| Asset SVG(s) | No | SVG files imported by name in `openings_and_additions.txt` (e.g. `butterfly.svg`); listed in `assets` and copied to the project root before rendering |
+| Screenshot SVG | No | SVG used as a fit-test overlay; listed in `screenshot` and copied to `default.svg` before rendering |
 
 ---
 
@@ -26,7 +27,8 @@ the committed reference image.
 {
   "description": "Human-readable summary of what this test verifies",
   "openings": "openings.txt",
-  "screenshot": "butterfly.svg",
+  "assets": ["butterfly.svg"],
+  "screenshot": "overlay.svg",
   "steps": [
     {
       "label": "full view",
@@ -55,8 +57,14 @@ the committed reference image.
 |---|---|---|
 | `description` | Yes | What this test verifies |
 | `openings` | No | Filename of the custom openings file in this folder (e.g. `"openings.txt"`) |
-| `screenshot` | No | Filename of the SVG in this folder to use as `default.svg` |
+| `assets` | No | List of SVG filenames imported by name in `openings_and_additions.txt`; each is copied from this folder to the project root before rendering and removed afterwards |
+| `screenshot` | No | Filename of an SVG in this folder to use as `default.svg` (for fit-test overlay); copied to `default.svg` before rendering and restored afterwards |
 | `steps` | Yes | Ordered list of render steps |
+
+**`assets` vs `screenshot`:**
+- Use `assets` for SVG files that `openings_and_additions.txt` references directly by name via `import("filename.svg")`. They are placed in the project root under their own names.
+- Use `screenshot` for the fit-test overlay that `keyguard.scad` imports when `include_screenshot = "yes"`. It is always placed as `default.svg`.
+- Both can be present in the same test if needed.
 
 ### Step fields
 
@@ -93,7 +101,7 @@ values are a natural copy of those — keeping interactive and automated views i
 
 3. Write `test.json` with those values and describe each step.
 
-4. Add any `openings.txt` or SVG file the test needs.
+4. Add any `openings.txt`, asset SVGs, or screenshot SVG the test needs.
 
 5. Run the capture command to generate reference images:
    ```bash
