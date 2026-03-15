@@ -484,9 +484,12 @@
 //Version 76: changed the color used to display a keyguard along with its frame from red to transparent pink
 //            added support for displaying where the frame will be split without first generating frame halves
 //            added reporting in the console for how far in mm the split will occur from the left and top side of the keyguard/frame
-//            updated the openings and additions file to speccify that kh and kw include tightness of fit adjustments
-//            updated ready-to-print designs to use kw and kh instead of cow and coh when placing case additions so that 
-//                  adjustments to keyguard tightness of fit will be included in placement of shapes
+//            moved horizontal and vertical "tightness of fit" options from the Special Actions and Settings section to the Keyguard Frame
+//                  section - they now only affect the keyguard when it is mounted in a frame
+//            changed the horizontal and vertical "tightness of fit" options to run from -1.0 to 1.0
+//            changed the "insert tightness of fit" option to run from -1.0 to 1.0
+//            changed the "tightness of dovetail joint" option to affect the second half of keyguard rather than the first
+//            changed the "tightness of dovetail joint" option to run from -0.5 to 0.5
 //
 //
 //
@@ -669,6 +672,10 @@ post_tightness_of_fit = 0; //[-10:10]
 post_extension_distance = 4; // [1:5]
 // set this option to "no" before rendering your design
 show_keyguard_with_frame = "no"; //[yes,no]
+//the larger the number the tighter the fit
+keyguard_vertical_tightness_of_fit = 0; // [-1:.1:1]
+//the larger the number the tighter the fit
+keyguard_horizontal_tightness_of_fit = 0; // [-1:.1:1]
 
 
 /*[Split Keyguard Info]*/
@@ -678,8 +685,8 @@ show_split_line = "no"; //[yes,no]
 split_line_type = "flat"; //[flat,dovetails]
 dovetail_width = 4.0; //[3:.1:6]
 slide_dovetails = 0; // [-3:.1:3]
-//smaller numbers are looser, larger numbers are tighter (affects first half of keyguard only)
-tightness_of_dovetail_joint = 5; //[0:.1:10]
+//the larger the number the tighter the fit, affects only the second half of the keyguard
+tightness_of_dovetail_joint = 0; // [-.5:.1:.5]
 
 
 /*[Sloped Keyguard Edge Info]*/
@@ -721,7 +728,7 @@ diameter_of_opening = 10; // .1
 Braille_to_opening_distance = 5.0; // .1
 engraved_text = "";
 //the larger the number the tighter the fit
-insert_tightness_of_fit = 0; //[-10:10]
+insert_tightness_of_fit = 0; //[-1:.1:1]
 insert_recess = 0.0; // .1
 
 
@@ -736,10 +743,6 @@ starting_corner_for_screen_measurements = "upper-left"; //[upper-left, lower-lef
 // set this option to "no" before rendering your design
 include_screenshot = "no"; //[yes,no]
 keyguard_display_angle = 0; // [0,30,45,60,75,90]
-//the larger the number the tighter the fit
-keyguard_vertical_tightness_of_fit = 0; // [-10:10]
-//the larger the number the tighter the fit
-keyguard_horizontal_tightness_of_fit = 0; // [-10:10]
 unequal_left_side_of_case_opening = 0.0; // .1
 unequal_bottom_side_of_case_opening = 0.0; // .1
 unequal_left_side_of_case = 0;
@@ -1175,15 +1178,15 @@ c_w = case_width;
 c_cr = case_corner_radius;
 ctsd = case_to_screen_depth;
 
-vtf = keyguard_vertical_tightness_of_fit/10;
-htf = keyguard_horizontal_tightness_of_fit/10;
+vtf = keyguard_vertical_tightness_of_fit;
+htf = keyguard_horizontal_tightness_of_fit;
 
 //overall keyguard measurements - not, necessarily, the size of the keyguard opening in a keyguard frame
 kw = (have_a_case == "no" && have_a_keyguard_frame=="no") ? tablet_width : 
-	 (have_a_case == "yes" && have_a_keyguard_frame=="no") ? cow+htf :
+	 (have_a_case == "yes" && have_a_keyguard_frame=="no") ? cow :
 															 keyguard_width+htf;
 kh = (have_a_case == "no" && have_a_keyguard_frame=="no") ? tablet_height : 
-	 (have_a_case == "yes" && have_a_keyguard_frame=="no") ? coh+vtf :
+	 (have_a_case == "yes" && have_a_keyguard_frame=="no") ? coh :
 															 keyguard_height+vtf;
 tt1cr = tablet_tl_corner_radius;
 ttrcr = tablet_tr_corner_radius;
@@ -1827,6 +1830,11 @@ $vpt = (keyguard_display_angle>0) ? [1,1,1] :
 $vpr = (show_back_of_keyguard=="no" && keyguard_display_angle > 0) ? [90-keyguard_display_angle,0,0] :
        (show_back_of_keyguard=="yes") ? [0,180,0] : 
 	   $vpr;
+	   
+echo($vpt);
+echo($vpr);
+echo($vpd);
+	   
 	   
 if (system_with_no_case){
 	echo();
@@ -3051,7 +3059,7 @@ module dovetails(half){
 	cutLen = (have_a_case=="no") ? tablet_height*2+ff*2 : kh*2+ff*2 ;
 	doveTailWidth=dovetail_width;
 	doveTailHeight = 100;
-	gap = (half == "first") ? -(tightness_of_dovetail_joint - 5)/10 : 0;
+	gap = (half == "second") ? tightness_of_dovetail_joint/2 : 0;
 	for (i=[-cutLen/2+doveTailWidth/2-1:doveTailWidth*2-2:cutLen/2]){
 		translate([i,-1,-doveTailHeight/2])
 		linear_extrude(height=doveTailHeight)
@@ -4088,7 +4096,7 @@ module create_cell_insert(){
 		  (BLR) ? -hacw+b_h+w1+btod+roo :
 		  (BR) ? -hacw+b_h+roo : 0;
 	
-	s_f=insert_tightness_of_fit/10;
+	s_f=insert_tightness_of_fit;
 			
 	if (BA || BB || BAB || BAE || BBE){
 		difference(){
@@ -6357,6 +6365,8 @@ module echo_settings(){
 		if (snap_in_tab_on_bottom_edge_of_keyguard != "yes") echo(snap_in_tab_on_bottom_edge_of_keyguard = snap_in_tab_on_bottom_edge_of_keyguard);
 		if (snap_in_tabs_on_left_and_right_edges_of_keyguard != "yes") echo(snap_in_tabs_on_left_and_right_edges_of_keyguard = snap_in_tabs_on_left_and_right_edges_of_keyguard);
 		if (post_tightness_of_fit != 0) echo(post_tightness_of_fit = post_tightness_of_fit);
+		if (keyguard_vertical_tightness_of_fit != 0) echo(keyguard_vertical_tightness_of_fit = keyguard_vertical_tightness_of_fit);
+		if (keyguard_horizontal_tightness_of_fit != 0) echo(keyguard_horizontal_tightness_of_fit = keyguard_horizontal_tightness_of_fit);
 		echo();
 		echo();
 
@@ -6365,7 +6375,7 @@ module echo_settings(){
 		if (split_line_type != "flat") echo(split_line_type = split_line_type);
 		if (dovetail_width != 4.0) echo(dovetail_width = dovetail_width);
 		if (slide_dovetails != 0) echo(slide_dovetails = slide_dovetails);
-		if (tightness_of_dovetail_joint != 5) echo(tightness_of_dovetail_joint = tightness_of_dovetail_joint);
+		if (tightness_of_dovetail_joint != 0) echo(tightness_of_dovetail_joint = tightness_of_dovetail_joint);
 		echo();
 		echo();
 	
@@ -6416,8 +6426,6 @@ module echo_settings(){
 	echo("---- Special Actions and Settings ----");
 		if (include_screenshot != "no") echo(include_screenshot = include_screenshot);
 		if (keyguard_display_angle != 0) echo(keyguard_display_angle = keyguard_display_angle);
-		if (keyguard_vertical_tightness_of_fit != 0) echo(keyguard_vertical_tightness_of_fit = keyguard_vertical_tightness_of_fit);
-		if (keyguard_horizontal_tightness_of_fit != 0) echo(keyguard_horizontal_tightness_of_fit = keyguard_horizontal_tightness_of_fit);
 		if (unequal_left_side_of_case_opening != 0) echo(unequal_left_side_of_case_opening = unequal_left_side_of_case_opening);
 		if (unequal_bottom_side_of_case_opening != 0) echo(unequal_bottom_side_of_case_opening = unequal_bottom_side_of_case_opening);
 		if (unequal_left_side_of_case != 0) echo(unequal_left_side_of_case = unequal_left_side_of_case);
