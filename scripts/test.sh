@@ -216,14 +216,15 @@ print(len(test.get('steps', [])))
 " | tr -d '\r'
 }
 
-# Get top-level string field from test.json
+# Get top-level string field from test.json (returns empty string for missing or null values)
 get_test_field() {
     local _p; _p=$(py_path "$1")
     $PYTHON -c "
 import json
 with open('$_p') as f:
     test = json.load(f)
-print(test.get('$2', ''))
+val = test.get('$2', '')
+print(val if val is not None else '')
 " | tr -d '\r'
 }
 
