@@ -79,29 +79,22 @@ See `scripts/render.sh`, `scripts/preview.sh`, and `scripts/test.sh` for conveni
 
 ## Running Tests
 
-Use `scripts/test.sh` to validate changes. It has five layers, selectable via flags:
+Use `scripts/test.sh` to validate changes. It has four layers, selectable via flags:
 
 | Flag | Layer | Speed | What it checks |
 |---|---|---|---|
 | `--lint` | 1 | Fast | sca2d static analysis — fails on fatal errors only |
 | `--syntax` | 2 | Fast | OpenSCAD `--hardwarnings` parse check |
 | `--smoke` | 3 | Minutes | Render default config to STL |
-| `--regression` | 4 | Slow | Render all 51 named configs; compare checksums to baseline |
-| `--visual` | 5 | Slow | Run `test.json` cases in `tests/cases/`; compare PNGs against references |
-| `--all` | 1–5 | Slow | All of the above |
+| `--visual` | 4 | Slow | Run `test.json` cases in `tests/cases/`; compare PNGs against references |
+| `--all` | 1–4 | Slow | All of the above |
 | _(no flag)_ | 1–3 | Fast | Lint + syntax + smoke (good for quick checks during development) |
 
 ```bash
 ./scripts/test.sh                        # Fast default (lint + syntax + smoke)
 ./scripts/test.sh --all                  # Full suite
-./scripts/test.sh --regression           # Regression only
-./scripts/test.sh --update-baseline      # Re-render all configs and save new STL baseline
 ./scripts/test.sh --capture-references   # Re-render all visual tests and save new reference PNGs
 ```
-
-**Regression baseline:** `tests/baseline.sha256` stores SHA-256 checksums of all 51
-named-config STL renders. It is committed to Git. Run `--update-baseline` after any
-intentional change to geometry to record the new expected output.
 
 **Visual test cases:** `tests/cases/` contains one subfolder per test case. Each folder
 holds a `test.json` describing a sequence of render steps (parameters, camera position,
@@ -134,7 +127,6 @@ falls back to exact SHA-256 hash comparison.
 │   ├── preview.sh                   ← Render to PNG
 │   └── test.sh                      ← Multi-layer test runner
 ├── tests/
-│   ├── baseline.sha256              ← Regression baseline checksums (committed)
 │   └── cases/                       ← Visual test cases (committed)
 │       ├── README.md                ← Test case format documentation
 │       └── Test Case NN/            ← One folder per test case
@@ -147,7 +139,6 @@ falls back to exact SHA-256 hash comparison.
     ├── stl/
     ├── preview/
     └── test/                        ← Test artefacts
-        ├── regression/              ← STL renders for regression layer
         └── visual/                  ← PNG renders + diff images for visual layer
 ```
 

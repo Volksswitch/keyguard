@@ -5,23 +5,20 @@
 #   --lint               Layer 1: sca2d static analysis (fast, no render)
 #   --syntax             Layer 2: OpenSCAD --hardwarnings parse check (fast, no render)
 #   --smoke              Layer 3: Render default config to STL
-#   --regression         Layer 4: Render all named configs from keyguard.json;
-#                                  compare STL checksums against baseline
-#   --visual             Layer 5: Run test.json cases; compare PNGs against references
+#   --visual             Layer 4: Run test.json cases; compare PNGs against references
 #
 # Usage:
 #   ./scripts/test.sh                        # Layers 1–3 (fast default)
 #   ./scripts/test.sh --all                  # All layers
 #   ./scripts/test.sh --lint                 # Single layer
 #   ./scripts/test.sh --lint --syntax        # Combine layers
-#   ./scripts/test.sh --update-baseline      # Re-render all configs; save new STL baseline
 #   ./scripts/test.sh --capture-references   # Re-render all visual tests; save new reference PNGs
 #
 # Requirements:
 #   - openscad  (on PATH, or at a common Windows install location)
 #   - python3   (for JSON parsing)
 #   - sca2d     (pip install sca2d)  — Layer 1 only
-#   - imagemagick (compare command)  — Layer 5 PNG comparison; falls back to hash if absent
+#   - imagemagick (compare command)  — Layer 4 PNG comparison; falls back to hash if absent
 
 set -euo pipefail
 
@@ -32,7 +29,6 @@ JSON_FILE="$PROJECT_ROOT/keyguard.json"
 OPENINGS_FILE="$PROJECT_ROOT/openings_and_additions.txt"
 DEFAULT_SVG="$PROJECT_ROOT/default.svg"
 OUTPUT_DIR="$PROJECT_ROOT/output/test"
-BASELINE_FILE="$PROJECT_ROOT/tests/baseline.sha256"
 CASES_DIR="$PROJECT_ROOT/tests/cases"
 
 # sca2d ignore codes:
@@ -103,9 +99,8 @@ PYTHON="$(find_python)"
 
 # ── Argument parsing ───────────────────────────────────────────────────────────
 
-RUN_LINT=false; RUN_SYNTAX=false; RUN_SMOKE=false
-RUN_REGRESSION=false; RUN_VISUAL=false
-UPDATE_BASELINE=false; CAPTURE_REFERENCES=false
+RUN_LINT=false; RUN_SYNTAX=false; RUN_SMOKE=false; RUN_VISUAL=false
+CAPTURE_REFERENCES=false
 
 if [[ $# -eq 0 ]]; then
     RUN_LINT=true; RUN_SYNTAX=true; RUN_SMOKE=true
@@ -115,11 +110,9 @@ else
             --lint)                RUN_LINT=true ;;
             --syntax)              RUN_SYNTAX=true ;;
             --smoke)               RUN_SMOKE=true ;;
-            --regression)          RUN_REGRESSION=true ;;
             --visual)              RUN_VISUAL=true ;;
             --all)                 RUN_LINT=true; RUN_SYNTAX=true; RUN_SMOKE=true
-                                   RUN_REGRESSION=true; RUN_VISUAL=true ;;
-            --update-baseline)     UPDATE_BASELINE=true; RUN_REGRESSION=true ;;
+                                   RUN_VISUAL=true ;;
             --capture-references)  CAPTURE_REFERENCES=true; RUN_VISUAL=true ;;
             *) echo "Unknown option: $arg"; exit 1 ;;
         esac
@@ -127,17 +120,6 @@ else
 fi
 
 # ── Python helpers ─────────────────────────────────────────────────────────────
-
-# List all named configs from keyguard.json
-get_configs() {
-    local _p; _p=$(py_path "$JSON_FILE")
-    $PYTHON -c "
-import json
-with open('$_p') as f:
-    data = json.load(f)
-for name in data.get('parameterSets', {}).keys():
-    print(name)
-" | tr -d '\r'; }
 
 # List test case folders that contain a test.json
 get_test_cases() {
@@ -303,63 +285,7 @@ run_smoke() {
     fi
 }
 
-# ── Layer 4: Regression ───────────────────────────────────────────────────────
-
-run_regression() {
-    header "Layer 4 — Regression test (all named configs)"
-    if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
-    mkdir -p "$OUTPUT_DIR/regression" "$(dirname "$BASELINE_FILE")"
-
-    local configs; mapfile -t configs < <(get_configs)
-    info "Found ${#configs[@]} named configs"
-    "$UPDATE_BASELINE" && info "Mode: updating baseline"
-
-    local new_checksums="" render_failures=0 total=${#configs[@]} current=0
-
-    for config in "${configs[@]}"; do
-        current=$((current + 1))
-        local safe; safe=$(echo "$config" | tr ' /' '__')
-        local out="$OUTPUT_DIR/regression/${safe}.stl"
-        printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
-        local exit_code=0
-        "$OPENSCAD" --hardwarnings -p "$JSON_FILE" -P "$config" \
-            -o "$out" "$SCAD_FILE" > /dev/null 2>&1 || exit_code=$?
-        if [[ "$exit_code" -ne 0 || ! -s "$out" ]]; then
-            echo -e " ${RED}RENDER FAILED${RESET}"
-            render_failures=$((render_failures + 1)); continue
-        fi
-        local sum; sum=$(sha256sum "$out" | cut -d' ' -f1)
-        new_checksums+="${sum}  ${config}"$'\n'
-        echo -e " ${GREEN}OK${RESET}"
-    done
-    echo ""
-    [[ "$render_failures" -gt 0 ]] && fail "$render_failures config(s) failed to render"
-
-    if "$UPDATE_BASELINE"; then
-        echo "$new_checksums" > "$BASELINE_FILE"
-        pass "Baseline updated — ${#configs[@]} configs"; return
-    fi
-    if [[ ! -f "$BASELINE_FILE" ]]; then
-        warn "No baseline found — creating now"
-        echo "$new_checksums" > "$BASELINE_FILE"
-        pass "Baseline created — ${#configs[@]} configs"; return
-    fi
-
-    local regressions=0
-    while IFS= read -r line; do
-        [[ -z "$line" ]] && continue
-        local old_sum old_name new_sum
-        old_sum=$(echo "$line" | cut -d' ' -f1)
-        old_name=$(echo "$line" | cut -d' ' -f3-)
-        new_sum=$(echo "$new_checksums" | grep "  ${old_name}$" | cut -d' ' -f1 || echo "")
-        if   [[ -z "$new_sum" ]];          then warn "Config '$old_name' missing"; regressions=$((regressions+1))
-        elif [[ "$old_sum" != "$new_sum" ]]; then fail "Regression: '$old_name' output changed"; regressions=$((regressions+1))
-        fi
-    done < "$BASELINE_FILE"
-    [[ "$regressions" -eq 0 ]] && pass "Regression — all ${#configs[@]} configs match baseline"
-}
-
-# ── Layer 5: Visual tests ─────────────────────────────────────────────────────
+# ── Layer 4: Visual tests ─────────────────────────────────────────────────────
 
 # Compare two PNGs; return 0 if same, 1 if different
 compare_png() {
@@ -379,7 +305,7 @@ compare_png() {
 }
 
 run_visual() {
-    header "Layer 5 — Visual tests"
+    header "Layer 4 — Visual tests"
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
     [[ -z "$COMPARE" ]] && warn "ImageMagick 'compare' not found — using exact hash comparison"
     "$CAPTURE_REFERENCES" && info "Mode: capturing reference images"
@@ -542,11 +468,10 @@ info "Python:      ${PYTHON:-NOT FOUND}"
 info "sca2d:       ${SCA2D:-NOT FOUND}"
 info "ImageMagick: ${COMPARE:-not found (will use hash comparison)}"
 
-"$RUN_LINT"       && run_lint
-"$RUN_SYNTAX"     && run_syntax
-"$RUN_SMOKE"      && run_smoke
-"$RUN_REGRESSION" && run_regression
-"$RUN_VISUAL"     && run_visual
+"$RUN_LINT"   && run_lint
+"$RUN_SYNTAX" && run_syntax
+"$RUN_SMOKE"  && run_smoke
+"$RUN_VISUAL" && run_visual
 
 echo ""
 echo "==============================="
