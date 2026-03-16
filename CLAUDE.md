@@ -127,19 +127,19 @@ falls back to exact SHA-256 hash comparison.
 │   ├── preview.sh                   ← Render to PNG
 │   └── test.sh                      ← Multi-layer test runner
 ├── tests/
-│   └── cases/                       ← Visual test cases (committed)
-│       ├── README.md                ← Test case format documentation
-│       └── Test Case NN/            ← One folder per test case
-│           ├── test.json            ← Steps, params, camera, expected filenames
-│           ├── openings.txt         ← Custom openings file (optional)
-│           ├── *.svg                ← Asset SVGs imported by openings.txt (optional)
-│           │                           and/or screenshot SVG used as default.svg (optional)
-│           └── stepN_expected.png   ← Committed reference renders
-└── output/                          ← Created by scripts; not committed to Git
+│   ├── cases/                       ← Visual test cases (committed)
+│   │   ├── README.md                ← Test case format documentation
+│   │   └── Test Case NN/            ← One folder per test case
+│   │       ├── test.json            ← Steps, params, camera, expected filenames
+│   │       ├── openings.txt         ← Custom openings file (optional)
+│   │       ├── *.svg                ← Asset SVGs imported by openings.txt (optional)
+│   │       │                           and/or screenshot SVG used as default.svg (optional)
+│   │       └── stepN_expected.png   ← Committed reference renders
+│   └── output/                      ← Test artefacts; not committed to Git
+│       └── visual/                  ← PNG renders + diff images for visual layer
+└── output/                          ← Created by render/preview scripts; not committed to Git
     ├── stl/
-    ├── preview/
-    └── test/                        ← Test artefacts
-        └── visual/                  ← PNG renders + diff images for visual layer
+    └── preview/
 ```
 
 ---

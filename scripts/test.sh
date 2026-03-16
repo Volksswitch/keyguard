@@ -28,7 +28,7 @@ SCAD_FILE="$PROJECT_ROOT/keyguard.scad"
 JSON_FILE="$PROJECT_ROOT/keyguard.json"
 OPENINGS_FILE="$PROJECT_ROOT/openings_and_additions.txt"
 DEFAULT_SVG="$PROJECT_ROOT/default.svg"
-OUTPUT_DIR="$PROJECT_ROOT/output/test"
+OUTPUT_DIR="$PROJECT_ROOT/tests/output"
 CASES_DIR="$PROJECT_ROOT/tests/cases"
 
 # sca2d ignore codes:
@@ -423,7 +423,7 @@ run_visual() {
                 echo -e " ${GREEN}PASS${RESET}"
                 rm -f "$diff_png"
             else
-                echo -e " ${RED}FAIL${RESET} (diff saved to output/test/visual/$safe_name/)"
+                echo -e " ${RED}FAIL${RESET} (diff saved to tests/output/visual/$safe_name/)"
                 case_ok=false
             fi
         done
@@ -449,7 +449,7 @@ run_visual() {
     echo ""
     if "$CAPTURE_REFERENCES"; then
         pass "References captured for ${#cases[@]} test case(s)"
-        info "Review PNGs in output/test/visual/, then commit tests/cases/"
+        info "Review PNGs in tests/output/visual/, then commit tests/cases/"
     elif [[ "$test_failures" -eq 0 ]]; then
         pass "Visual tests — all ${#cases[@]} case(s) passed"
     else
