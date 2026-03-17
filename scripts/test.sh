@@ -33,6 +33,20 @@ OPENINGS_FILE="$PROJECT_ROOT/openings_and_additions.txt"
 DEFAULT_SVG="$PROJECT_ROOT/default.svg"
 OUTPUT_DIR="$PROJECT_ROOT/output/test"
 BASELINE_FILE="$PROJECT_ROOT/tests/baseline.sha256"
+
+# If running inside a git worktree, mirror visual renders to the main repo's output folder
+# so results are visible without navigating into the worktree directory.
+_MAIN_REPO_ROOT=$(git -C "$PROJECT_ROOT" worktree list --porcelain 2>/dev/null | grep '^worktree ' | head -1 | cut -d' ' -f2-)
+# On Windows/Git Bash, git returns Windows-style paths; convert to Unix paths if cygpath is available
+if command -v cygpath &>/dev/null; then
+    _MAIN_REPO_ROOT=$(cygpath --unix "$_MAIN_REPO_ROOT" 2>/dev/null || echo "$_MAIN_REPO_ROOT")
+fi
+if [[ -n "$_MAIN_REPO_ROOT" && "$_MAIN_REPO_ROOT" != "$PROJECT_ROOT" && -d "$_MAIN_REPO_ROOT" ]]; then
+    MAIN_VISUAL_DIR="$_MAIN_REPO_ROOT/output/test/visual"
+else
+    MAIN_VISUAL_DIR=""
+fi
+unset _MAIN_REPO_ROOT
 CASES_DIR="$PROJECT_ROOT/tests/cases"
 
 # sca2d ignore codes:
@@ -478,6 +492,12 @@ run_visual() {
             if [[ "$exit_code" -ne 0 || ! -s "$rendered_png" ]]; then
                 echo -e " ${RED}RENDER FAILED${RESET}"
                 case_ok=false; continue
+            fi
+
+            # Mirror render to main repo output when running from a worktree
+            if [[ -n "$MAIN_VISUAL_DIR" ]]; then
+                mkdir -p "$MAIN_VISUAL_DIR/$safe_name"
+                cp "$rendered_png" "$MAIN_VISUAL_DIR/$safe_name/"
             fi
 
             # Capture mode: save as reference
