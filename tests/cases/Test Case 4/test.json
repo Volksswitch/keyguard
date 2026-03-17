@@ -7,7 +7,7 @@
       "params": "Test Case 4",
       "vpt": [-8.39957, -16.3749, -16.125],
       "vpr": [55, 0, 25],
-      "vpd": 446.129,
+      "vpd": 500,
       "expected": "step1_expected.png"
     },
     {
@@ -15,7 +15,7 @@
       "params": "Test Case 4a",
       "vpt": [-8.39957, -16.3749, -16.125],
       "vpr": [55, 0, 25],
-      "vpd": 446.129,
+      "vpd": 500,
       "expected": "step2_expected.png"
     }
   ]

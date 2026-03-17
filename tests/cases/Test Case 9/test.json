@@ -5,8 +5,8 @@
     {
       "label": "first half",
       "params": "Test Case 9",
-      "vpt": [-3.39601, -13.2231, -1.52659],
-      "vpr": [41.7, 0, 296.8],
+      "vpt": [-4.57587, 10.8704, -19.0937],
+      "vpr": [50.8, 0, 214.9],
       "vpd": 213.382,
       "expected": "step1_expected.png"
     },
