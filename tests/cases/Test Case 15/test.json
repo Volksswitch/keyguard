@@ -10,7 +10,7 @@
       "vpr": [55, 0, 25],
       "vpd": 500,
       "expected": "step1_expected.png"
-    }
+    },
     {
       "label": "split graphic",
       "params": "Test Case 15a",
@@ -18,7 +18,7 @@
       "vpr": [44.5, 0, 34.8],
       "vpd": 155.556,
       "expected": "step2_expected.png"
-    }
+    },
     {
       "label": "remove raised elements for laser-cut type",
       "params": "Test Case 15b",
