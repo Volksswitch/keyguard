@@ -25,6 +25,15 @@
       "vpr": [0, 0, 0],
       "vpd": 550.777,
       "expected": "step3_expected.png"
+    },
+    {
+      "label": "rendered SVG view",
+      "params": "Test Case 10b",
+      "render": true,
+      "vpt": [12.8751, -1.05844, -10.8098],
+      "vpr": [0, 0, 0],
+      "vpd": 550.777,
+      "expected": "step4_expected.png"
     }
   ]
 }

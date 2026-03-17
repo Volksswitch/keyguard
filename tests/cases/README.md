@@ -76,6 +76,7 @@ the committed reference image.
 | `vpt` | No | Viewport translation `[x, y, z]` — equivalent to OpenSCAD's `$vpt`; defaults to `[0, 0, 0]` |
 | `vpr` | No | Viewport rotation `[x, y, z]` — equivalent to OpenSCAD's `$vpr`; defaults to `[55, 0, 25]` |
 | `vpd` | No | Viewport distance — equivalent to OpenSCAD's `$vpd`; defaults to `250` |
+| `render` | No | If `true`, passes `--render` to OpenSCAD (CGAL full render, equivalent to F6); default `false` (preview renderer). Useful for 2D/SVG-generate steps where preview and render look different. |
 | `expected` | Yes | Filename of the committed reference PNG in this folder |
 
 ### Camera note
