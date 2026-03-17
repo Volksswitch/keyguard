@@ -1,0 +1,38 @@
+{
+  "description": "all cut shapes and angles",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "front view - upper left",
+      "params": "Test Case 5",
+      "vpt": [-8.39957, -16.3749, -16.125],
+      "vpr": [55, 0, 25],
+      "vpd": 446.129,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "front view - lower left",
+      "params": "Test Case 5a",
+      "vpt": [-8.39957, -16.3749, -16.125],
+      "vpr": [55, 0, 25],
+      "vpd": 446.129,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "back view - lower left",
+      "params": "Test Case 15b",
+      "vpt": [7.95006, -24.5444, -13.7588],
+      "vpr": [135.5, 0, 21.5],
+      "vpd": 550.777,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "back view - upper left",
+      "params": "Test Case 15c",
+      "vpt": [7.95006, -24.5444, -13.7588],
+      "vpr": [135.5, 0, 21.5],
+      "vpd": 550.777,
+      "expected": "step4_expected.png"
+    }
+  ]
+}

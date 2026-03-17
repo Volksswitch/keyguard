@@ -1,0 +1,46 @@
+{
+  "description": "Portrait test of height and width compensation and trim to rectangle",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "trim to rectangle",
+      "params": "Test Case 7",
+      "vpt": [10.5516, -6.96336, -15.3815],
+      "vpr": [55, 0, 25],
+      "vpd": 401.516,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "top bottom compensation",
+      "params": "Test Case 7a",
+      "vpt": [10.5516, -6.96336, -15.3815],
+      "vpr": [55, 0, 25],
+      "vpd": 401.516,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "left right compensation",
+      "params": "Test Case 7b",
+      "vpt": [10.5516, -6.96336, -15.3815],
+      "vpr": [55, 0, 25],
+      "vpd": 401.516,
+      "expected": "step3_expected.png"
+    },
+    {
+      "label": "wide top bottom compensation",
+      "params": "Test Case 7c",
+      "vpt": [10.5516, -6.96336, -15.3815],
+      "vpr": [55, 0, 25],
+      "vpd": 401.516,
+      "expected": "step4_expected.png"
+    },
+    {
+      "label": "wide left right compensation",
+      "params": "Test Case 7d",
+      "vpt": [10.5516, -6.96336, -15.3815],
+      "vpr": [55, 0, 25],
+      "vpd": 401.516,
+      "expected": "step5_expected.png"
+    }
+  ]
+}

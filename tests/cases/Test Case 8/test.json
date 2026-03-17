@@ -1,0 +1,52 @@
+{
+  "description": "landscape test of dovetails",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "first half",
+      "params": "Test Case 8",
+      "vpt": [-3.39601, -13.2231, -1.52659],
+      "vpr": [36.8, 0, 67],
+      "vpd": 213.382,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "second half",
+      "params": "Test Case 8a",
+      "vpt": [-3.39601, -13.2231, -1.52659],
+      "vpr": [36.8, 0, 67],
+      "vpd": 213.382,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "change width",
+      "params": "Test Case 8b",
+      "vpt": [-3.39601, -13.2231, -1.52659],
+      "vpr": [36.8, 0, 67],
+      "vpd": 213.382,
+      "expected": "step3_expected.png"
+    },
+      "label": "change tightness",
+      "params": "Test Case 8c",
+      "vpt": [-3.39601, -13.2231, -1.52659],
+      "vpr": [36.8, 0, 67],
+      "vpd": 213.382,
+      "expected": "step4_expected.png"
+    },
+      "label": "change location",
+      "params": "Test Case 8d",
+      "vpt": [-3.39601, -13.2231, -1.52659],
+      "vpr": [36.8, 0, 67],
+      "vpd": 213.382,
+      "expected": "step5_expected.png"
+    },
+    {
+      "label": "change columns",
+      "params": "Test Case 8e",
+      "vpt": [12.8751, -1.05844, -10.8098],
+      "vpr": [0, 0, 0],
+      "vpd": 550.777,
+      "expected": "step5_expected.png"
+    }
+  ]
+}

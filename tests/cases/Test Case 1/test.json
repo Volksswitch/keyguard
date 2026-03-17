@@ -1,0 +1,14 @@
+{
+  "description": "keyguard thickness",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "starting view",
+      "params": "Test Case 1",
+      "vpt": [0, 0, 0],
+      "vpr": [55, 0, 25],
+      "vpd": 140,
+      "expected": "step1_expected.png"
+    }
+  ]
+}

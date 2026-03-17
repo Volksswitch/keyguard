@@ -1,0 +1,22 @@
+{
+  "description": "clip on straps - portrait, change keyguard thickness to 5, the pedestals should disappear",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "starting view",
+      "params": "Test Case 4",
+      "vpt": [-8.39957, -16.3749, -16.125],
+      "vpr": [55, 0, 25],
+      "vpd": 446.129,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "change keyguard thickness to 5",
+      "params": "Test Case 4a",
+      "vpt": [-8.39957, -16.3749, -16.125],
+      "vpr": [55, 0, 25],
+      "vpd": 446.129,
+      "expected": "step2_expected.png"
+    }
+  ]
+}

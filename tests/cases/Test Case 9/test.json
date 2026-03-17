@@ -1,0 +1,54 @@
+{
+  "description": "portrait test of dovetails",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "first half",
+      "params": "Test Case 9",
+      "vpt": [-3.39601, -13.2231, -1.52659],
+      "vpr": [41.7, 0, 296.8],
+      "vpd": 213.382,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "second half",
+      "params": "Test Case 9a",
+      "vpt": [15.7612, 36.7812, 17.3113],
+      "vpr": [36.8, 0, 146.3],
+      "vpd": 213.382,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "change width",
+      "params": "Test Case 9b",
+      "vpt": [15.7612, 36.7812, 17.3113],
+      "vpr": [36.8, 0, 146.3],
+      "vpd": 213.382,
+      "expected": "step3_expected.png"
+    },
+    {
+      "label": "change tightness",
+      "params": "Test Case 9c",
+      "vpt": [15.7612, 36.7812, 17.3113],
+      "vpr": [36.8, 0, 146.3],
+      "vpd": 213.382,
+      "expected": "step4_expected.png"
+    },
+    {
+      "label": "change location",
+      "params": "Test Case 9d",
+      "vpt": [15.7612, 36.7812, 17.3113],
+      "vpr": [36.8, 0, 146.3],
+      "vpd": 213.382,
+      "expected": "step5_expected.png"
+    },
+    {
+      "label": "change rows",
+      "params": "Test Case 9e",
+      "vpt": [-3.29224, -58.5974, 17.3113],
+      "vpr": [0, 0, 0],
+      "vpd": 325.228,
+      "expected": "step5_expected.png"
+    }
+  ]
+}
