@@ -48,7 +48,7 @@
       "vpt": [-3.29224, -58.5974, 17.3113],
       "vpr": [0, 0, 0],
       "vpd": 325.228,
-      "expected": "step5_expected.png"
+      "expected": "step6_expected.png"
     }
   ]
 }

@@ -3,7 +3,7 @@
   "openings": "openings_and_additions.txt",
   "steps": [
     {
-      "label": "starting view view",
+      "label": "starting view",
       "params": "Test Case 2",
       "vpt": [-8.39957, -16.3749, -16.125],
       "vpr": [55, 0, 25],

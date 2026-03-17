@@ -20,15 +20,15 @@
     },
     {
       "label": "back view - lower left",
-      "params": "Test Case 15b",
+      "params": "Test Case 5b",
       "vpt": [7.95006, -24.5444, -13.7588],
       "vpr": [135.5, 0, 21.5],
       "vpd": 550.777,
-      "expected": "step2_expected.png"
+      "expected": "step3_expected.png"
     },
     {
       "label": "back view - upper left",
-      "params": "Test Case 15c",
+      "params": "Test Case 5c",
       "vpt": [7.95006, -24.5444, -13.7588],
       "vpr": [135.5, 0, 21.5],
       "vpd": 550.777,
