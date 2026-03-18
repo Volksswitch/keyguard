@@ -504,12 +504,20 @@ run_visual() {
 
             local exit_code=0
             local console_log="$render_dir/step$((i+1))_${STEP_LABEL// /_}_console.log"
-            "${cmd[@]}" > /dev/null 2>"$console_log" || exit_code=$?
+            "${cmd[@]}" > "$console_log" 2>&1 || exit_code=$?
 
             if [[ "$exit_code" -ne 0 || ! -s "$rendered_png" ]]; then
                 echo -e " ${RED}RENDER FAILED${RESET}"
                 case_ok=false
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | RENDER FAILED |"$'\n'
+                continue
+            fi
+
+            # Capture mode: copy rendered PNG as the new reference
+            if "$CAPTURE_REFERENCES"; then
+                cp "$rendered_png" "$expected_png"
+                echo -e " ${GREEN}CAPTURED${RESET}"
+                case_rows+="| $((i+1))/$step_count | $STEP_LABEL | CAPTURED |"$'\n'
                 continue
             fi
 
@@ -535,14 +543,6 @@ for m in missing:
     print(m)
 " "$console_ref" "$console_log")
                 [[ -z "$console_missing" ]] || console_ok=false
-            fi
-
-            # Capture mode: copy rendered PNG as the new reference
-            if "$CAPTURE_REFERENCES"; then
-                cp "$rendered_png" "$expected_png"
-                echo -e " ${GREEN}CAPTURED${RESET}"
-                case_rows+="| $((i+1))/$step_count | $STEP_LABEL | CAPTURED |"$'\n'
-                continue
             fi
 
             # Compare mode
