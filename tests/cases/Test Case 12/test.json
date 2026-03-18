@@ -41,6 +41,6 @@
       "vpr": [53.6, 0, 18],
       "vpd": 500,
       "expected": "step5_expected.png"
-    },
+    }
   ]
 }
