@@ -1,0 +1,46 @@
+{
+  "description": "LWFL-VI",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "full view",
+      "params": "Test Case 12",
+      "vpt": [0.41811, -11.7702, -17.4088],
+      "vpr": [53.6, 0, 18],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "increase the keyguard thickness",
+      "params": "Test Case 12a",
+      "vpt": [0.41811, -11.7702, -17.4088],
+      "vpr": [53.6, 0, 18],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "increase the ridge height",
+      "params": "Test Case 12b",
+      "vpt": [0.41811, -11.7702, -17.4088],
+      "vpr": [53.6, 0, 18],
+      "vpd": 500,
+      "expected": "step3_expected.png"
+    },
+    {
+      "label": "increase the ridge thickness",
+      "params": "Test Case 12c",
+      "vpt": [0.41811, -11.7702, -17.4088],
+      "vpr": [53.6, 0, 18],
+      "vpd": 500,
+      "expected": "step4_expected.png"
+    },
+    {
+      "label": "change to laser-cut",
+      "params": "Test Case 12d",
+      "vpt": [0.41811, -11.7702, -17.4088],
+      "vpr": [53.6, 0, 18],
+      "vpd": 500,
+      "expected": "step5_expected.png"
+    },
+  ]
+}

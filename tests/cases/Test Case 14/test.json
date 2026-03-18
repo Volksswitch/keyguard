@@ -1,0 +1,14 @@
+{
+  "description": "manual pedestals and slide in tabs – regular keyguard",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "full view",
+      "params": "Test Case 14",
+      "vpt": [4.33761, -5.83053, -11.3895],
+      "vpr": [53.6, 0, 18],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+  ]
+}
