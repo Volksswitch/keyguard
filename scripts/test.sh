@@ -190,7 +190,7 @@ vpr      = fmtlist(step.get('vpr'), '55,0,25')
 vpd      = str(step.get('vpd', 250))
 expected = step.get('expected', f'step{idx+1}_expected.png')
 render   = str(step.get('render', False)).lower()
-console  = step.get('console', [])
+console  = step.get('console', '')
 
 # Build -D flags for params_override
 d_flags = []
@@ -210,7 +210,7 @@ print(f'STEP_VPD={json.dumps(vpd)}')
 print(f'STEP_EXPECTED={json.dumps(expected)}')
 print(f'STEP_D_FLAGS={json.dumps(\" \".join(d_flags))}')
 print(f'STEP_RENDER={json.dumps(render)}')
-print(f'STEP_CONSOLE={json.dumps(json.dumps(console))}')
+print(f'STEP_CONSOLE={json.dumps(console)}')
 " | tr -d '\r'
 }
 
@@ -516,16 +516,24 @@ run_visual() {
             # Console text check
             local console_ok=true
             local console_missing=""
-            if [[ -n "$STEP_CONSOLE" && "$STEP_CONSOLE" != "[]" ]]; then
+            if [[ -n "$STEP_CONSOLE" ]]; then
+                local console_ref="$case_dir/$STEP_CONSOLE"
+                if [[ ! -f "$console_ref" ]]; then
+                    echo -e " ${YELLOW}NO CONSOLE REFERENCE${RESET} ($STEP_CONSOLE not found)"
+                    case_ok=false
+                    case_rows+="| $((i+1))/$step_count | $STEP_LABEL | NO CONSOLE REFERENCE |"$'\n'
+                    continue
+                fi
                 console_missing=$($PYTHON -c "
-import json, sys
-expected = json.loads(sys.argv[1])
+import sys
+with open(sys.argv[1]) as f:
+    expected_lines = [l.rstrip('\n') for l in f if l.strip()]
 with open(sys.argv[2]) as f:
     output = f.read()
-missing = [s for s in expected if s not in output]
+missing = [l for l in expected_lines if l not in output]
 for m in missing:
     print(m)
-" "$STEP_CONSOLE" "$console_log")
+" "$console_ref" "$console_log")
                 [[ -z "$console_missing" ]] || console_ok=false
             fi
 
