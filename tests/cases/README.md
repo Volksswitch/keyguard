@@ -15,6 +15,7 @@ the committed reference image.
 |---|---|---|
 | `test.json` | **Yes** | Describes the test steps (see format below) |
 | `step1_expected.png`, `step2_expected.png`, … | **Yes** | Committed reference renders; one per step |
+| Console reference text file(s) | No | Plain text file(s) containing expected console output for steps that use `console`; named freely and referenced from `test.json` |
 | `openings.txt` | No | Custom `openings_and_additions.txt` for this test; if absent the project-level file is used |
 | Asset SVG(s) | No | SVG files imported by name in `openings_and_additions.txt` (e.g. `butterfly.svg`); listed in `assets` and copied to the project root before rendering |
 | Screenshot SVG | No | SVG used as a fit-test overlay; listed in `screenshot` and copied to `default.svg` before rendering |
@@ -45,6 +46,7 @@ the committed reference image.
       "vpt": [120, -40, 0],
       "vpr": [45, 0, 0],
       "vpd": 80,
+      "console": "step2_console.txt",
       "expected": "step2_expected.png"
     }
   ]
@@ -77,7 +79,23 @@ the committed reference image.
 | `vpr` | No | Viewport rotation `[x, y, z]` — equivalent to OpenSCAD's `$vpr`; defaults to `[55, 0, 25]` |
 | `vpd` | No | Viewport distance — equivalent to OpenSCAD's `$vpd`; defaults to `250` |
 | `render` | No | If `true`, passes `--render` to OpenSCAD (CGAL full render, equivalent to F6); default `false` (preview renderer). Useful for 2D/SVG-generate steps where preview and render look different. |
+| `console` | No | Filename of a text file in this folder containing expected console output (copy-pasted from a valid run). Every non-empty line in the file must appear somewhere in OpenSCAD's actual console output for this step to pass. Simple substring match; case-sensitive. |
 | `expected` | Yes | Filename of the committed reference PNG in this folder |
+
+### Console reference files
+
+A console reference file is a plain text file containing lines copy-pasted from
+OpenSCAD's console during a known-good run. Name it anything you like (e.g.
+`step1_console.txt`) and reference it from the step's `console` field.
+
+The test runner checks that every non-empty line in the file appears somewhere in the
+actual console output for that step. Blank lines and lines containing only whitespace
+are ignored, so you can paste the full console output and the test will still pass as
+long as none of the expected lines go missing.
+
+The console log for each step is saved to `output/test/visual/` as a `_console.log`
+file alongside the rendered PNG — useful for inspecting output when building a new
+console reference.
 
 ### Camera note
 
