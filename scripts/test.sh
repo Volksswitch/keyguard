@@ -190,6 +190,7 @@ vpr      = fmtlist(step.get('vpr'), '55,0,25')
 vpd      = str(step.get('vpd', 250))
 expected = step.get('expected', f'step{idx+1}_expected.png')
 render   = str(step.get('render', False)).lower()
+console  = step.get('console', [])
 
 # Build -D flags for params_override
 d_flags = []
@@ -209,6 +210,7 @@ print(f'STEP_VPD={json.dumps(vpd)}')
 print(f'STEP_EXPECTED={json.dumps(expected)}')
 print(f'STEP_D_FLAGS={json.dumps(\" \".join(d_flags))}')
 print(f'STEP_RENDER={json.dumps(render)}')
+print(f'STEP_CONSOLE={json.dumps(json.dumps(console))}')
 " | tr -d '\r'
 }
 
@@ -501,13 +503,30 @@ run_visual() {
             cmd+=("$SCAD_FILE")
 
             local exit_code=0
-            "${cmd[@]}" > /dev/null 2>&1 || exit_code=$?
+            local console_log="$render_dir/step$((i+1))_${STEP_LABEL// /_}_console.log"
+            "${cmd[@]}" > /dev/null 2>"$console_log" || exit_code=$?
 
             if [[ "$exit_code" -ne 0 || ! -s "$rendered_png" ]]; then
                 echo -e " ${RED}RENDER FAILED${RESET}"
                 case_ok=false
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | RENDER FAILED |"$'\n'
                 continue
+            fi
+
+            # Console text check
+            local console_ok=true
+            local console_missing=""
+            if [[ -n "$STEP_CONSOLE" && "$STEP_CONSOLE" != "[]" ]]; then
+                console_missing=$($PYTHON -c "
+import json, sys
+expected = json.loads(sys.argv[1])
+with open(sys.argv[2]) as f:
+    output = f.read()
+missing = [s for s in expected if s not in output]
+for m in missing:
+    print(m)
+" "$STEP_CONSOLE" "$console_log")
+                [[ -z "$console_missing" ]] || console_ok=false
             fi
 
             # Capture mode: copy rendered PNG as the new reference
@@ -526,14 +545,27 @@ run_visual() {
                 continue
             fi
 
-            if compare_png "$rendered_png" "$expected_png" "$diff_png"; then
+            local png_ok=true
+            compare_png "$rendered_png" "$expected_png" "$diff_png" || png_ok=false
+
+            if "$png_ok" && "$console_ok"; then
                 echo -e " ${GREEN}PASS${RESET}"
                 rm -f "$diff_png"
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | PASS |"$'\n'
             else
-                echo -e " ${RED}FAIL${RESET}"
+                local fail_reasons=()
+                "$png_ok"     || fail_reasons+=("PNG mismatch")
+                "$console_ok" || fail_reasons+=("console mismatch")
+                local fail_str; fail_str=$(IFS=", "; echo "${fail_reasons[*]}")
+                echo -e " ${RED}FAIL${RESET} ($fail_str)"
+                if ! "$console_ok"; then
+                    while IFS= read -r missing_line; do
+                        [[ -n "$missing_line" ]] && \
+                            echo -e "      ${RED}missing from console:${RESET} $missing_line"
+                    done <<< "$console_missing"
+                fi
                 case_ok=false
-                case_rows+="| $((i+1))/$step_count | $STEP_LABEL | FAIL |"$'\n'
+                case_rows+="| $((i+1))/$step_count | $STEP_LABEL | FAIL ($fail_str) |"$'\n'
             fi
         done
 

@@ -45,6 +45,7 @@ the committed reference image.
       "vpt": [120, -40, 0],
       "vpr": [45, 0, 0],
       "vpd": 80,
+      "console": ["ECHO: \"some_expected_value\""],
       "expected": "step2_expected.png"
     }
   ]
@@ -77,6 +78,7 @@ the committed reference image.
 | `vpr` | No | Viewport rotation `[x, y, z]` — equivalent to OpenSCAD's `$vpr`; defaults to `[55, 0, 25]` |
 | `vpd` | No | Viewport distance — equivalent to OpenSCAD's `$vpd`; defaults to `250` |
 | `render` | No | If `true`, passes `--render` to OpenSCAD (CGAL full render, equivalent to F6); default `false` (preview renderer). Useful for 2D/SVG-generate steps where preview and render look different. |
+| `console` | No | List of strings that must each appear somewhere in OpenSCAD's console output for this step to pass. Useful for asserting `echo()` statements or warning messages. Simple substring match; case-sensitive. |
 | `expected` | Yes | Filename of the committed reference PNG in this folder |
 
 ### Camera note
