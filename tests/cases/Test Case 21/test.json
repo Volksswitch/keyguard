@@ -1,0 +1,30 @@
+{
+  "description": "other tablet, symmetric openings, and cell bottom edge slope",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "base view",
+      "params": "Test Case 21",
+      "vpt": [8.7011, -4.11876, -10.5827],
+      "vpr": [55, 0, 25],
+      "vpd": 400,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "set cell height to 25",
+      "params": "Test Case 21a",
+      "vpt": [8.7011, -4.11876, -10.5827],
+      "vpr": [55, 0, 25],
+      "vpd": 400,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "The cell height has been adjusted to 15 mm (or 193 px) in order to fit properly.",
+      "params": "Test Case 21a",
+      "vpt": [8.7011, -4.11876, -10.5827],
+      "vpr": [55, 0, 25],
+      "vpd": 400,
+      "console": "step3_console.txt"
+    }
+  ]
+}

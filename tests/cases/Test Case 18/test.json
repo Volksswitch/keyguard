@@ -7,7 +7,7 @@
       "params": "Test Case 18",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step1_expected.png"
     },
     {
@@ -15,7 +15,7 @@
       "params": "Test Case 18a",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step2_expected.png"
     },
     {
@@ -23,7 +23,7 @@
       "params": "Test Case 18b",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step3_expected.png"
     },
     {
@@ -31,7 +31,7 @@
       "params": "Test Case 18c",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step4_expected.png"
     },
     {
@@ -39,7 +39,7 @@
       "params": "Test Case 18d",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step5_expected.png"
     }
   ]

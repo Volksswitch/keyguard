@@ -1,0 +1,1 @@
+ECHO: "The cell height has been adjusted to 15 mm (or 193 px) in order to fit properly."

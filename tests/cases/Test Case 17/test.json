@@ -7,7 +7,7 @@
       "params": "Test Case 17",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step1_expected.png"
     },
     {
@@ -15,7 +15,7 @@
       "params": "Test Case 17a",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step2_expected.png"
     },
     {
@@ -23,7 +23,7 @@
       "params": "Test Case 17b",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step3_expected.png"
     },
     {
@@ -31,7 +31,7 @@
       "params": "Test Case 17c",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step4_expected.png"
     },
     {
@@ -39,7 +39,7 @@
       "params": "Test Case 17d",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step5_expected.png"
     },
     {
@@ -47,7 +47,7 @@
       "params": "Test Case 17e",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step6_expected.png"
     },
     {
@@ -55,7 +55,7 @@
       "params": "Test Case 17f",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step7_expected.png"
     },
     {
@@ -63,7 +63,7 @@
       "params": "Test Case 17g",
       "vpt": [12.9599, -6.98467, -16.8626],
       "vpr": [55, 0, 25],
-      "vpd": 600,
+      "vpd": 700,
       "expected": "step8_expected.png"
     }
   ]
