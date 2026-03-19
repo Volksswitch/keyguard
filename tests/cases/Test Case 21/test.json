@@ -7,7 +7,7 @@
       "params": "Test Case 21",
       "vpt": [8.7011, -4.11876, -10.5827],
       "vpr": [55, 0, 25],
-      "vpd": 400,
+      "vpd": 500,
       "expected": "step1_expected.png"
     },
     {
@@ -15,7 +15,7 @@
       "params": "Test Case 21a",
       "vpt": [8.7011, -4.11876, -10.5827],
       "vpr": [55, 0, 25],
-      "vpd": 400,
+      "vpd": 500,
       "expected": "step2_expected.png"
     },
     {
@@ -23,7 +23,7 @@
       "params": "Test Case 21a",
       "vpt": [8.7011, -4.11876, -10.5827],
       "vpr": [55, 0, 25],
-      "vpd": 400,
+      "vpd": 500,
       "console": "step3_console.txt"
     }
   ]

@@ -7,7 +7,7 @@
       "params": "Test Case 22",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step1_expected.png"
     },
     {
@@ -15,7 +15,7 @@
       "params": "Test Case 22a",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step2_expected.png"
     },
     {
@@ -23,7 +23,7 @@
       "params": "Test Case 22b",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step3_expected.png"
     },
     {
@@ -31,7 +31,7 @@
       "params": "Test Case 22c",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step4_expected.png"
     },
     {
@@ -39,7 +39,7 @@
       "params": "Test Case 22d",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step5_expected.png"
     },
     {
@@ -47,7 +47,7 @@
       "params": "Test Case 22e",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step6_expected.png"
     },
     {
@@ -55,7 +55,7 @@
       "params": "Test Case 22f",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step7_expected.png"
     },
     {
@@ -63,14 +63,14 @@
       "params": "Test Case 22g",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step8_expected.png"
     },
     {
       "label": "BSM 20",
       "params": "Test Case 22h",
       "vpt": [2.94707, 0.638962, -0.951702],
-      "vpr": [55, 0, 25],
+      "vpr": [200, 0, 25],
       "vpd": 250,
       "expected": "step9_expected.png"
     },
@@ -79,7 +79,7 @@
       "params": "Test Case 22i",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step10_expected.png"
     },
     {
@@ -87,7 +87,7 @@
       "params": "Test Case 22j",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step11_expected.png"
     },
     {
@@ -95,7 +95,7 @@
       "params": "Test Case 22k",
       "vpt": [2.94707, 0.638962, -0.951702],
       "vpr": [55, 0, 25],
-      "vpd": 250,
+      "vpd": 200,
       "expected": "step12_expected.png"
     }
   ]
