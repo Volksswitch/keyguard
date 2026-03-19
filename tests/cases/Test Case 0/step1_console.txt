@@ -1,0 +1,72 @@
+
+ECHO: 
+ECHO: 
+ECHO: "Customizer Settings"
+ECHO: 
+ECHO: 
+ECHO: "---- Keyguard Basics ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Tablet ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Tablet Case ----"
+ECHO: 
+ECHO: 
+ECHO: "---- App Layout in px ----"
+ECHO: 
+ECHO: 
+ECHO: "---- App Layout in mm ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Bar Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Grid Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Grid Special Settings ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Mounting Method ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Velcro Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Clip-on Straps Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Posts Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Shelf Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Slide-in Tabs Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Raised Tabs Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Keyguard Frame Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Split Keyguard Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Sloped Keyguard Edge Info ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Engraved/Embossed Text ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Cell Inserts ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Free-form and Hybrid Keyguard Openings ----"
+ECHO: 
+ECHO: 
+ECHO: "---- Special Actions and Settings ----"
+ECHO: 
+ECHO: 

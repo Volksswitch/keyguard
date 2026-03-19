@@ -1,0 +1,46 @@
+{
+  "description": "portrait frame mounting methods and unequal case openings",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "clip-on straps",
+      "params": "Test Case 17 portrait",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "raised tabs",
+      "params": "Test Case 17a portrait",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "clip-on straps, unequal left side of case opening - 25",
+      "params": "Test Case 17b portrait",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step3_expected.png"
+    },
+    {
+      "label": "keyguard v/h tightness of fit - -1",
+      "params": "Test Case 17c portrait",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step4_expected.png"
+    },
+    {
+      "label": "keyguard v/h tightness of fit - 1",
+      "params": "Test Case 17d portrait",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step5_expected.png"
+    }
+  ]
+}

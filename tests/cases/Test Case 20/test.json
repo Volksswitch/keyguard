@@ -1,0 +1,30 @@
+{
+  "description": "Bar Info - bar corner radius from 2 to 0 to 5",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "bar corner radius 2",
+      "params": "Test Case 20",
+      "vpt": [1, 1, 1],
+      "vpr": [15, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "bar corner radius 0",
+      "params": "Test Case 20a",
+      "vpt": [1, 1, 1],
+      "vpr": [15, 0, 0],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "bar corner radius 5",
+      "params": "Test Case 20b",
+      "vpt": [1, 1, 1],
+      "vpr": [15, 0, 0],
+      "vpd": 500,
+      "expected": "step3_expected.png"
+    }
+  ]
+}

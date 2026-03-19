@@ -1,0 +1,14 @@
+{
+  "description": "default design customizer settings",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "console content",
+      "params": "Test Case 0",
+      "vpt": [14.8701, -5.19949, -14.9901],
+      "vpr": [53.6, 0, 18],
+      "vpd": 1000,
+      "console": "step1_console.txt"
+    }
+  ]
+}

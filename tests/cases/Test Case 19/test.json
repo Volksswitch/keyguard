@@ -1,0 +1,30 @@
+{
+  "description": "cell top/bottom edge slope - 30" ,
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "Cell corner radius - 0",
+      "params": "Test Case 19",
+      "vpt": [-0.698685, -8.03925, -9.98384],
+      "vpr": [31.2, 0, 90.1],
+      "vpd": 700,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "lCell corner radius - 10",
+      "params": "Test Case 19a",
+      "vpt": [-0.698685, -8.03925, -9.98384],
+      "vpr": [31.2, 0, 90.1],
+      "vpd": 700,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "Cell corner radius - 30, cell width 38",
+      "params": "Test Case 19b",
+      "vpt": [-0.698685, -8.03925, -9.98384],
+      "vpr": [31.2, 0, 90.1],
+      "vpd": 700,
+      "expected": "step3_expected.png"
+    }
+  ]
+}
