@@ -16,6 +16,8 @@
 #   ./scripts/test.sh --lint --syntax        # Combine layers
 #   ./scripts/test.sh --update-baseline      # Re-render all configs; save new STL baseline
 #   ./scripts/test.sh --capture-references   # Re-render all visual tests; save new reference PNGs
+#   ./scripts/test.sh --capture-references --case "Test Case 25"  # Single test case only
+#   ./scripts/test.sh --visual --case "Test Case 25"              # Run one test case
 #
 # Requirements:
 #   - openscad  (on PATH, or at a common Windows install location)
@@ -111,12 +113,13 @@ PYTHON="$(find_python)"
 RUN_LINT=false; RUN_SYNTAX=false; RUN_SMOKE=false
 RUN_REGRESSION=false; RUN_VISUAL=false
 UPDATE_BASELINE=false; CAPTURE_REFERENCES=false
+CASE_FILTER=""
 
 if [[ $# -eq 0 ]]; then
     RUN_LINT=true; RUN_SYNTAX=true; RUN_SMOKE=true
 else
-    for arg in "$@"; do
-        case "$arg" in
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
             --lint)                RUN_LINT=true ;;
             --syntax)              RUN_SYNTAX=true ;;
             --smoke)               RUN_SMOKE=true ;;
@@ -126,8 +129,11 @@ else
                                    RUN_REGRESSION=true; RUN_VISUAL=true ;;
             --update-baseline)     UPDATE_BASELINE=true; RUN_REGRESSION=true ;;
             --capture-references)  CAPTURE_REFERENCES=true; RUN_VISUAL=true ;;
-            *) echo "Unknown option: $arg"; exit 1 ;;
+            --case)                shift; CASE_FILTER="$1" ;;
+            --case=*)              CASE_FILTER="${1#--case=}" ;;
+            *) echo "Unknown option: $1"; exit 1 ;;
         esac
+        shift
     done
 fi
 
@@ -412,6 +418,7 @@ run_visual() {
         return
     fi
     info "Found ${#cases[@]} test case(s)"
+    [[ -n "$CASE_FILTER" ]] && info "Filter: '$CASE_FILTER'"
 
     # Create a timestamped results directory for this run
     local timestamp; timestamp=$(date +%Y-%m-%d_%H-%M-%S)
@@ -422,11 +429,19 @@ run_visual() {
     local test_failures=0
     local summary_cases=""   # accumulated per-case markdown for summary
 
+    local run_count=0
     for case_dir in "${cases[@]}"; do
         local test_json="$case_dir/test.json"
         local case_name; case_name=$(basename "$case_dir")
+
+        # Skip cases that don't match the filter (if one was specified)
+        if [[ -n "$CASE_FILTER" && "$case_name" != "$CASE_FILTER" ]]; then
+            continue
+        fi
+
         local render_dir="$run_dir/$case_name"
         mkdir -p "$render_dir"
+        run_count=$((run_count + 1))
 
         echo ""
         echo -e "  ${BOLD}${case_name}${RESET}"
@@ -597,6 +612,7 @@ for m in missing:
 
     # ── Write summary document ───────────────────────────────────────────────────
     local mode_str; "$CAPTURE_REFERENCES" && mode_str="capture-references" || mode_str="visual"
+    [[ -n "$CASE_FILTER" ]] && mode_str+=" (filter: $CASE_FILTER)"
     local overall_str
     if   "$CAPTURE_REFERENCES";          then overall_str="References captured"
     elif [[ "$test_failures" -eq 0 ]];   then overall_str="PASS"
@@ -607,7 +623,7 @@ for m in missing:
         echo ""
         echo "- **Run:** $(date '+%Y-%m-%d %H:%M:%S')"
         echo "- **Mode:** $mode_str"
-        echo "- **Test cases:** ${#cases[@]}"
+        echo "- **Test cases:** $run_count of ${#cases[@]}"
         echo "- **Overall:** $overall_str"
         echo ""
         echo "---"
@@ -617,10 +633,12 @@ for m in missing:
 
     echo ""
     info "Results saved to: test results/$run_label/"
-    if "$CAPTURE_REFERENCES"; then
-        pass "References captured for ${#cases[@]} test case(s)"
+    if [[ "$run_count" -eq 0 ]]; then
+        warn "No test cases matched filter '$CASE_FILTER'"
+    elif "$CAPTURE_REFERENCES"; then
+        pass "References captured for $run_count test case(s)"
     elif [[ "$test_failures" -eq 0 ]]; then
-        pass "Visual tests — all ${#cases[@]} case(s) passed"
+        pass "Visual tests — all $run_count case(s) passed"
     else
         fail "$test_failures test case(s) failed"
     fi
