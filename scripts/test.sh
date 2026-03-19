@@ -479,10 +479,12 @@ run_visual() {
             eval "$step_vars"
 
             local camera; camera=$(build_camera "$STEP_VPT" "$STEP_VPR" "$STEP_VPD")
+            # Sanitise label for use in file names: spaces → _, slashes → _
+            local safe_label="${STEP_LABEL// /_}"; safe_label="${safe_label//\//_}"
             # Name rendered PNG with step number + label for easy browsing
-            local rendered_png="$render_dir/step$((i+1))_${STEP_LABEL// /_}.png"
+            local rendered_png="$render_dir/step$((i+1))_${safe_label}.png"
             local expected_png="$case_dir/$STEP_EXPECTED"
-            local diff_png="$render_dir/step$((i+1))_${STEP_LABEL// /_}_diff.png"
+            local diff_png="$render_dir/step$((i+1))_${safe_label}_diff.png"
 
             printf "    [step %d/%d] %-30s" "$((i+1))" "$step_count" "$STEP_LABEL"
 
@@ -503,7 +505,7 @@ run_visual() {
             cmd+=("$SCAD_FILE")
 
             local exit_code=0
-            local console_log="$render_dir/step$((i+1))_${STEP_LABEL// /_}_console.log"
+            local console_log="$render_dir/step$((i+1))_${safe_label}_console.log"
             "${cmd[@]}" > "$console_log" 2>&1 || exit_code=$?
 
             if [[ "$exit_code" -ne 0 || ! -s "$rendered_png" ]]; then
