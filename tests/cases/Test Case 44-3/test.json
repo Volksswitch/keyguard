@@ -1,0 +1,14 @@
+{
+  "description": "circular ridges",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "base model",
+      "params": "Test Case 44-3",
+      "vpt": [6.55008, -8.88552, -15.4543],
+      "vpr": [55, 0, 25],
+      "vpd": 800,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
