@@ -19,7 +19,7 @@
       "expected": "step2_expected.png"
     },
     {
-      "label": "set extend lip to edge of case to “yes”",
+      "label": "set extend lip to edge of case to yes",
       "params": "Test Case 50a",
       "vpt": [52.3839, 13.3431, 10.3857],
       "vpr": [103.3, 0, 25.7],
