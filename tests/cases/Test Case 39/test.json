@@ -7,7 +7,7 @@
       "params": "Test Case 39",
       "vpt": [1, 1, 1],
       "vpr": [30, 0, 0],
-      "vpd": 700,
+      "vpd": 900,
       "expected": "step1_expected.png"
     }
   ]

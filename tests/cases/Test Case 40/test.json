@@ -15,7 +15,7 @@
       "params": "Test Case 40a",
       "vpt": [1, 1, 1],
       "vpr": [30, 0, 0],
-      "vpd": 800,
+      "vpd": 1000,
       "expected": "step2_expected.png"
     }
   ]
