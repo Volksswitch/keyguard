@@ -1,0 +1,12 @@
+{
+  "description": "posts on keyguard in keyguard frame",
+  "openings": "openings_and_additions.txt",
+  "screenshot": "default.svg",
+  "steps": [
+    {
+      "label": "base model",
+      "params": "Test Case 36",
+      "expected": "step1_expected.png"
+    }
+  ]
+}
