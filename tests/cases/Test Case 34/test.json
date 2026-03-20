@@ -1,0 +1,22 @@
+{
+  "description": "portrait bars (in px) and TXT file variables (in px)",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "upper left",
+      "params": "Test Case 34",
+      "vpt": [-20.6878, 3.11116, 1],
+      "vpr": [0, 0, 0],
+      "vpd": 700,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "lower left",
+      "params": "Test Case 34a",
+      "vpt": [-20.6878, 3.11116, 1],
+      "vpr": [0, 0, 0],
+      "vpd": 700,
+      "expected": "step2_expected.png"
+    }
+  ]
+}
