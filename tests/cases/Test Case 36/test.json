@@ -6,6 +6,9 @@
     {
       "label": "base model",
       "params": "Test Case 36",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
       "expected": "step1_expected.png"
     }
   ]
