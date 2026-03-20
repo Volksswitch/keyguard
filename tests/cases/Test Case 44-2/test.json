@@ -1,5 +1,5 @@
 {
-  "description": "circular ridges",
+  "description": "change red (reduce) from 0 to 5",
   "openings": "openings_and_additions.txt",
   "steps": [
     {
@@ -7,7 +7,7 @@
       "params": "Test Case 44-2",
       "vpt": [6.55008, -8.88552, -15.4543],
       "vpr": [55, 0, 25],
-      "vpd": 800,
+      "vpd": 900,
       "expected": "step1_expected.png"
     }
   ]

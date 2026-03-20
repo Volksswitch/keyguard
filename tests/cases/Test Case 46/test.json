@@ -1,0 +1,38 @@
+{
+  "description": "ready to print keyguard design",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "base view",
+      "params": "Test Case 46",
+      "vpt": [6.55008, -8.88552, -15.4543],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "rotate 180 degrees=no",
+      "params": "Test Case 46a",
+      "vpt": [6.55008, -8.88552, -15.4543],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "laser-cut",
+      "params": "Test Case 46b",
+      "vpt": [6.55008, -8.88552, -15.4543],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step3_expected.png"
+    },
+    {
+      "label": "generate=svg",
+      "params": "Test Case 46c",
+      "vpt": [6.55008, -8.88552, -15.4543],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step4_expected.png"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "description": "Talk Pad 8 – sloped keyguard edge",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "base model",
+      "params": "Test Case 50",
+      "vpt": [1.71077, -6.00849, -8.80959],
+      "vpr": [55, 0, 25],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "sloped edge",
+      "params": "Test Case 50",
+      "vpt": [52.3839, 13.3431, 10.3857],
+      "vpr": [103.3, 0, 25.7],
+      "vpd": 200,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "set extend lip to edge of case to “yes”",
+      "params": "Test Case 50a",
+      "vpt": [52.3839, 13.3431, 10.3857],
+      "vpr": [103.3, 0, 25.7],
+      "vpd": 200,
+      "expected": "step3_expected.png"
+    }
+  ]
+}

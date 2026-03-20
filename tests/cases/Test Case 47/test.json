@@ -1,0 +1,39 @@
+{
+  "description": "engraved/embossed text in Customizer - front",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "base model",
+      "params": "Test Case 47",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "change text depth to +2",
+      "params": "Test Case 47a",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "change text depth to -3",
+      "params": "Test Case 47b",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step3_expected.png"
+    },
+    {
+      "label": "render",
+      "params": "Test Case 47b",
+      "render": true,
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step4_expected.png"
+    }
+  ]
+}

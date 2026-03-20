@@ -1,0 +1,14 @@
+{
+  "description": "Grid Pad 13 – using tablet_openings",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "base model",
+      "params": "Test Case 49",
+      "vpt": [-4.20185, -23.9343, -28.443],
+      "vpr": [55, 0, 25],
+      "vpd": 700,
+      "expected": "step1_expected.png"
+    }
+  ]
+}

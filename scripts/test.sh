@@ -144,7 +144,7 @@ get_configs() {
     local _p; _p=$(py_path "$JSON_FILE")
     $PYTHON -c "
 import json
-with open('$_p') as f:
+with open('$_p', encoding='utf-8') as f:
     data = json.load(f)
 for name in data.get('parameterSets', {}).keys():
     print(name)
@@ -173,7 +173,7 @@ parse_step() {
     $PYTHON -c "
 import json, sys
 
-with open('$_p') as f:
+with open('$_p', encoding='utf-8') as f:
     test = json.load(f)
 
 steps = test.get('steps', [])
@@ -225,7 +225,7 @@ count_steps() {
     local _p; _p=$(py_path "$1")
     $PYTHON -c "
 import json
-with open('$_p') as f:
+with open('$_p', encoding='utf-8') as f:
     test = json.load(f)
 print(len(test.get('steps', [])))
 " | tr -d '\r'
@@ -236,7 +236,7 @@ get_test_field() {
     local _p; _p=$(py_path "$1")
     $PYTHON -c "
 import json
-with open('$_p') as f:
+with open('$_p', encoding='utf-8') as f:
     test = json.load(f)
 val = test.get('$2', '')
 print(val if val is not None else '')
@@ -248,7 +248,7 @@ get_test_assets() {
     local _p; _p=$(py_path "$1")
     $PYTHON -c "
 import json
-with open('$_p') as f:
+with open('$_p', encoding='utf-8') as f:
     test = json.load(f)
 for a in test.get('assets', []):
     print(a)
@@ -551,9 +551,9 @@ run_visual() {
                 fi
                 console_missing=$($PYTHON -c "
 import sys
-with open(sys.argv[1]) as f:
+with open(sys.argv[1], encoding='utf-8') as f:
     expected_lines = [l.rstrip('\n') for l in f if l.strip()]
-with open(sys.argv[2]) as f:
+with open(sys.argv[2], encoding='utf-8') as f:
     output = f.read()
 missing = [l for l in expected_lines if l not in output]
 for m in missing:
