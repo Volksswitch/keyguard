@@ -1,0 +1,47 @@
+{
+  "description": "standard posts mount",
+  "openings": "openings_and_additions.txt",
+  "screenshot": "default.svg",
+  "steps": [
+    {
+      "label": "base design",
+      "params": "Test Case 37",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "post location",
+      "params": "Test Case 37a",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "length of posts",
+      "params": "Test Case 37b",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step3_expected.png"
+    },
+    {
+      "label": "diameter of posts",
+      "params": "Test Case 37c",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step4_expected.png"
+    },
+    {
+      "label": "size of mini tabs",
+      "params": "Test Case 37d",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step5_expected.png"
+    }
+  ]
+}

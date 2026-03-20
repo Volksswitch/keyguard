@@ -1,0 +1,14 @@
+{
+  "description": "subtracting plastic from the keyguard edge (portrait)",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "upper left",
+      "params": "Test Case 39",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 700,
+      "expected": "step1_expected.png"
+    }
+  ]
+}

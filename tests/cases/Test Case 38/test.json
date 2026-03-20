@@ -1,0 +1,14 @@
+{
+  "description": "subtracting plastic from the keyguard edge (landscape)",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "base modell",
+      "params": "Test Case 38",
+      "vpt": [1, 1, 1],
+      "vpr": [60, 0, 0],
+      "vpd": 600,
+      "expected": "step1_expected.png"
+    }
+  ]
+}

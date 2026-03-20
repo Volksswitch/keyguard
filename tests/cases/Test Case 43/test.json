@@ -1,0 +1,22 @@
+{
+  "description": "circular ridges",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "base model",
+      "params": "Test Case 43",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "change values for ridge thickness and height",
+      "params": "Test Case 43a",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "posts on keyguard in keyguard frame with both upper bars covered",
+  "openings": "openings_and_additions.txt",
+  "screenshot": "default.svg",
+  "steps": [
+    {
+      "label": "keyguard and frame",
+      "params": "Test Case 41",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    }
+  ]
+}

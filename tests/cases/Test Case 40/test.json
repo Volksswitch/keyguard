@@ -1,0 +1,22 @@
+{
+  "description": "subtracting plastic from the keyguard frame edge (portrait) and generate keyguard frame  ",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "keyguard",
+      "params": "Test Case 40",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 600,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "frame",
+      "params": "Test Case 40a",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 800,
+      "expected": "step2_expected.png"
+    }
+  ]
+}
