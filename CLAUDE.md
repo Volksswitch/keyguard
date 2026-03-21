@@ -237,7 +237,7 @@ It only needs to be present when this feature is in use.
 ### Priority Key
 - **(Clean-up)** — tidy when 2+ months between releases
 - **(Low)** — wait until reported as a problem
-- **(Medium vXX)** — fix within the next few releases (vXX = version found in release XX)
+- **(Medium vXX)** — fix within the next few releases (vXX = version in which the issue was identified)
 - **(High)** — fix in next release
 - **(Super High)** — immediate fix unless related to work in the current development
 
