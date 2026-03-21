@@ -2136,6 +2136,9 @@ else { //Customizer settings
 
 // ---------------------Modules----------------------------
 
+// Generates the complete 3D-printed keyguard solid, including all cutouts, case mounts,
+// additions, snap-in tabs, and optional text engraving/embossing.
+// @param cheat  Pass "yes" to suppress case additions that conflict with the keyguard frame
 module keyguard(cheat){
 	unequal_opening = (have_a_keyguard_frame=="no") ? [-unequal_left_side_offset,-unequal_bottom_side_offset,0] : [0,0,0];
 	difference(){
@@ -2447,6 +2450,8 @@ module keyguard(cheat){
 }
 
 
+// Generates the 2D laser-cut keyguard outline including all cutouts and slide-in tabs.
+// Produces a flat 2D profile (zero thickness) suitable for laser cutting workflows.
 // create 2D image of keyguard for laser cutting
 module lc_keyguard(){
 	unequal_opening = [-unequal_left_side_offset,-unequal_bottom_side_offset,0];
@@ -2570,6 +2575,9 @@ module lc_keyguard(){
 	}
 }
 
+// Generates the keyguard frame — the outer border piece that a snap-in or slide-in
+// keyguard mounts into. Includes case mounts, case additions, and relevant cutouts.
+// @param cheat  Pass "yes" to suppress additions that conflict with the inner keyguard
 module keyguard_frame(cheat){
 	unequal_border = [-unequal_tablet_left_side_offset,-unequal_tablet_bottom_side_offset,0];
 
@@ -2726,6 +2734,8 @@ module keyguard_frame(cheat){
 }
 
 
+// Cuts the slot and cylindrical bore that receive a keyguard frame post,
+// allowing the inner keyguard to slide onto the frame posts.
 module add_keyguard_frame_post_slots(){
 	hole_dia = kt - post_tightness_of_fit/10;
 
@@ -2738,6 +2748,8 @@ module add_keyguard_frame_post_slots(){
 }
 
 
+// Adds the cylindrical posts that protrude from the keyguard frame and insert into
+// the corresponding post slots of the inner keyguard.
 module add_keyguard_frame_posts(){
 	post_dia = kt;
 	post_cl = (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm+kt/2 :
@@ -2751,7 +2763,9 @@ module add_keyguard_frame_posts(){
 }
 
 
-module trim_keyguard_to_bar(){				
+// Cuts away the top portion of the keyguard above the exposed status/message/command bar,
+// so the bar opening is flush with the top edge of the remaining keyguard body.
+module trim_keyguard_to_bar(){
 	post_cl = (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
               (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no") ? shm/2-sbhm-umbhm :	
 			  shm/2-sbhm;
@@ -2762,6 +2776,8 @@ module trim_keyguard_to_bar(){
 }
 
 
+// Generates the horizontal cylindrical mounting posts (and optional mini tabs) used when
+// the mounting method is "Posts". Posts extend out from the sides of the case opening.
 module add_mounting_posts(){
 	pd = (have_a_keyguard_frame=="yes") ? kt : post_diameter;
 	p_l = (expose_status_bar=="yes" || expose_upper_message_bar=="yes") ? post_length : width_of_opening_in_case+post_length*2;
@@ -2837,6 +2853,8 @@ module add_mounting_posts(){
 	}
 }
 
+// Produces the cutting tool that splits the keyguard into first and second halves,
+// optionally adding dovetail interlocks at the split line.
 module split_keyguard(){
 	half = (generate == "first half of keyguard") ? "first" : "second";
 	
@@ -2950,6 +2968,8 @@ module split_keyguard(){
 	}
 }
 
+// Renders a highlighted 1 mm slab at the split-line position for visual inspection,
+// and echoes the distance from each edge to the console.
 module show_line_split_location(){
 	if (orientation=="landscape"){
 		if(generate=="keyguard frame" || generate=="first half of keyguard frame" ||generate=="second half of keyguard frame"){
@@ -3027,6 +3047,9 @@ module show_line_split_location(){
 
 
 
+// Produces the cutting tool that splits the keyguard frame into first and second halves,
+// with optional dovetail interlocks at the split line.
+// @param half  "first" or "second" — selects which half of the frame to keep
 module split_keyguard_frame(half){
 	maskwidth = fw;
 	maskheight = fh;
@@ -3055,6 +3078,9 @@ module split_keyguard_frame(half){
 	}
 }
 
+// Generates a row of dovetail teeth or sockets along the split line for joining
+// the two halves of a split keyguard or frame.
+// @param half  "first" produces teeth; "second" produces sockets (with tightness gap)
 module dovetails(half){
 	cutLen = (have_a_case=="no") ? tablet_height*2+ff*2 : kh*2+ff*2 ;
 	doveTailWidth=dovetail_width;
@@ -3067,6 +3093,9 @@ module dovetails(half){
 	}
 }
 
+// Dispatches to the appropriate mounting geometry (slide-in tabs, raised tabs, or
+// clip-on strap pedestals) based on the current mounting method parameter.
+// @param depth  Keyguard thickness in mm; pass 0 for laser-cut (2D) output
 module case_mounts(depth) {
 	//add mounting points for cases
 	if (m_m=="Slide-in Tabs"){
@@ -3087,6 +3116,8 @@ module case_mounts(depth) {
 	}
 }
 
+// Places the 2D slide-in tab profiles on the horizontal and/or vertical edges of
+// the keyguard outline, ready to be extruded to the slide-in tab thickness.
 module add_2d_slide_in_tabs() {
 	h_sitlen = horizontal_slide_in_tab_length_incl_acrylic;
 	v_sitlen = vertical_slide_in_tab_length_incl_acrylic;
@@ -3138,6 +3169,10 @@ module add_2d_slide_in_tabs() {
 	}
 }
 
+// Builds the 2D profile for a single slide-in tab, including the rounded hook
+// geometry that grips the edge of the tablet case.
+// @param tab_length  Length of the tab in mm (parallel to the keyguard edge)
+// @param tab_width   Width of the tab in mm (perpendicular to the keyguard edge)
 module create_2D_slide_in_tab(tab_length,tab_width){
 	x1_offset = -tab_length/2;
 	x2_offset = tab_length/2-2;
@@ -3178,6 +3213,9 @@ module create_2D_slide_in_tab(tab_length,tab_width){
 	}
 }
 
+// Places the four (or eight) tapered pedestals on the case-opening border that
+// clip-on straps snap onto to secure the keyguard.
+// @param depth  Keyguard thickness in mm; used to set the base height of the pedestals
 module add_clip_on_strap_pedestals(depth){
 	xloc = cow;
 	yloc = coh;
@@ -3220,6 +3258,9 @@ module add_clip_on_strap_pedestals(depth){
 
 
 
+// Places four raised tab assemblies at the corners of the case opening to grip
+// the case edge and secure the keyguard without a frame.
+// @param depth  Keyguard thickness in mm; determines the tab starting height and ramp geometry
 module add_raised_tabs(depth) {
 	s = (raised_tabs_starting_height < depth - 1) ? raised_tabs_starting_height : depth - 1;
 	
@@ -3244,6 +3285,9 @@ module add_raised_tabs(depth) {
 	}
 }
 
+// Builds a single raised tab with a ramped approach and flat gripping tread that
+// hooks over the case edge. Optionally includes a magnet recess.
+// @param depth  Keyguard thickness in mm; controls available ramp height
 module raised_tab(depth){
 	a = raised_tab_length;
 	b = raised_tab_height;
@@ -3382,6 +3426,13 @@ module raised_tab(depth){
 	}
 }
 
+// Creates a quarter-cylinder wedge used to cut outer-arc (oa) corners in keyguard
+// openings, with optional chamfering on the outer edge for 3D-printed keyguards.
+// @param rotation   Z-axis rotation in degrees to position the wedge at the correct corner
+// @param diameter   Diameter of the arc in mm
+// @param thickness  Keyguard thickness in mm
+// @param slope      Slope angle in degrees for the chamfer/taper
+// @param type       "oa" applies outer-arc chamfer; any other value omits it
 module create_cutting_tool(rotation,diameter,thickness,slope,type){
 	rotate([0,0,rotation])
 	difference(){
@@ -3398,6 +3449,10 @@ module create_cutting_tool(rotation,diameter,thickness,slope,type){
 	}
 }
 
+// Creates the 2D quarter-circle wedge profile used for outer-arc corner cuts in
+// laser-cut keyguard outlines.
+// @param rotation  Z-axis rotation in degrees to position the wedge at the correct corner
+// @param diameter  Diameter of the arc in mm
 module create_cutting_tool_2d(rotation,diameter){
 	rotate([0,0,rotation])
 	difference(){
@@ -3408,6 +3463,9 @@ module create_cutting_tool_2d(rotation,diameter){
 	}
 }
 
+// Cuts the home button and camera openings from the keyguard at the positions
+// defined by the selected tablet's built-in dimension data.
+// @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
 module home_camera(depth){
 	//deal with home button
 	if (home_button_location!=0 && expose_home_button=="yes" && home_button_height > 0 && home_button_width > 0){
@@ -3455,6 +3513,9 @@ module home_camera(depth){
 	}
 }
 
+// Dispatches to the appropriate mounting-point cutting module (suction cups, velcro
+// recesses, screw-on strap slots, or clip-on strap grooves) based on the current
+// mounting method parameter.
 module mounting_points(){
 	if (m_m=="Suction Cups"){
 		suction_cups();
@@ -3473,6 +3534,8 @@ module mounting_points(){
 	}
 }
 
+// Cuts four pairs of suction-cup mounting holes (outer recess and inner bore)
+// into the border region of the keyguard.
 module suction_cups(){
 	major_dim = max(tablet_width,tablet_height);
 
@@ -3509,6 +3572,8 @@ module suction_cups(){
 	cube(size=[10,15,kt]);
 }
 
+// Cuts four shallow recesses on the bottom surface of the keyguard border to
+// accept round or square velcro pads for mounting.
 module velcro(){
 	major_dim = max(tablet_width,tablet_height);
 
@@ -3543,6 +3608,8 @@ module velcro(){
 	}
 }
 
+// Cuts the slots and flange bores for Keyguard AT-style screw-on acrylic strap tabs
+// into the keyguard border, supporting both full-depth and partial-depth cuts.
 module screw_on_straps(){
 	major_dim = max(tablet_width,tablet_height);
 
@@ -3594,6 +3661,8 @@ module screw_on_straps(){
 	cylinder(h=kt*3, d=6, center=true);
 }
 
+// Cuts the wedge-shaped grooves on the edges of the keyguard that clip-on strap
+// clips hook into, for horizontal and/or vertical clip locations.
 module clip_on_straps_groove(){
 	xloc = (add_sloped_keyguard_edge=="no") ? cow :
 	       (extend_lip_to_edge_of_case=="no") ? cow + sew*2-2 : case_width-2;
@@ -3650,6 +3719,9 @@ module clip_on_straps_groove(){
 	}
 }
 
+// Cuts the status bar, message bar, and command bar openings (upper and lower) through
+// the keyguard at their configured heights and positions.
+// @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
 module bars(depth){
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && expose_upper_command_bar=="no" && sbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
@@ -3712,6 +3784,9 @@ module bars(depth){
 	}
 }
 
+// Generates grid cell openings clipped to the adjusted grid boundary, trimming
+// any cells that extend outside the configured grid area.
+// @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
 module bounded_cells(depth){
 	adj_grid_width = grid_width-col_first_trim-col_last_trim;
 	adj_grid_height = grid_height-row_first_trim-row_last_trim;
@@ -3728,6 +3803,10 @@ module bounded_cells(depth){
 	}
 }
 
+// Iterates over every cell in the grid and cuts the appropriate opening, handling
+// merged cells (horizontal and vertical), covered cells, and both rectangular and
+// circular cell shapes.
+// @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
 module cells(depth){
 	d = (depth > 0) ? depth+2*ff : 0;
 	grid_part_w = grid_width/number_of_columns;
@@ -3791,6 +3870,8 @@ module cells(depth){
 	}
 }
 
+// Adds tactile ridges around the specified grid cells, using either a rounded-rectangle
+// wall or a circular wall depending on the cell shape.
 module cell_ridges(){
 	grid_part_w = grid_width/number_of_columns;
 	grid_part_h = grid_height/number_of_rows;
@@ -3836,11 +3917,23 @@ module cell_ridges(){
 	}
 }
 
+// Creates a hollow circular ring wall (annulus) of the specified inner diameter,
+// wall thickness, and height, with a chamfered top edge.
+// @param ID         Inner diameter of the ring in mm
+// @param thickness  Wall thickness in mm
+// @param hgt        Wall height in mm
 module circular_wall(ID,thickness,hgt){
 	rotate_extrude($fn=60)
 	polygon([[ID/2,0],[ID/2+thickness,0],[ID/2+thickness,hgt-.5],[ID/2+thickness-.5,hgt],[ID/2+.5,hgt],[ID/2,hgt-.5]]);
 }
 
+// Creates a hollow rounded-rectangle wall of given outer dimensions, corner radius,
+// wall thickness, and height, by combining straight and corner wall segments.
+// @param width          Outer width of the rectangle in mm
+// @param hgt            Height of the rectangle (Y dimension) in mm
+// @param corner_radius  Corner radius in mm
+// @param thickness      Wall thickness in mm
+// @param hgt2           Wall height (Z dimension) in mm
 module rounded_rectangle_wall(width,hgt,corner_radius,thickness,hgt2){
 	rr_wall1(width,hgt,corner_radius,thickness,hgt2);
 	mirror([0,1,0])
@@ -3860,6 +3953,12 @@ module rounded_rectangle_wall(width,hgt,corner_radius,thickness,hgt2){
 	rr_corner_wall(width,hgt,corner_radius,thickness,hgt2);
 }
 
+// Generates the top straight segment of a rounded-rectangle wall (used by rounded_rectangle_wall).
+// @param width          Outer width of the rectangle in mm
+// @param hgt            Height of the rectangle (Y dimension) in mm
+// @param corner_radius  Corner radius in mm
+// @param thickness      Wall thickness in mm
+// @param hgt2           Wall height (Z dimension) in mm
 module rr_wall1(width,hgt,corner_radius,thickness,hgt2){
 	translate([width/2-corner_radius,-hgt/2,0])
 	rotate([0,0,-90])
@@ -3868,6 +3967,12 @@ module rr_wall1(width,hgt,corner_radius,thickness,hgt2){
 	polygon([[0,0],[thickness,0],[thickness,hgt2-.5],[thickness-.5,hgt2],[.5,hgt2],[0,hgt2-.5]]);
 }
 
+// Generates the left straight segment of a rounded-rectangle wall (used by rounded_rectangle_wall).
+// @param width          Outer width of the rectangle in mm
+// @param hgt            Height of the rectangle (Y dimension) in mm
+// @param corner_radius  Corner radius in mm
+// @param thickness      Wall thickness in mm
+// @param hgt2           Wall height (Z dimension) in mm
 module rr_wall2(width,hgt,corner_radius,thickness,hgt2){
 	translate([-width/2-thickness,hgt/2-corner_radius,0])
 	rotate([90,0,0])
@@ -3875,6 +3980,13 @@ module rr_wall2(width,hgt,corner_radius,thickness,hgt2){
 	polygon([[0,0],[thickness,0],[thickness,hgt2-.5],[thickness-.5,hgt2],[.5,hgt2],[0,hgt2-.5]]);
 }
 
+// Generates one 90-degree arc corner segment of a rounded-rectangle wall
+// (used by rounded_rectangle_wall for the top-right quadrant; mirroring covers the rest).
+// @param width          Outer width of the rectangle in mm
+// @param hgt            Height of the rectangle (Y dimension) in mm
+// @param corner_radius  Corner radius in mm
+// @param thickness      Wall thickness in mm
+// @param hgt2           Wall height (Z dimension) in mm
 module rr_corner_wall(width,hgt,corner_radius,thickness,hgt2){
 	translate([width/2-corner_radius,hgt/2-corner_radius,0])
 	rotate_extrude(angle=90,$fn=60)
@@ -3882,6 +3994,16 @@ module rr_corner_wall(width,hgt,corner_radius,thickness,hgt2){
 	polygon([[0,0],[thickness,0],[thickness,hgt2-.5],[thickness-.5,hgt2],[.5,hgt2],[0,hgt2-.5]]);
 }
 
+// Primary opening cutter: cuts a tapered hole with per-side slope angles and an optional
+// corner radius. For 3D-printed keyguards, adds a cell-edge chamfer layer on top.
+// @param hole_width    Opening width in mm
+// @param hole_height   Opening height in mm
+// @param top_slope     Slope angle on the top edge in degrees (90 = vertical)
+// @param bottom_slope  Slope angle on the bottom edge in degrees
+// @param left_slope    Slope angle on the left edge in degrees
+// @param right_slope   Slope angle on the right edge in degrees
+// @param radius        Corner radius in mm (0 = sharp corners)
+// @param depth         Cut depth in mm
 module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,depth){
 	d = (type_of_keyguard=="3D-Printed") ? depth-cec : depth;
 	z = (type_of_keyguard=="3D-Printed") ? -cec/2 : 0;
@@ -3924,11 +4046,32 @@ module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,righ
 	}
 }
 
+// Simplified opening cutter that delegates directly to cut() without adding a
+// cell-edge chamfer layer. Used for openings that must not be chamfered (e.g. flipped cuts).
+// @param hole_width    Opening width in mm
+// @param hole_height   Opening height in mm
+// @param top_slope     Slope angle on the top edge in degrees
+// @param bottom_slope  Slope angle on the bottom edge in degrees
+// @param left_slope    Slope angle on the left edge in degrees
+// @param right_slope   Slope angle on the right edge in degrees
+// @param radius        Corner radius in mm
+// @param depth         Cut depth in mm
 module hole_cutter_3(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,depth){
 	rad1=min(hole_width/2,hole_height/2,radius);
 	cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,rad1,depth);
 }
 
+// Alternative opening cutter that places the chamfer layer below the main cut and
+// adds a flush top cap; used for special opening types that need a different layer order.
+// Applies only to 3D-printed keyguards.
+// @param hole_width    Opening width in mm
+// @param hole_height   Opening height in mm
+// @param top_slope     Slope angle on the top edge in degrees
+// @param bottom_slope  Slope angle on the bottom edge in degrees
+// @param left_slope    Slope angle on the left edge in degrees
+// @param right_slope   Slope angle on the right edge in degrees
+// @param radius        Corner radius in mm
+// @param depth         Cut depth in mm
 module hole_cutter2(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,depth){
 	//applies only to 3D-printed keyguards
 	l_s = (left_slope>=chamfer_angle_stop || left_slope<0) ? 45 : left_slope;
@@ -3969,10 +4112,24 @@ module hole_cutter2(hole_width,hole_height,top_slope,bottom_slope,left_slope,rig
 }
 
 
+// 2D opening cutter wrapper — delegates to cut_2d() for laser-cut keyguard profiles.
+// @param hole_width   Opening width in mm
+// @param hole_height  Opening height in mm
+// @param radius       Corner radius in mm (0 = sharp corners)
 module hole_cutter_2d(hole_width,hole_height,radius){
 	cut_2d(hole_width,hole_height,radius);
 }
 
+// Core geometry primitive: produces a tapered hull solid (or 2D shape when thick=0)
+// centred at the origin, used by all hole_cutter variants.
+// @param cut_w         Base width in mm
+// @param cut_h         Base height in mm
+// @param top_angle     Slope angle on the top face in degrees
+// @param bottom_angle  Slope angle on the bottom face in degrees
+// @param left_angle    Slope angle on the left face in degrees
+// @param right_angle   Slope angle on the right face in degrees
+// @param radius        Corner radius in mm
+// @param thick         Extrusion thickness in mm (0 produces a 2D shape)
 module cut(cut_w, cut_h, top_angle, bottom_angle, left_angle, right_angle, radius, thick){
 	$fn=60;
 	th1 = thick + 2*ff;
@@ -4013,6 +4170,11 @@ module cut(cut_w, cut_h, top_angle, bottom_angle, left_angle, right_angle, radiu
 }
 
 
+// Core 2D geometry primitive: produces a centred rounded-rectangle 2D shape used
+// by hole_cutter_2d and other laser-cut profiling modules.
+// @param cut_w   Width in mm
+// @param cut_h   Height in mm
+// @param radius  Corner radius in mm (0 = sharp corners)
 module cut_2d(cut_w, cut_h, radius){
 	$fn=60;
 	radius1 = (radius==0) ? 0 : radius-ff;
@@ -4022,6 +4184,8 @@ module cut_2d(cut_w, cut_h, radius){
 }
 
 
+// Generates a standalone cell insert — a small 3D object that fits inside a grid
+// cell opening and can carry Braille dots, engraved text, or a plain surface.
 module create_cell_insert(){
 	chamfer = .5;
 	btod = Braille_to_opening_distance+1;
@@ -4161,6 +4325,10 @@ module create_cell_insert(){
 	
 }
 
+// Iterates over the screen_openings vector and cuts (or highlights with #) each
+// opening at the correct position relative to the screen coordinate origin.
+// @param s_o    Screen openings vector (rows of opening definitions)
+// @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
 module cut_screen_openings(s_o,depth){
 	for(i = [0 : len(s_o)-1]){
 		opening = s_o[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:top slope, 7:bottom slope, 8:left slope, 9:right slope, 10:corner_radius, 11:other
@@ -4243,6 +4411,10 @@ module cut_screen_openings(s_o,depth){
 	}
 }
 
+// Iterates over the case_openings vector and cuts (or highlights with #) each
+// opening at the correct position relative to the case-opening coordinate origin.
+// @param c_o    Case openings vector (rows of opening definitions)
+// @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
 module cut_case_openings(c_o,depth){
 
 	for(i = [0 : len(c_o)-1]){
@@ -4283,6 +4455,11 @@ module cut_case_openings(c_o,depth){
 	
 }
 
+// Iterates over the tablet_openings vector and cuts (or highlights with #) each
+// opening at the correct position relative to the tablet coordinate origin, applying
+// the current orientation rotation.
+// @param t_o    Tablet openings vector (rows of opening definitions)
+// @param depth  Cut depth in mm
 module cut_tablet_openings(t_o,depth){
 
 	for(i = [0 : len(t_o)-1]){
@@ -4313,6 +4490,10 @@ module cut_tablet_openings(t_o,depth){
 		}
 	}
 }
+// Iterates over the ambient-light-sensor openings vector and cuts each opening at
+// the correct tablet-relative position, respecting the current orientation.
+// @param a_o    ALS openings vector (rows of opening definitions)
+// @param depth  Cut depth in mm
 module cut_als_openings(a_o,depth){
 
 	for(i = [0 : len(a_o)-1]){
@@ -4344,6 +4525,20 @@ module cut_als_openings(a_o,depth){
 	}
 }
 
+// Dispatches to the correct 3D cutting geometry for a single opening based on its
+// shape code, slope parameters, and depth offset. Handles all built-in shape types
+// (r, cr, c, hd, rr, crr, oa1-4, svg, ttext/btext, ridges, etc.).
+// @param cut_width     Opening width in mm
+// @param cut_height    Opening height in mm
+// @param shape         Shape code string (e.g. "r", "c", "rr", "oa1", "svg")
+// @param top_slope     Top-edge slope angle in degrees
+// @param bottom_slope  Bottom-edge slope angle in degrees
+// @param left_slope    Left-edge slope angle in degrees
+// @param right_slope   Right-edge slope angle in degrees
+// @param corner_radius Corner radius in mm
+// @param other         Numeric depth override or text string (shape-dependent)
+// @param depth         Full cut depth in mm
+// @param type          Coordinate context: "screen", "keyguard", or "tablet"
 module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_slope, right_slope, corner_radius, other, depth, type){
 
 	other_number = is_num(other);
@@ -4557,6 +4752,13 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 }
 
 
+// Dispatches to the correct 2D cutting profile for a single opening based on its
+// shape code. Used for laser-cut keyguard outlines.
+// @param cut_width     Opening width in mm
+// @param cut_height    Opening height in mm
+// @param shape         Shape code string (e.g. "r", "c", "rr", "oa1")
+// @param top_slope     Top-edge slope angle in degrees (default 0)
+// @param corner_radius Corner radius in mm (default 0)
 module cut_opening_2d(cut_width, cut_height, shape, top_slope=0, corner_radius=0){
 
 	if (shape=="r"){
@@ -4622,6 +4824,10 @@ module cut_opening_2d(cut_width, cut_height, shape, top_slope=0, corner_radius=0
 	}
 }
 
+// Iterates over an additions vector and places bump, ridge, SVG, and text additions
+// on the keyguard surface at positions relative to the screen or case coordinate origin.
+// @param additions  Vector of addition definitions from screen_openings or case_openings
+// @param where      Coordinate context: "screen" or "case"
 module adding_plastic(additions,where){
 	for(i = [0 : len(additions)-1]){
 		addition = additions[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:top slope, 7:bottom slope, 8:left slope, 9:right slope, 10:corner_radius, 11:other
@@ -4685,6 +4891,19 @@ module adding_plastic(additions,where){
 	}
 }
 
+// Builds the 3D solid for a single bump, ridge (hridge/vridge/ridge/aridge/cridge/rridge),
+// SVG import, or engraved/embossed text addition.
+// @param addition_width    Width of the addition in mm
+// @param addition_height   Height of the addition in mm
+// @param shape             Shape code string (e.g. "bump", "hridge", "svg", "ttext")
+// @param top_slope         Slope angle for the addition top in degrees
+// @param top_slope_mm      Ridge height in mm (used by ridge-type shapes)
+// @param bottom_slope      Slope angle for the addition bottom in degrees
+// @param bottom_slope_mm   Ridge base thickness in mm (used by ridge-type shapes)
+// @param left_slope        Left-slope / rotation angle in degrees
+// @param right_slope       Right-slope angle in degrees
+// @param corner_radius     Corner radius or arc radius in mm
+// @param other             Text string or secondary numeric value (shape-dependent)
 module place_addition(addition_width, addition_height, shape, top_slope, top_slope_mm, bottom_slope, bottom_slope_mm, left_slope, right_slope, corner_radius, other){
 	if (shape=="bump"){
 		if(addition_width>0){
@@ -4799,6 +5018,12 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 	}	
 }
 
+// Creates a horizontal raised ridge with a trapezoidal cross-section and chamfered
+// end caps, rotated by the specified angle.
+// @param length     Length of the ridge in mm
+// @param thickness  Base width (thickness) of the ridge in mm
+// @param hi         Ridge height above the surface in mm
+// @param rot        Z-axis rotation in degrees (0 = horizontal ridge along X axis)
 module hridge(length, thickness, hi,rot){
 	hite = hi + sata;
 	rotate([0,0,rot])
@@ -4822,6 +5047,11 @@ module hridge(length, thickness, hi,rot){
 	}
 }
 
+// Creates a vertical raised ridge with a trapezoidal cross-section and chamfered
+// end caps, oriented along the Y axis.
+// @param length     Length of the ridge in mm
+// @param thickness  Base width (thickness) of the ridge in mm
+// @param hi         Ridge height above the surface in mm
 module vridge(length, thickness, hi){
 	hite = hi + sata;
 	translate([thickness/2,0,-sata])
@@ -4845,6 +5075,13 @@ module vridge(length, thickness, hi){
 	}
 }
 
+// Creates a raised ridge with a trapezoidal cross-section, chamfered end caps, and
+// an arbitrary rotation angle. Functionally identical to hridge but exposed as a
+// general-purpose ridge primitive.
+// @param length     Length of the ridge in mm
+// @param thickness  Base width (thickness) of the ridge in mm
+// @param hi         Ridge height above the surface in mm
+// @param rot        Z-axis rotation in degrees
 module ridge(length, thickness, hi,rot){
 	hite = hi + sata;
 	rotate([0,0,rot])
@@ -4868,6 +5105,11 @@ module ridge(length, thickness, hi,rot){
 	}
 }
 
+// Creates a quarter-arc ridge segment (one corner of a rounded-rectangle ridge),
+// used by the aridge1-4 addition shapes.
+// @param radius     Arc radius in mm
+// @param thickness  Ridge base width in mm
+// @param hi         Ridge height above the surface in mm
 module aridge(radius, thickness, hi){
 	hite = hi + sata;
 	translate([-1,-1,-sata])
@@ -4883,6 +5125,10 @@ module aridge(radius, thickness, hi){
 	}
 }
 
+// Builds the full clip-on strap clip body including the base leg, vertical leg,
+// reach leg, spur, chamfers, optional bumper recess, and strap slots.
+// @param clip_reach  How far the reach leg extends over the case edge in mm
+// @param clip_width  Width of the clip in mm (parallel to the case edge)
 module create_clip(clip_reach,clip_width){
 	base_thickness = 4;
 	clip_thickness = 3;
@@ -4961,6 +5207,10 @@ module create_clip(clip_reach,clip_width){
 	}
 }
 
+// Builds the mini clip-on strap clip variant 1: vertical leg + reach leg + spur,
+// without a base leg. Used for thinner case edges.
+// @param clip_reach  How far the reach leg extends over the case edge in mm
+// @param clip_width  Width of the clip in mm
 module create_mini_clip1(clip_reach,clip_width){
 	base_thickness = 4;
 	clip_thickness = 5;
@@ -5026,6 +5276,10 @@ module create_mini_clip1(clip_reach,clip_width){
 	}
 }
 
+// Builds the mini clip-on strap clip variant 2: reach leg + spur only (no base or
+// vertical leg). Used for the thinnest case edges.
+// @param clip_reach  How far the reach leg extends over the case edge in mm
+// @param clip_width  Width of the clip in mm
 module create_mini_clip2(clip_reach,clip_width){
 	base_thickness = 4;
 	clip_thickness = 5;
@@ -5087,6 +5341,14 @@ module create_mini_clip2(clip_reach,clip_width){
 	}
 }
 
+// Builds the base keyguard blank (extruded case-opening shape) with optional
+// sloped edge, shelf lip, and per-edge chamfer slices. Used by both keyguard()
+// and keyguard_frame() as their starting solid.
+// @param wid        Width of the blank in mm
+// @param hei        Height of the blank in mm
+// @param crad       Corner radius (scalar or 4-element vector) in mm
+// @param thickness  Thickness of the blank in mm (0 = 2D for laser cutting)
+// @param cheat      "yes" suppresses case additions that conflict with the frame geometry
 module base_keyguard(wid,hei,crad,thickness,cheat){
 	//consider moving this logic to global scope
 	widt = (add_sloped_keyguard_edge=="no") ? wid :
@@ -5148,6 +5410,14 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 	}
 }
 
+// Generates a single chamfer step (a thin ring that is slightly wider at its layer
+// position) used to approximate a chamfered edge around the keyguard perimeter.
+// @param layer          Step index (1 = outermost, chamfer_slices = innermost)
+// @param width          Overall blank width in mm
+// @param height         Overall blank height in mm
+// @param corner_radius  Corner radius of the blank in mm
+// @param thickness      Keyguard thickness in mm
+// @param cheat          Passed through to case_opening_blank_2d
 module chamfer_slice(layer,width,height,corner_radius,thickness, cheat){
 	slice_width = chamfer_slice_size*(chamfer_slices-layer+1);
 	slice_height = thickness-chamfer_slice_size*layer;
@@ -5163,6 +5433,13 @@ module chamfer_slice(layer,width,height,corner_radius,thickness, cheat){
 	}
 }
 
+// Extrudes the 2D case-opening profile to the specified thickness, or returns the
+// 2D profile directly when thickness is 0 (laser-cut mode).
+// @param width          Shape width in mm
+// @param heigt          Shape height in mm
+// @param corner_radius  Corner radius (scalar or 4-element vector) in mm
+// @param thickness      Extrusion height in mm (0 = 2D output)
+// @param cheat          Passed through to case_opening_blank_2d
 module case_opening_blank(width,heigt,corner_radius,thickness,cheat){
 	if (thickness > 0){
 		linear_extrude(height=thickness)
@@ -5173,6 +5450,13 @@ module case_opening_blank(width,heigt,corner_radius,thickness,cheat){
 	}
 }
 
+// Generates the 2D footprint of the keyguard blank — a rounded rectangle that may
+// have per-corner radii — including any full-height case addition shapes added to or
+// subtracted from the outline.
+// @param shape_x  Width of the blank in mm
+// @param shape_y  Height of the blank in mm
+// @param c_r      Corner radius: scalar (uniform) or 4-element vector [TL,TR,BL,BR] in mm
+// @param cheat    "yes" suppresses case addition shapes in the outline
 module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 	same_radii = (c_r[0]==c_r[1] && c_r[0]==c_r[2] && c_r[0]==c_r[3]); // test to see if all radii are the same
 	difference(){
@@ -5227,6 +5511,10 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 	}
 }
 
+// Processes the case additions vector in 2D, either adding shapes (type="add") or
+// subtracting shapes whose name starts with "-" (type="sub") from the keyguard outline.
+// @param c_a   Case additions vector (rows of addition definitions)
+// @param type  "add" to union shapes into the outline; "sub" to cut them out
 module add_case_full_height_shapes(c_a,type){
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
@@ -5314,6 +5602,13 @@ module add_case_full_height_shapes(c_a,type){
 	}
 }
 
+// Generates the 2D footprint for a single case addition or subtraction shape
+// (rectangle, circle, triangle, fillet, crescent, outer-arc corner, etc.) centred
+// or anchored according to the shape code convention.
+// @param addition_width          Width of the shape in mm
+// @param addition_height         Height of the shape in mm
+// @param addition_shape          Shape code string (e.g. "r", "cr", "c", "rr", "oa1")
+// @param addition_corner_radius  Corner radius in mm (used by rr/crr/oa shapes)
 module build_addition(addition_width, addition_height, addition_shape, addition_corner_radius){
 	if (addition_shape=="r" || addition_shape=="-r"){
 		if (addition_width > 0 && addition_height > 0){
@@ -5573,6 +5868,10 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 	}
 }
 
+// Iterates the case additions vector and linear-extrudes each addition that has a
+// positive thickness (non-zero height shapes like slide-in tabs or pedestals).
+// Negative-shape entries are ignored here (handled by sub_flex_height_shapes).
+// @param c_a  Case additions vector (rows of addition definitions)
 module add_flex_height_shapes(c_a){
 	if (len(c_a)>0){
 		for(i = [0 : len(c_a)-1]){
@@ -5606,6 +5905,9 @@ module add_flex_height_shapes(c_a){
 	}
 }
 
+// Iterates the case additions vector and linear-extrudes each subtraction entry
+// (those whose shape name begins with "-") as a cutting solid.
+// @param c_a  Case additions vector (rows of addition definitions)
 module sub_flex_height_shapes(c_a){
 	if (len(c_a)>0){
 		for(i = [0 : len(c_a)-1]){
@@ -5639,6 +5941,18 @@ module sub_flex_height_shapes(c_a){
 	}
 }
 
+// Builds a 2D addition shape and applies optional clipping on each side using the
+// trim_above/below/left/right values from the case additions vector.
+// @param addition_x             X offset from the coordinate origin in mm
+// @param addition_y             Y offset from the coordinate origin in mm
+// @param addition_width         Shape width in mm
+// @param addition_height        Shape height in mm
+// @param addition_shape         Shape code string
+// @param addition_trim_above    Y coordinate above which to clip (−999 = no clip)
+// @param addition_trim_below    Y coordinate below which to clip (−999 = no clip)
+// @param addition_trim_to_right X coordinate to the right of which to clip (−999 = no clip)
+// @param addition_trim_to_left  X coordinate to the left of which to clip (−999 = no clip)
+// @param addition_corner_radius Corner radius in mm
 module build_trimmed_addition(addition_x,addition_y,addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left,addition_corner_radius){
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
@@ -5667,6 +5981,9 @@ module build_trimmed_addition(addition_x,addition_y,addition_width, addition_hei
 }
 
 
+// Places horizontal cylinder additions (cyl1-4) from the case additions vector,
+// used to add bar-shaped protrusions on the top, right, bottom, or left edges.
+// @param case_posts  Case additions vector containing cyl1/cyl2/cyl3/cyl4 entries
 module add_case_cylinders(case_posts){
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
@@ -5812,6 +6129,11 @@ module add_case_cylinders(case_posts){
 	// }
 // }
 
+// Generates a 2D rectangle with two rounded corners on one end (a half-rounded
+// rectangle), used as the profile for snap-in tab shapes.
+// @param h1  Height of the shape in mm
+// @param w1  Width of the shape in mm
+// @param cr  Corner radius applied to the two rounded corners in mm
 module half_rounded_rectangle(h1,w1,cr){
 	difference(){
         translate([-w1/2,0,0])
@@ -5841,6 +6163,9 @@ module half_rounded_rectangle(h1,w1,cr){
     }
 }
 
+// Iterates the case additions vector and adds clip-on strap pedestals for ped1-4
+// entries (manually placed pedestals on the top, left, bottom, or right edge).
+// @param c_a  Case additions vector containing ped1/ped2/ped3/ped4 entries
 module add_manual_mount_pedestals(c_a){
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
@@ -5910,6 +6235,9 @@ module add_manual_mount_pedestals(c_a){
 	}
 }
 
+// Iterates the case additions vector and cuts the wedge-shaped grooves that
+// correspond to manually placed ped1-4 pedestals, for clip-on strap attachment.
+// @param c_a  Case additions vector containing ped1/ped2/ped3/ped4 entries
 module cut_manual_mount_pedestal_slots(c_a){
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
@@ -5980,6 +6308,8 @@ module cut_manual_mount_pedestal_slots(c_a){
 }
  
 
+// Produces a cutting solid that trims the keyguard down to exactly the screen area
+// (swm × shm), removing everything outside the screen boundary.
 module trim_to_the_screen(){
 	difference(){
 		cube([1000,1000,100],true);
@@ -5987,6 +6317,8 @@ module trim_to_the_screen(){
 	}
 }
 
+// Produces a cutting solid that trims the keyguard to the user-defined rectangular
+// region (trim_to_rectangle_lower_left / upper_right parameters).
 module trim_to_rectangle(){
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
@@ -6013,16 +6345,22 @@ module trim_to_rectangle(){
 	}
 }
 
+// Produces a tall rectangular cutting solid that removes the entire screen area
+// from the bottom of the keyguard (used as a helper for SVG layer output).
 module cut_screen(){
 	translate([screen_x0,screen_y0,-kt/2-ff-50])
 	cube([swm,shm,100]);
 }
 
+// Produces a tall rectangular cutting solid that removes the entire grid area from
+// the keyguard (used as a helper for SVG layer output).
 module cut_grid(){
 	translate([grid_x0,grid_y0,-kt/2-ff])
 	cube([gwm,ghm,100]);
 }
 
+// Cuts the triangular snap-in grooves into the keyguard frame at the positions
+// where the inner keyguard's snap-in tabs will engage.
 module snap_in_tab_grooves(){
 	if (mount_keyguard_with=="snap-in tabs"){
 		translate([keyguard_width/2-ff,0,-keyguard_frame_thickness/2+kt/2])
@@ -6055,6 +6393,8 @@ module snap_in_tab_grooves(){
 }
 
 
+// Adds the triangular snap-in tab protrusions to the edges of the inner keyguard
+// that click into the corresponding grooves in the keyguard frame.
 module add_snap_ins(){
 	if (snap_in_tabs_on_left_and_right_edges_of_keyguard=="yes" && mount_keyguard_with=="snap-in tabs"){
 		translate([kw/2,0,0])
@@ -6089,6 +6429,10 @@ module add_snap_ins(){
 	}
 }
 
+// Extrudes a single triangular snap-in tab (or groove tooth) perpendicular to the
+// keyguard edge.
+// @param size   Height of the triangle in mm (how far the tab protrudes)
+// @param width  Width of the tab along the edge in mm
 module make_snap_ins(size,width){
 	rotate([-90,0,0])
 	translate([0,0,-width/2])
@@ -6096,6 +6440,9 @@ module make_snap_ins(size,width){
 	polygon([[0,-size],[size,0],[0,size]]);
 }
 
+// Imports and displays the screenshot SVG file as a semi-transparent colour overlay
+// scaled to fit the screen area, for visual alignment of openings.
+// @param thickness  Keyguard thickness in mm; used to position the overlay just below the top face
 module show_screenshot(thickness){
 	color(screenshotcolor,.5)
 	translate([msh,msv,-thickness/2-0.5])
@@ -6104,6 +6451,9 @@ module show_screenshot(thickness){
 	import(file=screenshot_file,center=true);
 }
 
+// Imports and displays the screenshot SVG as a linearly extruded (solid) overlay
+// scaled to fit the screen area. Used on Maker World where pure 2D imports are invisible.
+// @param thickness  Keyguard thickness in mm; positions the overlay just below the top face
 module show_screenshotMW(thickness){
 	color(screenshotcolor,.5)
 	translate([msh,msv,-thickness/2-0.5])
@@ -6113,6 +6463,9 @@ module show_screenshotMW(thickness){
 	import(file=screenshot_file,center=true);
 }
 
+// Places engraved or embossed text on the keyguard by delegating to cut_opening()
+// or place_addition(), positioning the text according to the region, alignment,
+// angle, depth, and slide parameters.
 module engrave_emboss_instruction(){
 	x_start = (keyguard_region=="screen region") ? slide_horizontally/100 * swm : 
 	          (keyguard_region=="case region") ? slide_horizontally/100 * cow :
@@ -6183,6 +6536,8 @@ module engrave_emboss_instruction(){
 	}
 }
 
+// Echoes all non-default Customizer parameter values to the OpenSCAD console,
+// grouped by category, to help users record their configuration.
 module echo_settings(){
 	echo();
 	echo(keyguard_designer_version=keyguard_designer_version);
@@ -6450,6 +6805,8 @@ module echo_settings(){
 		echo();
 }
 
+// Computes the perimeter rail widths on each side of the keyguard and echoes a
+// warning to the console for any rail that is narrower than the minimum acrylic width.
 module issues(){
 		echo();
 		perimeter1 = (kh - shm)/2;
@@ -6491,6 +6848,8 @@ module issues(){
 		echo();
 }
 
+// Echoes the most important design dimensions and settings to the console
+// (tablet, case opening, grid, mounting method, text) for a quick sanity check.
 module key_settings(){
 	echo(str("type of tablet: ", type_of_tablet));
 	echo(str("use Laser Cutting best practices: ", use_Laser_Cutting_best_practices));
@@ -6559,6 +6918,12 @@ module key_settings(){
 	}
 }
 
+// Creates a rectangular cuboid with all twelve edges chamfered by the specified amount,
+// using an intersection of three chamfered extrusions.
+// @param x  Width in mm
+// @param y  Height in mm
+// @param z  Depth in mm
+// @param c  Chamfer size in mm
 module chamfered_cuboid (x, y, z, c){
 	intersection(){	
 		translate([0,0,-z/2])
@@ -6580,6 +6945,14 @@ module chamfered_cuboid (x, y, z, c){
 	}
 }
 
+// Creates a chamfered cell-insert solid with rounded or circular cross-section.
+// The chamfer shrinks the top and bottom faces inward by c mm relative to the
+// mid-section, producing bevelled top and bottom edges.
+// @param x   Width (or diameter for circular cells) in mm
+// @param y   Height of the solid in mm
+// @param z   Depth (or diameter for circular cells) in mm
+// @param c   Chamfer size in mm
+// @param cr  Corner radius of the cross-section in mm (ignored for circular cells)
 module chamfered_shape(x, y, z, c, cr){
 	if (cell_shape=="rectangular"){
 		hull(){
@@ -6618,12 +6991,18 @@ module chamfered_shape(x, y, z, c, cr){
 	}
 }
 
+// Positions and rotates a word of Braille dots so they sit on the top surface of
+// the cell insert, facing the reader.
+// @param word  String to render in Braille (looked up in the braille_d dictionary)
 module add_braille(word){
 	translate([0,-sat/2,0])
 	rotate([90,0,0])
 	word_flat(word);
 }
 
+// Renders a complete word as a horizontal row of Braille characters by iterating
+// over each character and calling braille_by_row.
+// @param word  String to render in Braille
 module word_flat(word){
 	translate([(-6.1*(len(word)-1)/2)*bsm,0,0])
 	for(i=[0:len(word)-1]){
@@ -6631,6 +7010,9 @@ module word_flat(word){
 	   braille_by_row(braille_d[word[i]]);
 	}
 }
+// Decodes a decimal Braille dot pattern into a 6-bit boolean array and calls
+// dots_letter to place the corresponding raised dots.
+// @param decimal  Integer encoding of the Braille cell dot pattern (bits 1-6)
 module braille_by_row(decimal){
 	b1 = decimal%2;
 	b1a = floor(decimal/2);
@@ -6648,6 +7030,9 @@ module braille_by_row(decimal){
 	dots_letter(b);
 }
 
+// Places up to six spherical Braille dots at the standard dot positions for a
+// single Braille cell, based on the 6-element boolean array b.
+// @param b  6-element array [dot1..dot6]; 1 = place dot, 0 = omit
 module dots_letter(b){
 	$fn=20;
 
@@ -6677,6 +7062,9 @@ module dots_letter(b){
 	}
 }
 
+// Engraves a text string into the face of a cell insert using the Liberation Sans Bold
+// font, scaled by the Braille scale multiplier.
+// @param alignment  Horizontal text alignment: "left", "center", or "right"
 module add_engraved_text(alignment){
 	fs = "Liberation Sans:style=Bold";
 	t_h = 8*bsm;
