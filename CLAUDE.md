@@ -234,9 +234,39 @@ It only needs to be present when this feature is in use.
 
 ## Known Issues / Current Work
 
-> Add any known bugs or active work here as you go.
+### Priority Key
+- **(Clean-up)** — tidy when 2+ months between releases
+- **(Low)** — wait until reported as a problem
+- **(Medium vXX)** — fix within the next few releases (vXX = version found in release XX)
+- **(High)** — fix in next release
+- **(Super High)** — immediate fix unless related to work in the current development
 
-- [ ] (none logged yet)
+### Open Items
+
+- [ ] (Clean-up) Go through all `translate` statements and ensure fudge is included where necessary (should be possible to make it as small as 0.001)
+- [ ] (Low) "ridge around cells" doesn't play well with "cell top edge slope" and bottom edge slope
+- [ ] (Medium v67) Make snap-in tabs a function of the screen area thickness, not keyguard thickness. Test case 17: snap-in features not playing well with screen area thickness (keyguard frame thickness=10, keyguard thickness=6, screen area thickness=4, keyguard height=119). It's currently possible to omit snap-in tabs on the top and/or bottom — that may resolve this if keyguard width is large enough to exceed screen width.
+- [ ] (Clean-up) Funky-looking raised tabs in Test Case 15
+- [ ] (Low) Need to move clip-on strap pedestals and grooves inward as keyguard edge chamfer increases (Test Case 3: set keyguard edge chamfer to 3.2)
+- [ ] (Clean-up) Figure out when and how to put an outer arc on the sharp corner after merging
+- [ ] (Clean-up) Revisit Test Case 43 — ridges around merged cells. Also verify that widening the ridge (thickening) doesn't encroach on the interior space of a cell.
+- [ ] (Low) Should a portrait-oriented keyguard have raised tabs on its long side?
+- [ ] (Medium) Should the outer corner on a ridge be pointed if the corner radius is 0? (If ridge gets narrow this may cause a break in the ridge at the corner — also a sharp raised feature)
+- [ ] (Medium) Tablet height and width should be bezel-to-bezel, not overall tablet size, because the keyguard would sit up on the edge of the bezel when used without a case. Requires updating all supported tablet dimensions and the wording on the "extending the keyguard designer" page.
+- [ ] (Low) Case elements showing up in keyguard when it has a frame and is split (Test Case 17 portrait)
+- [ ] (Medium) Add more complete handling in iPad 6/7 and iPad 10/11 `openings_and_additions.txt` files for rotation and column count merging/cutting
+- [ ] (Medium) Too many variables calculating borders and offsets with overlapping definitions
+- [ ] (Medium) Why don't the offsets need to be part of the `case_xy0` values as well?
+- [ ] (Low) Hiding the screen region doesn't play well with 2D rendering
+- [ ] (Low) Add support for a centre-anchored vertical, horizontal, and angled ridge
+- [ ] (Low) Test Case 10 — fillet shouldn't be in the first layer because it's removed by a `-f2` instruction. Low priority because `-` shapes are used to create features that sit up in the air, which is irrelevant for laser-cut keyguards.
+- [ ] (Medium) Move all quadrant and edge-based case addition shapes toward their anchor points by `ff` to eliminate the appearance of a small wall or gap on those surfaces
+- [ ] (Low) MakerWorld has three known bugs: (1) displaying a keyguard frame requires `have_a_keyguard_frame="yes"` first or an odd error appears; (2) it ignores shapes less than 1.00001 mm thick when differencing; (3) it ignores anything after a comment even if separated by a carriage return
+- [ ] (Medium v73) Add support for all `case_additions` shapes (including their negatives?) to `screen_openings` and `case_openings`
+- [ ] Make outer arcs (and potentially other shapes) placed in the screen region sensitive to cell chamfer values, and those in the case region sensitive to keyguard chamfer
+- [ ] Add support for case measurements and sloped edge measurements to `openings_and_additions.txt`
+- [ ] (Medium v75) Mini tabs on post mounting are not documented and are broken — rotating the tabs produces incorrect results (may be acceptable since tab rotation is only used when the keyguard edge is curved)
+- [ ] (Medium v76) Test Case 1 — changing to laser-cut and generating DXF/SVG shows "Customizer settings" in the console because the related `else` statement still sees raised tabs and doesn't execute, causing the final `else` (Customizer settings) to run
 
 ---
 
