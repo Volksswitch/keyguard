@@ -270,6 +270,36 @@ It only needs to be present when this feature is in use.
 
 ---
 
+## Code Quality Improvements (identified 2026-03-20)
+
+A full code review was completed on 2026-03-20. Items are listed roughly highest-to-lowest priority.
+Address these one at a time, running the test suite after each change.
+
+### High Priority
+- [ ] **Fix hardcoded `$fn=60`** in `cut()` (line ~4134) and `cut_2d()` (line ~4179) — these override the global `smoothness_of_circles_and_arcs` parameter; replace with the global `$fn`
+- [ ] **Remove dead module** `add_manual_mount_slide_in_tabs` (lines ~6035–6125) — entirely commented out; either restore and use it or delete it
+- [ ] **Deduplicate bar height conversion** (lines ~1373–1392) — the same 4-level ternary expression is repeated 5 times (once per bar type); extract into a reusable function
+- [ ] **Refactor tablet lookup chain** (lines ~942–1056) — 100+ chained ternaries to select tablet data; replace with a lookup-table approach using `search()` on a `[name, data]` array
+
+### Medium Priority
+- [ ] **Name the magic numbers** — groove dimensions (lines ~1609–1611), clip offsets (~1564), scale factors (~6191–6231), and other unexplained literals should be named constants
+- [ ] **Document array field indices** — `tablet_params[18]`, `tablet_params[21]` etc. are opaque; add a comment block listing what each index means
+- [ ] **Rename cryptic variables** — `sxo`, `xtls`, `ytbs`, `ff`, `sat`, `cts`, `cbs` and similar abbreviations should have clearer names or at least a legend
+- [ ] **Add `type_of_tablet` validation** — if the tablet name matches nothing the designer silently falls back to default data; add an echo warning when this happens
+- [ ] **Add opening dimension validation** — zero or negative widths/heights in `screen_openings` / `case_openings` fail silently; add guards with informative echoes
+- [ ] **Catch conflicting settings early** — e.g. laser-cut + cell inserts, incompatible frame/case settings — add an explicit validation section near the top
+- [ ] **Deduplicate case additions logic** (lines ~5470–5599) — near-identical `add`/`sub` blocks with trimming logic repeated 4+ times; extract shared logic into a module
+- [ ] **Remove `#` debug modifiers from production code** — `#cut_opening(...)` etc. appear in ~20 locations; safe as examples but risky if copied into active geometry
+
+### Lower Priority
+- [ ] **Move version history to `CHANGELOG.md`** — the 493-line header dominates the file; keep only a brief note pointing to the external file
+- [ ] **Add a module index near the top** — 87+ modules with no table of contents; a brief index would aid navigation
+- [ ] **Standardise docstrings** — some modules have them, others don't; ensure all public modules have consistent docblock comments
+- [ ] **Document initialisation order** — ~200 global variables must be defined in a specific sequence; add a clear warning comment so future edits don't accidentally break ordering
+- [ ] **Use named string constants** — values like `"yes"`, `"landscape"`, `"3D-Printed"` appear in many conditionals; typos fail silently; define constants at the top for the most-used ones
+
+---
+
 ## OpenSCAD Gotchas — Please Read
 
 See `docs/openscad-reference.md` for a full reference. Critical points:
