@@ -330,14 +330,33 @@ run_regression() {
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
     mkdir -p "$OUTPUT_DIR/regression" "$(dirname "$BASELINE_FILE")"
 
+    # Configs that intentionally produce non-3D output and cannot render to STL.
+    # These are skipped (not counted as failures) in the regression layer.
+    local -a REGRESSION_SKIP=(
+        "Test Case 0"    # generate="Customizer settings" — outputs parameter echoes, no geometry
+        "Test Case 10b"  # generate="first layer for SVG/DXF file" — 2D output only
+        "Test Case 13b"  # generate="first half of keyguard" + Laser-Cut — can't split laser-cut
+        "Test Case 46c"  # generate="first layer for SVG/DXF file" — 2D output only
+    )
+
     local configs; mapfile -t configs < <(get_configs)
     info "Found ${#configs[@]} named configs"
     "$UPDATE_BASELINE" && info "Mode: updating baseline"
 
-    local new_checksums="" render_failures=0 total=${#configs[@]} current=0
+    local new_checksums="" render_failures=0 skipped=0 total=${#configs[@]} current=0
 
     for config in "${configs[@]}"; do
         current=$((current + 1))
+        # Check skip list
+        local skip=false
+        for s in "${REGRESSION_SKIP[@]}"; do
+            [[ "$config" == "$s" ]] && skip=true && break
+        done
+        if "$skip"; then
+            printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
+            echo -e " ${YELLOW}SKIP${RESET}"
+            skipped=$((skipped + 1)); continue
+        fi
         local safe; safe=$(echo "$config" | tr ' /' '__')
         local out="$OUTPUT_DIR/regression/${safe}.stl"
         printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
@@ -353,16 +372,17 @@ run_regression() {
         echo -e " ${GREEN}OK${RESET}"
     done
     echo ""
+    [[ "$skipped" -gt 0 ]] && info "$skipped config(s) skipped (non-3D output by design)"
     [[ "$render_failures" -gt 0 ]] && fail "$render_failures config(s) failed to render"
 
     if "$UPDATE_BASELINE"; then
         echo "$new_checksums" > "$BASELINE_FILE"
-        pass "Baseline updated — ${#configs[@]} configs"; return
+        pass "Baseline updated — ${#configs[@]} configs (${skipped} skipped)"; return
     fi
     if [[ ! -f "$BASELINE_FILE" ]]; then
         warn "No baseline found — creating now"
         echo "$new_checksums" > "$BASELINE_FILE"
-        pass "Baseline created — ${#configs[@]} configs"; return
+        pass "Baseline created — ${#configs[@]} configs (${skipped} skipped)"; return
     fi
 
     local regressions=0
