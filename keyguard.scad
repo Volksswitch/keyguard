@@ -426,6 +426,24 @@ screenshot_file = "default.svg";
 
 /*[Hidden]*/
 
+// IMPORTANT — DECLARATION ORDER IN THIS SECTION
+// ----------------------------------------------
+// OpenSCAD variables are constants evaluated at parse time. In practice this means
+// a variable's value is determined by the *last* assignment in the file, but a
+// variable used inside another variable's expression must have already appeared
+// earlier in the file or the reference will resolve to 0 / undef.
+//
+// All variables below depend on the User Input parameters above, and many depend
+// on other variables earlier in this Hidden section. When adding a new variable:
+//   1. Place it AFTER all variables it references.
+//   2. Place it BEFORE any variables that reference it.
+//   3. Do not insert variables between unrelated groups without checking dependencies.
+//
+// The rough dependency order is:
+//   version / flags → fudge constants → laser-cut variables → tablet data →
+//   tablet selection → screen/case geometry → grid geometry → bar geometry →
+//   cell geometry → opening/addition helpers → mounting geometry → text/SVG helpers
+
 keyguard_designer_version = 76; //*****************************
 
 // if this is the "MW" version for Maker World set this statement to true and comment the include statement before start of Main
