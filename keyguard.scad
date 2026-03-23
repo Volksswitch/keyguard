@@ -1251,11 +1251,31 @@ vertical_pedestal_width = vertical_clip_width + 10;
 horizontal_slot_width = horizontal_clip_width+2;
 vertical_slot_width = vertical_clip_width+2;
 
-pedestal_height = (!has_case)? 0 : 
+// Clip-on strap groove cross-section (wedge profile that clip hooks snap into)
+groove_depth = 3;          // depth of each wedge groove in mm
+groove_slot_width = 3;     // width of groove at base in mm
+groove_slant = 1;          // horizontal lean of groove walls over groove_depth in mm
+groove_setback = 2;        // distance from case edge to the start of the groove in mm
+
+// Clip-on strap pedestal geometry
+pedestal_base_size = 7;    // side length of the pedestal base square in mm
+pedestal_taper = 0.8;      // linear_extrude scale: top face shrinks to this fraction of the base
+pedestal_edge_inset = 4.3; // distance from case-opening edge to pedestal centre in mm
+pedestal_corner_inset = 4; // inward offset from pedestal width boundary toward clip centre in mm
+
+// Manually placed strap pedestal geometry (ped1–ped4 in case_additions)
+manual_pedestal_edge_inset = 4.5;   // inset from keyguard-opening edge to pedestal centre in mm
+manual_pedestal_slot_inset = 1.25;  // offset from keyguard edge to groove-slot centre in mm
+
+// Clip viewport layout (positions paired clips side-by-side when rendered individually)
+clip_display_separation = 35; // x-offset to visually separate the two clips in mm
+clip_display_gap = 10;        // extra y-clearance between paired clips beyond case_thickness/2 in mm
+
+pedestal_height = (!has_case)? 0 :
 				  (!has_frame) ? max(case_to_screen_depth - kt,0) :
 				  max(case_to_screen_depth - keyguard_frame_thickness,0);
-vertical_offset = (!has_frame) ? kt/2 + pedestal_height-3+ff : // bottom of cut for clip-on strap
-												  keyguard_frame_thickness/2 + pedestal_height-3+ff;
+vertical_offset = (!has_frame) ? kt/2 + pedestal_height-groove_depth+ff : // bottom of cut for clip-on strap
+												  keyguard_frame_thickness/2 + pedestal_height-groove_depth+ff;
 h_clip_reach = (!has_case)? 6 :
 			 (add_sloped_keyguard_edge=="no")? (case_width-kw)/2+5 :
 			 (extend_lip_to_edge_of_case=="no")? (case_width-cow)/2-sew+6 :
@@ -1564,10 +1584,10 @@ else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" 
 
 	if (include_screenshot=="yes"){
 		if (MW_version){
-			show_screenshotMW(3.175);
+			show_screenshotMW(acrylic_thickness);
 		}
 		else{
-			show_screenshot(3.175);
+			show_screenshot(acrylic_thickness);
 		}
 	}
 }
@@ -1580,10 +1600,10 @@ else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame 
 
 	if (include_screenshot=="yes"){
 		if (MW_version){
-			show_screenshotMW(3.175);
+			show_screenshotMW(acrylic_thickness);
 		}
 		else{
-			show_screenshot(3.175);
+			show_screenshot(acrylic_thickness);
 		}
 	}
 }
@@ -1598,13 +1618,13 @@ else if (generate=="horizontal clip"){
 		clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
 
 		//left side clip
-		translate([-35,0,horizontal_clip_width])
+		translate([-clip_display_separation,0,horizontal_clip_width])
 		rotate([0,180,0])
-		translate([0,case_thickness/2+10,0])
+		translate([0,case_thickness/2+clip_display_gap,0])
 		create_clip(clip_reach_left,horizontal_clip_width);
-		
+
 		//right side clip
-		translate([0,-case_thickness/2-10,0])
+		translate([0,-case_thickness/2-clip_display_gap,0])
 		create_clip(clip_reach_right,horizontal_clip_width);
 	}
 }
@@ -1619,13 +1639,13 @@ else if (generate=="vertical clip"){
 		clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
 
 		//top side clip
-		translate([-35,0,vertical_clip_width])
+		translate([-clip_display_separation,0,vertical_clip_width])
 		rotate([0,180,0])
-		translate([0,case_thickness/2+10,0])
+		translate([0,case_thickness/2+clip_display_gap,0])
 		create_clip(clip_reach_bottom,vertical_clip_width);
-		
+
 		//bottom side clip
-		translate([0,-case_thickness/2-10,0])
+		translate([0,-case_thickness/2-clip_display_gap,0])
 		create_clip(clip_reach_top,vertical_clip_width);
 	}
 }
@@ -1640,13 +1660,13 @@ else if (generate=="horizontal mini clip"){
 		clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
 
 		//left side clip
-		translate([-35,0,horizontal_clip_width])
+		translate([-clip_display_separation,0,horizontal_clip_width])
 		rotate([0,180,0])
-		translate([0,case_thickness/2+10,0])
+		translate([0,case_thickness/2+clip_display_gap,0])
 		create_mini_clip1(clip_reach_left,horizontal_clip_width);
-		
+
 		//right side clip
-		translate([0,-case_thickness/2-10,0])
+		translate([0,-case_thickness/2-clip_display_gap,0])
 		create_mini_clip1(clip_reach_right,horizontal_clip_width);
 	}
 }
@@ -1661,13 +1681,13 @@ else if (generate=="vertical mini clip"){
 		clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
 
 		//left side clip
-		translate([-35,0,vertical_clip_width,vertical_clip_width])
+		translate([-clip_display_separation,0,vertical_clip_width,vertical_clip_width])
 		rotate([0,180,0])
-		translate([0,case_thickness/2+10,0])
+		translate([0,case_thickness/2+clip_display_gap,0])
 		create_mini_clip1(clip_reach_bottom,vertical_clip_width);
-		
+
 		//right side clip
-		translate([0,-case_thickness/2-10,0])
+		translate([0,-case_thickness/2-clip_display_gap,0])
 		create_mini_clip1(clip_reach_top,vertical_clip_width);
 	}
 }
@@ -1682,13 +1702,13 @@ else if (generate=="horizontal micro clip"){
 		clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
 
 		//left side clip
-		translate([-35,0,horizontal_clip_width])
+		translate([-clip_display_separation,0,horizontal_clip_width])
 		rotate([0,180,0])
-		translate([0,case_thickness/2+10,0])
+		translate([0,case_thickness/2+clip_display_gap,0])
 		create_mini_clip2(clip_reach_left,horizontal_clip_width);
-		
+
 		//right side clip
-		translate([0,-case_thickness/2-10,0])
+		translate([0,-case_thickness/2-clip_display_gap,0])
 		create_mini_clip2(clip_reach_right,horizontal_clip_width);
 	}
 }
@@ -1703,13 +1723,13 @@ else if (generate=="vertical micro clip"){
 		clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
 
 		//left side clip
-		translate([-35,0,vertical_clip_width,vertical_clip_width])
+		translate([-clip_display_separation,0,vertical_clip_width,vertical_clip_width])
 		rotate([0,180,0])
-		translate([0,case_thickness/2+10,0])
+		translate([0,case_thickness/2+clip_display_gap,0])
 		create_mini_clip2(clip_reach_bottom,vertical_clip_width);
-		
+
 		//right side clip
-		translate([0,-case_thickness/2-10,0])
+		translate([0,-case_thickness/2-clip_display_gap,0])
 		create_mini_clip2(clip_reach_top,vertical_clip_width);
 	}
 }
@@ -2893,38 +2913,38 @@ module add_clip_on_strap_pedestals(depth){
 	yloc = coh;
 
 	if(clip_locations=="horizontal only" || clip_locations=="horizontal and vertical"){
-		translate([-xloc/2+4.3, -distance_between_horizontal_clips/2-horizontal_pedestal_width/2+4+ulbs, depth/2])
-		linear_extrude(height=pedestal_height,scale=.8)
-		square([7,horizontal_pedestal_width],center=true);
-				
-		translate([-xloc/2+4.3 , distance_between_horizontal_clips/2+horizontal_pedestal_width/2-4+ulbs, depth/2])
-		linear_extrude(height=pedestal_height,scale=.8)
-		square([7,horizontal_pedestal_width],center=true);
-		
-		translate([xloc/2-4.3, -distance_between_horizontal_clips/2-horizontal_pedestal_width/2+4+ulbs, depth/2])
-		linear_extrude(height=pedestal_height,scale=.8)
-		square([7,horizontal_pedestal_width],center=true);
-		
-		translate([xloc/2-4.3, distance_between_horizontal_clips/2+horizontal_pedestal_width/2-4+ulbs, depth/2])
-		linear_extrude(height=pedestal_height,scale=.8)
-		square([7,horizontal_pedestal_width],center=true);
+		translate([-xloc/2+pedestal_edge_inset, -distance_between_horizontal_clips/2-horizontal_pedestal_width/2+pedestal_corner_inset+ulbs, depth/2])
+		linear_extrude(height=pedestal_height,scale=pedestal_taper)
+		square([pedestal_base_size,horizontal_pedestal_width],center=true);
+
+		translate([-xloc/2+pedestal_edge_inset , distance_between_horizontal_clips/2+horizontal_pedestal_width/2-pedestal_corner_inset+ulbs, depth/2])
+		linear_extrude(height=pedestal_height,scale=pedestal_taper)
+		square([pedestal_base_size,horizontal_pedestal_width],center=true);
+
+		translate([xloc/2-pedestal_edge_inset, -distance_between_horizontal_clips/2-horizontal_pedestal_width/2+pedestal_corner_inset+ulbs, depth/2])
+		linear_extrude(height=pedestal_height,scale=pedestal_taper)
+		square([pedestal_base_size,horizontal_pedestal_width],center=true);
+
+		translate([xloc/2-pedestal_edge_inset, distance_between_horizontal_clips/2+horizontal_pedestal_width/2-pedestal_corner_inset+ulbs, depth/2])
+		linear_extrude(height=pedestal_height,scale=pedestal_taper)
+		square([pedestal_base_size,horizontal_pedestal_width],center=true);
 	}
 	if(clip_locations=="vertical only" || clip_locations=="horizontal and vertical"){
-		translate([-distance_between_vertical_clips/2-vertical_pedestal_width/2+4+ulos, -yloc/2+4.3, depth/2])
-		linear_extrude(height=pedestal_height,scale=.8)
-		square([vertical_pedestal_width,7],center=true);
-		
-		translate([distance_between_vertical_clips/2+vertical_pedestal_width/2-4+ulos, -yloc/2+4.3, depth/2])
-		linear_extrude(height=pedestal_height,scale=.8)
-		square([vertical_pedestal_width,7],center=true);
-		
-		translate([-distance_between_vertical_clips/2-vertical_pedestal_width/2+4+ulos, yloc/2-4.3, depth/2])
-		linear_extrude(height=pedestal_height,scale=.8)
-		square([vertical_pedestal_width,7],center=true);
-		
-		translate([distance_between_vertical_clips/2+vertical_pedestal_width/2-4+ulos, yloc/2-4.3 , depth/2])
-		linear_extrude(height=pedestal_height,scale=.8)
-		square([vertical_pedestal_width,7],center=true);
+		translate([-distance_between_vertical_clips/2-vertical_pedestal_width/2+pedestal_corner_inset+ulos, -yloc/2+pedestal_edge_inset, depth/2])
+		linear_extrude(height=pedestal_height,scale=pedestal_taper)
+		square([vertical_pedestal_width,pedestal_base_size],center=true);
+
+		translate([distance_between_vertical_clips/2+vertical_pedestal_width/2-pedestal_corner_inset+ulos, -yloc/2+pedestal_edge_inset, depth/2])
+		linear_extrude(height=pedestal_height,scale=pedestal_taper)
+		square([vertical_pedestal_width,pedestal_base_size],center=true);
+
+		translate([-distance_between_vertical_clips/2-vertical_pedestal_width/2+pedestal_corner_inset+ulos, yloc/2-pedestal_edge_inset, depth/2])
+		linear_extrude(height=pedestal_height,scale=pedestal_taper)
+		square([vertical_pedestal_width,pedestal_base_size],center=true);
+
+		translate([distance_between_vertical_clips/2+vertical_pedestal_width/2-pedestal_corner_inset+ulos, yloc/2-pedestal_edge_inset , depth/2])
+		linear_extrude(height=pedestal_height,scale=pedestal_taper)
+		square([vertical_pedestal_width,pedestal_base_size],center=true);
 	}
 }
 
@@ -3347,47 +3367,47 @@ module clip_on_straps_groove(){
 	y0 = -h1/2;
 	
 	if(clip_locations=="horizontal only" || clip_locations =="horizontal and vertical"){
-		translate([x0+2, -distance_between_horizontal_clips/2+ulbs, vertical_offset])
+		translate([x0+groove_setback, -distance_between_horizontal_clips/2+ulbs, vertical_offset])
 		rotate([90,0,0])
 		linear_extrude(height = horizontal_slot_width)
-		polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
-		
-		translate([x0+2, distance_between_horizontal_clips/2+horizontal_slot_width+ulbs, vertical_offset])
+		polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+
+		translate([x0+groove_setback, distance_between_horizontal_clips/2+horizontal_slot_width+ulbs, vertical_offset])
 		rotate([90,0,0])
 		linear_extrude(height = horizontal_slot_width)
-		polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
-		
-		translate([-x0-5, -distance_between_horizontal_clips/2+ulbs, vertical_offset])
+		polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+
+		translate([-x0-(groove_setback+groove_slot_width), -distance_between_horizontal_clips/2+ulbs, vertical_offset])
 		rotate([90,0,0])
 		linear_extrude(height = horizontal_slot_width)
-		polygon(points=[[0,0],[3,0],[2,3],[-1,3]]);
-		
-		translate([-x0-5, distance_between_horizontal_clips/2+horizontal_slot_width+ulbs, vertical_offset])
+		polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width-groove_slant,groove_depth],[-groove_slant,groove_depth]]);
+
+		translate([-x0-(groove_setback+groove_slot_width), distance_between_horizontal_clips/2+horizontal_slot_width+ulbs, vertical_offset])
 		rotate([90,0,0])
 		linear_extrude(height = horizontal_slot_width)
-		polygon(points=[[0,0],[3,0],[2,3],[-1,3]]);
+		polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width-groove_slant,groove_depth],[-groove_slant,groove_depth]]);
 	}
-	
+
 	if(clip_locations=="vertical only" || clip_locations =="horizontal and vertical"){
-		translate([-distance_between_vertical_clips/2-vertical_slot_width+ulos, y0 + 2,  vertical_offset])
+		translate([-distance_between_vertical_clips/2-vertical_slot_width+ulos, y0+groove_setback,  vertical_offset])
 		rotate([90,0,90])
 		linear_extrude(height = vertical_slot_width)
-		polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
-		
-		translate([distance_between_vertical_clips/2+ulos, y0 + 2,  vertical_offset])
+		polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+
+		translate([distance_between_vertical_clips/2+ulos, y0+groove_setback,  vertical_offset])
 		rotate([90,0,90])
 		linear_extrude(height = vertical_slot_width)
-		polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
-		
-		translate([-distance_between_vertical_clips/2+ulos, -y0 - 2,  vertical_offset])
+		polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+
+		translate([-distance_between_vertical_clips/2+ulos, -y0-groove_setback,  vertical_offset])
 		rotate([90,0,-90])
 		linear_extrude(height = vertical_slot_width)
-		polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
-		
-		translate([distance_between_vertical_clips/2 + vertical_slot_width+ulos, -y0 - 2,  vertical_offset])
+		polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+
+		translate([distance_between_vertical_clips/2 + vertical_slot_width+ulos, -y0-groove_setback,  vertical_offset])
 		rotate([90,0,-90])
 		linear_extrude(height = vertical_slot_width)
-		polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+		polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 	}
 }
 
@@ -5854,54 +5874,54 @@ module add_manual_mount_pedestals(c_a){
 		translate([addition_x,addition_y])
 		if(addition_ID!="#"){
 			if(addition_shape=="ped1"){
-				translate([x0,y0-4.5,kt/2])
+				translate([x0,y0-manual_pedestal_edge_inset,kt/2])
 				rotate([0,0,-90])
-				linear_extrude(height=pedestal_height,scale=.8)
-				square([7,vertical_pedestal_width],center=true);
+				linear_extrude(height=pedestal_height,scale=pedestal_taper)
+				square([pedestal_base_size,vertical_pedestal_width],center=true);
 			}
 			else if(addition_shape=="ped2"){
-				translate([x0-4.5,y0,kt/2])
+				translate([x0-manual_pedestal_edge_inset,y0,kt/2])
 				rotate([0,0,0])
-				linear_extrude(height=pedestal_height,scale=.8)
-				square([7,horizontal_pedestal_width],center=true);
+				linear_extrude(height=pedestal_height,scale=pedestal_taper)
+				square([pedestal_base_size,horizontal_pedestal_width],center=true);
 			}
 			else if(addition_shape=="ped3"){
-				translate([x0,y0+4.5,kt/2])
+				translate([x0,y0+manual_pedestal_edge_inset,kt/2])
 				rotate([0,0,-90])
-				linear_extrude(height=pedestal_height,scale=.8)
-				square([7,vertical_pedestal_width],center=true);
+				linear_extrude(height=pedestal_height,scale=pedestal_taper)
+				square([pedestal_base_size,vertical_pedestal_width],center=true);
 			}
 			else if(addition_shape=="ped4"){
-				translate([x0+4.5,y0,kt/2])
+				translate([x0+manual_pedestal_edge_inset,y0,kt/2])
 				rotate([0,0,0])
-				linear_extrude(height=pedestal_height,scale=.8)
-				square([7,horizontal_pedestal_width],center=true);
+				linear_extrude(height=pedestal_height,scale=pedestal_taper)
+				square([pedestal_base_size,horizontal_pedestal_width],center=true);
 			}
 		}
 		else{
 			if(addition_shape=="ped1"){
-				translate([x0,y0-4.5,kt/2])
+				translate([x0,y0-manual_pedestal_edge_inset,kt/2])
 				rotate([0,0,-90])
-				#linear_extrude(height=pedestal_height,scale=.8)
-				square([7,vertical_pedestal_width],center=true);
+				#linear_extrude(height=pedestal_height,scale=pedestal_taper)
+				square([pedestal_base_size,vertical_pedestal_width],center=true);
 			}
 			else if(addition_shape=="ped2"){
-				translate([x0-4.5,y0,kt/2])
+				translate([x0-manual_pedestal_edge_inset,y0,kt/2])
 				rotate([0,0,0])
-				#linear_extrude(height=pedestal_height,scale=.8)
-				square([7,horizontal_pedestal_width],center=true);
+				#linear_extrude(height=pedestal_height,scale=pedestal_taper)
+				square([pedestal_base_size,horizontal_pedestal_width],center=true);
 			}
 			else if(addition_shape=="ped3"){
-				translate([x0,y0+4.5,kt/2])
+				translate([x0,y0+manual_pedestal_edge_inset,kt/2])
 				rotate([0,0,-90])
-				#linear_extrude(height=pedestal_height,scale=.8)
-				square([7,vertical_pedestal_width],center=true);
+				#linear_extrude(height=pedestal_height,scale=pedestal_taper)
+				square([pedestal_base_size,vertical_pedestal_width],center=true);
 			}
 			else if(addition_shape=="ped4"){
-				translate([x0+4.5,y0,kt/2])
+				translate([x0+manual_pedestal_edge_inset,y0,kt/2])
 				rotate([0,0,0])
-				#linear_extrude(height=pedestal_height,scale=.8)
-				square([7,horizontal_pedestal_width],center=true);
+				#linear_extrude(height=pedestal_height,scale=pedestal_taper)
+				square([pedestal_base_size,horizontal_pedestal_width],center=true);
 			}
 		}
 	}
@@ -5926,54 +5946,54 @@ module cut_manual_mount_pedestal_slots(c_a){
 		translate([x0+addition_x,y0+addition_y])
 		if(addition_ID!="#"){
 			if(addition_shape=="ped1"){
-				translate([vertical_slot_width/2,-1.25-kec,vertical_offset])
+				translate([vertical_slot_width/2,-manual_pedestal_slot_inset-kec,vertical_offset])
 				rotate([90,0,-90])
 				linear_extrude(height = vertical_slot_width)
-				polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+				polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 			}
 			else if(addition_shape=="ped3"){
-				translate([-vertical_slot_width/2,1.25+kec,vertical_offset])
+				translate([-vertical_slot_width/2,manual_pedestal_slot_inset+kec,vertical_offset])
 				rotate([90,0,90])
 				linear_extrude(height = vertical_slot_width)
-				polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+				polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 			}
 			else if(addition_shape=="ped2"){
-				translate([-kec-1.25,-horizontal_slot_width/2,vertical_offset])
+				translate([-kec-manual_pedestal_slot_inset,-horizontal_slot_width/2,vertical_offset])
 				rotate([90,0,180])
 				linear_extrude(height = horizontal_slot_width)
-				polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+				polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 			}
 			else if(addition_shape=="ped4"){
-				translate([kec+1.25,horizontal_slot_width/2,vertical_offset])
+				translate([kec+manual_pedestal_slot_inset,horizontal_slot_width/2,vertical_offset])
 				rotate([90,0,0])
 				linear_extrude(height = horizontal_slot_width)
-				polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+				polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 			}
 		}
 		else{
 			if(addition_shape=="ped1"){
-				translate([vertical_slot_width/2,-1.25-kec,vertical_offset])
+				translate([vertical_slot_width/2,-manual_pedestal_slot_inset-kec,vertical_offset])
 				rotate([90,0,-90])
 				#linear_extrude(height = vertical_slot_width)
-				polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+				polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 			}
 			else if(addition_shape=="ped3"){
-				translate([-vertical_slot_width/2,1.25+kec,vertical_offset])
+				translate([-vertical_slot_width/2,manual_pedestal_slot_inset+kec,vertical_offset])
 				rotate([90,0,90])
 				#linear_extrude(height = vertical_slot_width)
-				polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+				polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 			}
 			else if(addition_shape=="ped2"){
-				translate([-kec-1.25,-horizontal_slot_width/2,vertical_offset])
+				translate([-kec-manual_pedestal_slot_inset,-horizontal_slot_width/2,vertical_offset])
 				rotate([90,0,180])
 				#linear_extrude(height = horizontal_slot_width)
-				polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+				polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 			}
 			else if(addition_shape=="ped4"){
-				translate([kec+1.25,horizontal_slot_width/2,vertical_offset])
+				translate([kec+manual_pedestal_slot_inset,horizontal_slot_width/2,vertical_offset])
 				rotate([90,0,0])
 				#linear_extrude(height = horizontal_slot_width)
-				polygon(points=[[0,0],[3,0],[4,3],[1,3]]);
+				polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
 			}
 		}
 	}
