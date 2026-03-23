@@ -292,7 +292,7 @@ Address these one at a time, running the test suite after each change.
 - [ ] **Remove `#` debug modifiers from production code** — `#cut_opening(...)` etc. appear in ~20 locations; safe as examples but risky if copied into active geometry
 
 ### Lower Priority
-- [ ] **Move version history to `CHANGELOG.md`** — the 493-line header dominates the file; keep only a brief note pointing to the external file
+- [x] **Move version history to `CHANGELOG.md`** — the 493-line header dominates the file; keep only a brief note pointing to the external file
 - [ ] **Add a module index near the top** — 87+ modules with no table of contents; a brief index would aid navigation
 - [ ] **Standardise docstrings** — some modules have them, others don't; ensure all public modules have consistent docblock comments
 - [ ] **Document initialisation order** — ~200 global variables must be defined in a specific sequence; add a clear warning comment so future edits don't accidentally break ordering
