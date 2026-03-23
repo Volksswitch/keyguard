@@ -448,6 +448,18 @@ keyguard_designer_version = 76; //*****************************
 
 // if this is the "MW" version for Maker World set this statement to true and comment the include statement before start of Main
 MW_version = false;
+
+// Boolean shorthands for the most-used string comparisons.
+// Use these in conditionals instead of comparing against string literals
+// directly: a typo in a constant name causes an immediate parse error,
+// while a typo in a string literal fails silently.
+is_3d_printed     = (type_of_keyguard == "3D-Printed");
+is_laser_cut      = (type_of_keyguard == "Laser-Cut");
+has_case          = (have_a_case == "yes");
+has_frame         = (have_a_keyguard_frame == "yes");
+is_landscape      = (orientation == "landscape");
+using_px          = (unit_of_measure_for_screen == "px");
+lc_best_practices = (use_Laser_Cutting_best_practices == "yes");
 screenshotcolor = (MW_version) ? "white" : "magenta";
 
 // the "true" outcome of the following line of code is for controling keyguard frame mounting options
@@ -459,21 +471,21 @@ camera_cut_angle = 50;
 
 //laser-cut variables
 acrylic_thickness = 3.175;
-acrylic_slide_in_tab_thickness = (use_Laser_Cutting_best_practices=="yes") ?  1 : preferred_slide_in_tab_thickness;
-horizontal_acrylic_slide_in_tab_length = (use_Laser_Cutting_best_practices=="yes") ?  acrylic_thickness : horizontal_slide_in_tab_length;
-vertical_acrylic_slide_in_tab_length = (use_Laser_Cutting_best_practices=="yes") ?  acrylic_thickness : vertical_slide_in_tab_length;
-acrylic_case_corner_radius = (use_Laser_Cutting_best_practices=="yes") ?  2 : case_opening_corner_radius;
-sat_incl_acrylic = (type_of_keyguard=="Laser-Cut") ? acrylic_thickness : screen_area_thickness;
-camera_offset_acrylic = (type_of_keyguard=="Laser-Cut") ? sat_incl_acrylic/tan(camera_cut_angle) : 0;
+acrylic_slide_in_tab_thickness = (lc_best_practices) ?  1 : preferred_slide_in_tab_thickness;
+horizontal_acrylic_slide_in_tab_length = (lc_best_practices) ?  acrylic_thickness : horizontal_slide_in_tab_length;
+vertical_acrylic_slide_in_tab_length = (lc_best_practices) ?  acrylic_thickness : vertical_slide_in_tab_length;
+acrylic_case_corner_radius = (lc_best_practices) ?  2 : case_opening_corner_radius;
+sat_incl_acrylic = (is_laser_cut) ? acrylic_thickness : screen_area_thickness;
+camera_offset_acrylic = (is_laser_cut) ? sat_incl_acrylic/tan(camera_cut_angle) : 0;
 
 
-rs_inc_acrylic = (type_of_keyguard=="3D-Printed") ? cell_edge_slope : 90;
+rs_inc_acrylic = (is_3d_printed) ? cell_edge_slope : 90;
 
-bar_edge_slope_inc_acrylic = (type_of_keyguard=="3D-Printed") ? bar_edge_slope : 90;
-m_m = (type_of_keyguard=="3D-Printed")  ? mounting_method :
-	(type_of_keyguard=="Laser-Cut" && mounting_method=="Slide-in Tabs") ? "Slide-in Tabs" :
+bar_edge_slope_inc_acrylic = (is_3d_printed) ? bar_edge_slope : 90;
+m_m = (is_3d_printed)  ? mounting_method :
+	(is_laser_cut && mounting_method=="Slide-in Tabs") ? "Slide-in Tabs" :
 	"No Mount";
-hbes = (type_of_keyguard=="3D-Printed") ? home_button_edge_slope : 90;
+hbes = (is_3d_printed) ? home_button_edge_slope : 90;
 
 
 //Tablet Parameters -- 0:Tablet Width, 1:Tablet Height, 2:Tablet Thickness, 3:Screen Width, 4:Screen Height, 
@@ -731,13 +743,13 @@ o_t_p_s = parse_csv_mixed_top(other_tablet_pixel_sizes); // same call handles pl
 // Tablet variables
 ot_test = (type_of_tablet=="other tablet" && len(o_t_g_s)==21) && (len(o_t_p_s)==3);
 
-st_tablet_width = (orientation=="landscape") ? tablet_params[0] : tablet_params[1];
-ot_tablet_width = (orientation=="landscape") ? o_t_g_s[0] : o_t_g_s[1];
+st_tablet_width = (is_landscape) ? tablet_params[0] : tablet_params[1];
+ot_tablet_width = (is_landscape) ? o_t_g_s[0] : o_t_g_s[1];
 tablet_width = (ot_test) ? ot_tablet_width : st_tablet_width;
 tablet_width_l = (ot_test) ? o_t_g_s[0] : tablet_params[0]; //in landscape mode
 
-st_tablet_height = (orientation=="landscape") ? tablet_params[1] : tablet_params[0];
-ot_tablet_height = (orientation=="landscape") ? o_t_g_s[1] : o_t_g_s[0];
+st_tablet_height = (is_landscape) ? tablet_params[1] : tablet_params[0];
+ot_tablet_height = (is_landscape) ? o_t_g_s[1] : o_t_g_s[0];
 tablet_height = (ot_test) ? ot_tablet_height : st_tablet_height;
 tablet_height_l = (ot_test) ? o_t_g_s[1] : tablet_params[1]; //in landscape mode
 
@@ -764,20 +776,20 @@ st_tablet_thickness = tablet_params[2];
 ot_tablet_thickness = o_t_g_s[2];
 tablet_thickness = (ot_test) ? ot_tablet_thickness : st_tablet_thickness;
 
-st_right_border_width = (orientation=="landscape") ? tablet_params[5] : tablet_params[8];
-ot_right_border_width = (orientation=="landscape") ? o_t_g_s[5] : o_t_g_s[8];
+st_right_border_width = (is_landscape) ? tablet_params[5] : tablet_params[8];
+ot_right_border_width = (is_landscape) ? o_t_g_s[5] : o_t_g_s[8];
 pre_right_border_width = (ot_test) ? ot_right_border_width : st_right_border_width;
 
-st_left_border_width = (orientation=="landscape") ? tablet_params[6] : tablet_params[7];
-ot_left_border_width = (orientation=="landscape") ? o_t_g_s[6] : o_t_g_s[7];
+st_left_border_width = (is_landscape) ? tablet_params[6] : tablet_params[7];
+ot_left_border_width = (is_landscape) ? o_t_g_s[6] : o_t_g_s[7];
 pre_left_border_width = (ot_test) ? ot_left_border_width : st_left_border_width;
 
-st_top_border_height = (orientation=="landscape") ? tablet_params[8] : tablet_params[6];
-ot_top_border_height = (orientation=="landscape") ? o_t_g_s[8] : o_t_g_s[6];
+st_top_border_height = (is_landscape) ? tablet_params[8] : tablet_params[6];
+ot_top_border_height = (is_landscape) ? o_t_g_s[8] : o_t_g_s[6];
 pre_top_border_height = (ot_test) ? ot_top_border_height : st_top_border_height;
 
-st_bottom_border_height = (orientation=="landscape") ? tablet_params[7] : tablet_params[5];
-ot_bottom_border_height = (orientation=="landscape") ? o_t_g_s[7] : o_t_g_s[5];
+st_bottom_border_height = (is_landscape) ? tablet_params[7] : tablet_params[5];
+ot_bottom_border_height = (is_landscape) ? o_t_g_s[7] : o_t_g_s[5];
 pre_bottom_border_height = (ot_test) ? ot_bottom_border_height : st_bottom_border_height;
 
 right_border_width = (rotate_tablet_180_degrees=="no") ? pre_right_border_width : pre_left_border_width;
@@ -789,48 +801,48 @@ st_distance_from_screen_to_home_button = tablet_params[9];
 ot_distance_from_screen_to_home_button = o_t_g_s[9];
 distance_from_screen_to_home_button = (ot_test) ? ot_distance_from_screen_to_home_button : st_distance_from_screen_to_home_button;
 
-st_home_button_height = (orientation=="landscape") ? tablet_params[10] : tablet_params[11];
-ot_home_button_height = (orientation=="landscape") ? o_t_g_s[10] : o_t_g_s[11];
+st_home_button_height = (is_landscape) ? tablet_params[10] : tablet_params[11];
+ot_home_button_height = (is_landscape) ? o_t_g_s[10] : o_t_g_s[11];
 home_button_height = (ot_test) ? ot_home_button_height : st_home_button_height;
 
-st_home_button_width = (orientation=="landscape") ? tablet_params[11] : tablet_params[10];
-ot_home_button_width = (orientation=="landscape") ? o_t_g_s[11] : o_t_g_s[10];
+st_home_button_width = (is_landscape) ? tablet_params[11] : tablet_params[10];
+ot_home_button_width = (is_landscape) ? o_t_g_s[11] : o_t_g_s[10];
 home_button_width = (ot_test) ? ot_home_button_width : st_home_button_width;
 
 st_hb_loc = tablet_params[12];
 ot_hb_loc = o_t_g_s[12];
-st_home_loc = (orientation=="landscape") ? st_hb_loc : search(st_hb_loc,[0,4,1,2,3])[0];
-ot_home_loc = (orientation=="landscape") ? ot_hb_loc : search(ot_hb_loc,[0,4,1,2,3])[0];
+st_home_loc = (is_landscape) ? st_hb_loc : search(st_hb_loc,[0,4,1,2,3])[0];
+ot_home_loc = (is_landscape) ? ot_hb_loc : search(ot_hb_loc,[0,4,1,2,3])[0];
 home_loc = (ot_test) ? ot_home_loc : st_home_loc;
 
 st_distance_from_screen_to_camera = tablet_params[13];
 ot_distance_from_screen_to_camera = o_t_g_s[13];
 distance_from_screen_to_camera = (ot_test) ? ot_distance_from_screen_to_camera : st_distance_from_screen_to_camera;
 
-st_camera_height = (orientation=="landscape") ? tablet_params[14] : tablet_params[15];
-ot_camera_height = (orientation=="landscape") ? o_t_g_s[14] : o_t_g_s[15];
+st_camera_height = (is_landscape) ? tablet_params[14] : tablet_params[15];
+ot_camera_height = (is_landscape) ? o_t_g_s[14] : o_t_g_s[15];
 camera_height = (ot_test) ? ot_camera_height : st_camera_height;
 
-st_camera_width = (orientation=="landscape") ? tablet_params[15] : tablet_params[14];
-ot_camera_width = (orientation=="landscape") ? o_t_g_s[15] : o_t_g_s[14];
+st_camera_width = (is_landscape) ? tablet_params[15] : tablet_params[14];
+ot_camera_width = (is_landscape) ? o_t_g_s[15] : o_t_g_s[14];
 camera_width = (ot_test) ? ot_camera_width : st_camera_width;
 
 st_c_loc = tablet_params[16];
 ot_c_loc = o_t_g_s[16];
-st_cam_loc = (orientation=="landscape") ? st_c_loc : search(st_c_loc,[0,4,1,2,3])[0];
-ot_cam_loc = (orientation=="landscape") ? ot_c_loc : search(ot_c_loc,[0,4,1,2,3])[0];
+st_cam_loc = (is_landscape) ? st_c_loc : search(st_c_loc,[0,4,1,2,3])[0];
+ot_cam_loc = (is_landscape) ? ot_c_loc : search(ot_c_loc,[0,4,1,2,3])[0];
 cam_loc = (ot_test) ? ot_cam_loc : st_cam_loc;
 
 swap=[0,3,4,1,2];
 home_button_location = (rotate_tablet_180_degrees=="no") ? home_loc : swap[home_loc];
 camera_location = (rotate_tablet_180_degrees=="no") ? cam_loc : swap[cam_loc];
 
-case_opening_corner_radius_incl_acrylic = (type_of_keyguard=="3D-Printed") ? case_opening_corner_radius : max(case_opening_corner_radius,acrylic_case_corner_radius);
+case_opening_corner_radius_incl_acrylic = (is_3d_printed) ? case_opening_corner_radius : max(case_opening_corner_radius,acrylic_case_corner_radius);
 
 
 // Case and Screen variables
-coh = (have_a_case == "yes") ? height_of_opening_in_case : 0;
-cow = (have_a_case == "yes") ? width_of_opening_in_case : 0;
+coh = (has_case) ? height_of_opening_in_case : 0;
+cow = (has_case) ? width_of_opening_in_case : 0;
 cocr = case_opening_corner_radius_incl_acrylic;
 
 c_h = case_height;
@@ -842,11 +854,11 @@ vtf = keyguard_vertical_tightness_of_fit;
 htf = keyguard_horizontal_tightness_of_fit;
 
 //overall keyguard measurements - not, necessarily, the size of the keyguard opening in a keyguard frame
-kw = (have_a_case == "no" && have_a_keyguard_frame=="no") ? tablet_width : 
-	 (have_a_case == "yes" && have_a_keyguard_frame=="no") ? cow :
+kw = (!has_case && !has_frame) ? tablet_width : 
+	 (has_case && !has_frame) ? cow :
 															 keyguard_width+htf;
-kh = (have_a_case == "no" && have_a_keyguard_frame=="no") ? tablet_height : 
-	 (have_a_case == "yes" && have_a_keyguard_frame=="no") ? coh :
+kh = (!has_case && !has_frame) ? tablet_height : 
+	 (has_case && !has_frame) ? coh :
 															 keyguard_height+vtf;
 tt1cr = tablet_tl_corner_radius;
 ttrcr = tablet_tr_corner_radius;
@@ -860,27 +872,27 @@ cocria = case_opening_corner_radius_incl_acrylic;
 
 kcrf = keyguard_corner_radius;  // the keyguard corner radius when in a frame 
 
-kcr = (have_a_case == "no" && have_a_keyguard_frame=="no") ? tcr : 
-	 (have_a_case == "yes" && have_a_keyguard_frame=="no") ? [cocria,cocria,cocria,cocria] :
+kcr = (!has_case && !has_frame) ? tcr : 
+	 (has_case && !has_frame) ? [cocria,cocria,cocria,cocria] :
 															 [kcrf,kcrf,kcrf,kcrf];
 
-fw = (have_a_case=="yes" && have_a_keyguard_frame=="yes") ? cow : 
-      (have_a_case=="no" && have_a_keyguard_frame=="yes") ? tw :
+fw = (has_case && has_frame) ? cow : 
+      (!has_case && has_frame) ? tw :
 	  0;
-fh = (have_a_case=="yes" && have_a_keyguard_frame=="yes") ? coh : 
-      (have_a_case=="no" && have_a_keyguard_frame=="yes") ? th :
+fh = (has_case && has_frame) ? coh : 
+      (!has_case && has_frame) ? th :
 	  0;
-fcr = (have_a_case=="yes" && have_a_keyguard_frame=="yes") ? [cocria,cocria,cocria,cocria] : 
-      (have_a_case=="no" && have_a_keyguard_frame=="yes") ? tcr :
+fcr = (has_case && has_frame) ? [cocria,cocria,cocria,cocria] : 
+      (!has_case && has_frame) ? tcr :
 	  [0,0,0,0];
 
-st_screen_width = (orientation=="landscape") ? tablet_params[3] : tablet_params[4];
-ot_screen_width = (orientation=="landscape") ? o_t_g_s[3] : o_t_g_s[4];
+st_screen_width = (is_landscape) ? tablet_params[3] : tablet_params[4];
+ot_screen_width = (is_landscape) ? o_t_g_s[3] : o_t_g_s[4];
 screen_width = (ot_test) ? ot_screen_width : st_screen_width;
 swm = screen_width;
 
-st_screen_height = (orientation=="landscape") ? tablet_params[4] : tablet_params[3];
-ot_screen_height = (orientation=="landscape") ? o_t_g_s[4] : o_t_g_s[3];
+st_screen_height = (is_landscape) ? tablet_params[4] : tablet_params[3];
+ot_screen_height = (is_landscape) ? o_t_g_s[4] : o_t_g_s[3];
 screen_height = (ot_test) ? ot_screen_height : st_screen_height;
 shm = screen_height;
 
@@ -888,15 +900,15 @@ st_ps = tablet_params[17]; //pixel settings
 ot_ps = (ot_test) ? o_t_p_s : [0,0,0]; //pixel settings
 
 ps = (type_of_tablet=="other tablet") ? ot_ps : st_ps; //pixel settings
-shp = (orientation=="landscape") ? ps[0] : ps[1]; // screen height in pixels
-swp = (orientation=="landscape") ? ps[1] : ps[0]; // screen width in pixels
+shp = (is_landscape) ? ps[0] : ps[1]; // screen height in pixels
+swp = (is_landscape) ? ps[1] : ps[0]; // screen width in pixels
 mpp =  ps[2]; // millimeters per pixel
 ppm = 1/mpp; // pixels per millimeter
 
-lec = (have_a_keyguard_frame=="no") ? left_edge_compensation_for_tight_cases : 0;  // you won't use a frame if the case opening is tight to the screen
-rec = (have_a_keyguard_frame=="no") ? right_edge_compensation_for_tight_cases : 0;
-bec = (have_a_keyguard_frame=="no") ? bottom_edge_compensation_for_tight_cases : 0;
-tec = (have_a_keyguard_frame=="no") ? top_edge_compensation_for_tight_cases : 0;
+lec = (!has_frame) ? left_edge_compensation_for_tight_cases : 0;  // you won't use a frame if the case opening is tight to the screen
+rec = (!has_frame) ? right_edge_compensation_for_tight_cases : 0;
+bec = (!has_frame) ? bottom_edge_compensation_for_tight_cases : 0;
+tec = (!has_frame) ? top_edge_compensation_for_tight_cases : 0;
 
 equal_tablet_border_left = (tablet_width-swm)/2;
 equal_tablet_border_bottom = (tablet_height-shm)/2;
@@ -909,8 +921,8 @@ unequal_tablet_bottom_side_offset = bottom_border_height-equal_tablet_border_bot
 unequal_co_left_side_offset = (unequal_left_side_of_case_opening>0) ? unequal_left_side_of_case_opening-equal_co_border_left : 0;
 unequal_co_bottom_side_offset = (unequal_bottom_side_of_case_opening>0) ? unequal_bottom_side_of_case_opening-equal_co_border_bottom : 0;
 						
-unequal_left_side_offset = (have_a_case == "no") ? unequal_tablet_left_side_offset : unequal_co_left_side_offset;
-unequal_bottom_side_offset = (have_a_case == "no") ? unequal_tablet_bottom_side_offset : unequal_co_bottom_side_offset;
+unequal_left_side_offset = (!has_case) ? unequal_tablet_left_side_offset : unequal_co_left_side_offset;
+unequal_bottom_side_offset = (!has_case) ? unequal_tablet_bottom_side_offset : unequal_co_bottom_side_offset;
 							
 // the size of the case borders accounting for edge compensation							
 adj_case_border_left = (unequal_left_side_of_case_opening>0) ? unequal_left_side_of_case_opening : equal_co_border_left;
@@ -938,8 +950,8 @@ if (msv != 0){
 horiz_sit = (slide_in_tab_locations=="horizontal only" ||  slide_in_tab_locations=="horizontal and vertical");
 vert_sit = (slide_in_tab_locations=="vertical only" ||  slide_in_tab_locations=="horizontal and vertical");
 
-split_add = (mounting_method=="Slide-in Tabs" && horiz_sit && orientation=="landscape") ? horizontal_slide_in_tab_length :
-            (mounting_method=="Slide-in Tabs" && vert_sit && orientation=="portrait") ? vertical_slide_in_tab_length :
+split_add = (mounting_method=="Slide-in Tabs" && horiz_sit && is_landscape) ? horizontal_slide_in_tab_length :
+            (mounting_method=="Slide-in Tabs" && vert_sit && !is_landscape) ? vertical_slide_in_tab_length :
 			(mounting_method=="Raised Tabs") ? raised_tab_length :
 			(mounting_method=="Shelf") ? shelf_depth :
 			(mounting_method=="Posts") ? post_length :
@@ -956,8 +968,8 @@ case_y0 = -coh/2;
 screen_x0 = -swm/2;
 screen_y0 = -shm/2;
 
-keyguard_x0 = (have_a_case == "no") ? tablet_x0 : -kw/2;
-keyguard_y0 = (have_a_case == "no") ? tablet_y0 : -kh/2;
+keyguard_x0 = (!has_case) ? tablet_x0 : -kw/2;
+keyguard_y0 = (!has_case) ? tablet_y0 : -kh/2;
 
 generate_keyguard = generate=="keyguard" || generate=="first half of keyguard" || generate=="second half of keyguard" || generate=="first layer for SVG/DXF file";
 
@@ -1010,8 +1022,8 @@ sy0 = screen_y0;
 	nr = number_of_rows;
 	
 	//the following values depend on the setting in the Freeform and hybrid Openings section
-	sh = (unit_of_measure_for_screen=="px") ? shp : shm;
-	sw = (unit_of_measure_for_screen=="px") ? swp : swm;
+	sh = (using_px) ? shp : shm;
+	sw = (using_px) ? swp : swm;
 	
 // app variables - used in opentings_and_additions.txt file
 
@@ -1030,25 +1042,25 @@ sy0 = screen_y0;
 	lmbhp = (px_measurements_start=="top") ? lcbtp - lmbtp : lmbtp - lcbtp; // height of lower message bar in pixels
 	lcbhp = (px_measurements_start=="top") ? shp - lcbtp : lcbtp; // height of lower command bar in pixelscel
 	
-	sbh = (px_measurements && unit_of_measure_for_screen=="px") ? sbhp :
-	      (px_measurements && unit_of_measure_for_screen=="mm") ? sbhp * mpp : 
-		  (!px_measurements && unit_of_measure_for_screen=="mm") ? status_bar_height : 
+	sbh = (px_measurements && using_px) ? sbhp :
+	      (px_measurements && !using_px) ? sbhp * mpp : 
+		  (!px_measurements && !using_px) ? status_bar_height : 
 		  status_bar_height * ppm; // status bar height
-	umbh = (px_measurements && unit_of_measure_for_screen=="px") ? umbhp :
-	      (px_measurements && unit_of_measure_for_screen=="mm") ? umbhp * mpp : 
-		  (!px_measurements && unit_of_measure_for_screen=="mm") ? upper_message_bar_height : 
+	umbh = (px_measurements && using_px) ? umbhp :
+	      (px_measurements && !using_px) ? umbhp * mpp : 
+		  (!px_measurements && !using_px) ? upper_message_bar_height : 
 		  upper_message_bar_height * ppm; //  upper message bar height
-	ucbh = (px_measurements && unit_of_measure_for_screen=="px") ? ucbhp :
-	      (px_measurements && unit_of_measure_for_screen=="mm") ? ucbhp * mpp : 
-		  (!px_measurements && unit_of_measure_for_screen=="mm") ? upper_command_bar_height : 
+	ucbh = (px_measurements && using_px) ? ucbhp :
+	      (px_measurements && !using_px) ? ucbhp * mpp : 
+		  (!px_measurements && !using_px) ? upper_command_bar_height : 
 		  upper_command_bar_height * ppm; // command bar height
-	lmbh = (px_measurements && unit_of_measure_for_screen=="px") ? lmbhp :
-	      (px_measurements && unit_of_measure_for_screen=="mm") ? lmbhp * mpp : 
-		  (!px_measurements && unit_of_measure_for_screen=="mm") ? lower_message_bar_height : 
+	lmbh = (px_measurements && using_px) ? lmbhp :
+	      (px_measurements && !using_px) ? lmbhp * mpp : 
+		  (!px_measurements && !using_px) ? lower_message_bar_height : 
 		  lower_message_bar_height * ppm; // lower message bar height
-	lcbh = (px_measurements && unit_of_measure_for_screen=="px") ? lcbhp :
-	      (px_measurements && unit_of_measure_for_screen=="mm") ? lcbhp * mpp : 
-		  (!px_measurements && unit_of_measure_for_screen=="mm") ? lower_command_bar_height : 
+	lcbh = (px_measurements && using_px) ? lcbhp :
+	      (px_measurements && !using_px) ? lcbhp * mpp : 
+		  (!px_measurements && !using_px) ? lower_command_bar_height : 
 		  lower_command_bar_height * ppm; // lower command bar height
 
 
@@ -1076,14 +1088,14 @@ lmbhm = (px_measurements) ? lmbhp * mpp : lower_message_bar_height; /// lower me
 lcbhm = (px_measurements) ? lcbhp * mpp : lower_command_bar_height; /// lower command bar height
 
 // if keyguard will go in a case, determine if edge compensation will affect bar width and by how much
-adj_lec = (have_a_case=="yes") ? max(lec-adj_case_border_left,0) : 0;  // positive if lec is larger than the left border
-adj_rec = (have_a_case=="yes") ? max(rec-adj_case_border_right,0) : 0;  // positive if rec is larger than the right border
+adj_lec = (has_case) ? max(lec-adj_case_border_left,0) : 0;  // positive if lec is larger than the left border
+adj_rec = (has_case) ? max(rec-adj_case_border_right,0) : 0;  // positive if rec is larger than the right border
 
 bar_width = swm - adj_lec - adj_rec;
 
 // if keyguard will go in a case, determine if edge compensation will affect bar height and by how much
-adj_tec =(have_a_case=="yes") ?  max(tec-adj_case_border_top,0) : 0;  // positive if tec is larger than the top border
-adj_bec = (have_a_case=="yes") ? max(bec-adj_case_border_bottom,0) : 0;  // positive if tec is larger than the bottom border
+adj_tec =(has_case) ?  max(tec-adj_case_border_top,0) : 0;  // positive if tec is larger than the top border
+adj_bec = (has_case) ? max(bec-adj_case_border_bottom,0) : 0;  // positive if tec is larger than the bottom border
 
 sbh_adjust = (adj_tec>0) ? sbhm - adj_tec : sbhm;
 umbh_adjust = (adj_tec>sbhm) ? umbhm-(adj_tec-sbhm)  : umbhm;
@@ -1100,8 +1112,8 @@ grid_height = shm - sbhm - umbhm - ucbhm - top_padding - bottom_padding - lmbhm 
 grid_x0 = screen_x0 + left_padding;
 grid_y0 = screen_y0 + bottom_padding + lmbhm + lcbhm;
 
-	gw = (unit_of_measure_for_screen=="mm") ? grid_width : grid_width * ppm;
-	gh = (unit_of_measure_for_screen=="mm") ? grid_height : grid_height * ppm;
+	gw = (!using_px) ? grid_width : grid_width * ppm;
+	gh = (!using_px) ? grid_height : grid_height * ppm;
 	gt = ucbb;  // grid top
 	gb = lmbt;  // grid bottom
 	
@@ -1117,8 +1129,8 @@ chamfer_angle_stop = 45;
 
 //next instruction doesn't allow for acrylic sheets that are other than 3.15 mm thick - but only impacts display of keyguard since laser cutting uses
 //   only the first layer for SVG/DXF file export
-kt = (type_of_keyguard=="Laser-Cut") ? 3.175: 
-     (have_a_keyguard_frame=="yes" && keyguard_thickness > keyguard_frame_thickness) ? keyguard_frame_thickness :
+kt = (is_laser_cut) ? 3.175: 
+     (has_frame && keyguard_thickness > keyguard_frame_thickness) ? keyguard_frame_thickness :
 	 keyguard_thickness;
 	 
 //misc variables
@@ -1130,7 +1142,7 @@ $fn=smoothness_of_circles_and_arcs;
 
 
 //handle the instance where a system like an Accent
-system_with_no_case = ((tablet_width==0) || (tablet_height == 0)) && (have_a_case=="no");
+system_with_no_case = ((tablet_width==0) || (tablet_height == 0)) && (!has_case);
 
 //cell variables
 column_count = (system_with_no_case || hide_screen_region == "yes") ? 0 : number_of_columns;
@@ -1138,7 +1150,7 @@ row_count = (system_with_no_case || hide_screen_region == "yes") ? 0 : number_of
 
 max_cell_width = grid_width/column_count;
 max_cell_height = grid_height/row_count;
-minimum__acrylic_rail_width = (use_Laser_Cutting_best_practices=="no") ?  1 : 2;
+minimum__acrylic_rail_width = (!lc_best_practices) ?  1 : 2;
 
 cell_w = (cell_width_in_mm==0) ? cell_width_in_px*mpp : cell_width_in_mm;
 cell_h = (cell_height_in_mm==0) ? cell_height_in_px*mpp : cell_height_in_mm;
@@ -1160,31 +1172,31 @@ hrw = grid_height/number_of_rows - ch;
 
 	ccr = cell_corner_radius;
 	
-	hor = (unit_of_measure_for_screen=="px") ? height_of_ridge * ppm : height_of_ridge;
-	tor = (unit_of_measure_for_screen=="px") ? thickness_of_ridge * ppm : thickness_of_ridge;
+	hor = (using_px) ? height_of_ridge * ppm : height_of_ridge;
+	tor = (using_px) ? thickness_of_ridge * ppm : thickness_of_ridge;
 
 min_actual_cell_dim = min(cw,ch);
 acrylic_cell_corner_radius = max(min_actual_cell_dim/10,cell_corner_radius);
-first_ocr = (type_of_keyguard=="Laser-Cut" && use_Laser_Cutting_best_practices=="yes") ? acrylic_cell_corner_radius : cell_corner_radius;
+first_ocr = (is_laser_cut && lc_best_practices) ? acrylic_cell_corner_radius : cell_corner_radius;
 ocr = min(first_ocr, min_actual_cell_dim/2);
 
 sata = sat_incl_acrylic;
 sat = min(kt,sata); // thiness of the grid and bar region of the keyguard which can't exceed the overall keyguard Thickness
 
-horizontal_slide_in_tab_length_incl_acrylic = (type_of_keyguard=="3D-Printed") ? horizontal_slide_in_tab_length : horizontal_acrylic_slide_in_tab_length;
-vertical_slide_in_tab_length_incl_acrylic = (type_of_keyguard=="3D-Printed") ? vertical_slide_in_tab_length : vertical_acrylic_slide_in_tab_length;
-slide_in_tab_thickness = (type_of_keyguard=="3D-Printed") ? min(kt-0.65, preferred_slide_in_tab_thickness) : acrylic_slide_in_tab_thickness;
+horizontal_slide_in_tab_length_incl_acrylic = (is_3d_printed) ? horizontal_slide_in_tab_length : horizontal_acrylic_slide_in_tab_length;
+vertical_slide_in_tab_length_incl_acrylic = (is_3d_printed) ? vertical_slide_in_tab_length : vertical_acrylic_slide_in_tab_length;
+slide_in_tab_thickness = (is_3d_printed) ? min(kt-0.65, preferred_slide_in_tab_thickness) : acrylic_slide_in_tab_thickness;
 
-col_first_trim = (lec>left_padding+vrw/2+adj_case_border_left && have_a_case=="yes") ? lec-left_padding-vrw/2-adj_case_border_left : 0;
-col_last_trim = (rec>right_padding+vrw/2+adj_case_border_right && have_a_case=="yes") ? rec-right_padding-vrw/2-adj_case_border_right: 0;
-row_first_trim = (bec>bottom_padding+lmbhm+lcbhm+hrw/2+adj_case_border_bottom && have_a_case=="yes") ? bec - bottom_padding - lmbhm - lcbhm - hrw/2 -adj_case_border_bottom: 0;
-row_last_trim = (tec>top_padding+sbhm+umbhm+ucbhm+hrw/2+adj_case_border_top && have_a_case=="yes") ? tec-top_padding-sbhm-umbhm-ucbhm-hrw/2-adj_case_border_top : 0;
+col_first_trim = (lec>left_padding+vrw/2+adj_case_border_left && has_case) ? lec-left_padding-vrw/2-adj_case_border_left : 0;
+col_last_trim = (rec>right_padding+vrw/2+adj_case_border_right && has_case) ? rec-right_padding-vrw/2-adj_case_border_right: 0;
+row_first_trim = (bec>bottom_padding+lmbhm+lcbhm+hrw/2+adj_case_border_bottom && has_case) ? bec - bottom_padding - lmbhm - lcbhm - hrw/2 -adj_case_border_bottom: 0;
+row_last_trim = (tec>top_padding+sbhm+umbhm+ucbhm+hrw/2+adj_case_border_top && has_case) ? tec-top_padding-sbhm-umbhm-ucbhm-hrw/2-adj_case_border_top : 0;
 
 
-cts = (type_of_keyguard=="Laser-Cut") ? 90 :
-		(type_of_keyguard=="3D-Printed" && cell_top_edge_slope == 90) ? cell_edge_slope : cell_top_edge_slope;  
-cbs = (type_of_keyguard=="Laser-Cut") ? 90 :
-		(type_of_keyguard=="3D-Printed" && cell_bottom_edge_slope == 90) ? cell_edge_slope : cell_bottom_edge_slope;  
+cts = (is_laser_cut) ? 90 :
+		(is_3d_printed && cell_top_edge_slope == 90) ? cell_edge_slope : cell_top_edge_slope;  
+cbs = (is_laser_cut) ? 90 :
+		(is_3d_printed && cell_bottom_edge_slope == 90) ? cell_edge_slope : cell_bottom_edge_slope;  
 		
 cell_top_offset = screen_area_thickness*cos(cell_edge_slope); //this is actually the maximum value since edge compensation can override
 		
@@ -1239,16 +1251,16 @@ vertical_pedestal_width = vertical_clip_width + 10;
 horizontal_slot_width = horizontal_clip_width+2;
 vertical_slot_width = vertical_clip_width+2;
 
-pedestal_height = (have_a_case=="no")? 0 : 
-				  (have_a_keyguard_frame=="no") ? max(case_to_screen_depth - kt,0) :
+pedestal_height = (!has_case)? 0 : 
+				  (!has_frame) ? max(case_to_screen_depth - kt,0) :
 				  max(case_to_screen_depth - keyguard_frame_thickness,0);
-vertical_offset = (have_a_keyguard_frame=="no") ? kt/2 + pedestal_height-3+ff : // bottom of cut for clip-on strap
+vertical_offset = (!has_frame) ? kt/2 + pedestal_height-3+ff : // bottom of cut for clip-on strap
 												  keyguard_frame_thickness/2 + pedestal_height-3+ff;
-h_clip_reach = (have_a_case=="no")? 6 :
+h_clip_reach = (!has_case)? 6 :
 			 (add_sloped_keyguard_edge=="no")? (case_width-kw)/2+5 :
 			 (extend_lip_to_edge_of_case=="no")? (case_width-cow)/2-sew+6 :
 			 7;
-v_clip_reach = (have_a_case=="no")? 6 :
+v_clip_reach = (!has_case)? 6 :
 			 (add_sloped_keyguard_edge=="no")? (case_height-kh)/2+5 :
 			 (extend_lip_to_edge_of_case=="no")? (case_height-coh)/2-sew+6 :
 			 7;
@@ -1259,7 +1271,7 @@ no_clips = (add_sloped_keyguard_edge=="yes" && keyguard_thickness<case_to_screen
 // raised-tab variables
 
 //shelf variables
-shelf_t = (have_a_keyguard_frame=="no") ? min(shelf_thickness,keyguard_thickness) : min(shelf_thickness,keyguard_frame_thickness);
+shelf_t = (!has_frame) ? min(shelf_thickness,keyguard_thickness) : min(shelf_thickness,keyguard_frame_thickness);
 scr = shelf_corner_radius;
 
 
@@ -1294,7 +1306,7 @@ e_t = engraved_text;
 // // // path_and_filename = (path != "" && filename != "") ? str(path,filename,".stl") : "";
 
 ///**** these next two lines should be derivable or replaced by values above
-case_thick = (have_a_case=="no")? tablet_thickness+kt : case_thickness+max(kt-case_to_screen_depth,0);
+case_thick = (!has_case)? tablet_thickness+kt : case_thickness+max(kt-case_to_screen_depth,0);
 
 //currently only openings for ambient light sensors - may need to become specific to ALS if other types of openings are added - especially if they don't map to tablet models in the same way that ALS openings do
 als_openings=[  
@@ -1482,8 +1494,8 @@ m_t_o = parse_user_vector(my_tablet_openings, /*strict=*/true);
 
 
 // ----------------------Main-----------------------------
-$vpd = (keyguard_display_angle>0 && orientation=="landscape") ? 500 : 
-	   (keyguard_display_angle>0 && orientation=="portrait") ? 620 :
+$vpd = (keyguard_display_angle>0 && is_landscape) ? 500 : 
+	   (keyguard_display_angle>0 && !is_landscape) ? 620 :
 	   $vpd;
 $vpt = (keyguard_display_angle>0) ? [1,1,1] : 
 	   $vpt;
@@ -1521,14 +1533,14 @@ else if (type_of_tablet=="other tablet" && (len(o_t_g_s)!=21 || len(o_t_p_s)!=3)
 	echo();
 	echo();
 }
-else if (add_sloped_keyguard_edge=="yes" && type_of_keyguard=="Laser-Cut"){
+else if (add_sloped_keyguard_edge=="yes" && is_laser_cut){
 	echo();
 	echo();
 	echo("************ Laser-cut keyguards cannot have a sloped edge ************");
 	echo();
 	echo();
 }
-else if (type_of_keyguard=="3D-Printed" && (generate=="keyguard" || generate=="first half of keyguard" || generate=="second half of keyguard")){
+else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyguard" || generate=="second half of keyguard")){
 	color("Turquoise")
 	keyguard("no");
 	
@@ -1545,7 +1557,7 @@ else if (type_of_keyguard=="3D-Printed" && (generate=="keyguard" || generate=="f
 		show_line_split_location();
 	}
 }
-else if (type_of_keyguard=="Laser-Cut" && generate=="keyguard" && have_a_keyguard_frame=="no" && (m_m=="No Mount" || m_m=="Slide-in Tabs")){
+else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" || m_m=="Slide-in Tabs")){
 	color("Khaki")
 	keyguard("no");
 	issues();
@@ -1559,7 +1571,7 @@ else if (type_of_keyguard=="Laser-Cut" && generate=="keyguard" && have_a_keyguar
 		}
 	}
 }
-else if (type_of_keyguard=="Laser-Cut" && generate=="first layer for SVG/DXF file" && have_a_keyguard_frame=="no" && (mounting_method=="No Mount" || mounting_method=="Slide-in Tabs")){
+else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame && (mounting_method=="No Mount" || mounting_method=="Slide-in Tabs")){
 	color("DarkSeaGreen")
 	render()
 	lc_keyguard();
@@ -1701,7 +1713,7 @@ else if (generate=="vertical micro clip"){
 		create_mini_clip2(clip_reach_top,vertical_clip_width);
 	}
 }
-else if (generate=="keyguard frame" && have_a_keyguard_frame=="yes" && type_of_keyguard!="Laser-Cut"){
+else if (generate=="keyguard frame" && has_frame && !is_laser_cut){
 	color("Turquoise")
 	keyguard_frame("no");
 	
@@ -1723,14 +1735,14 @@ else if (generate=="keyguard frame" && have_a_keyguard_frame=="yes" && type_of_k
 		show_line_split_location();
 	}
 }
-else if (generate=="keyguard frame" && have_a_keyguard_frame=="no"){
+else if (generate=="keyguard frame" && !has_frame){
 	echo();
 	echo();
 	echo("************ 'have a keyguard frame' is set to 'no' ************");
 	echo();
 	echo();
 }
-else if (generate=="first half of keyguard frame" && type_of_keyguard!="Laser-Cut"){
+else if (generate=="first half of keyguard frame" && !is_laser_cut){
 	color("Turquoise")
 	{
 		difference(){
@@ -1742,7 +1754,7 @@ else if (generate=="first half of keyguard frame" && type_of_keyguard!="Laser-Cu
 		show_line_split_location();
 	}
 }
-else if (generate=="second half of keyguard frame" && type_of_keyguard!="Laser-Cut"){
+else if (generate=="second half of keyguard frame" && !is_laser_cut){
 	color("Turquoise")
 	{
 		difference(){
@@ -1754,35 +1766,35 @@ else if (generate=="second half of keyguard frame" && type_of_keyguard!="Laser-C
 		show_line_split_location();
 	}
 }
-else if ((generate=="first half of keyguard" || generate=="second half of keyguard") && type_of_keyguard=="Laser-Cut"){
+else if ((generate=="first half of keyguard" || generate=="second half of keyguard") && is_laser_cut){
 	echo();
 	echo();
 	echo("************ Laser-cut keyguards cannot be split ************");
 	echo();
 	echo();
 }
-else if ((generate=="keyguard frame" || generate=="first half of keyguard frame" || generate=="second half of keyguard frame") && type_of_keyguard=="Laser-Cut"){
+else if ((generate=="keyguard frame" || generate=="first half of keyguard frame" || generate=="second half of keyguard frame") && is_laser_cut){
 	echo();
 	echo();
 	echo("************ Laser-cut keyguard frames are not supported ************");
 	echo();
 	echo();
 }
-else if (generate=="keyguard" && type_of_keyguard=="Laser-Cut" && have_a_keyguard_frame=="yes"){
+else if (generate=="keyguard" && is_laser_cut && has_frame){
 	echo();
 	echo();
 	echo("************ Laser-cut keyguards, going in a keyguard frame, are not supported ************");
 	echo();
 	echo();
 }
-else if (type_of_keyguard=="3D-Printed" && generate=="first layer for SVG/DXF file"){
+else if (is_3d_printed && generate=="first layer for SVG/DXF file"){
 	echo();
 	echo();
 	echo("************ First layer for SVG/DXF filee is not supported for a 3D-Printed keyguard ************");
 	echo();
 	echo();
 }
-else if (generate=="cell insert" && type_of_keyguard!="Laser-Cut"){ //cell inserts
+else if (generate=="cell insert" && !is_laser_cut){ //cell inserts
 	rotation = (Braille_text=="") ? -90 : 0;
 	color("LawnGreen")
 	rotate([rotation,0,0])
@@ -1800,7 +1812,7 @@ else { //Customizer settings
 // additions, snap-in tabs, and optional text engraving/embossing.
 // @param cheat  Pass "yes" to suppress case additions that conflict with the keyguard frame
 module keyguard(cheat){
-	unequal_opening = (have_a_keyguard_frame=="no") ? [-unequal_left_side_offset,-unequal_bottom_side_offset,0] : [0,0,0];
+	unequal_opening = (!has_frame) ? [-unequal_left_side_offset,-unequal_bottom_side_offset,0] : [0,0,0];
 	difference(){
 		union(){
 			difference(){
@@ -1815,12 +1827,12 @@ module keyguard(cheat){
 								base_keyguard(kw,kh,kcr,kt,cheat);
 													
 								//add slide-in & raised tabs
-								if (have_a_case=="yes" && have_a_keyguard_frame=="no" && (m_m=="Slide-in Tabs" || m_m=="Raised Tabs")){
+								if (has_case && !has_frame && (m_m=="Slide-in Tabs" || m_m=="Raised Tabs")){
 									case_mounts(kt);
 								}
 								
 								//add shelf as a mounting method
-								if (have_a_case=="yes" && have_a_keyguard_frame=="no" && m_m=="Shelf" && cheat=="no") {
+								if (has_case && !has_frame && m_m=="Shelf" && cheat=="no") {
 									shelf_height = coh+2*shelf_depth;
 									shelf_width = cow+2*shelf_depth;
 					
@@ -1831,25 +1843,25 @@ module keyguard(cheat){
 								
 								// adding manual slide-in tabs, other shapes not full keyguard height, and pedestals for clip-on straps
 								if(!is_undef(case_additions)){
-									if(have_a_case=="yes" && len(case_additions)>0){
-										if (have_a_keyguard_frame=="no" || 
-										   (have_a_keyguard_frame=="yes" && generate=="keyguard frame" && cheat=="no")
+									if(has_case && len(case_additions)>0){
+										if (!has_frame || 
+										   (has_frame && generate=="keyguard frame" && cheat=="no")
 										   ){
 										   
 											add_flex_height_shapes(case_additions);
 											
-											if(type_of_keyguard!="Laser-Cut"){
+											if(!is_laser_cut){
 												add_manual_mount_pedestals(case_additions);
 											}
 										}
 									}
 								}
 
-								if(len(m_c_a)>0 && have_a_case=="yes" && (have_a_keyguard_frame=="no" || 
-											(have_a_keyguard_frame=="yes" && generate=="keyguard frame" && cheat=="no"))){
+								if(len(m_c_a)>0 && has_case && (!has_frame || 
+											(has_frame && generate=="keyguard frame" && cheat=="no"))){
 									add_flex_height_shapes(m_c_a);
 									
-									if(type_of_keyguard!="Laser-Cut"){
+									if(!is_laser_cut){
 										add_manual_mount_pedestals(m_c_a);
 									}
 								}
@@ -1861,15 +1873,15 @@ module keyguard(cheat){
 								}
 								
 								//add pedestals for clip-on straps and ensure pedestals don't extend into screen area
-								if (have_a_case=="yes" && m_m=="Clip-on Straps" && 
-								    !(generate=="keyguard" && have_a_keyguard_frame=="yes") &&
-									!(generate=="keyguard frame" && have_a_keyguard_frame=="yes") &&
+								if (has_case && m_m=="Clip-on Straps" && 
+								    !(generate=="keyguard" && has_frame) &&
+									!(generate=="keyguard frame" && has_frame) &&
 									!no_clips){
 									case_mounts(kt);
 								}
 							
 								// add mounting posts and small tabs
-								if(have_a_case=="yes" && m_m=="Posts"){
+								if(has_case && m_m=="Posts"){
 									add_mounting_posts();
 								}
 							
@@ -1880,12 +1892,12 @@ module keyguard(cheat){
 							
 							// cut case openings
 							if(!is_undef(case_openings)){
-								if(have_a_case=="yes" && len(case_openings)>0 && !(have_a_keyguard_frame=="yes" && generate=="keyguard") && cheat=="no"){
+								if(has_case && len(case_openings)>0 && !(has_frame && generate=="keyguard") && cheat=="no"){
 									cut_case_openings(case_openings,kt);
 								}
 							}
 								
-							if(len(m_c_o)>0 && have_a_case=="yes" && !(have_a_keyguard_frame=="yes" && generate=="keyguard") && cheat=="no"){
+							if(len(m_c_o)>0 && has_case && !(has_frame && generate=="keyguard") && cheat=="no"){
 								cut_case_openings(m_c_o,kt);
 							}
 						
@@ -1895,23 +1907,23 @@ module keyguard(cheat){
 							}
 
 							//add cuts for suction cups, velcro, clip-on straps and screw-on straps
-							if (have_a_case=="no" && hide_screen_region=="no" && type_of_keyguard=="3D-Printed"){
+							if (!has_case && hide_screen_region=="no" && is_3d_printed){
 								mounting_points();
 							}
 									
 							//cut out slots for customizer added clip-on straps
-							if (have_a_case=="yes" && m_m=="Clip-on Straps" && 
-								    !(generate=="keyguard" && have_a_keyguard_frame=="yes") &&
-									!(generate=="keyguard frame" && have_a_keyguard_frame=="yes") &&
+							if (has_case && m_m=="Clip-on Straps" && 
+								    !(generate=="keyguard" && has_frame) &&
+									!(generate=="keyguard frame" && has_frame) &&
 									!no_clips){
 								clip_on_straps_groove();
 							}							
 
 							// "-" shapes not full keyguard height
 							if(!is_undef(case_additions)){
-								if(have_a_case=="yes" && len(case_additions)>0){
-									if (have_a_keyguard_frame=="no" || 
-									   (have_a_keyguard_frame=="yes" && generate=="keyguard frame" && cheat=="no")
+								if(has_case && len(case_additions)>0){
+									if (!has_frame || 
+									   (has_frame && generate=="keyguard frame" && cheat=="no")
 									   ){
 									   
 										sub_flex_height_shapes(case_additions);
@@ -1920,19 +1932,19 @@ module keyguard(cheat){
 								}
 							}
 							
-							if(len(m_c_a)>0 && have_a_case=="yes" && (have_a_keyguard_frame=="no" || 
-										(have_a_keyguard_frame=="yes" && generate=="keyguard frame" && cheat=="no"))){
+							if(len(m_c_a)>0 && has_case && (!has_frame || 
+										(has_frame && generate=="keyguard frame" && cheat=="no"))){
 								sub_flex_height_shapes(m_c_a);
 							}	
 
 							// add slots to manually added clip-on strap pedestals
 							if(!is_undef(case_additions)){
-								if(have_a_case=="yes" && len(case_additions)>0 && type_of_keyguard!="Laser-Cut" && cheat=="no"){
+								if(has_case && len(case_additions)>0 && !is_laser_cut && cheat=="no"){
 									cut_manual_mount_pedestal_slots(case_additions);
 								}
 							}
 							
-							if(len(m_c_a)>0 && have_a_case=="yes" && type_of_keyguard!="Laser-Cut" && cheat=="no"){
+							if(len(m_c_a)>0 && has_case && !is_laser_cut && cheat=="no"){
 								cut_manual_mount_pedestal_slots(m_c_a);
 							}
 						}
@@ -1965,7 +1977,7 @@ module keyguard(cheat){
 						home_camera(kt);
 						
 						// symmetric openings are not supported for unequal openings or keyguard frames
-						if(add_symmetric_openings=="yes" && have_a_keyguard_frame=="no" && unequal_left_side_offset==0 && unequal_bottom_side_offset==0){
+						if(add_symmetric_openings=="yes" && !has_frame && unequal_left_side_offset==0 && unequal_bottom_side_offset==0){
 							rotate([0,0,180])
 							home_camera(kt);
 							
@@ -2029,32 +2041,32 @@ module keyguard(cheat){
 					//*** add items screen elements  and case elements that will override screen cutouts
 					
 					//add cell ridges	
-					if (column_count>0 && row_count>0 && type_of_keyguard=="3D-Printed"){
+					if (column_count>0 && row_count>0 && is_3d_printed){
 						cell_ridges();
 					}
 
 					//add bumps and ridges
 					if(!is_undef(screen_openings)){
-						if(type_of_keyguard=="3D-Printed" && len(screen_openings)>0){
+						if(is_3d_printed && len(screen_openings)>0){
 							adding_plastic(screen_openings,"screen");
 						}
 					}
 					
-					if(len(m_s_o)>0 && type_of_keyguard=="3D-Printed"){
+					if(len(m_s_o)>0 && is_3d_printed){
 						adding_plastic(m_s_o,"screen");
 					}
 						
 					//add bumps and ridges from case_openings file and adjust for unequal case opening
 					if(!is_undef(case_openings)){
 						translate(unequal_opening)
-						if(type_of_keyguard=="3D-Printed" && have_a_case=="yes" && have_a_keyguard_frame=="no" && len(case_openings)>0 && cheat=="no"){
+						if(is_3d_printed && has_case && !has_frame && len(case_openings)>0 && cheat=="no"){
 							adding_plastic(case_openings,"case");
 						}
 					}
 					
 					if(len(m_c_o)>0){
 						translate(unequal_opening)
-						if(type_of_keyguard=="3D-Printed" && have_a_case=="yes" && have_a_keyguard_frame=="no" && cheat=="no"){
+						if(is_3d_printed && has_case && !has_frame && cheat=="no"){
 							adding_plastic(m_c_o,"case");
 						}
 					}
@@ -2068,7 +2080,7 @@ module keyguard(cheat){
 				//*** add cuts that should override anything added to the screen
 				
 				// remove parts of keyguard frame above posts
-				if(have_a_case=="yes" && have_a_keyguard_frame=="yes" && mount_keyguard_with=="posts"){
+				if(has_case && has_frame && mount_keyguard_with=="posts"){
 					trim_keyguard_to_bar();
 				}
 										
@@ -2085,12 +2097,12 @@ module keyguard(cheat){
 			//*** add specialized elements for special configurations - like a snap-in keyguard to a keyguard frame
 			
 			// add snap-in tabs
-			if (have_a_keyguard_frame=="yes" && hide_screen_region == "no"){
+			if (has_frame && hide_screen_region == "no"){
 				add_snap_ins();
 			}
 					
 			//add the posts themselves
-			if(have_a_case=="yes" && have_a_keyguard_frame=="yes" && mount_keyguard_with=="posts"){
+			if(has_case && has_frame && mount_keyguard_with=="posts"){
 				add_keyguard_frame_posts();
 			}	
 		}
@@ -2129,7 +2141,7 @@ module lc_keyguard(){
 								base_keyguard(kw,kh,kcr,0,"no");
 													
 								//add slide-in & raised tabs
-								if (have_a_case=="yes" && have_a_keyguard_frame=="no" && m_m=="Slide-in Tabs"){
+								if (has_case && !has_frame && m_m=="Slide-in Tabs"){
 									case_mounts(0);
 								}
 							}
@@ -2137,13 +2149,13 @@ module lc_keyguard(){
 
 							// cut case openings
 							if(!is_undef(case_openings)){
-								if(have_a_case=="yes" && len(case_openings)>0 && !(have_a_keyguard_frame=="yes" && generate=="keyguard")){
+								if(has_case && len(case_openings)>0 && !(has_frame && generate=="keyguard")){
 									cut_case_openings(case_openings,0);
 								}
 							}
 							
 							if(len(m_c_o)>0){
-								if(have_a_case=="yes" && !(have_a_keyguard_frame=="yes" && generate=="keyguard")){
+								if(has_case && !(has_frame && generate=="keyguard")){
 									cut_case_openings(m_c_o,0);
 								}
 							}
@@ -2241,7 +2253,7 @@ module lc_keyguard(){
 module keyguard_frame(cheat){
 	unequal_border = [-unequal_tablet_left_side_offset,-unequal_tablet_bottom_side_offset,0];
 
-	trans = (have_a_case=="yes") ? [-unequal_left_side_offset,-unequal_bottom_side_offset,0] : unequal_border;
+	trans = (has_case) ? [-unequal_left_side_offset,-unequal_bottom_side_offset,0] : unequal_border;
 	difference(){
 		translate(trans)
 		difference(){
@@ -2272,8 +2284,8 @@ module keyguard_frame(cheat){
 				// adding manual slide-in tabs and pedestals for clip-on straps
 				if(!is_undef(case_additions)){
 					if(len(case_additions)>0){
-						if (have_a_keyguard_frame=="no" || 
-						   (have_a_keyguard_frame=="yes" && generate=="keyguard frame" && cheat=="no")
+						if (!has_frame || 
+						   (has_frame && generate=="keyguard frame" && cheat=="no")
 						   ){
 						   
 							add_flex_height_shapes(case_additions);
@@ -2283,8 +2295,8 @@ module keyguard_frame(cheat){
 					}
 				}
 				
-				if(len(m_c_a)>0 && (have_a_keyguard_frame=="no" || 
-				   (have_a_keyguard_frame=="yes" && generate=="keyguard frame" && cheat=="no"))){
+				if(len(m_c_a)>0 && (!has_frame || 
+				   (has_frame && generate=="keyguard frame" && cheat=="no"))){
 				   
 					add_flex_height_shapes(m_c_a);
 					
@@ -2312,11 +2324,11 @@ module keyguard_frame(cheat){
 			
 			// add slots to manually added clip-on strap pedestals
 			if(!is_undef(case_additions)){
-				if(len(case_additions)>0 && type_of_keyguard!="Laser-Cut" && cheat=="no"){
+				if(len(case_additions)>0 && !is_laser_cut && cheat=="no"){
 					cut_manual_mount_pedestal_slots(case_additions);
 				}
 			}
-			if(len(m_c_a)>0 && type_of_keyguard!="Laser-Cut" && cheat=="no"){
+			if(len(m_c_a)>0 && !is_laser_cut && cheat=="no"){
 				cut_manual_mount_pedestal_slots(m_c_a);
 			}
 
@@ -2352,16 +2364,16 @@ module keyguard_frame(cheat){
 		// remove non-full height "-" shapes
 		if(!is_undef(case_additions)){
 			if(len(case_additions)>0){
-				if (have_a_keyguard_frame=="no" || 
-				   (have_a_keyguard_frame=="yes" && generate=="keyguard frame" && cheat=="no")
+				if (!has_frame || 
+				   (has_frame && generate=="keyguard frame" && cheat=="no")
 				   ){
 					sub_flex_height_shapes(case_additions);
 				}
 			}
 		}
 		
-		if(len(m_c_a)>0 && (have_a_keyguard_frame=="no" || 
-		   (have_a_keyguard_frame=="yes" && generate=="keyguard frame" && cheat=="no"))){
+		if(len(m_c_a)>0 && (!has_frame || 
+		   (has_frame && generate=="keyguard frame" && cheat=="no"))){
 			sub_flex_height_shapes(m_c_a);
 		}
 
@@ -2439,7 +2451,7 @@ module trim_keyguard_to_bar(){
 // Generates the horizontal cylindrical mounting posts (and optional mini tabs) used when
 // the mounting method is "Posts". Posts extend out from the sides of the case opening.
 module add_mounting_posts(){
-	pd = (have_a_keyguard_frame=="yes") ? kt : post_diameter;
+	pd = (has_frame) ? kt : post_diameter;
 	p_l = (expose_status_bar=="yes" || expose_upper_message_bar=="yes") ? post_length : width_of_opening_in_case+post_length*2;
 
 	bdr = (cow-swm)/2;
@@ -2518,9 +2530,9 @@ module add_mounting_posts(){
 module split_keyguard(){
 	half = (generate == "first half of keyguard") ? "first" : "second";
 	
-	if (orientation=="landscape"){
-		maskwidth = (have_a_case == "no") ? tablet_width : kw;
-		maskheight = (have_a_case == "no") ? tablet_height : kh;
+	if (is_landscape){
+		maskwidth = (!has_case) ? tablet_width : kw;
+		maskheight = (!has_case) ? tablet_height : kh;
 		
 		if (split_line_location==0 && row_count > 0 && column_count > 0){
 			odd_num_columns = column_count/2 - floor(column_count/2) > 0;
@@ -2573,8 +2585,8 @@ module split_keyguard(){
 		}
 	}
 	else{
-		maskwidth = (have_a_case == "no") ? tablet_width : kw;
-		maskheight = (have_a_case == "no") ? tablet_height : kh;
+		maskwidth = (!has_case) ? tablet_width : kw;
+		maskheight = (!has_case) ? tablet_height : kh;
 
 		if (split_line_location==0 && row_count > 0 && column_count > 0){
 			odd_num_rows = row_count/2 - floor(row_count/2) > 0;
@@ -2631,7 +2643,7 @@ module split_keyguard(){
 // Renders a highlighted 1 mm slab at the split-line position for visual inspection,
 // and echoes the distance from each edge to the console.
 module show_line_split_location(){
-	if (orientation=="landscape"){
+	if (is_landscape){
 		if(generate=="keyguard frame" || generate=="first half of keyguard frame" ||generate=="second half of keyguard frame"){
 			translate([split_line_location,0,0])
 			#cube([1,coh+10,10],center=true);
@@ -2714,7 +2726,7 @@ module split_keyguard_frame(half){
 	maskwidth = fw;
 	maskheight = fh;
 		
-	rot = (orientation=="landscape") ? [0,0,0] : [0,0,-90];
+	rot = (is_landscape) ? [0,0,0] : [0,0,-90];
 	split_x0 = (half=="first")? maskwidth + split_line_location : -maskwidth + split_line_location;
 	
 	rotate(rot)
@@ -2742,7 +2754,7 @@ module split_keyguard_frame(half){
 // the two halves of a split keyguard or frame.
 // @param half  "first" produces teeth; "second" produces sockets (with tightness gap)
 module dovetails(half){
-	cutLen = (have_a_case=="no") ? tablet_height*2+ff*2 : kh*2+ff*2 ;
+	cutLen = (!has_case) ? tablet_height*2+ff*2 : kh*2+ff*2 ;
 	doveTailWidth=dovetail_width;
 	doveTailHeight = 100;
 	gap = (half == "second") ? tightness_of_dovetail_joint/2 : 0;
@@ -2768,10 +2780,10 @@ module case_mounts(depth) {
 			add_2d_slide_in_tabs();
 		}
 	}
-	else if (m_m=="Raised Tabs" && type_of_keyguard=="3D-Printed" && depth > 0){
+	else if (m_m=="Raised Tabs" && is_3d_printed && depth > 0){
 		add_raised_tabs(depth);
 	}
-	else if (m_m=="Clip-on Straps" && type_of_keyguard=="3D-Printed" && depth > 0 && !no_clips){
+	else if (m_m=="Clip-on Straps" && is_3d_printed && depth > 0 && !no_clips){
 		add_clip_on_strap_pedestals(depth);
 	}
 }
@@ -2924,8 +2936,8 @@ module add_clip_on_strap_pedestals(depth){
 module add_raised_tabs(depth) {
 	s = (raised_tabs_starting_height < depth - 1) ? raised_tabs_starting_height : depth - 1;
 	
-	dim = (orientation=="landscape") ? cow : coh;
-	r = (orientation=="landscape") ? 0 : 90;
+	dim = (is_landscape) ? cow : coh;
+	r = (is_landscape) ? 0 : 90;
 	
 	rotate([0,0,r])
 	union(){
@@ -3100,7 +3112,7 @@ module create_cutting_tool(rotation,diameter,thickness,slope,type){
 		cube(size=[diameter/2+ff*2,diameter/2+ff*2,thickness+ff]);
 		intersection(){
 			cylinder(h=thickness+ff*4,r1=diameter/2,r2=diameter/2-(thickness/tan(slope)),center=true);
-			if (type=="oa" && type_of_keyguard=="3D-Printed"){ //outer arcs are chamfered
+			if (type=="oa" && is_3d_printed){ //outer arcs are chamfered
 				chamfer_circle_radius1 = diameter/2+(tan(45)*(thickness-.6)); // bottom radius
 				chamfer_circle_radius2 = diameter/2 -.6; //top radius
 				cylinder(h=thickness+ff*2,r1=chamfer_circle_radius1,r2=chamfer_circle_radius2,center=true);
@@ -3153,7 +3165,7 @@ module home_camera(depth){
 	if (camera_location!=0 && expose_camera=="yes" && camera_height > 0 && camera_width > 0){
 		translate([cam_x_loc,cam_y_loc,0])
 		if (camera_height==camera_width){
-			if (type_of_keyguard=="3D-Printed"){
+			if (is_3d_printed){
 				hole_cutter(camera_height,camera_height,camera_cut_angle,camera_cut_angle,camera_cut_angle,camera_cut_angle,camera_height/2,depth);
 			}
 			else{
@@ -3161,7 +3173,7 @@ module home_camera(depth){
 			}
 		}
 		else{
-			if (type_of_keyguard=="3D-Printed"){
+			if (is_3d_printed){
 				m = min(camera_width,camera_height);
 				hole_cutter(camera_width,camera_height,camera_cut_angle,camera_cut_angle,camera_cut_angle,camera_cut_angle,m/2,depth);
 			}
@@ -3329,8 +3341,8 @@ module clip_on_straps_groove(){
 	yloc = (add_sloped_keyguard_edge=="no") ? coh :
 	       (extend_lip_to_edge_of_case=="no") ? coh + sew*2-2 : case_height-2;
 	
-	w1 = (have_a_case=="no") ? tablet_width :xloc;
-	h1 = (have_a_case=="no") ? tablet_height : yloc;
+	w1 = (!has_case) ? tablet_width :xloc;
+	h1 = (!has_case) ? tablet_height : yloc;
 	x0 = -w1/2;
 	y0 = -h1/2;
 	
@@ -3665,8 +3677,8 @@ module rr_corner_wall(width,hgt,corner_radius,thickness,hgt2){
 // @param radius        Corner radius in mm (0 = sharp corners)
 // @param depth         Cut depth in mm
 module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,depth){
-	d = (type_of_keyguard=="3D-Printed") ? depth-cec : depth;
-	z = (type_of_keyguard=="3D-Printed") ? -cec/2 : 0;
+	d = (is_3d_printed) ? depth-cec : depth;
+	z = (is_3d_printed) ? -cec/2 : 0;
 	
 	rad1=min(hole_width/2,hole_height/2,radius);
 	
@@ -3675,7 +3687,7 @@ module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,righ
 		union(){
 			cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,rad1,d);
 			
-			if (type_of_keyguard=="3D-Printed"){  // add cell edge chamfer to cutting tool
+			if (is_3d_printed){  // add cell edge chamfer to cutting tool
 				l_s = (left_slope>=chamfer_angle_stop || left_slope<0) ? 45 : left_slope;
 				r_s = (right_slope>=chamfer_angle_stop || right_slope<0) ? 45 : right_slope;
 				t_s = (top_slope>=chamfer_angle_stop || top_slope<0) ? 45 : top_slope;
@@ -3998,29 +4010,29 @@ module cut_screen_openings(s_o,depth){
 		opening_width = (opening[3]==undef) ? 0 : opening[3];
 		opening_height = opening[4];
 		opening_shape = opening[5];
-		opening_top_slope = (type_of_keyguard=="Laser-Cut" || (opening[6]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[6];
-		opening_bottom_slope = (type_of_keyguard=="Laser-Cut" || (opening[7]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[7];
-		opening_left_slope = (type_of_keyguard=="Laser-Cut" || (opening[8]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[8];
-		opening_right_slope = (type_of_keyguard=="Laser-Cut" || (opening[9]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[9];
+		opening_top_slope = (is_laser_cut || (opening[6]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[6];
+		opening_bottom_slope = (is_laser_cut || (opening[7]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[7];
+		opening_left_slope = (is_laser_cut || (opening[8]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[8];
+		opening_right_slope = (is_laser_cut || (opening[9]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[9];
 		opening_corner_radius = opening[10];
 		opening_other = opening[11];
-		opening_width_mm = (unit_of_measure_for_screen=="px") ? opening_width * mpp : opening_width;
-		opening_height_mm = (unit_of_measure_for_screen=="px") ? opening_height * mpp : opening_height;
-		opening_x_mm = (unit_of_measure_for_screen=="px") ? opening_x * mpp : opening_x;
+		opening_width_mm = (using_px) ? opening_width * mpp : opening_width;
+		opening_height_mm = (using_px) ? opening_height * mpp : opening_height;
+		opening_x_mm = (using_px) ? opening_x * mpp : opening_x;
 
 		o_s = opening_shape;		
 		o_c_r = (o_s=="oa1" || o_s=="oa2" || o_s=="oa3" || "oa4") ? opening_corner_radius : min(opening_corner_radius,min(opening_width,opening_height)/2);
-		opening_corner_radius_mm = (unit_of_measure_for_screen=="px") ? o_c_r * mpp : o_c_r;
+		opening_corner_radius_mm = (using_px) ? o_c_r * mpp : o_c_r;
 		
 		if(depth>0){
 			if(opening_ID!="#"){
 				if (starting_corner_for_screen_measurements == "upper-left"){
-					opening_y_mm = (unit_of_measure_for_screen=="px") ? (shp - opening_y) * mpp : (shm - opening_y);
+					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
 					translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
 					cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other,depth,"screen");
 				}
 				else{
-					opening_y_mm = (unit_of_measure_for_screen=="px") ? opening_y * mpp : opening_y;
+					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
 					
 					translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
 					cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other,depth,"screen");
@@ -4028,12 +4040,12 @@ module cut_screen_openings(s_o,depth){
 			}
 			else{
 				if (starting_corner_for_screen_measurements == "upper-left"){
-					opening_y_mm = (unit_of_measure_for_screen=="px") ? (shp - opening_y) * mpp : (shm - opening_y);
+					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
 					translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
 					#cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other,depth,"screen");
 				}
 				else{
-					opening_y_mm = (unit_of_measure_for_screen=="px") ? opening_y * mpp : opening_y;
+					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
 					
 					translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
 					#cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other,depth,"screen");
@@ -4043,12 +4055,12 @@ module cut_screen_openings(s_o,depth){
 		else{
 			if(opening_ID!="#"){
 				if (starting_corner_for_screen_measurements == "upper-left"){
-					opening_y_mm = (unit_of_measure_for_screen=="px") ? (shp - opening_y) * mpp : (shm - opening_y);
+					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
 					translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
 					cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
 				}
 				else{
-					opening_y_mm = (unit_of_measure_for_screen=="px") ? opening_y * mpp : opening_y;
+					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
 					
 					translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
 					cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
@@ -4056,12 +4068,12 @@ module cut_screen_openings(s_o,depth){
 			}
 			else{
 				if (starting_corner_for_screen_measurements == "upper-left"){
-					opening_y_mm = (unit_of_measure_for_screen=="px") ? (shp - opening_y) * mpp : (shm - opening_y);
+					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
 					translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
 					#cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
 				}
 				else{
-					opening_y_mm = (unit_of_measure_for_screen=="px") ? opening_y * mpp : opening_y;
+					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
 					
 					translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
 					#cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
@@ -4085,10 +4097,10 @@ module cut_case_openings(c_o,depth){
 		opening_width = opening[3];
 		opening_height = opening[4];
 		opening_shape = opening[5];
-		opening_top_slope = (type_of_keyguard=="Laser-Cut" || (opening[6]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[6];
-		opening_bottom_slope = (type_of_keyguard=="Laser-Cut" || (opening[7]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[7];
-		opening_left_slope = (type_of_keyguard=="Laser-Cut" || (opening[8]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[8];
-		opening_right_slope = (type_of_keyguard=="Laser-Cut" || (opening[9]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[9];
+		opening_top_slope = (is_laser_cut || (opening[6]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[6];
+		opening_bottom_slope = (is_laser_cut || (opening[7]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[7];
+		opening_left_slope = (is_laser_cut || (opening[8]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[8];
+		opening_right_slope = (is_laser_cut || (opening[9]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : opening[9];
 		opening_corner_radius = opening[10];
 		opening_other = opening[11];
 
@@ -4131,16 +4143,16 @@ module cut_tablet_openings(t_o,depth){
 		opening_width = opening[3];
 		opening_height = opening[4];
 		opening_shape = opening[5];
-		opening_top_slope = (opening[6]==0 || type_of_keyguard=="Laser-Cut") ? 90 : opening[6];
-		opening_bottom_slope = (opening[7]==0 || type_of_keyguard=="Laser-Cut") ? 90 : opening[7];
-		opening_left_slope = (opening[8]==0 || type_of_keyguard=="Laser-Cut") ? 90 : opening[8];
-		opening_right_slope = (opening[9]==0 || type_of_keyguard=="Laser-Cut") ? 90 : opening[9];
+		opening_top_slope = (opening[6]==0 || is_laser_cut) ? 90 : opening[6];
+		opening_bottom_slope = (opening[7]==0 || is_laser_cut) ? 90 : opening[7];
+		opening_left_slope = (opening[8]==0 || is_laser_cut) ? 90 : opening[8];
+		opening_right_slope = (opening[9]==0 || is_laser_cut) ? 90 : opening[9];
 		opening_corner_radius = opening[10];
 		opening_other = opening[11];
 		
 		o_c_r = (opening_width>0 && opening_height>0) ? min(opening_corner_radius,min(opening_width,opening_height)/2) : opening_corner_radius;
 		
-		trans = (orientation=="landscape") ? [tx0+opening_x,ty0+opening_y,0] : [tx0+opening_y,-ty0-opening_x,0];
+		trans = (is_landscape) ? [tx0+opening_x,ty0+opening_y,0] : [tx0+opening_y,-ty0-opening_x,0];
 		translate(trans)
 		if(opening_ID!="#"){
 			cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "tablet");
@@ -4174,7 +4186,7 @@ module cut_als_openings(a_o,depth){
 		
 		o_c_r = (opening_width>0 && opening_height>0) ? min(opening_corner_radius,min(opening_width,opening_height)/2) : opening_corner_radius;
 		
-		trans = (orientation=="landscape") ? [tx0+opening_x,ty0+opening_y,0] : [tx0+opening_y,-ty0-opening_x,0];
+		trans = (is_landscape) ? [tx0+opening_x,ty0+opening_y,0] : [tx0+opening_y,-ty0-opening_x,0];
 		translate(trans)
 		if(opening_ID!="#"){
 			cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "tablet");
@@ -4205,14 +4217,14 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 	other_pos = other_number && other>=0;
 	other_neg = other_number && other<0;
 	
-	offset = (type_of_keyguard=="3D-Printed" && other_number && other_pos && type=="screen") ? depth - other : 
-			 (type_of_keyguard=="3D-Printed" && other_number && other_pos && type=="keyguard") ? (depth - other)/2 : 
-			 (type_of_keyguard=="3D-Printed" && other_number && other_neg && type=="screen") ? -depth-other :
-			 (type_of_keyguard=="3D-Printed" && other_number && other_neg && type=="keyguard") ? -(depth+other)/2 :
+	offset = (is_3d_printed && other_number && other_pos && type=="screen") ? depth - other : 
+			 (is_3d_printed && other_number && other_pos && type=="keyguard") ? (depth - other)/2 : 
+			 (is_3d_printed && other_number && other_neg && type=="screen") ? -depth-other :
+			 (is_3d_printed && other_number && other_neg && type=="keyguard") ? -(depth+other)/2 :
 			 0;
 			 			 		
-	dep = (type_of_keyguard=="3D-Printed" && other_number && other_pos) ? other : 
-		  (type_of_keyguard=="3D-Printed" && other_number && other_neg) ? -other :
+	dep = (is_3d_printed && other_number && other_pos) ? other : 
+		  (is_3d_printed && other_number && other_neg) ? -other :
 	      depth;
 		    
 	flip = (other_number && other_neg) ? true: false;
@@ -4248,7 +4260,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 	}
 	else if (shape=="c"){
 		if (cut_height > 0){
-			if (type_of_keyguard=="3D-Printed"){
+			if (is_3d_printed){
 				trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
 				if (flip){
 					translate([0,0,trans])
@@ -4368,7 +4380,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 			text(str(other),font = f_s, size=cut_height,valign=vert,halign=horiz);
 		}
 	}
-	else if (shape=="btext" && type_of_keyguard=="3D-Printed"){
+	else if (shape=="btext" && is_3d_printed){
 		f_s = 
 			(bottom_slope==1)? "Liberation Sans:style=Bold"
 		  : (bottom_slope==2)? "Liberation Sans:style=Italic"
@@ -4398,7 +4410,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 			text(str(other),font = f_s, size=cut_height,valign=vert,halign=horiz);
 		}
 	}
-	else if (shape=="svg" && type_of_keyguard=="3D-Printed"){
+	else if (shape=="svg" && is_3d_printed){
 		if (cut_width > 0 && cut_height > 0 && corner_radius<0){
 			trans = (type=="screen") ? corner_radius-kt/2+sat-ff : kt/2+corner_radius;
 			translate([0,0,trans])
@@ -4514,21 +4526,21 @@ module adding_plastic(additions,where){
 		
 		if (addition_shape == "bump" || addition_shape == "hridge" || addition_shape == "vridge" || addition_shape == "cridge" || addition_shape == "rridge" || addition_shape == "crridge" || addition_shape == "ridge" || addition_shape == "aridge1" || addition_shape == "aridge2" || addition_shape == "aridge3" || addition_shape == "aridge4" || addition_shape == "svg" || addition_shape == "ttext") {
 	
-			addition_width_mm = (unit_of_measure_for_screen=="px" && where=="screen") ? addition_width * mpp : addition_width;
-			addition_height_mm = (unit_of_measure_for_screen=="px" && where=="screen") ? addition_height * mpp : addition_height;
-			addition_x_mm = (unit_of_measure_for_screen=="px" && where=="screen") ? addition_x * mpp : addition_x;
-			addition_corner_radius_mm = (unit_of_measure_for_screen=="px" && where=="screen") ? addition_corner_radius * mpp : addition_corner_radius;
-			addition_top_slope_mm = (unit_of_measure_for_screen=="px" && where=="screen") ? addition_top_slope * mpp : addition_top_slope;
-			addition_bottom_slope_mm = (unit_of_measure_for_screen=="px" && where=="screen") ? addition_bottom_slope * mpp : addition_bottom_slope;
+			addition_width_mm = (using_px && where=="screen") ? addition_width * mpp : addition_width;
+			addition_height_mm = (using_px && where=="screen") ? addition_height * mpp : addition_height;
+			addition_x_mm = (using_px && where=="screen") ? addition_x * mpp : addition_x;
+			addition_corner_radius_mm = (using_px && where=="screen") ? addition_corner_radius * mpp : addition_corner_radius;
+			addition_top_slope_mm = (using_px && where=="screen") ? addition_top_slope * mpp : addition_top_slope;
+			addition_bottom_slope_mm = (using_px && where=="screen") ? addition_bottom_slope * mpp : addition_bottom_slope;
 
 			if(addition_ID!="#"){
 				if (starting_corner_for_screen_measurements == "upper-left" && where=="screen"){
-					addition_y_mm = (unit_of_measure_for_screen=="px") ? (shp - addition_y) * mpp : (shm - addition_y);
+					addition_y_mm = (using_px) ? (shp - addition_y) * mpp : (shm - addition_y);
 					translate([x0+addition_x_mm,y0+addition_y_mm,trans-ff])
 					place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
 				}
 				else{
-					addition_y_mm = (unit_of_measure_for_screen=="px" && where=="screen") ? addition_y * mpp : addition_y;
+					addition_y_mm = (using_px && where=="screen") ? addition_y * mpp : addition_y;
 					
 					translate([x0+addition_x_mm,y0+addition_y_mm,trans-ff])
 					place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
@@ -4536,12 +4548,12 @@ module adding_plastic(additions,where){
 			}
 			else{
 				if (starting_corner_for_screen_measurements == "upper-left" && where=="screen"){
-					addition_y_mm = (unit_of_measure_for_screen=="px") ? (shp - addition_y) * mpp : (shm - addition_y);
+					addition_y_mm = (using_px) ? (shp - addition_y) * mpp : (shm - addition_y);
 					translate([x0+addition_x_mm,y0+addition_y_mm,trans-ff])
 					#place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
 				}
 				else{
-					addition_y_mm = (unit_of_measure_for_screen=="px" && where=="screen") ? addition_y * mpp : addition_y;
+					addition_y_mm = (using_px && where=="screen") ? addition_y * mpp : addition_y;
 					
 					translate([x0+addition_x_mm,y0+addition_y_mm,trans-ff])
 					#place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
@@ -5023,7 +5035,7 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 	difference(){
 		case_opening_blank(widt,heig,radi,thickness,cheat);
 		
-		if (type_of_keyguard=="3D-Printed" && add_sloped_keyguard_edge=="yes"){
+		if (is_3d_printed && add_sloped_keyguard_edge=="yes"){
 			difference(){
 				translate([0,0,-fudge])
 				case_opening_blank(widt+5,heig+5,radi,case_to_screen_depth+fudge*2,cheat);
@@ -5062,7 +5074,7 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 			}
 		}
 				
-		if (type_of_keyguard=="3D-Printed"){  //add chamfer
+		if (is_3d_printed){  //add chamfer
 			for (i = [1:1:chamfer_slices]) { 
 				chamfer_slice(i,widt,heig,radi,thickness,cheat);
 			}
@@ -5127,11 +5139,11 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 				square([shape_x-c_r[0]*2,shape_y-c_r[0]*2],center=true);
 				
 				if(!is_undef(case_additions)){
-					if(add_symmetric_openings=="no" && !(generate=="keyguard" && have_a_keyguard_frame=="yes") && have_a_case=="yes" && len(case_additions)>0 && cheat=="no"){
+					if(add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && len(case_additions)>0 && cheat=="no"){
 						add_case_full_height_shapes(case_additions,"add");
 					}
 				}
-				if(len(m_c_a)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && have_a_keyguard_frame=="yes") && have_a_case=="yes" && cheat=="no"){
+				if(len(m_c_a)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && cheat=="no"){
 					add_case_full_height_shapes(m_c_a,"add");
 				}
 			}
@@ -5155,16 +5167,16 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 		}
 
 		if(!is_undef(case_additions)){
-			if(add_symmetric_openings=="no" && !(generate=="keyguard" && have_a_keyguard_frame=="yes") && have_a_case=="yes" && len(case_additions)>0 && cheat=="no"){
+			if(add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && len(case_additions)>0 && cheat=="no"){
 				add_case_full_height_shapes(case_additions,"sub");
 			}
 		}
 
-		if(len(m_c_a)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && have_a_keyguard_frame=="yes") && have_a_case=="yes" && cheat=="no"){
+		if(len(m_c_a)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && cheat=="no"){
 			add_case_full_height_shapes(m_c_a,"sub");
 		}
 
-		if(have_a_case=="yes" && m_m=="Posts"){
+		if(has_case && m_m=="Posts"){
 			translate([0,coh/2+25-mount_to_top_of_opening_distance,0])
 			square([cow+1,50],center=true);
 		}
@@ -5542,7 +5554,7 @@ module add_flex_height_shapes(c_a){
 			addition_y = addition[2];
 			addition_width = addition[3];
 			addition_height = addition[4];
-			addition_thickness = (type_of_keyguard=="Laser-Cut" && generate=="first layer for SVG/DXF file") ? 0 : addition[6];
+			addition_thickness = (is_laser_cut && generate=="first layer for SVG/DXF file") ? 0 : addition[6];
 			addition_shape = addition[5];
 			addition_trim_above = addition[7];
 			addition_trim_below = addition[8];
@@ -5578,7 +5590,7 @@ module sub_flex_height_shapes(c_a){
 			addition_y = addition[2];
 			addition_width = addition[3]+ff;
 			addition_height = addition[4]+ff;
-			addition_thickness = (type_of_keyguard=="Laser-Cut" && generate=="first layer for SVG/DXF file") ? 0 : addition[6]+ff;
+			addition_thickness = (is_laser_cut && generate=="first layer for SVG/DXF file") ? 0 : addition[6]+ff;
 			addition_shape = addition[5];
 			addition_trim_above = addition[7];
 			addition_trim_below = addition[8];
@@ -5983,8 +5995,8 @@ module trim_to_rectangle(){
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
 	
-	major_dim = (have_a_case=="no") ? max(tablet_width,tablet_height) : max(kw,kh);
-	minor_dim = (have_a_case=="no") ? min(tablet_width,tablet_height): min(kw,kh);
+	major_dim = (!has_case) ? max(tablet_width,tablet_height) : max(kw,kh);
+	minor_dim = (!has_case) ? min(tablet_width,tablet_height): min(kw,kh);
 	
 	x1 = t_t_r_ll[0];
 	y1 = t_t_r_ll[1];
@@ -5996,7 +6008,7 @@ module trim_to_rectangle(){
 	
 	translate([x0+w1/2+x1,y0+h1/2+y1,0])
 	difference(){
-		final_rotation = (orientation=="landscape") ? [0,0,0] : [0,0,-90];
+		final_rotation = (is_landscape) ? [0,0,0] : [0,0,-90];
 		
 		rotate(final_rotation)
 		cube([major_dim*3,minor_dim*3,kt+ff*2],true);
@@ -6158,7 +6170,7 @@ module engrave_emboss_instruction(){
 	              (text_vertical_alignment=="baseline") ? 2 :
 	              (text_vertical_alignment=="center") ? 3 :
 				  4;
-	corner_radius = (type_of_keyguard=="Laser-Cut") ? -0.1 : text_depth;
+	corner_radius = (is_laser_cut) ? -0.1 : text_depth;
 	other = text;
 	depth = sat;
 	
@@ -6208,7 +6220,7 @@ module echo_settings(){
 	echo();
 
 	echo("---- Keyguard Basics ----");
-		if (type_of_keyguard != "3D-Printed") echo(type_of_keyguard = type_of_keyguard);
+		if (!is_3d_printed) echo(type_of_keyguard = type_of_keyguard);
 		if (keyguard_thickness != 4) echo(keyguard_thickness = keyguard_thickness);
 		if (screen_area_thickness != 4) echo(screen_area_thickness = screen_area_thickness);
 		echo();
@@ -6216,7 +6228,7 @@ module echo_settings(){
 
 	echo("---- Tablet ----");
 		if (type_of_tablet != "iPad 9th generation") echo(type_of_tablet = type_of_tablet);
-		if (orientation != "landscape") echo(orientation = orientation);
+		if (!is_landscape) echo(orientation = orientation);
 		if (expose_home_button != "yes") echo(expose_home_button = expose_home_button);
 		if (home_button_edge_slope!= 30) echo(home_button_edge_slope = home_button_edge_slope);
 		if (expose_camera != "yes") echo(expose_camera = expose_camera);
@@ -6227,7 +6239,7 @@ module echo_settings(){
 		echo();
 
 	echo("---- Tablet Case ----");
-		if (have_a_case != "yes") echo(have_a_case = have_a_case);
+		if (!has_case) echo(have_a_case = have_a_case);
 		if (height_of_opening_in_case != 170) echo(height_of_opening_in_case = height_of_opening_in_case);
 		if (width_of_opening_in_case != 245) echo(width_of_opening_in_case = width_of_opening_in_case);
 		if (case_opening_corner_radius != 5) echo(case_opening_corner_radius = case_opening_corner_radius);
@@ -6370,7 +6382,7 @@ module echo_settings(){
 		echo();
 
 	echo("---- Keyguard Frame Info ----");
-		if (have_a_keyguard_frame != "no") echo(have_a_keyguard_frame = have_a_keyguard_frame);
+		if (has_frame) echo(have_a_keyguard_frame = have_a_keyguard_frame);
 		if (keyguard_frame_thickness != 5) echo(keyguard_frame_thickness = keyguard_frame_thickness);
 		if (keyguard_height != 160) echo(keyguard_height = keyguard_height);
 		if (keyguard_width != 210) echo(keyguard_width = keyguard_width);
@@ -6433,7 +6445,7 @@ module echo_settings(){
 		echo();
 
 	echo("---- Free-form and Hybrid Keyguard Openings ----");
-		if (unit_of_measure_for_screen != "px") echo(unit_of_measure_for_screen = unit_of_measure_for_screen);
+		if (!using_px) echo(unit_of_measure_for_screen = unit_of_measure_for_screen);
 		if (starting_corner_for_screen_measurements != "upper-left") echo(starting_corner_for_screen_measurements = starting_corner_for_screen_measurements);
 		echo();
 		echo();
@@ -6454,7 +6466,7 @@ module echo_settings(){
 		if (trim_to_rectangle_lower_left != "" && trim_to_rectangle_lower_left != "[]") echo(trim_to_rectangle_lower_left = trim_to_rectangle_lower_left);
 		if (trim_to_rectangle_upper_right != "" && trim_to_rectangle_upper_right != "[]") echo(trim_to_rectangle_upper_right = trim_to_rectangle_upper_right);
 		if (smoothness_of_circles_and_arcs != 40) echo(smoothness_of_circles_and_arcs = smoothness_of_circles_and_arcs);
-		if (use_Laser_Cutting_best_practices != "yes") echo(use_Laser_Cutting_best_practices = use_Laser_Cutting_best_practices);
+		if (!lc_best_practices) echo(use_Laser_Cutting_best_practices = use_Laser_Cutting_best_practices);
 		if (other_tablet_general_sizes != "" && other_tablet_general_sizes != "[]") echo(other_tablet_general_sizes = other_tablet_general_sizes);
 		if (other_tablet_pixel_sizes != "" && other_tablet_pixel_sizes != "[]") echo(other_tablet_pixel_sizes = other_tablet_pixel_sizes);
 		if (my_screen_openings != "") echo(my_screen_openings = my_screen_openings);
@@ -6515,7 +6527,7 @@ module key_settings(){
 	echo(str("use Laser Cutting best practices: ", use_Laser_Cutting_best_practices));
 	echo(str("orientation: ", orientation));
 	echo(str("have a case? ", have_a_case));
-	if(have_a_case=="yes"){
+	if(has_case){
 		echo(str("height of opening in case: ", kh, " mm."));
 		echo(str("width of opening in case: ", kw, " mm."));
 		echo(str("case opening corner radius: ", ccr, " mm."));
@@ -6548,18 +6560,18 @@ module key_settings(){
 		tsv = th*slide_vertically/100;
 	
 		// horizontal location
-		x_loc = (keyguard_region=="screen region" && have_a_case=="yes") ? adj_case_border_left + ssh :
-				(keyguard_region=="screen region" && have_a_case=="no") ? left_border_width + ssh :
-				(keyguard_region=="case region" && have_a_case=="yes") ? csh :
-				(keyguard_region=="tablet region" && have_a_case=="no") ? tsh :
-				(keyguard_region=="tablet region" && have_a_case=="yes") ? 0 :
+		x_loc = (keyguard_region=="screen region" && has_case) ? adj_case_border_left + ssh :
+				(keyguard_region=="screen region" && !has_case) ? left_border_width + ssh :
+				(keyguard_region=="case region" && has_case) ? csh :
+				(keyguard_region=="tablet region" && !has_case) ? tsh :
+				(keyguard_region=="tablet region" && has_case) ? 0 :
 				0;
 		// vertical location
-		y_loc = (keyguard_region=="screen region" && have_a_case=="yes") ? adj_case_border_bottom + ssv :
-				(keyguard_region=="screen region" && have_a_case=="no") ? bottom_border_height + ssv :
-				(keyguard_region=="case region" && have_a_case=="yes") ? csv :
-				(keyguard_region=="tablet region" && have_a_case=="no") ? tsv :
-				(keyguard_region=="tablet region" && have_a_case=="yes") ? 0 :
+		y_loc = (keyguard_region=="screen region" && has_case) ? adj_case_border_bottom + ssv :
+				(keyguard_region=="screen region" && !has_case) ? bottom_border_height + ssv :
+				(keyguard_region=="case region" && has_case) ? csv :
+				(keyguard_region=="tablet region" && !has_case) ? tsv :
+				(keyguard_region=="tablet region" && has_case) ? 0 :
 				0;
 		
 		echo();
