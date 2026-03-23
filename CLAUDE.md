@@ -86,6 +86,7 @@ Use `scripts/test.sh` to validate changes. It has five layers, selectable via fl
 | `--lint` | 1 | Fast | sca2d static analysis — fails on fatal errors only |
 | `--syntax` | 2 | Fast | OpenSCAD `--hardwarnings` parse check |
 | `--smoke` | 3 | Minutes | Render default config to STL |
+| `--quick-regression` | 4q | ~10 min | Render 8 branch-covering configs; compare checksums to baseline |
 | `--regression` | 4 | Slow | Render all 51 named configs; compare checksums to baseline |
 | `--visual` | 5 | Slow | Run `test.json` cases in `tests/cases/`; compare PNGs against references |
 | `--all` | 1–5 | Slow | All of the above |
@@ -94,6 +95,7 @@ Use `scripts/test.sh` to validate changes. It has five layers, selectable via fl
 ```bash
 ./scripts/test.sh                        # Fast default (lint + syntax + smoke)
 ./scripts/test.sh --all                  # Full suite
+./scripts/test.sh --quick-regression     # Fast geometry check during refactoring
 ./scripts/test.sh --regression           # Regression only
 ./scripts/test.sh --update-baseline      # Re-render all configs and save new STL baseline
 ./scripts/test.sh --capture-references   # Re-render all visual tests and save new reference PNGs

@@ -5,6 +5,7 @@
 #   --lint               Layer 1: sca2d static analysis (fast, no render)
 #   --syntax             Layer 2: OpenSCAD --hardwarnings parse check (fast, no render)
 #   --smoke              Layer 3: Render default config to STL
+#   --quick-regression   Layer 4q: Render 8 branch-covering configs; compare checksums to baseline
 #   --regression         Layer 4: Render all named configs from keyguard.json;
 #                                  compare STL checksums against baseline
 #   --visual             Layer 5: Run test.json cases; compare PNGs against references
@@ -14,6 +15,7 @@
 #   ./scripts/test.sh --all                  # All layers
 #   ./scripts/test.sh --lint                 # Single layer
 #   ./scripts/test.sh --lint --syntax        # Combine layers
+#   ./scripts/test.sh --quick-regression     # Fast geometry check during refactoring
 #   ./scripts/test.sh --update-baseline      # Re-render all configs; save new STL baseline
 #   ./scripts/test.sh --capture-references   # Re-render all visual tests; save new reference PNGs
 #   ./scripts/test.sh --capture-references --case "Test Case 25"  # Single test case only
@@ -59,6 +61,22 @@ info()  { echo -e "${BLUE}  ·${RESET} $*"; }
 header(){ echo -e "\n${BOLD}$*${RESET}"; }
 
 FAILURES=0
+
+# ── Quick-regression subset ────────────────────────────────────────────────────
+# Eight configs chosen to cover each major code branch. Used by --quick-regression
+# as a fast geometry sanity-check during refactoring (compare against the full
+# --regression baseline; run --update-baseline to refresh it after intentional changes).
+
+QUICK_REGRESSION_SUBSET=(
+    "Test Case 1"   # Default 3D-printed, landscape, with case — broad baseline
+    "Test Case 2"   # Laser-cut path
+    "Test Case 5"   # Portrait orientation
+    "Test Case 12"  # generate="frame"
+    "Test Case 13"  # Split keyguard
+    "Test Case 17"  # Snap-in tabs + frame + thick keyguard (bar height logic)
+    "Test Case 22"  # Heavy custom openings/additions (case additions logic)
+    "Test Case 43"  # Merged cells with ridges
+)
 
 # ── Tool detection ─────────────────────────────────────────────────────────────
 
@@ -111,7 +129,7 @@ PYTHON="$(find_python)"
 # ── Argument parsing ───────────────────────────────────────────────────────────
 
 RUN_LINT=false; RUN_SYNTAX=false; RUN_SMOKE=false
-RUN_REGRESSION=false; RUN_VISUAL=false
+RUN_REGRESSION=false; RUN_QUICK_REGRESSION=false; RUN_VISUAL=false
 UPDATE_BASELINE=false; CAPTURE_REFERENCES=false
 CASE_FILTER=""
 
@@ -123,6 +141,7 @@ else
             --lint)                RUN_LINT=true ;;
             --syntax)              RUN_SYNTAX=true ;;
             --smoke)               RUN_SMOKE=true ;;
+            --quick-regression)    RUN_QUICK_REGRESSION=true ;;
             --regression)          RUN_REGRESSION=true ;;
             --visual)              RUN_VISUAL=true ;;
             --all)                 RUN_LINT=true; RUN_SYNTAX=true; RUN_SMOKE=true
@@ -324,11 +343,14 @@ run_smoke() {
 }
 
 # ── Layer 4: Regression ───────────────────────────────────────────────────────
+#
+# run_regression [quick]
+#   quick=false (default): render all named configs and compare against full baseline
+#   quick=true:            render QUICK_REGRESSION_SUBSET only; compare those entries
+#                          against the full baseline (does not update the baseline)
 
 run_regression() {
-    header "Layer 4 — Regression test (all named configs)"
-    if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
-    mkdir -p "$OUTPUT_DIR/regression" "$(dirname "$BASELINE_FILE")"
+    local quick="${1:-false}"
 
     # Configs that intentionally produce non-3D output and cannot render to STL.
     # These are skipped (not counted as failures) in the regression layer.
@@ -339,9 +361,20 @@ run_regression() {
         "Test Case 46c"  # generate="first layer for SVG/DXF file" — 2D output only
     )
 
-    local configs; mapfile -t configs < <(get_configs)
-    info "Found ${#configs[@]} named configs"
-    "$UPDATE_BASELINE" && info "Mode: updating baseline"
+    local -a configs
+    if "$quick"; then
+        header "Layer 4q — Quick regression test (${#QUICK_REGRESSION_SUBSET[@]} configs)"
+        configs=("${QUICK_REGRESSION_SUBSET[@]}")
+    else
+        header "Layer 4 — Regression test (all named configs)"
+        mapfile -t configs < <(get_configs)
+        info "Found ${#configs[@]} named configs"
+    fi
+
+    if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
+    mkdir -p "$OUTPUT_DIR/regression" "$(dirname "$BASELINE_FILE")"
+
+    "$UPDATE_BASELINE" && ! "$quick" && info "Mode: updating baseline"
 
     local new_checksums="" render_failures=0 skipped=0 total=${#configs[@]} current=0
 
@@ -375,6 +408,29 @@ run_regression() {
     [[ "$skipped" -gt 0 ]] && info "$skipped config(s) skipped (non-3D output by design)"
     [[ "$render_failures" -gt 0 ]] && fail "$render_failures config(s) failed to render"
 
+    # Quick mode: compare each rendered config against its entry in the existing baseline.
+    # Does not update the baseline (run --update-baseline with --regression for that).
+    if "$quick"; then
+        if [[ ! -f "$BASELINE_FILE" ]]; then
+            fail "No baseline found — run --regression first to establish one"; return
+        fi
+        local regressions=0
+        while IFS= read -r line; do
+            [[ -z "$line" ]] && continue
+            local new_sum config_name
+            new_sum=$(echo "$line" | cut -d' ' -f1)
+            config_name=$(echo "$line" | cut -d' ' -f3-)
+            local old_sum
+            old_sum=$(grep "  ${config_name}$" "$BASELINE_FILE" | cut -d' ' -f1 || echo "")
+            if   [[ -z "$old_sum" ]];          then warn "Config '$config_name' not in baseline — run --regression to update"; regressions=$((regressions+1))
+            elif [[ "$old_sum" != "$new_sum" ]]; then fail "Regression: '$config_name' output changed"; regressions=$((regressions+1))
+            fi
+        done <<< "$new_checksums"
+        [[ "$regressions" -eq 0 ]] && pass "Quick regression — all ${#QUICK_REGRESSION_SUBSET[@]} subset configs match baseline"
+        return
+    fi
+
+    # Full mode: optionally update the baseline, then compare every baseline entry.
     if "$UPDATE_BASELINE"; then
         echo "$new_checksums" > "$BASELINE_FILE"
         pass "Baseline updated — ${#configs[@]} configs (${skipped} skipped)"; return
@@ -675,11 +731,12 @@ info "Python:      ${PYTHON:-NOT FOUND}"
 info "sca2d:       ${SCA2D:-NOT FOUND}"
 info "ImageMagick: ${COMPARE:-not found (will use hash comparison)}"
 
-"$RUN_LINT"       && run_lint
-"$RUN_SYNTAX"     && run_syntax
-"$RUN_SMOKE"      && run_smoke
-"$RUN_REGRESSION" && run_regression
-"$RUN_VISUAL"     && run_visual
+"$RUN_LINT"             && run_lint
+"$RUN_SYNTAX"           && run_syntax
+"$RUN_SMOKE"            && run_smoke
+"$RUN_QUICK_REGRESSION" && run_regression true
+"$RUN_REGRESSION"       && run_regression false
+"$RUN_VISUAL"           && run_visual
 
 echo ""
 echo "==============================="
