@@ -16,10 +16,130 @@
 //
 // Version History: see CHANGELOG.md in the same directory as this file.
 //
-
-
-
-
+//------------------------------------------------------------------
+// Module Index
+// Search for "module name(" to jump to any entry.
+//------------------------------------------------------------------
+//
+// TOP-LEVEL GENERATORS
+//   keyguard()                          1664  Main 3D-printed keyguard
+//   lc_keyguard()                       1978  Laser-cut keyguard
+//   keyguard_frame()                    2103  Keyguard frame
+//
+// SPLITTING
+//   split_keyguard()                    2380  Split keyguard into halves for printing
+//   show_line_split_location()          2495  Visualise the split line
+//   split_keyguard_frame()              2575  Split keyguard frame into halves
+//   dovetails()                         2606  Dovetail joint geometry
+//
+// FRAME & SNAP-IN MOUNTING
+//   add_keyguard_frame_post_slots()     2261  Slots in frame for post mounting
+//   add_keyguard_frame_posts()          2275  Posts that attach keyguard to frame
+//   add_mounting_posts()                2303  Mounting posts (Via Pro etc.)
+//   snap_in_tab_grooves()               5886  Grooves for snap-in tabs in frames
+//   add_snap_ins()                      5920  Add snap-in tabs
+//   make_snap_ins()                     5958  Single snap-in tab geometry
+//
+// MOUNTING METHODS
+//   case_mounts()                       2621  Dispatch mounting method geometry
+//   add_2d_slide_in_tabs()              2643  Slide-in tabs (2D layout)
+//   create_2D_slide_in_tab()            2698  Single slide-in tab geometry
+//   add_clip_on_strap_pedestals()       2741  Pedestals for clip-on straps
+//   add_raised_tabs()                   2786  Raised tabs
+//   raised_tab()                        2813  Single raised tab geometry
+//   mounting_points()                   3041  Suction-cup / screw mounting points
+//   suction_cups()                      3061  Suction cup geometry
+//   velcro()                            3099  Velcro slot geometry
+//   screw_on_straps()                   3135  Screw-on strap geometry
+//   clip_on_straps_groove()             3188  Groove for clip-on straps
+//   add_manual_mount_pedestals()        5691  Manually placed strap pedestals
+//   cut_manual_mount_pedestal_slots()   5763  Slots for manually placed pedestals
+//
+// CLIPS
+//   create_clip()                       4654  Standard clip geometry
+//   create_mini_clip1()                 4736  Mini clip geometry
+//   create_mini_clip2()                 4805  Micro clip geometry
+//
+// GRID & CELLS
+//   trim_keyguard_to_bar()              2290  Trim keyguard height to bar region
+//   bars()                              3247  Message / command / status bars
+//   bounded_cells()                     3312  Cell openings (bounded by bars)
+//   cells()                             3332  Individual cell openings
+//   cell_ridges()                       3397  Ridges around cell openings
+//   create_cell_insert()                3711  Cell insert / Braille insert
+//
+// RIDGES & WALLS
+//   hridge()                            4549  Horizontal ridge
+//   vridge()                            4577  Vertical ridge
+//   ridge()                             4607  Ridge at arbitrary angle
+//   aridge()                            4635  Arc-shaped ridge
+//   circular_wall()                     3447  Circular wall
+//   rounded_rectangle_wall()            3459  Rounded-rectangle wall
+//   rr_wall1()                          3484  Rounded-rectangle wall (variant 1)
+//   rr_wall2()                          3498  Rounded-rectangle wall (variant 2)
+//   rr_corner_wall()                    3512  Rounded-rectangle corner wall
+//
+// OPENINGS & CUTS (high-level)
+//   cut_screen_openings()               3854  Apply screen_openings vector
+//   cut_case_openings()                 3940  Apply case_openings vector
+//   cut_tablet_openings()               3985  Apply tablet_openings vector
+//   cut_als_openings()                  4019  Apply ALS openings
+//   home_camera()                       2991  Home button and camera openings
+//   trim_to_the_screen()                5835  Trim keyguard to screen boundary
+//   trim_to_rectangle()                 5844  Trim keyguard to arbitrary rectangle
+//   cut_screen()                        5872  Cut out entire screen area
+//   cut_grid()                          5879  Cut out grid area
+//
+// OPENINGS & CUTS (primitives)
+//   cut_opening()                       4064  Shape-dispatching opening cutter
+//   cut_opening_2d()                    4284  2D version of cut_opening
+//   cut()                               3655  Core 3D cut primitive (chamfered box)
+//   cut_2d()                            3700  Core 2D cut primitive
+//   hole_cutter()                       3529  Sloped-edge hole (primary)
+//   hole_cutter2()                      3597  Sloped-edge hole (variant)
+//   hole_cutter_3()                     3581  Sloped-edge hole (variant)
+//   hole_cutter_2d()                    3641  2D hole outline
+//   create_cutting_tool()               2958  Rotary cutting tool shape
+//   create_cutting_tool_2d()            2978  2D rotary cutting tool shape
+//
+// CASE ADDITIONS
+//   adding_plastic()                    4353  Add plastic to case (dispatch)
+//   place_addition()                    4429  Place a single addition shape
+//   add_case_full_height_shapes()       5040  Full-height case addition shapes
+//   add_flex_height_shapes()            5397  Flexible-height case additions
+//   sub_flex_height_shapes()            5433  Subtract flexible-height shapes
+//   build_addition()                    5134  Build a single addition solid
+//   build_trimmed_addition()            5478  Addition solid with edge trimming
+//   add_case_cylinders()                5509  Cylindrical mounting posts
+//   half_rounded_rectangle()            5659  Half rounded-rectangle primitive
+//
+// BASE GEOMETRY
+//   base_keyguard()                     4874  Outer keyguard body
+//   chamfer_slice()                     4943  Chamfer layer for keyguard edge
+//   case_opening_blank()                4965  Solid fill of case opening area
+//   case_opening_blank_2d()             4982  2D version of case opening fill
+//
+// SCREENSHOT & VISUALISATION
+//   show_screenshot()                   5968  Display SVG screenshot layer
+//   show_screenshotMW()                 5979  Screenshot layer for Maker World
+//   engrave_emboss_instruction()        5991  Engrave/emboss an opening shape
+//
+// TEXT & BRAILLE
+//   add_engraved_text()                 6590  Engrave or emboss text
+//   add_braille()                       6519  Add Braille dots from a word
+//   word_flat()                         6528  Lay out a word in Braille cells
+//   braille_by_row()                    6538  Braille dot pattern by row
+//   dots_letter()                       6558  Individual Braille character dots
+//
+// GEOMETRY HELPERS
+//   chamfered_cuboid()                  6449  Cuboid with chamfered top edge
+//   chamfered_shape()                   6478  Rounded-rectangle with chamfer
+//
+// DIAGNOSTICS & SETTINGS OUTPUT
+//   echo_settings()                     6063  Echo all Customizer settings to console
+//   issues()                            6332  Echo known issues / warnings
+//   key_settings()                      6375  Echo key parameter summary
+//
 //------------------------------------------------------------------
 // User Inputs
 //------------------------------------------------------------------
