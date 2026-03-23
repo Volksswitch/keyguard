@@ -296,7 +296,7 @@ Address these one at a time, running the test suite after each change.
 - [x] **Add a module index near the top** — 87+ modules with no table of contents; a brief index would aid navigation
 - [x] **Standardise docstrings** — some modules have them, others don't; ensure all public modules have consistent docblock comments
 - [x] **Document initialisation order** — ~200 global variables must be defined in a specific sequence; add a clear warning comment so future edits don't accidentally break ordering
-- [ ] **Use named string constants** — values like `"yes"`, `"landscape"`, `"3D-Printed"` appear in many conditionals; typos fail silently; define constants at the top for the most-used ones
+- [x] **Use named string constants** — values like `"yes"`, `"landscape"`, `"3D-Printed"` appear in many conditionals; typos fail silently; define constants at the top for the most-used ones
 
 ---
 
