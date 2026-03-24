@@ -4037,10 +4037,18 @@ module cut_screen_openings(s_o,depth){
 		opening_height_mm = (using_px) ? opening_height * mpp : opening_height;
 		opening_x_mm = (using_px) ? opening_x * mpp : opening_x;
 
-		o_s = opening_shape;		
+		o_s = opening_shape;
 		o_c_r = (o_s=="oa1" || o_s=="oa2" || o_s=="oa3" || "oa4") ? opening_corner_radius : min(opening_corner_radius,min(opening_width,opening_height)/2);
 		opening_corner_radius_mm = (using_px) ? o_c_r * mpp : o_c_r;
-		
+
+		has_invalid_dims = (opening_width_mm <= 0 || opening_height_mm <= 0)
+		                && o_s != "ridge" && o_s != "ttext" && o_s != "btext" && o_s != "svg";
+		if (has_invalid_dims) {
+			echo(str("WARNING: screen_openings entry '", opening_ID,
+			         "' has zero or negative dimensions (width=", opening_width_mm,
+			         "mm, height=", opening_height_mm, "mm) — skipping."));
+		}
+		if (!has_invalid_dims) {
 		if(depth>0){
 			if(opening_ID!="#"){
 				if (starting_corner_for_screen_measurements == "upper-left"){
@@ -4097,6 +4105,7 @@ module cut_screen_openings(s_o,depth){
 				}
 			}
 		}
+		} // end if (!has_invalid_dims)
 	}
 }
 
@@ -4123,25 +4132,35 @@ module cut_case_openings(c_o,depth){
 
 		o_c_r = (opening_width>0 && opening_height>0) ? min(opening_corner_radius,min(opening_width,opening_height)/2) : opening_corner_radius;
 
-		translate([cox0+opening_x,coy0+opening_y,0])
-		if(depth>0){
-			if(opening_ID!="#"){
-				cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "keyguard");
+		has_invalid_dims = (opening_width <= 0 || opening_height <= 0)
+		                && opening_shape != "ridge" && opening_shape != "ttext"
+		                && opening_shape != "btext" && opening_shape != "svg";
+		if (has_invalid_dims) {
+			echo(str("WARNING: case_openings entry '", opening_ID,
+			         "' has zero or negative dimensions (width=", opening_width,
+			         "mm, height=", opening_height, "mm) — skipping."));
+		}
+		if (!has_invalid_dims) {
+			translate([cox0+opening_x,coy0+opening_y,0])
+			if(depth>0){
+				if(opening_ID!="#"){
+					cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "keyguard");
+				}
+				else{
+					#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "keyguard");
+				}
 			}
 			else{
-				#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "keyguard");
+				if(opening_ID!="#"){
+					cut_opening_2d(opening_width, opening_height, opening_shape, opening_top_slope,  o_c_r);
+				}
+				else{
+					#cut_opening_2d(opening_width, opening_height, opening_shape, opening_top_slope,  o_c_r);
+				}
 			}
-		}
-		else{
-			if(opening_ID!="#"){
-				cut_opening_2d(opening_width, opening_height, opening_shape, opening_top_slope,  o_c_r);
-			}
-			else{
-				#cut_opening_2d(opening_width, opening_height, opening_shape, opening_top_slope,  o_c_r);
-			}
-		}
+		} // end if (!has_invalid_dims)
 	}
-	
+
 }
 
 // Iterates over the tablet_openings vector and cuts (or highlights with #) each
@@ -4168,15 +4187,25 @@ module cut_tablet_openings(t_o,depth){
 		opening_other = opening[11];
 		
 		o_c_r = (opening_width>0 && opening_height>0) ? min(opening_corner_radius,min(opening_width,opening_height)/2) : opening_corner_radius;
-		
-		trans = (is_landscape) ? [tx0+opening_x,ty0+opening_y,0] : [tx0+opening_y,-ty0-opening_x,0];
-		translate(trans)
-		if(opening_ID!="#"){
-			cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "tablet");
+
+		has_invalid_dims = (opening_width <= 0 || opening_height <= 0)
+		                && opening_shape != "ridge" && opening_shape != "ttext"
+		                && opening_shape != "btext" && opening_shape != "svg";
+		if (has_invalid_dims) {
+			echo(str("WARNING: tablet_openings entry '", opening_ID,
+			         "' has zero or negative dimensions (width=", opening_width,
+			         "mm, height=", opening_height, "mm) — skipping."));
 		}
-		else{
-			#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "tablet");
-		}
+		if (!has_invalid_dims) {
+			trans = (is_landscape) ? [tx0+opening_x,ty0+opening_y,0] : [tx0+opening_y,-ty0-opening_x,0];
+			translate(trans)
+			if(opening_ID!="#"){
+				cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "tablet");
+			}
+			else{
+				#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "tablet");
+			}
+		} // end if (!has_invalid_dims)
 	}
 }
 // Iterates over the ambient-light-sensor openings vector and cuts each opening at
