@@ -5,8 +5,9 @@
 #   --lint               Layer 1: sca2d static analysis (fast, no render)
 #   --syntax             Layer 2: OpenSCAD --hardwarnings parse check (fast, no render)
 #   --smoke              Layer 3: Render default config to STL
-#   --regression         Layer 4: Render all named configs from keyguard.json;
-#                                  verify each STL is manifold (Simple: yes)
+#   --geometry           Layer 4: Render all named configs from keyguard.json;
+#                                  verify each STL is manifold (Simple: yes) and
+#                                  passes admesh mesh-integrity checks (if available)
 #   --visual             Layer 5: Run test.json cases; compare PNGs against references
 #
 # Usage:
@@ -22,6 +23,7 @@
 #   - openscad  (on PATH, or at a common Windows install location)
 #   - python3   (for JSON parsing)
 #   - sca2d     (pip install sca2d)  — Layer 1 only
+#   - admesh    (optional)           — Layer 4 supplementary mesh-integrity check
 #   - imagemagick (compare command)  — Layer 5 PNG comparison; falls back to hash if absent
 
 set -euo pipefail
@@ -88,6 +90,11 @@ find_compare() {
     echo ""
 }
 
+find_admesh() {
+    command -v admesh &>/dev/null && echo "admesh" && return
+    echo ""
+}
+
 find_python() {
     command -v python3 &>/dev/null && python3 -c "import sys; sys.exit(0)" 2>/dev/null && echo "python3" && return
     command -v python &>/dev/null && echo "python" && return
@@ -104,12 +111,13 @@ py_path() {
 OPENSCAD="$(find_openscad)"
 SCA2D="$(find_sca2d)"
 COMPARE="$(find_compare)"
+ADMESH="$(find_admesh)"
 PYTHON="$(find_python)"
 
 # ── Argument parsing ───────────────────────────────────────────────────────────
 
 RUN_LINT=false; RUN_SYNTAX=false; RUN_SMOKE=false
-RUN_REGRESSION=false; RUN_VISUAL=false
+RUN_GEOMETRY=false; RUN_VISUAL=false
 CAPTURE_REFERENCES=false
 CASE_FILTER=""
 
@@ -121,10 +129,10 @@ else
             --lint)                RUN_LINT=true ;;
             --syntax)              RUN_SYNTAX=true ;;
             --smoke)               RUN_SMOKE=true ;;
-            --regression)          RUN_REGRESSION=true ;;
+            --geometry)            RUN_GEOMETRY=true ;;
             --visual)              RUN_VISUAL=true ;;
             --all)                 RUN_LINT=true; RUN_SYNTAX=true; RUN_SMOKE=true
-                                   RUN_REGRESSION=true; RUN_VISUAL=true ;;
+                                   RUN_GEOMETRY=true; RUN_VISUAL=true ;;
             --capture-references)  CAPTURE_REFERENCES=true; RUN_VISUAL=true ;;
             --case)                shift; CASE_FILTER="$1" ;;
             --case=*)              CASE_FILTER="${1#--case=}" ;;
@@ -320,37 +328,46 @@ run_smoke() {
     fi
 }
 
-# ── Layer 4: Regression ───────────────────────────────────────────────────────
+# ── Layer 4: Geometry validation ──────────────────────────────────────────────
 #
-# Renders every named config to STL and checks that the resulting mesh is
-# manifold (OpenSCAD reports "Simple: yes" in its console output).  A non-
-# manifold mesh will print incorrectly or fail slicing entirely, so this
-# catches real geometry regressions without relying on a stored baseline.
+# Renders every named config to STL and validates the resulting mesh:
+#   1. Render must succeed and produce a non-empty STL
+#   2. OpenSCAD must report "Simple: yes" (CGAL manifold check)
+#   3. admesh must report zero errors (if admesh is installed)
+#
+# No baseline is needed — all checks are self-contained and reliable across
+# machines and OpenSCAD versions.
 
-run_regression() {
+run_geometry() {
     # Configs that intentionally produce non-3D output and cannot render to STL.
-    # These are skipped (not counted as failures) in the regression layer.
-    local -a REGRESSION_SKIP=(
+    # These are skipped (not counted as failures) in the geometry validation layer.
+    local -a GEOMETRY_SKIP=(
         "Test Case 0"    # generate="Customizer settings" — outputs parameter echoes, no geometry
         "Test Case 10b"  # generate="first layer for SVG/DXF file" — 2D output only
         "Test Case 13b"  # generate="first half of keyguard" + Laser-Cut — can't split laser-cut
         "Test Case 46c"  # generate="first layer for SVG/DXF file" — 2D output only
     )
 
-    header "Layer 4 — Regression test (manifold check, all named configs)"
+    header "Layer 4 — Geometry validation (all named configs)"
     local -a configs
     mapfile -t configs < <(get_configs)
     info "Found ${#configs[@]} named configs"
+    if [[ -n "$ADMESH" ]]; then
+        info "admesh available — full mesh-integrity checks enabled"
+    else
+        info "admesh not found — manifold check only (install admesh for deeper validation)"
+    fi
 
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
-    mkdir -p "$OUTPUT_DIR/regression"
+    mkdir -p "$OUTPUT_DIR/geometry"
 
-    local render_failures=0 manifold_failures=0 skipped=0 total=${#configs[@]} current=0
+    local render_failures=0 manifold_failures=0 admesh_failures=0 skipped=0
+    local total=${#configs[@]} current=0
 
     for config in "${configs[@]}"; do
         current=$((current + 1))
         local skip=false
-        for s in "${REGRESSION_SKIP[@]}"; do
+        for s in "${GEOMETRY_SKIP[@]}"; do
             [[ "$config" == "$s" ]] && skip=true && break
         done
         if "$skip"; then
@@ -358,9 +375,12 @@ run_regression() {
             echo -e " ${YELLOW}SKIP${RESET}"
             skipped=$((skipped + 1)); continue
         fi
+
         local safe; safe=$(echo "$config" | tr ' /' '__')
-        local out="$OUTPUT_DIR/regression/${safe}.stl"
+        local out="$OUTPUT_DIR/geometry/${safe}.stl"
         printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
+
+        # ── 1. Render ──────────────────────────────────────────────────────────
         local exit_code=0 console
         console=$("$OPENSCAD" -p "$JSON_FILE" -P "$config" \
             -o "$out" "$SCAD_FILE" 2>&1) || exit_code=$?
@@ -368,19 +388,48 @@ run_regression() {
             echo -e " ${RED}RENDER FAILED${RESET}"
             render_failures=$((render_failures + 1)); continue
         fi
-        # Check manifold status: OpenSCAD prints "Simple: yes" for a valid manifold
-        # mesh, "Simple: no" for a broken one.  Non-manifold meshes can cause slicer
-        # failures or silent print defects.
+
+        local config_ok=true
+
+        # ── 2. Manifold check (OpenSCAD / CGAL) ────────────────────────────────
+        # "Simple: yes" means every edge is shared by exactly two faces — the
+        # standard definition of a 2-manifold mesh.
         local is_simple
         is_simple=$(echo "$console" | grep -oE 'Simple:[[:space:]]+(yes|no)' \
                     | grep -oE '(yes|no)' || echo "")
         if [[ "$is_simple" == "no" ]]; then
             echo -e " ${RED}NON-MANIFOLD${RESET}"
             manifold_failures=$((manifold_failures + 1))
-        elif [[ -z "$is_simple" ]]; then
-            echo -e " ${YELLOW}OK (manifold status unknown)${RESET}"
-        else
-            echo -e " ${GREEN}OK${RESET}"
+            config_ok=false
+        fi
+
+        # ── 3. admesh mesh-integrity check (optional) ──────────────────────────
+        # admesh checks for degenerate facets, open edges, reversed normals, etc.
+        # A clean mesh has zero counts across all repair categories.
+        if [[ -n "$ADMESH" && "$config_ok" == "true" ]]; then
+            local admesh_out
+            admesh_out=$("$ADMESH" "$out" 2>&1) || true
+            local admesh_issues
+            admesh_issues=$(echo "$admesh_out" | \
+                grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Facets reversed|Backsides flipped|Parts fixed)' | \
+                grep -cE ':[[:space:]]+[1-9][0-9]*[[:space:]]*$' || echo "0")
+            if [[ "$admesh_issues" -gt 0 ]]; then
+                echo -e " ${RED}MESH ERRORS${RESET}"
+                echo "$admesh_out" | \
+                    grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Facets reversed|Backsides flipped|Parts fixed)' | \
+                    grep -E ':[[:space:]]+[1-9]' | sed 's/^/      /'
+                admesh_failures=$((admesh_failures + 1))
+                config_ok=false
+            fi
+        fi
+
+        # ── Print per-config result ─────────────────────────────────────────────
+        if [[ "$config_ok" == "true" ]]; then
+            if [[ -z "$is_simple" ]]; then
+                echo -e " ${YELLOW}OK (manifold status unknown)${RESET}"
+            else
+                echo -e " ${GREEN}OK${RESET}"
+            fi
         fi
     done
 
@@ -394,8 +443,11 @@ run_regression() {
     if [[ "$manifold_failures" -gt 0 ]]; then
         fail "$manifold_failures config(s) produced non-manifold geometry"
     fi
-    if [[ "$render_failures" -eq 0 && "$manifold_failures" -eq 0 ]]; then
-        pass "Regression — all configs rendered as valid manifold geometry"
+    if [[ "$admesh_failures" -gt 0 ]]; then
+        fail "$admesh_failures config(s) failed admesh mesh-integrity check"
+    fi
+    if [[ "$render_failures" -eq 0 && "$manifold_failures" -eq 0 && "$admesh_failures" -eq 0 ]]; then
+        pass "Geometry validation — all configs passed"
     fi
 }
 
@@ -673,12 +725,13 @@ echo    "==============================="
 info "OpenSCAD:    ${OPENSCAD:-NOT FOUND}"
 info "Python:      ${PYTHON:-NOT FOUND}"
 info "sca2d:       ${SCA2D:-NOT FOUND}"
+info "admesh:      ${ADMESH:-not found (manifold-only check in Layer 4)}"
 info "ImageMagick: ${COMPARE:-not found (will use hash comparison)}"
 
 "$RUN_LINT"             && run_lint
 "$RUN_SYNTAX"           && run_syntax
 "$RUN_SMOKE"            && run_smoke
-"$RUN_REGRESSION"       && run_regression
+"$RUN_GEOMETRY"         && run_geometry
 "$RUN_VISUAL"           && run_visual
 
 echo ""

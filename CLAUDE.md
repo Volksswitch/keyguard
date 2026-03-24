@@ -86,7 +86,7 @@ Use `scripts/test.sh` to validate changes. It has five layers, selectable via fl
 | `--lint` | 1 | Fast | sca2d static analysis — fails on fatal errors only |
 | `--syntax` | 2 | Fast | OpenSCAD `--hardwarnings` parse check |
 | `--smoke` | 3 | Minutes | Render default config to STL |
-| `--regression` | 4 | Slow | Render all named configs; verify each STL is manifold (`Simple: yes`) |
+| `--geometry` | 4 | Slow | Render all named configs; verify each STL is manifold + passes admesh checks |
 | `--visual` | 5 | Slow | Run `test.json` cases in `tests/cases/`; compare PNGs against references |
 | `--all` | 1–5 | Slow | All of the above |
 | _(no flag)_ | 1–3 | Fast | Lint + syntax + smoke (good for quick checks during development) |
@@ -94,13 +94,15 @@ Use `scripts/test.sh` to validate changes. It has five layers, selectable via fl
 ```bash
 ./scripts/test.sh                        # Fast default (lint + syntax + smoke)
 ./scripts/test.sh --all                  # Full suite
-./scripts/test.sh --regression           # Regression only (manifold check)
+./scripts/test.sh --geometry             # Geometry validation only
 ./scripts/test.sh --capture-references   # Re-render all visual tests and save new reference PNGs
 ```
 
-**Regression layer:** Renders every named config to STL and verifies the mesh is
-manifold (`Simple: yes` in OpenSCAD's console output). No baseline file is needed —
-the check is self-contained and reliable across machines and OpenSCAD versions.
+**Geometry validation layer:** Renders every named config to STL and runs two checks:
+(1) OpenSCAD must report `Simple: yes` (CGAL 2-manifold check); (2) `admesh` must
+report zero errors across all repair categories (degenerate facets, open edges,
+reversed normals, etc.) — if `admesh` is installed. No baseline file is needed;
+all checks are self-contained and reliable across machines and OpenSCAD versions.
 
 **Visual test cases:** `tests/cases/` contains one subfolder per test case. Each folder
 holds a `test.json` describing a sequence of render steps (parameters, camera position,
