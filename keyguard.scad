@@ -726,7 +726,13 @@ tablet_params =
   : (type_of_tablet=="Samsung Galaxy Tab S9 Ultra")? SamsungGalaxyTabS9Ultra_data
   : (type_of_tablet=="Samsung Galaxy Tab S9+")? SamsungGalaxyTabS9Plus_data  : (type_of_tablet=="blank") ? blank_data
   : catch_all_data;
-  
+
+if (tablet_params == catch_all_data && type_of_tablet != "blank" && type_of_tablet != "other tablet") {
+    echo(str("WARNING: '", type_of_tablet, "' is not a recognised tablet name. ",
+             "Check the spelling or select 'other tablet' to enter custom dimensions. ",
+             "Using catch-all defaults."));
+}
+
 
 //logic to handle strings/vectors as input - primarily for use on Maker World
 c_t_c = parse_csv_mixed_top(cover_these_cells); // same call handles plain CSV
