@@ -1042,26 +1042,19 @@ sy0 = screen_y0;
 	lmbhp = (px_measurements_start=="top") ? lcbtp - lmbtp : lmbtp - lcbtp; // height of lower message bar in pixels
 	lcbhp = (px_measurements_start=="top") ? shp - lcbtp : lcbtp; // height of lower command bar in pixelscel
 	
-	sbh = (px_measurements && using_px) ? sbhp :
-	      (px_measurements && !using_px) ? sbhp * mpp : 
-		  (!px_measurements && !using_px) ? status_bar_height : 
-		  status_bar_height * ppm; // status bar height
-	umbh = (px_measurements && using_px) ? umbhp :
-	      (px_measurements && !using_px) ? umbhp * mpp : 
-		  (!px_measurements && !using_px) ? upper_message_bar_height : 
-		  upper_message_bar_height * ppm; //  upper message bar height
-	ucbh = (px_measurements && using_px) ? ucbhp :
-	      (px_measurements && !using_px) ? ucbhp * mpp : 
-		  (!px_measurements && !using_px) ? upper_command_bar_height : 
-		  upper_command_bar_height * ppm; // command bar height
-	lmbh = (px_measurements && using_px) ? lmbhp :
-	      (px_measurements && !using_px) ? lmbhp * mpp : 
-		  (!px_measurements && !using_px) ? lower_message_bar_height : 
-		  lower_message_bar_height * ppm; // lower message bar height
-	lcbh = (px_measurements && using_px) ? lcbhp :
-	      (px_measurements && !using_px) ? lcbhp * mpp : 
-		  (!px_measurements && !using_px) ? lower_command_bar_height : 
-		  lower_command_bar_height * ppm; // lower command bar height
+// Convert a bar measurement to the working unit (mm or px depending on using_px).
+// px_val: the bar height derived from pixel input; mm_val: the bar height parameter in mm.
+function bar_height(px_val, mm_val) =
+	(px_measurements && using_px)   ? px_val :
+	(px_measurements && !using_px)  ? px_val * mpp :
+	(!px_measurements && !using_px) ? mm_val :
+	mm_val * ppm;
+
+	sbh  = bar_height(sbhp,  status_bar_height);        // status bar height
+	umbh = bar_height(umbhp, upper_message_bar_height); // upper message bar height
+	ucbh = bar_height(ucbhp, upper_command_bar_height); // upper command bar height
+	lmbh = bar_height(lmbhp, lower_message_bar_height); // lower message bar height
+	lcbh = bar_height(lcbhp, lower_command_bar_height); // lower command bar height
 
 
 	sbb = (starting_corner_for_screen_measurements=="upper-left") ? sbh : sh - (sbh); //status bar bottom
