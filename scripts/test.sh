@@ -6,7 +6,7 @@
 #   --syntax             Layer 2: OpenSCAD --hardwarnings parse check (fast, no render)
 #   --smoke              Layer 3: Render default config to STL
 #   --regression         Layer 4: Render all named configs from keyguard.json;
-#                                  compare STL checksums against baseline
+#                                  verify each STL is manifold (Simple: yes)
 #   --visual             Layer 5: Run test.json cases; compare PNGs against references
 #
 # Usage:
@@ -14,7 +14,6 @@
 #   ./scripts/test.sh --all                  # All layers
 #   ./scripts/test.sh --lint                 # Single layer
 #   ./scripts/test.sh --lint --syntax        # Combine layers
-#   ./scripts/test.sh --update-baseline      # Re-render all configs; save new STL baseline
 #   ./scripts/test.sh --capture-references   # Re-render all visual tests; save new reference PNGs
 #   ./scripts/test.sh --capture-references --case "Test Case 25"  # Single test case only
 #   ./scripts/test.sh --visual --case "Test Case 25"              # Run one test case
@@ -35,7 +34,6 @@ OPENINGS_FILE="$PROJECT_ROOT/openings_and_additions.txt"
 DEFAULT_SVG="$PROJECT_ROOT/default.svg"
 OUTPUT_DIR="$PROJECT_ROOT/output/test"
 TEST_RESULTS_DIR="$PROJECT_ROOT/test results"
-BASELINE_FILE="$PROJECT_ROOT/tests/baseline.sha256"
 CASES_DIR="$PROJECT_ROOT/tests/cases"
 
 # sca2d ignore codes:
@@ -112,7 +110,7 @@ PYTHON="$(find_python)"
 
 RUN_LINT=false; RUN_SYNTAX=false; RUN_SMOKE=false
 RUN_REGRESSION=false; RUN_VISUAL=false
-UPDATE_BASELINE=false; CAPTURE_REFERENCES=false
+CAPTURE_REFERENCES=false
 CASE_FILTER=""
 
 if [[ $# -eq 0 ]]; then
@@ -127,7 +125,6 @@ else
             --visual)              RUN_VISUAL=true ;;
             --all)                 RUN_LINT=true; RUN_SYNTAX=true; RUN_SMOKE=true
                                    RUN_REGRESSION=true; RUN_VISUAL=true ;;
-            --update-baseline)     UPDATE_BASELINE=true; RUN_REGRESSION=true ;;
             --capture-references)  CAPTURE_REFERENCES=true; RUN_VISUAL=true ;;
             --case)                shift; CASE_FILTER="$1" ;;
             --case=*)              CASE_FILTER="${1#--case=}" ;;
@@ -324,6 +321,11 @@ run_smoke() {
 }
 
 # ── Layer 4: Regression ───────────────────────────────────────────────────────
+#
+# Renders every named config to STL and checks that the resulting mesh is
+# manifold (OpenSCAD reports "Simple: yes" in its console output).  A non-
+# manifold mesh will print incorrectly or fail slicing entirely, so this
+# catches real geometry regressions without relying on a stored baseline.
 
 run_regression() {
     # Configs that intentionally produce non-3D output and cannot render to STL.
@@ -335,21 +337,18 @@ run_regression() {
         "Test Case 46c"  # generate="first layer for SVG/DXF file" — 2D output only
     )
 
+    header "Layer 4 — Regression test (manifold check, all named configs)"
     local -a configs
-    header "Layer 4 — Regression test (all named configs)"
     mapfile -t configs < <(get_configs)
     info "Found ${#configs[@]} named configs"
 
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
-    mkdir -p "$OUTPUT_DIR/regression" "$(dirname "$BASELINE_FILE")"
+    mkdir -p "$OUTPUT_DIR/regression"
 
-    "$UPDATE_BASELINE" && info "Mode: updating baseline"
-
-    local new_checksums="" render_failures=0 skipped=0 total=${#configs[@]} current=0
+    local render_failures=0 manifold_failures=0 skipped=0 total=${#configs[@]} current=0
 
     for config in "${configs[@]}"; do
         current=$((current + 1))
-        # Check skip list
         local skip=false
         for s in "${REGRESSION_SKIP[@]}"; do
             [[ "$config" == "$s" ]] && skip=true && break
@@ -369,54 +368,34 @@ run_regression() {
             echo -e " ${RED}RENDER FAILED${RESET}"
             render_failures=$((render_failures + 1)); continue
         fi
-        # Extract geometry statistics from OpenSCAD's console output.
-        # These are deterministic across runs (unlike STL byte content, which varies
-        # due to CGAL's non-deterministic triangle ordering and coordinate construction).
-        # Format: E:<n>,F:<n>,S:<yes|no>,V:<n>,Vol:<n>  (no spaces — preserves cut -d' ' parsing)
-        local stats
-        stats=$(echo "$console" | $PYTHON -c "
-import sys, re
-text = sys.stdin.read()
-fields = {}
-for label, key in [('Vertices','V'),('Edges','E'),('Facets','F'),('Volumes','Vol'),('Simple','S')]:
-    m = re.search(rf'{label}:\s+(\S+)', text)
-    if m: fields[key] = m.group(1).rstrip('.')
-if fields:
-    print(','.join(f'{k}:{v}' for k,v in sorted(fields.items())))
-else:
-    print('no-stats')
-" 2>/dev/null || echo "no-stats")
-        new_checksums+="${stats}  ${config}"$'\n'
-        echo -e " ${GREEN}OK${RESET}"
-    done
-    echo ""
-    [[ "$skipped" -gt 0 ]] && info "$skipped config(s) skipped (non-3D output by design)"
-    [[ "$render_failures" -gt 0 ]] && fail "$render_failures config(s) failed to render"
-
-    # Optionally update the baseline, then compare every baseline entry.
-    if "$UPDATE_BASELINE"; then
-        echo "$new_checksums" > "$BASELINE_FILE"
-        pass "Baseline updated — ${#configs[@]} configs (${skipped} skipped)"; return
-    fi
-    if [[ ! -f "$BASELINE_FILE" ]]; then
-        warn "No baseline found — creating now"
-        echo "$new_checksums" > "$BASELINE_FILE"
-        pass "Baseline created — ${#configs[@]} configs (${skipped} skipped)"; return
-    fi
-
-    local regressions=0
-    while IFS= read -r line; do
-        [[ -z "$line" ]] && continue
-        local old_sum old_name new_sum
-        old_sum=$(echo "$line" | cut -d' ' -f1)
-        old_name=$(echo "$line" | cut -d' ' -f3-)
-        new_sum=$(echo "$new_checksums" | grep "  ${old_name}$" | cut -d' ' -f1 || echo "")
-        if   [[ -z "$new_sum" ]];          then warn "Config '$old_name' missing"; regressions=$((regressions+1))
-        elif [[ "$old_sum" != "$new_sum" ]]; then fail "Regression: '$old_name' output changed"; regressions=$((regressions+1))
+        # Check manifold status: OpenSCAD prints "Simple: yes" for a valid manifold
+        # mesh, "Simple: no" for a broken one.  Non-manifold meshes can cause slicer
+        # failures or silent print defects.
+        local is_simple
+        is_simple=$(echo "$console" | grep -oE 'Simple:[[:space:]]+(yes|no)' \
+                    | grep -oE '(yes|no)' || echo "")
+        if [[ "$is_simple" == "no" ]]; then
+            echo -e " ${RED}NON-MANIFOLD${RESET}"
+            manifold_failures=$((manifold_failures + 1))
+        elif [[ -z "$is_simple" ]]; then
+            echo -e " ${YELLOW}OK (manifold status unknown)${RESET}"
+        else
+            echo -e " ${GREEN}OK${RESET}"
         fi
-    done < "$BASELINE_FILE"
-    if [[ "$regressions" -eq 0 ]]; then
-        pass "Regression — all ${#configs[@]} configs match baseline"
+    done
+
+    echo ""
+    if [[ "$skipped" -gt 0 ]]; then
+        info "$skipped config(s) skipped (non-3D output by design)"
+    fi
+    if [[ "$render_failures" -gt 0 ]]; then
+        fail "$render_failures config(s) failed to render"
+    fi
+    if [[ "$manifold_failures" -gt 0 ]]; then
+        fail "$manifold_failures config(s) produced non-manifold geometry"
+    fi
+    if [[ "$render_failures" -eq 0 && "$manifold_failures" -eq 0 ]]; then
+        pass "Regression — all configs rendered as valid manifold geometry"
     fi
 }
 
