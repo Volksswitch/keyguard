@@ -415,7 +415,9 @@ else:
         elif [[ "$old_sum" != "$new_sum" ]]; then fail "Regression: '$old_name' output changed"; regressions=$((regressions+1))
         fi
     done < "$BASELINE_FILE"
-    [[ "$regressions" -eq 0 ]] && pass "Regression — all ${#configs[@]} configs match baseline"
+    if [[ "$regressions" -eq 0 ]]; then
+        pass "Regression — all ${#configs[@]} configs match baseline"
+    fi
 }
 
 # ── Layer 5: Visual tests ─────────────────────────────────────────────────────
