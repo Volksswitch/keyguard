@@ -1813,6 +1813,13 @@ else if (is_3d_printed && generate=="first layer for SVG/DXF file"){
 	echo();
 	echo();
 }
+else if (generate=="cell insert" && is_laser_cut){
+	echo();
+	echo();
+	echo("************ Cell inserts are not supported for laser-cut keyguards ************");
+	echo();
+	echo();
+}
 else if (generate=="cell insert" && !is_laser_cut){ //cell inserts
 	rotation = (Braille_text=="") ? -90 : 0;
 	color("LawnGreen")
