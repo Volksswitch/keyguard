@@ -1138,7 +1138,7 @@ kec = (keyguard_thickness > keyguard_edge_chamfer) ? keyguard_edge_chamfer : key
 chamfer_slices = keyguard_edge_chamfer/.2;
 chamfer_slice_size = .2;
 
-$fn=smoothness_of_circles_and_arcs;
+$fn=64;
 
 
 //handle the instance where a system like an Accent
@@ -3615,7 +3615,7 @@ module cell_ridges(){
 // @param thickness  Wall thickness in mm
 // @param hgt        Wall height in mm
 module circular_wall(ID,thickness,hgt){
-	rotate_extrude($fn=60)
+	rotate_extrude()
 	polygon([[ID/2,0],[ID/2+thickness,0],[ID/2+thickness,hgt-.5],[ID/2+thickness-.5,hgt],[ID/2+.5,hgt],[ID/2,hgt-.5]]);
 }
 
@@ -3681,7 +3681,7 @@ module rr_wall2(width,hgt,corner_radius,thickness,hgt2){
 // @param hgt2           Wall height (Z dimension) in mm
 module rr_corner_wall(width,hgt,corner_radius,thickness,hgt2){
 	translate([width/2-corner_radius,hgt/2-corner_radius,0])
-	rotate_extrude(angle=90,$fn=60)
+	rotate_extrude(angle=90)
 	translate([corner_radius,0,0])
 	polygon([[0,0],[thickness,0],[thickness,hgt2-.5],[thickness-.5,hgt2],[.5,hgt2],[0,hgt2-.5]]);
 }
@@ -3823,7 +3823,6 @@ module hole_cutter_2d(hole_width,hole_height,radius){
 // @param radius        Corner radius in mm
 // @param thick         Extrusion thickness in mm (0 produces a 2D shape)
 module cut(cut_w, cut_h, top_angle, bottom_angle, left_angle, right_angle, radius, thick){
-	$fn=60;
 	th1 = thick + 2*ff;
 
 	radius1 = (radius==0) ? 0 : radius-ff;
@@ -3868,7 +3867,6 @@ module cut(cut_w, cut_h, top_angle, bottom_angle, left_angle, right_angle, radiu
 // @param cut_h   Height in mm
 // @param radius  Corner radius in mm (0 = sharp corners)
 module cut_2d(cut_w, cut_h, radius){
-	$fn=60;
 	radius1 = (radius==0) ? 0 : radius-ff;
 	
 	offset(r=radius1)
