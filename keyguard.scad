@@ -4044,7 +4044,7 @@ module cut_screen_openings(s_o,depth){
 		opening_x_mm = (using_px) ? opening_x * mpp : opening_x;
 
 		o_s = opening_shape;
-		o_c_r = (o_s=="oa1" || o_s=="oa2" || o_s=="oa3" || "oa4") ? opening_corner_radius : min(opening_corner_radius,min(opening_width,opening_height)/2);
+		o_c_r = (o_s=="oa1" || o_s=="oa2" || o_s=="oa3" || o_s=="oa4") ? opening_corner_radius : min(opening_corner_radius,min(opening_width,opening_height)/2);
 		opening_corner_radius_mm = (using_px) ? o_c_r * mpp : o_c_r;
 
 		has_invalid_dims = (opening_width_mm <= 0 || opening_height_mm <= 0)

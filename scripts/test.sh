@@ -497,7 +497,7 @@ run_visual() {
 
     # Create a timestamped results directory for this run
     local timestamp; timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-    local run_label; "$CAPTURE_REFERENCES" && run_label="${timestamp}_capture" || run_label="$timestamp"
+    local run_label; "$CAPTURE_REFERENCES" && run_label="${timestamp}_cap" || run_label="$timestamp"
     local run_dir="$TEST_RESULTS_DIR/$run_label"
     mkdir -p "$run_dir"
 
