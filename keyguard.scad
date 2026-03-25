@@ -404,7 +404,6 @@ first_two_layers_only = "no"; //[yes,no]
 trim_to_rectangle_lower_left = "";
 //specify the upper right coordinate (example: 80,125)
 trim_to_rectangle_upper_right = "";
-smoothness_of_circles_and_arcs = 40; //[5:360]
 use_Laser_Cutting_best_practices = "yes"; // [yes,no]
 //21 entries e.g., 190,140,10,150,100,20,20,20,20,5,5,5,2,10,4,4,4,10,10,10,10
 other_tablet_general_sizes = "";
@@ -6385,7 +6384,6 @@ module echo_settings(){
 		if (first_two_layers_only != "no") echo(first_two_layers_only = first_two_layers_only);
 		if (trim_to_rectangle_lower_left != "" && trim_to_rectangle_lower_left != "[]") echo(trim_to_rectangle_lower_left = trim_to_rectangle_lower_left);
 		if (trim_to_rectangle_upper_right != "" && trim_to_rectangle_upper_right != "[]") echo(trim_to_rectangle_upper_right = trim_to_rectangle_upper_right);
-		if (smoothness_of_circles_and_arcs != 40) echo(smoothness_of_circles_and_arcs = smoothness_of_circles_and_arcs);
 		if (!lc_best_practices) echo(use_Laser_Cutting_best_practices = use_Laser_Cutting_best_practices);
 		if (other_tablet_general_sizes != "" && other_tablet_general_sizes != "[]") echo(other_tablet_general_sizes = other_tablet_general_sizes);
 		if (other_tablet_pixel_sizes != "" && other_tablet_pixel_sizes != "[]") echo(other_tablet_pixel_sizes = other_tablet_pixel_sizes);
