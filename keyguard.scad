@@ -5439,8 +5439,11 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 
 				translate([-radius*2-10,-radius-5-ff])
 				square([radius*2+10,radius*2+10]);
-				
+
 			}
+		}
+		else{
+			echo(str("WARNING: case_additions shape '", addition_shape, "' has zero or negative dimensions (width=", addition_width, ", height=", addition_height, ") — skipping."));
 		}
 	}
 	else if (addition_shape=="cm2" || addition_shape=="-cm2"){
@@ -5451,7 +5454,7 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 			d2 = addition_height/2;
 			Cx = (d2*d2)/(2*d1) - d1/2;
 			radius = Cx + d1;
-			
+
 			translate([-ff,0])
 			difference(){
 				translate([-Cx,0])
@@ -5460,6 +5463,9 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 				translate([-radius*2-10-ff,-radius-5])
 				square([radius*2+10,radius*2+10]);
 			}
+		}
+		else{
+			echo(str("WARNING: case_additions shape '", addition_shape, "' has zero or negative dimensions (width=", addition_width, ", height=", addition_height, ") — skipping."));
 		}
 	}
 	else if (addition_shape=="cm3" || addition_shape=="-cm3"){
@@ -5479,8 +5485,11 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 
 				translate([-radius*2-10,-radius-5+ff])
 				square([radius*2+10,radius*2+10]);
-				
+
 			}
+		}
+		else{
+			echo(str("WARNING: case_additions shape '", addition_shape, "' has zero or negative dimensions (width=", addition_width, ", height=", addition_height, ") — skipping."));
 		}
 	}
 	else if (addition_shape=="cm4" || addition_shape=="-cm4"){
@@ -5500,6 +5509,9 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 				translate([0+ff,-radius-5])
 				square([radius*2+10,radius*2+10]);
 			}
+		}
+		else{
+			echo(str("WARNING: case_additions shape '", addition_shape, "' has zero or negative dimensions (width=", addition_width, ", height=", addition_height, ") — skipping."));
 		}
 	}
 	else if (addition_shape=="rr" || addition_shape=="-rr"){
