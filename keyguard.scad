@@ -91,7 +91,8 @@
 //   cut_grid()                          5879  Cut out grid area
 //
 // OPENINGS & CUTS (primitives)
-//   cut_opening()                       4064  Shape-dispatching opening cutter
+//   cut_hole()                          4064  Flip-aware hole cut helper (used by cut_opening)
+//   cut_opening()                       4090  Shape-dispatching opening cutter
 //   cut_opening_2d()                    4284  2D version of cut_opening
 //   cut()                               3655  Core 3D cut primitive (chamfered box)
 //   cut_2d()                            3700  Core 2D cut primitive
@@ -4249,6 +4250,34 @@ module cut_als_openings(a_o,depth){
 	}
 }
 
+// Translates to position then cuts with hole_cutter (normal) or hole_cutter_3 +
+// 180° rotation (flipped), depending on the flip flag. Centralises the
+// flip/non-flip branch that would otherwise be repeated for every shape in
+// cut_opening.
+// @param tx    X translation
+// @param ty    Y translation
+// @param tz    Z translation
+// @param w     Cut width in mm
+// @param h     Cut height in mm
+// @param ts    Top-edge slope angle in degrees
+// @param bs    Bottom-edge slope angle in degrees
+// @param ls    Left-edge slope angle in degrees
+// @param rs    Right-edge slope angle in degrees
+// @param cr    Corner radius in mm
+// @param dep   Cut depth in mm
+// @param flip  true = use hole_cutter_3 with 180° flip; false = use hole_cutter
+module cut_hole(tx, ty, tz, w, h, ts, bs, ls, rs, cr, dep, flip){
+	translate([tx, ty, tz]){
+		if (flip){
+			rotate([0,180,0])
+			hole_cutter_3(w, h, ts, bs, ls, rs, cr, dep);
+		}
+		else{
+			hole_cutter(w, h, ts, bs, ls, rs, cr, dep);
+		}
+	}
+}
+
 // Dispatches to the correct 3D cutting geometry for a single opening based on its
 // shape code, slope parameters, and depth offset. Handles all built-in shape types
 // (r, cr, c, hd, rr, crr, oa1-4, svg, ttext/btext, ridges, etc.).
@@ -4285,44 +4314,20 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 	if (shape=="r"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			if (flip){
-				translate([cut_width/2,cut_height/2,trans])
-				rotate([0,180,0])
-				hole_cutter_3(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,0,dep);
-			}
-			else{
-				translate([cut_width/2,cut_height/2,trans])
-				hole_cutter(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,0,dep);
-			}
+			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, 0, dep, flip);
 		}
 	}
 	else if (shape=="cr"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			if (flip){
-				translate([0,0,trans])
-				rotate([0,180,0])
-				hole_cutter_3(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,0,dep);
-			}
-			else{
-				translate([0,0,trans])
-				hole_cutter(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,0,dep);
-			}
+			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, 0, dep, flip);
 		}
 	}
 	else if (shape=="c"){
 		if (cut_height > 0){
 			if (is_3d_printed){
 				trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-				if (flip){
-					translate([0,0,trans])
-					rotate([0,180,0])
-					hole_cutter_3(cut_height,cut_height,top_slope,bottom_slope,left_slope,right_slope,cut_height/2,dep);
-				}
-				else{
-					translate([0,0,trans])
-					hole_cutter(cut_height,cut_height,top_slope,bottom_slope,left_slope,right_slope,cut_height/2,dep);
-				}
+				cut_hole(0, 0, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip);
 			}
 			else{
 				//need to accomodate ALS sensors and other circular openings if slope is non-90 degrees
@@ -4335,43 +4340,19 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 		if (cut_width > 0 && cut_height > 0){
 			m = min(cut_width,cut_height);
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			if (flip){
-				translate([0,0,trans])
-				rotate([0,180,0])
-				hole_cutter_3(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,m/2,dep);
-			}
-			else{
-				translate([0,0,trans])
-				hole_cutter(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,m/2,dep);
-			}
+			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip);
 		}
 	}
 	else if (shape=="rr"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			if (flip){
-				translate([cut_width/2,cut_height/2,trans])
-				rotate([0,180,0])
-				hole_cutter_3(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,corner_radius,dep);
-			}
-			else{
-				translate([cut_width/2,cut_height/2,trans])
-				hole_cutter(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,corner_radius,dep);
-			}
+			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner_radius, dep, flip);
 		}
-	}	
+	}
 	else if (shape=="crr"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			if (flip){
-				translate([0,0,trans])
-				rotate([0,180,0])
-				hole_cutter_3(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,corner_radius,dep);
-			}
-			else{
-				translate([0,0,trans])
-				hole_cutter(cut_width,cut_height,top_slope,bottom_slope,left_slope,right_slope,corner_radius,dep);
-			}
+			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner_radius, dep, flip);
 		}
 	}	
 	else if (shape=="oa1"){
