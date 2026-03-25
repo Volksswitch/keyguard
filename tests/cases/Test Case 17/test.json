@@ -65,6 +65,22 @@
       "vpr": [55, 0, 25],
       "vpd": 700,
       "expected": "step8_expected.png"
+    },
+    {
+      "label": "vertical raised tabs only",
+      "params": "Test Case 17h",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 700,
+      "expected": "step9_expected.png"
+    },
+    {
+      "label": "horizontal and vertical raised tabs",
+      "params": "Test Case 17i",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 700,
+      "expected": "step10_expected.png"
     }
   ]
 }
