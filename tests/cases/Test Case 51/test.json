@@ -1,0 +1,14 @@
+{
+  "description": "raised tabs with magnet embedding",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "magnet pockets in raised tabs",
+      "params": "Test Case 51",
+      "vpt": [0, -30, 0],
+      "vpr": [20, 0, 200],
+      "vpd": 400,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
