@@ -106,8 +106,7 @@
 //   adding_plastic()                    4353  Add plastic to case (dispatch)
 //   place_addition()                    4429  Place a single addition shape
 //   add_case_full_height_shapes()       5040  Full-height case addition shapes
-//   add_flex_height_shapes()            5397  Flexible-height case additions
-//   sub_flex_height_shapes()            5433  Subtract flexible-height shapes
+//   apply_flex_height_shapes()          5397  Add or subtract flexible-height shapes
 //   build_addition()                    5134  Build a single addition solid
 //   build_trimmed_addition()            5478  Addition solid with edge trimming
 //   add_case_cylinders()                5509  Cylindrical mounting posts
@@ -1874,7 +1873,7 @@ module keyguard(cheat){
 										   (has_frame && generate=="keyguard frame" && cheat=="no")
 										   ){
 										   
-											add_flex_height_shapes(case_additions);
+											apply_flex_height_shapes(case_additions, false);
 											
 											if(!is_laser_cut){
 												add_manual_mount_pedestals(case_additions);
@@ -1885,7 +1884,7 @@ module keyguard(cheat){
 
 								if(len(m_c_a)>0 && has_case && (!has_frame || 
 											(has_frame && generate=="keyguard frame" && cheat=="no"))){
-									add_flex_height_shapes(m_c_a);
+									apply_flex_height_shapes(m_c_a, false);
 									
 									if(!is_laser_cut){
 										add_manual_mount_pedestals(m_c_a);
@@ -1952,7 +1951,7 @@ module keyguard(cheat){
 									   (has_frame && generate=="keyguard frame" && cheat=="no")
 									   ){
 									   
-										sub_flex_height_shapes(case_additions);
+										apply_flex_height_shapes(case_additions, true);
 										
 									}
 								}
@@ -1960,7 +1959,7 @@ module keyguard(cheat){
 							
 							if(len(m_c_a)>0 && has_case && (!has_frame || 
 										(has_frame && generate=="keyguard frame" && cheat=="no"))){
-								sub_flex_height_shapes(m_c_a);
+								apply_flex_height_shapes(m_c_a, true);
 							}	
 
 							// add slots to manually added clip-on strap pedestals
@@ -2314,7 +2313,7 @@ module keyguard_frame(cheat){
 						   (has_frame && generate=="keyguard frame" && cheat=="no")
 						   ){
 						   
-							add_flex_height_shapes(case_additions);
+							apply_flex_height_shapes(case_additions, false);
 							
 							add_manual_mount_pedestals(case_additions);
 						}
@@ -2324,7 +2323,7 @@ module keyguard_frame(cheat){
 				if(len(m_c_a)>0 && (!has_frame || 
 				   (has_frame && generate=="keyguard frame" && cheat=="no"))){
 				   
-					add_flex_height_shapes(m_c_a);
+					apply_flex_height_shapes(m_c_a, false);
 					
 					add_manual_mount_pedestals(m_c_a);
 				}
@@ -2393,14 +2392,14 @@ module keyguard_frame(cheat){
 				if (!has_frame || 
 				   (has_frame && generate=="keyguard frame" && cheat=="no")
 				   ){
-					sub_flex_height_shapes(case_additions);
+					apply_flex_height_shapes(case_additions, true);
 				}
 			}
 		}
 		
 		if(len(m_c_a)>0 && (!has_frame || 
 		   (has_frame && generate=="keyguard frame" && cheat=="no"))){
-			sub_flex_height_shapes(m_c_a);
+			apply_flex_height_shapes(m_c_a, true);
 		}
 
 
@@ -2543,11 +2542,11 @@ module add_mounting_posts(){
 		
 		translate([-cow/2+mini_tab_inset_distance+mini_tab_width/2,-coh/2,min(mini_tab_height,keyguard_thickness-2)])
 		rotate([0,0,-rotate_mini_tab])
-		add_flex_height_shapes(tab);
+		apply_flex_height_shapes(tab, false);
 		
 		translate([cow/2-mini_tab_inset_distance-mini_tab_width/2,-coh/2,min(mini_tab_height,keyguard_thickness-2)])
 		rotate([0,0,rotate_mini_tab])
-		add_flex_height_shapes(tab);
+		apply_flex_height_shapes(tab, false);
 	}
 }
 
@@ -5595,9 +5594,15 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 
 // Iterates the case additions vector and linear-extrudes each addition that has a
 // positive thickness (non-zero height shapes like slide-in tabs or pedestals).
-// Negative-shape entries are ignored here (handled by sub_flex_height_shapes).
+// Negative-shape entries are ignored here when is_sub=false.
 // @param c_a  Case additions vector (rows of addition definitions)
-module add_flex_height_shapes(c_a){
+// Iterates the case additions vector and linear-extrudes each entry whose shape
+// matches the requested mode: pass is_sub=false to process positive additions
+// (shapes without a leading "-"), or is_sub=true to process subtractions
+// (shapes with a leading "-", extruded slightly oversized to ensure clean cuts).
+// @param c_a     Case additions vector (rows of addition definitions)
+// @param is_sub  false = add positive shapes; true = subtract negative shapes
+module apply_flex_height_shapes(c_a, is_sub){
 	if (len(c_a)>0){
 		for(i = [0 : len(c_a)-1]){
 			addition = c_a[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:thickness, 7:trim_above, 8:trim_below, 9:trim_to_right, 10:trim_to_left, 11:corner_radius, 12:other
@@ -5605,54 +5610,20 @@ module add_flex_height_shapes(c_a){
 			addition_ID = addition[0];
 			addition_x = addition[1];
 			addition_y = addition[2];
-			addition_width = addition[3];
-			addition_height = addition[4];
-			addition_thickness = (is_laser_cut && generate=="first layer for SVG/DXF file") ? 0 : addition[6];
+			addition_width     = is_sub ? addition[3]+ff : addition[3];
+			addition_height    = is_sub ? addition[4]+ff : addition[4];
+			addition_thickness = (is_laser_cut && generate=="first layer for SVG/DXF file") ? 0
+			                   : is_sub ? addition[6]+ff : addition[6];
 			addition_shape = addition[5];
 			addition_trim_above = addition[7];
 			addition_trim_below = addition[8];
 			addition_trim_to_right = addition[9];
 			addition_trim_to_left = addition[10];
 			addition_corner_radius = addition[11];
-			
-			if(addition_thickness>0 && search("-",addition_shape)==[]){
-				translate([0,0,-kt/2])
-				if(addition_ID=="#"){
-					#linear_extrude(height=addition_thickness)
-					build_trimmed_addition(addition_x,addition_y,addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left,addition_corner_radius);
-				}
-				else{
-					linear_extrude(height=addition_thickness)
-					build_trimmed_addition(addition_x,addition_y,addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left,addition_corner_radius);
-				}
-			}
-		}
-	}
-}
 
-// Iterates the case additions vector and linear-extrudes each subtraction entry
-// (those whose shape name begins with "-") as a cutting solid.
-// @param c_a  Case additions vector (rows of addition definitions)
-module sub_flex_height_shapes(c_a){
-	if (len(c_a)>0){
-		for(i = [0 : len(c_a)-1]){
-			addition = c_a[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:thickness, 7:trim_above, 8:trim_below, 9:trim_to_right, 10:trim_to_left, 11:corner_radius, 12:other
-
-			addition_ID = addition[0];
-			addition_x = addition[1];
-			addition_y = addition[2];
-			addition_width = addition[3]+ff;
-			addition_height = addition[4]+ff;
-			addition_thickness = (is_laser_cut && generate=="first layer for SVG/DXF file") ? 0 : addition[6]+ff;
-			addition_shape = addition[5];
-			addition_trim_above = addition[7];
-			addition_trim_below = addition[8];
-			addition_trim_to_right = addition[9];
-			addition_trim_to_left = addition[10];
-			addition_corner_radius = addition[11];
-			
-			if(addition_thickness>0 && search("-",addition_shape)!=[]){
-				translate([0,0,-kt/2-ff])
+			is_negative = search("-", addition_shape) != [];
+			if(addition_thickness>0 && is_sub==is_negative){
+				translate([0, 0, is_sub ? -kt/2-ff : -kt/2])
 				if(addition_ID=="#"){
 					#linear_extrude(height=addition_thickness)
 					build_trimmed_addition(addition_x,addition_y,addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left,addition_corner_radius);
