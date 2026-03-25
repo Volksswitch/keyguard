@@ -431,6 +431,9 @@ run_geometry() {
                 echo -e " ${GREEN}OK${RESET}"
             fi
         fi
+
+        # ── Clean up STL (checks are done; no value in keeping it) ─────────────
+        rm -f "$out"
     done
 
     echo ""
