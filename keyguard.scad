@@ -288,13 +288,17 @@ distance_between_vertical_slide_in_tabs=60;
 
 
 /*[Raised Tabs Info]*/
+raised_tab_locations = "horizontal only"; //[horizontal only, vertical only, horizontal and vertical]
 raised_tab_height=6;
-raised_tab_length=8;
-raised_tab_width=20;
+horizontal_raised_tab_length=8;
+horizontal_raised_tab_width=20;
+distance_between_horizontal_raised_tabs=60;
+vertical_raised_tab_length=8;
+vertical_raised_tab_width=20;
+distance_between_vertical_raised_tabs=60;
 preferred_raised_tab_thickness=2; // .1
 raised_tabs_starting_height = 0.0; // .1
 ramp_angle = 30;
-distance_between_raised_tabs=60;
 embed_magnets = "no"; // [yes, no]
 magnet_size = "20 x 8 x 1.5"; // [20 x 8 x 1.5, 40 x 10 x 2]
 
@@ -955,13 +959,16 @@ if (msv != 0){
 //for calculating split line location from edge of keygaurd with mounting options
 horiz_sit = (slide_in_tab_locations=="horizontal only" ||  slide_in_tab_locations=="horizontal and vertical");
 vert_sit = (slide_in_tab_locations=="vertical only" ||  slide_in_tab_locations=="horizontal and vertical");
+horiz_rt = (raised_tab_locations=="horizontal only" || raised_tab_locations=="horizontal and vertical");
+vert_rt  = (raised_tab_locations=="vertical only"   || raised_tab_locations=="horizontal and vertical");
 
-split_add = (mounting_method=="Slide-in Tabs" && horiz_sit && is_landscape) ? horizontal_slide_in_tab_length :
-            (mounting_method=="Slide-in Tabs" && vert_sit && !is_landscape) ? vertical_slide_in_tab_length :
-			(mounting_method=="Raised Tabs") ? raised_tab_length :
-			(mounting_method=="Shelf") ? shelf_depth :
-			(mounting_method=="Posts") ? post_length :
-				0;
+split_add = (mounting_method=="Slide-in Tabs" && horiz_sit && is_landscape)  ? horizontal_slide_in_tab_length :
+            (mounting_method=="Slide-in Tabs" && vert_sit  && !is_landscape) ? vertical_slide_in_tab_length :
+            (mounting_method=="Raised Tabs"   && horiz_rt  && is_landscape)  ? horizontal_raised_tab_length :
+            (mounting_method=="Raised Tabs"   && vert_rt   && !is_landscape) ? vertical_raised_tab_length :
+            (mounting_method=="Shelf")   ? shelf_depth :
+            (mounting_method=="Posts")   ? post_length :
+            0;
 				
 							
 // origin location variables
@@ -2956,38 +2963,73 @@ module add_clip_on_strap_pedestals(depth){
 
 
 
-// Places four raised tab assemblies at the corners of the case opening to grip
-// the case edge and secure the keyguard without a frame.
+// Places raised tab assemblies on the left/right edges (horizontal), top/bottom
+// edges (vertical), or all four edges, according to raised_tab_locations.
+// "Horizontal" always means left and right edges; "vertical" always means top
+// and bottom edges, regardless of keyguard orientation.
 // @param depth  Keyguard thickness in mm; determines the tab starting height and ramp geometry
 module add_raised_tabs(depth) {
 	s = (raised_tabs_starting_height < depth - 1) ? raised_tabs_starting_height : depth - 1;
-	
-	dim = (is_landscape) ? cow : coh;
-	r = (is_landscape) ? 0 : 90;
-	
-	rotate([0,0,r])
-	union(){
-		translate([-dim/2, -raised_tab_width-distance_between_raised_tabs/2+ulbs, -depth/2+s])
-		mirror([1,0,0])
-		raised_tab(depth);
+	z = -depth/2+s;
 
-		translate([-dim/2, distance_between_raised_tabs/2+ulbs, -depth/2+s])
-		mirror([1,0,0])
-		raised_tab(depth);
+	h_w   = horizontal_raised_tab_width;
+	h_len = horizontal_raised_tab_length;
+	h_d   = distance_between_horizontal_raised_tabs;
 
-		translate([dim/2, -raised_tab_width-distance_between_raised_tabs/2+ulbs, -depth/2+s])
-		raised_tab(depth);
-		
-		translate([dim/2, distance_between_raised_tabs/2+ulbs, -depth/2+s])
-		raised_tab(depth);
+	v_w   = vertical_raised_tab_width;
+	v_len = vertical_raised_tab_length;
+	v_d   = distance_between_vertical_raised_tabs;
+
+	if (horiz_rt) {
+		// Left edge — tab extends in -X; width spans along Y
+		translate([-cow/2, -h_w-h_d/2+ulbs, z])
+		mirror([1,0,0])
+		raised_tab(depth, h_w, h_len);
+
+		translate([-cow/2, h_d/2+ulbs, z])
+		mirror([1,0,0])
+		raised_tab(depth, h_w, h_len);
+
+		// Right edge — tab extends in +X; width spans along Y
+		translate([cow/2, -h_w-h_d/2+ulbs, z])
+		raised_tab(depth, h_w, h_len);
+
+		translate([cow/2, h_d/2+ulbs, z])
+		raised_tab(depth, h_w, h_len);
+	}
+
+	if (vert_rt) {
+		// Bottom edge — tab extends in -Y; width spans along X
+		// rotate([0,0,-90]) maps +X→-Y so the ramp faces outward
+		translate([-v_d/2-v_w+ulos, -coh/2, z])
+		rotate([0,0,-90])
+		raised_tab(depth, v_w, v_len);
+
+		translate([v_d/2+ulos, -coh/2, z])
+		rotate([0,0,-90])
+		raised_tab(depth, v_w, v_len);
+
+		// Top edge — tab extends in +Y; width spans along X
+		// rotate([0,0,90]) maps +X→+Y so the ramp faces outward
+		translate([-v_d/2-v_w+ulos, coh/2, z])
+		rotate([0,0,90])
+		mirror([0,1,0])
+		raised_tab(depth, v_w, v_len);
+
+		translate([v_d/2+ulos, coh/2, z])
+		rotate([0,0,90])
+		mirror([0,1,0])
+		raised_tab(depth, v_w, v_len);
 	}
 }
 
 // Builds a single raised tab with a ramped approach and flat gripping tread that
 // hooks over the case edge. Optionally includes a magnet recess.
-// @param depth  Keyguard thickness in mm; controls available ramp height
-module raised_tab(depth){
-	a = raised_tab_length;
+// @param depth      Keyguard thickness in mm; controls available ramp height
+// @param tab_width  Width of the tab in mm (dimension along the case edge)
+// @param tab_length Length of the tab in mm (dimension projecting from the case edge)
+module raised_tab(depth, tab_width, tab_length){
+	a = tab_length;
 	b = raised_tab_height;
 	s = (raised_tabs_starting_height < depth - 1) ? raised_tabs_starting_height : depth - 1;
 	angle = ramp_angle;
@@ -3023,19 +3065,19 @@ module raised_tab(depth){
 				difference(){
 					rotate([0,-angle,0])
 					translate([-2,0,0])
-					cube([r+2,raised_tab_width,e]);
+					cube([r+2,tab_width,e]);
 				
 					translate([-5,-ff,-5])
-					cube([5,raised_tab_width+2*ff,5]);
+					cube([5,tab_width+2*ff,5]);
 				}
 					
 				translate([h1-x-50*ff,0,b-s])
 				difference(){
 					union(){
-						cube([g-2.5,raised_tab_width,th1]);
+						cube([g-2.5,tab_width,th1]);
 						
 						translate([g-2.5,2.5,0])
-						cube([2.5,raised_tab_width-5,th1]);
+						cube([2.5,tab_width-5,th1]);
 						
 						translate([g-2.5,0,0])
 						difference(){
@@ -3043,35 +3085,35 @@ module raised_tab(depth){
 								translate([0,2.5,0])
 								cylinder(h=th1,r=2.5);
 								
-								translate([0,raised_tab_width-2.5,0])
+								translate([0,tab_width-2.5,0])
 								cylinder(h=th1,r=2.5);
 							}
 							translate([-6,-ff,-ff])
-							cube([6,raised_tab_width+2*ff,th1+2*ff]);
+							cube([6,tab_width+2*ff,th1+2*ff]);
 						}
 					}
 			
 					translate([g+ff,0,th1/2])
 					rotate([0,-45,0])
-					cube([th1,raised_tab_width,th1]);
+					cube([th1,tab_width,th1]);
 				}
 			}
 			
 			if(embed_magnets=="yes"){
-				translate([h1-x+2,(raised_tab_width-ml)/2,b-s+.4])
+				translate([h1-x+2,(tab_width-ml)/2,b-s+.4])
 				union(){
-					cube([mw,ml+(raised_tab_width-ml)/2+1,mh]);
+					cube([mw,ml+(tab_width-ml)/2+1,mh]);
 					#cube([mw,ml,mh]);
 				}
 			}
 			
 			translate([-6,-ff,depth-s])
-			cube([5,raised_tab_width+2*ff,5]);
+			cube([5,tab_width+2*ff,5]);
 			
 			translate([0,-ff,e])
 			rotate([0,-ramp_angle,0])
 			translate([-5,0,0])
-			cube([r+10,raised_tab_width+2*ff,3]);
+			cube([r+10,tab_width+2*ff,3]);
 		}
 	}
 	else{ // tread doesn't exist
@@ -3083,43 +3125,43 @@ module raised_tab(depth){
 			difference(){
 				union(){
 					translate([-2,0,0])
-					cube([f+2-2.5,raised_tab_width,th1+1]);
+					cube([f+2-2.5,tab_width,th1+1]);
 					
 					translate([f-2.5,2.5,0])
-					cube([2.5,raised_tab_width-5,th1+1]);
+					cube([2.5,tab_width-5,th1+1]);
 					
 					translate([f-2.5,2.5,0])
 					cylinder(h=th1+1,r=2.5);
 				
-					translate([f-2.5,raised_tab_width-2.5,0])
+					translate([f-2.5,tab_width-2.5,0])
 					cylinder(h=th1+1,r=2.5);
 				}
 				
 				translate([f+ff,0,(th1+1)/2])
 				rotate([0,-45,0])
-				cube([th1+1,raised_tab_width,th1+1]);
+				cube([th1+1,tab_width,th1+1]);
 
 				translate([-th1-1+2-ff,-ff,depth/2])
 				rotate([0,-45,0])
-				cube([th1+1,raised_tab_width+2*ff,th1+1]);
+				cube([th1+1,tab_width+2*ff,th1+1]);
 				
 
 				if(embed_magnets=="yes"){
-					translate([2,(raised_tab_width-ml)/2,.6])
+					translate([2,(tab_width-ml)/2,.6])
 					union(){
-						cube([mw+.5,ml+(raised_tab_width-ml)/2-.5,mh+.5]);
+						cube([mw+.5,ml+(tab_width-ml)/2-.5,mh+.5]);
 						#cube([mw+.5,ml,mh+.5]);
 						translate([(mw-1)/2,0,0])
-						cube([1,ml+(raised_tab_width-ml)/2+1,mh+.5]);
+						cube([1,ml+(tab_width-ml)/2+1,mh+.5]);
 					}
 				}
 			}
 			
 			translate([-5,-ff,-5])
-			cube([5,raised_tab_width+2*ff,5]);
+			cube([5,tab_width+2*ff,5]);
 			
 			translate([-5-1.25,-ff,depth/2-.5])
-			cube([5,raised_tab_width+2*ff,5]);
+			cube([5,tab_width+2*ff,5]);
 		}
 	}
 }
@@ -6299,13 +6341,17 @@ module echo_settings(){
 		echo();
 
 	echo("---- Raised Tabs Info ----");
+		if (raised_tab_locations != "horizontal only") echo(raised_tab_locations = raised_tab_locations);
 		if (raised_tab_height != 6) echo(raised_tab_height= raised_tab_height);
-		if (raised_tab_length != 8) echo(raised_tab_length= raised_tab_length);
-		if (raised_tab_width != 20) echo(raised_tab_width= raised_tab_width);
+		if (horizontal_raised_tab_length != 8) echo(horizontal_raised_tab_length= horizontal_raised_tab_length);
+		if (horizontal_raised_tab_width != 20) echo(horizontal_raised_tab_width= horizontal_raised_tab_width);
+		if (distance_between_horizontal_raised_tabs != 60) echo(distance_between_horizontal_raised_tabs= distance_between_horizontal_raised_tabs);
+		if (vertical_raised_tab_length != 8) echo(vertical_raised_tab_length= vertical_raised_tab_length);
+		if (vertical_raised_tab_width != 20) echo(vertical_raised_tab_width= vertical_raised_tab_width);
+		if (distance_between_vertical_raised_tabs != 60) echo(distance_between_vertical_raised_tabs= distance_between_vertical_raised_tabs);
 		if (preferred_raised_tab_thickness != 2) echo(preferred_raised_tab_thickness= preferred_raised_tab_thickness);
 		if (raised_tabs_starting_height != 0) echo(raised_tabs_starting_height = raised_tabs_starting_height);
 		if (ramp_angle != 30) echo(ramp_angle = ramp_angle);
-		if (distance_between_raised_tabs != 60) echo(distance_between_raised_tabs= distance_between_raised_tabs);
 		if (embed_magnets != "no") echo(embed_magnets = embed_magnets);
 		if (magnet_size != "20 x 8 x 1.5") echo(magnet_size = magnet_size);
 		echo();
