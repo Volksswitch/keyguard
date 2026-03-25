@@ -81,6 +81,22 @@
       "vpr": [55, 0, 25],
       "vpd": 700,
       "expected": "step10_expected.png"
+    },
+    {
+      "label": "vertical raised tabs only - plain keyguard",
+      "params": "Test Case 17j",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 700,
+      "expected": "step11_expected.png"
+    },
+    {
+      "label": "horizontal and vertical raised tabs - plain keyguard",
+      "params": "Test Case 17k",
+      "vpt": [12.9599, -6.98467, -16.8626],
+      "vpr": [55, 0, 25],
+      "vpd": 700,
+      "expected": "step12_expected.png"
     }
   ]
 }
