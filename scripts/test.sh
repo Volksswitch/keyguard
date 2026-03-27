@@ -37,6 +37,7 @@ DEFAULT_SVG="$PROJECT_ROOT/default.svg"
 OUTPUT_DIR="$PROJECT_ROOT/output/test"
 TEST_RESULTS_DIR="$PROJECT_ROOT/test results"
 CASES_DIR="$PROJECT_ROOT/tests/cases"
+TIMINGS_FILE="$PROJECT_ROOT/test-timings.ndjson"
 
 # sca2d ignore codes:
 #   User-configured: I3001 I0006 I1002 I0004 I1001 I4001 I4002 I0003 I4003
@@ -57,6 +58,15 @@ fail()  { echo -e "${RED}  ✗ FAIL${RESET}  $*"; FAILURES=$((FAILURES + 1)); }
 warn()  { echo -e "${YELLOW}  ⚠ WARN${RESET}  $*"; }
 info()  { echo -e "${BLUE}  ·${RESET} $*"; }
 header(){ echo -e "\n${BOLD}$*${RESET}"; }
+
+# Append one NDJSON record to the timings file (one JSON object per line)
+log_event() { printf '%s\n' "$1" >> "$TIMINGS_FILE"; }
+
+# Current UTC timestamp in ISO 8601 format
+iso_ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
+
+# Escape a value for use as a JSON string (handles backslashes and double-quotes)
+json_str() { local s="$1"; s="${s//\\/\\\\}"; s="${s//\"/\\\"}"; printf '%s' "$s"; }
 
 FAILURES=0
 
@@ -461,9 +471,12 @@ run_geometry() {
 
 # ── Layer 5: Visual tests ─────────────────────────────────────────────────────
 
-# Compare two PNGs; return 0 if same/within threshold, 1 if different
+# Compare two PNGs; return 0 if same/within threshold, 1 if different.
+# Sets the global LAST_RMSE to the numeric score (or "null" if unavailable).
+LAST_RMSE="null"
 compare_png() {
     local rendered="$1" expected="$2" diff_out="$3"
+    LAST_RMSE="null"
     if [[ -n "$COMPARE" ]]; then
         # ImageMagick outputs "X (Y)" where X is the absolute RMSE in quantum
         # units (0–65535 for Q16-HDRI builds) and Y is the normalized 0–1 value.
@@ -478,13 +491,17 @@ compare_png() {
         local raw_output score
         raw_output=$("$COMPARE" -metric RMSE "$rendered" "$expected" "$diff_out" 2>&1) || true
         score=$(echo "$raw_output" | grep -oE '\([0-9.e+-]+\)' | tr -d '()' || echo "1")
+        LAST_RMSE="${score:-null}"
         $PYTHON -c "import sys; sys.exit(0 if float('${score:-1}') < 0.02 else 1)" 2>/dev/null
     elif [[ -n "$PYTHON" ]]; then
         # Python fallback: pure-stdlib RMSE comparison (threshold 5.0)
         # OpenSCAD's PNG renderer is slightly non-deterministic between runs;
         # RMSE < 5.0 catches real regressions while tolerating render noise.
         local py_script; py_script="$(py_path "$SCRIPT_DIR/compare_png.py")"
-        $PYTHON "$py_script" "$rendered" "$expected" 5.0 > /dev/null
+        local score exit_code=0
+        score=$($PYTHON "$py_script" "$rendered" "$expected" 5.0 2>/dev/null) || exit_code=$?
+        LAST_RMSE="${score:-null}"
+        return $exit_code
     else
         # Last resort: exact hash comparison
         local h1 h2
@@ -518,6 +535,8 @@ run_visual() {
 
     local test_failures=0
     local summary_cases=""   # accumulated per-case markdown for summary
+    local t_run_start; t_run_start=$(date +%s)
+    local cases_passed=0
 
     local run_count=0
     for case_dir in "${cases[@]}"; do
@@ -532,6 +551,8 @@ run_visual() {
         local render_dir="$run_dir/$case_name"
         mkdir -p "$render_dir"
         run_count=$((run_count + 1))
+        local t_case_start; t_case_start=$(date +%s)
+        local case_step_passed=0 case_step_failed=0 case_step_captured=0
 
         echo ""
         echo -e "  ${BOLD}${case_name}${RESET}"
@@ -598,6 +619,7 @@ run_visual() {
 
             printf "    [step %d/%d] %-30s" "$((i+1))" "$step_count" "$STEP_LABEL"
 
+            local t_step_start; t_step_start=$(date +%s)
             local cmd=("$OPENSCAD"
                 --camera="$camera"
                 --imgsize=1024,768
@@ -618,10 +640,14 @@ run_visual() {
             local console_log="$render_dir/step$((i+1))_${safe_label}_console.log"
             "${cmd[@]}" > "$console_log" 2>&1 || exit_code=$?
 
+            local t_step_elapsed=$(( $(date +%s) - t_step_start ))
+
             if [[ "$exit_code" -ne 0 || ! -s "$rendered_png" ]]; then
                 echo -e " ${RED}RENDER FAILED${RESET}"
                 case_ok=false
+                case_step_failed=$((case_step_failed + 1))
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | RENDER FAILED |"$'\n'
+                log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"render_failed\",\"rmse\":null,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
                 continue
             fi
 
@@ -629,7 +655,9 @@ run_visual() {
             if "$CAPTURE_REFERENCES"; then
                 cp "$rendered_png" "$expected_png"
                 echo -e " ${GREEN}CAPTURED${RESET}"
+                case_step_captured=$((case_step_captured + 1))
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | CAPTURED |"$'\n'
+                log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"captured\",\"rmse\":null,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
                 continue
             fi
 
@@ -661,7 +689,9 @@ for m in missing:
             if [[ ! -f "$expected_png" ]]; then
                 echo -e " ${YELLOW}NO REFERENCE${RESET} (run --capture-references to create one)"
                 case_ok=false
+                case_step_failed=$((case_step_failed + 1))
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | NO REFERENCE |"$'\n'
+                log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"no_reference\",\"rmse\":null,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
                 continue
             fi
 
@@ -671,7 +701,9 @@ for m in missing:
             if "$png_ok" && "$console_ok"; then
                 echo -e " ${GREEN}PASS${RESET}"
                 rm -f "$diff_png"
+                case_step_passed=$((case_step_passed + 1))
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | PASS |"$'\n'
+                log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"pass\",\"rmse\":$LAST_RMSE,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
             else
                 local fail_reasons=()
                 "$png_ok"     || fail_reasons+=("PNG mismatch")
@@ -685,7 +717,9 @@ for m in missing:
                     done <<< "$console_missing"
                 fi
                 case_ok=false
+                case_step_failed=$((case_step_failed + 1))
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | FAIL ($fail_str) |"$'\n'
+                log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"fail\",\"rmse\":$LAST_RMSE,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
             fi
         done
 
@@ -698,7 +732,13 @@ for m in missing:
         fi
         for asset_path in "${copied_assets[@]}"; do rm -f "$asset_path"; done
 
-        "$case_ok" || test_failures=$((test_failures + 1))
+        if "$case_ok"; then
+            cases_passed=$((cases_passed + 1))
+        else
+            test_failures=$((test_failures + 1))
+        fi
+        local t_case_elapsed=$(( $(date +%s) - t_case_start ))
+        log_event "{\"event\":\"case\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"steps\":$step_count,\"passed\":$case_step_passed,\"failed\":$case_step_failed,\"captured\":$case_step_captured,\"duration_s\":$t_case_elapsed,\"ts\":\"$(iso_ts)\"}"
         summary_cases+="### $case_name"$'\n\n'
         summary_cases+="| Step | Label | Result |"$'\n'
         summary_cases+="|------|-------|--------|"$'\n'
@@ -726,8 +766,14 @@ for m in missing:
         echo "$summary_cases"
     } > "$run_dir/summary.md"
 
+    local t_run_elapsed=$(( $(date +%s) - t_run_start ))
+    local run_mode_str; "$CAPTURE_REFERENCES" && run_mode_str="capture-references" || run_mode_str="visual"
+    [[ -n "$CASE_FILTER" ]] && run_mode_str+=" (filter: $(json_str "$CASE_FILTER"))"
+    log_event "{\"event\":\"run\",\"run\":\"$(json_str "$run_label")\",\"mode\":\"$(json_str "$run_mode_str")\",\"cases_run\":$run_count,\"cases_passed\":$cases_passed,\"cases_failed\":$test_failures,\"duration_s\":$t_run_elapsed,\"ts\":\"$(iso_ts)\"}"
+
     echo ""
     info "Results saved to: test results/$run_label/"
+    info "Timings appended to: test-timings.ndjson"
     if [[ "$run_count" -eq 0 ]]; then
         warn "No test cases matched filter '$CASE_FILTER'"
     elif "$CAPTURE_REFERENCES"; then
