@@ -372,6 +372,9 @@ run_geometry() {
 
     local render_failures=0 manifold_failures=0 admesh_failures=0 skipped=0
     local total=${#configs[@]} current=0
+    local run_label; run_label=$(date +%Y-%m-%d_%H-%M-%S)
+    local t_geom_run_start; t_geom_run_start=$(date +%s)
+    local geom_passed=0
 
     for config in "${configs[@]}"; do
         current=$((current + 1))
@@ -382,7 +385,9 @@ run_geometry() {
         if "$skip"; then
             printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
             echo -e " ${YELLOW}SKIP${RESET}"
-            skipped=$((skipped + 1)); continue
+            skipped=$((skipped + 1))
+            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"skip\",\"manifold\":null,\"admesh_issues\":null,\"duration_s\":0,\"ts\":\"$(iso_ts)\"}"
+            continue
         fi
 
         # Write STL to a system temp directory (outside OneDrive/cloud-sync folders)
@@ -400,6 +405,7 @@ run_geometry() {
         if [[ "$exit_code" -ne 0 || ! -s "$out" ]]; then
             echo -e " ${RED}RENDER FAILED${RESET} (${t_elapsed}s)"
             render_failures=$((render_failures + 1))
+            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"render_failed\",\"manifold\":null,\"admesh_issues\":null,\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
             rm -f "$out"; continue
         fi
 
@@ -420,6 +426,7 @@ run_geometry() {
         # ── 3. admesh mesh-integrity check (optional) ──────────────────────────
         # admesh checks for degenerate facets, open edges, reversed normals, etc.
         # A clean mesh has zero counts across all repair categories.
+        local admesh_issues_count=0
         if [[ -n "$ADMESH" && "$config_ok" == "true" ]]; then
             local admesh_out
             admesh_out=$("$ADMESH" "$out" 2>&1) || true
@@ -428,6 +435,7 @@ run_geometry() {
                 grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Facets reversed|Backsides flipped|Parts fixed)' | \
                 grep -cE ':[[:space:]]+[1-9][0-9]*[[:space:]]*$' || true)
             admesh_issues=${admesh_issues:-0}
+            admesh_issues_count=$admesh_issues
             if [[ "$admesh_issues" -gt 0 ]]; then
                 echo -e " ${RED}MESH ERRORS${RESET} (${t_elapsed}s)"
                 echo "$admesh_out" | \
@@ -445,6 +453,10 @@ run_geometry() {
             else
                 echo -e " ${GREEN}OK${RESET} (${t_elapsed}s)"
             fi
+            geom_passed=$((geom_passed + 1))
+            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"pass\",\"manifold\":\"${is_simple:-unknown}\",\"admesh_issues\":$admesh_issues_count,\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
+        else
+            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"fail\",\"manifold\":\"${is_simple:-unknown}\",\"admesh_issues\":$admesh_issues_count,\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
         fi
 
         # ── Clean up STL (checks are done; no value in keeping it) ─────────────
@@ -467,6 +479,10 @@ run_geometry() {
     if [[ "$render_failures" -eq 0 && "$manifold_failures" -eq 0 && "$admesh_failures" -eq 0 ]]; then
         pass "Geometry validation — all configs passed"
     fi
+    local t_geom_elapsed=$(( $(date +%s) - t_geom_run_start ))
+    local geom_failed=$(( render_failures + manifold_failures + admesh_failures ))
+    log_event "{\"event\":\"run\",\"run\":\"$(json_str "$run_label")\",\"mode\":\"geometry\",\"configs_total\":$total,\"configs_passed\":$geom_passed,\"configs_failed\":$geom_failed,\"configs_skipped\":$skipped,\"render_failures\":$render_failures,\"manifold_failures\":$manifold_failures,\"admesh_failures\":$admesh_failures,\"duration_s\":$t_geom_elapsed,\"ts\":\"$(iso_ts)\"}"
+    info "Timings appended to: test-timings.ndjson"
 }
 
 # ── Layer 5: Visual tests ─────────────────────────────────────────────────────
