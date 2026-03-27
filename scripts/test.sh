@@ -299,7 +299,7 @@ run_syntax() {
     # Omit --hardwarnings: that flag exits non-zero on warnings too, including the benign
     # "Viewall and autocenter disabled in favor of $vp*" warning set in the file.
     # Without --hardwarnings, OpenSCAD exits non-zero only on actual parse/compile errors.
-    local tmp_stl; tmp_stl=$(mktemp "${TMPDIR:-/tmp}/openscad_syntax_XXXXXX.stl")
+    local tmp_stl="/tmp/openscad_syntax_$$.stl"
     output=$("$OPENSCAD" -o "$tmp_stl" "$SCAD_FILE" 2>&1) || exit_code=$?
     rm -f "$tmp_stl"
     [[ -n "$output" ]] && echo "$output" | sed 's/^/    /' && echo ""
@@ -359,7 +359,6 @@ run_geometry() {
     fi
 
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
-    mkdir -p "$OUTPUT_DIR/geometry"
 
     local render_failures=0 manifold_failures=0 admesh_failures=0 skipped=0
     local total=${#configs[@]} current=0
@@ -376,17 +375,22 @@ run_geometry() {
             skipped=$((skipped + 1)); continue
         fi
 
+        # Write STL to a system temp directory (outside OneDrive/cloud-sync folders)
+        # to avoid sync overhead on large temporary files.
         local safe; safe=$(echo "$config" | tr ' /' '__')
-        local out="$OUTPUT_DIR/geometry/${safe}.stl"
+        local out="/tmp/keyguard_geom_${safe}_$$.stl"
         printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
 
         # ── 1. Render ──────────────────────────────────────────────────────────
-        local exit_code=0 console
+        local exit_code=0 console t_start t_elapsed
+        t_start=$(date +%s)
         console=$("$OPENSCAD" -p "$JSON_FILE" -P "$config" \
             -o "$out" "$SCAD_FILE" 2>&1) || exit_code=$?
+        t_elapsed=$(( $(date +%s) - t_start ))
         if [[ "$exit_code" -ne 0 || ! -s "$out" ]]; then
-            echo -e " ${RED}RENDER FAILED${RESET}"
-            render_failures=$((render_failures + 1)); continue
+            echo -e " ${RED}RENDER FAILED${RESET} (${t_elapsed}s)"
+            render_failures=$((render_failures + 1))
+            rm -f "$out"; continue
         fi
 
         local config_ok=true
@@ -398,7 +402,7 @@ run_geometry() {
         is_simple=$(echo "$console" | grep -oE 'Simple:[[:space:]]+(yes|no)' \
                     | grep -oE '(yes|no)' || echo "")
         if [[ "$is_simple" == "no" ]]; then
-            echo -e " ${RED}NON-MANIFOLD${RESET}"
+            echo -e " ${RED}NON-MANIFOLD${RESET} (${t_elapsed}s)"
             manifold_failures=$((manifold_failures + 1))
             config_ok=false
         fi
@@ -412,9 +416,10 @@ run_geometry() {
             local admesh_issues
             admesh_issues=$(echo "$admesh_out" | \
                 grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Facets reversed|Backsides flipped|Parts fixed)' | \
-                grep -cE ':[[:space:]]+[1-9][0-9]*[[:space:]]*$' || echo "0")
+                grep -cE ':[[:space:]]+[1-9][0-9]*[[:space:]]*$' || true)
+            admesh_issues=${admesh_issues:-0}
             if [[ "$admesh_issues" -gt 0 ]]; then
-                echo -e " ${RED}MESH ERRORS${RESET}"
+                echo -e " ${RED}MESH ERRORS${RESET} (${t_elapsed}s)"
                 echo "$admesh_out" | \
                     grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Facets reversed|Backsides flipped|Parts fixed)' | \
                     grep -E ':[[:space:]]+[1-9]' | sed 's/^/      /'
@@ -426,9 +431,9 @@ run_geometry() {
         # ── Print per-config result ─────────────────────────────────────────────
         if [[ "$config_ok" == "true" ]]; then
             if [[ -z "$is_simple" ]]; then
-                echo -e " ${YELLOW}OK (manifold status unknown)${RESET}"
+                echo -e " ${YELLOW}OK (manifold status unknown)${RESET} (${t_elapsed}s)"
             else
-                echo -e " ${GREEN}OK${RESET}"
+                echo -e " ${GREEN}OK${RESET} (${t_elapsed}s)"
             fi
         fi
 
@@ -460,10 +465,20 @@ run_geometry() {
 compare_png() {
     local rendered="$1" expected="$2" diff_out="$3"
     if [[ -n "$COMPARE" ]]; then
-        # ImageMagick: RMSE < 1.0
-        local score
-        score=$("$COMPARE" -metric RMSE "$rendered" "$expected" "$diff_out" 2>&1 | grep -oE '^[0-9.]+' || echo "999")
-        $PYTHON -c "import sys; sys.exit(0 if float('$score') < 1.0 else 1)" 2>/dev/null
+        # ImageMagick outputs "X (Y)" where X is the absolute RMSE in quantum
+        # units (0–65535 for Q16-HDRI builds) and Y is the normalized 0–1 value.
+        # We extract the parenthesized Y value so the threshold works regardless
+        # of the quantum depth of the installed ImageMagick build.
+        # 0.02 ≈ 5/255, matching the Python fallback threshold.
+        #
+        # Note: `compare` exits 1 when images differ (even slightly), so we must
+        # capture its output before checking the exit code.  With `set -o pipefail`
+        # active, piping directly and using `|| echo "1"` would fire the fallback
+        # for every non-identical pair, corrupting the score variable.
+        local raw_output score
+        raw_output=$("$COMPARE" -metric RMSE "$rendered" "$expected" "$diff_out" 2>&1) || true
+        score=$(echo "$raw_output" | grep -oE '\([0-9.e+-]+\)' | tr -d '()' || echo "1")
+        $PYTHON -c "import sys; sys.exit(0 if float('${score:-1}') < 0.02 else 1)" 2>/dev/null
     elif [[ -n "$PYTHON" ]]; then
         # Python fallback: pure-stdlib RMSE comparison (threshold 5.0)
         # OpenSCAD's PNG renderer is slightly non-deterministic between runs;
@@ -532,14 +547,14 @@ run_visual() {
         local copied_assets=()
 
         if [[ -n "$openings_override" && -f "$case_dir/$openings_override" ]]; then
-            saved_openings=$(mktemp)
+            saved_openings="/tmp/keyguard_openings_$$.txt"
             cp "$OPENINGS_FILE" "$saved_openings"
             cp "$case_dir/$openings_override" "$OPENINGS_FILE"
             info "Using $openings_override"
         fi
 
         if [[ -n "$svg_source" && -f "$case_dir/$svg_source" ]]; then
-            saved_svg=$(mktemp --suffix=.svg)
+            saved_svg="/tmp/keyguard_default_$$.svg"
             [[ -f "$DEFAULT_SVG" ]] && cp "$DEFAULT_SVG" "$saved_svg"
             cp "$case_dir/$svg_source" "$DEFAULT_SVG"
             info "Using $svg_source as default.svg"
@@ -569,8 +584,13 @@ run_visual() {
             eval "$step_vars"
 
             local camera; camera=$(build_camera "$STEP_VPT" "$STEP_VPR" "$STEP_VPD")
-            # Sanitise label for use in file names: spaces → _, slashes → _
-            local safe_label="${STEP_LABEL// /_}"; safe_label="${safe_label//\//_}"
+            # Sanitise label for use in file names: spaces/slashes/commas → _
+            # Commas must be stripped because OpenSCAD parses -o argument values
+            # on commas (e.g. --imgsize=WW,HH), so a comma in the output filename
+            # causes the export to fail with "Can't open file".
+            # Truncate to 50 chars to avoid Windows MAX_PATH (260) overflow on
+            # deeply nested paths.
+            local safe_label="${STEP_LABEL// /_}"; safe_label="${safe_label//\//_}"; safe_label="${safe_label//,/_}"; safe_label="${safe_label:0:50}"
             # Name rendered PNG with step number + label for easy browsing
             local rendered_png="$render_dir/step$((i+1))_${safe_label}.png"
             local expected_png="$case_dir/$STEP_EXPECTED"
