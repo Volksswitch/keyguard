@@ -68,6 +68,12 @@ iso_ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
 # Escape a value for use as a JSON string (handles backslashes and double-quotes)
 json_str() { local s="$1"; s="${s//\\/\\\\}"; s="${s//\"/\\\"}"; printf '%s' "$s"; }
 
+# JSON-encode a value: outputs a quoted string, or null if the value is empty
+json_val() { [[ -n "$1" ]] && printf '"%s"' "$(json_str "$1")" || printf 'null'; }
+
+# Return the first line of a tool's --version output, or empty string if unavailable
+tool_version() { [[ -n "$1" ]] && "$1" --version 2>&1 | head -1 | tr -d '\r' || true; }
+
 FAILURES=0
 
 # ── Tool detection ─────────────────────────────────────────────────────────────
@@ -500,37 +506,29 @@ run_geometry() {
 
 # Compare two PNGs; return 0 if same/within threshold, 1 if different.
 # Sets the global LAST_RMSE to the numeric score (or "null" if unavailable).
+#
+# Pass/fail always uses Python RMSE (threshold 5.0 on the 0–255 scale) so
+# results are consistent across machines regardless of whether ImageMagick is
+# installed.  If ImageMagick is available it is used only to generate the diff
+# image; the decision is still made by Python.
 LAST_RMSE="null"
 compare_png() {
     local rendered="$1" expected="$2" diff_out="$3"
     LAST_RMSE="null"
-    if [[ -n "$COMPARE" ]]; then
-        # ImageMagick outputs "X (Y)" where X is the absolute RMSE in quantum
-        # units (0–65535 for Q16-HDRI builds) and Y is the normalized 0–1 value.
-        # We extract the parenthesized Y value so the threshold works regardless
-        # of the quantum depth of the installed ImageMagick build.
-        # 0.02 ≈ 5/255, matching the Python fallback threshold.
-        #
-        # Note: `compare` exits 1 when images differ (even slightly), so we must
-        # capture its output before checking the exit code.  With `set -o pipefail`
-        # active, piping directly and using `|| echo "1"` would fire the fallback
-        # for every non-identical pair, corrupting the score variable.
-        local raw_output score
-        raw_output=$("$COMPARE" -metric RMSE "$rendered" "$expected" "$diff_out" 2>&1) || true
-        score=$(echo "$raw_output" | grep -oE '\([0-9.e+-]+\)' | tr -d '()' || echo "1")
-        LAST_RMSE="${score:-null}"
-        $PYTHON -c "import sys; sys.exit(0 if float('${score:-1}') < 0.02 else 1)" 2>/dev/null
-    elif [[ -n "$PYTHON" ]]; then
-        # Python fallback: pure-stdlib RMSE comparison (threshold 5.0)
-        # OpenSCAD's PNG renderer is slightly non-deterministic between runs;
-        # RMSE < 5.0 catches real regressions while tolerating render noise.
+    if [[ -n "$PYTHON" ]]; then
+        # Always use Python for the pass/fail decision (consistent across machines).
+        # Threshold 5.0 on the 0–255 scale (≈ 2% of full range).
         local py_script; py_script="$(py_path "$SCRIPT_DIR/compare_png.py")"
         local score exit_code=0
         score=$($PYTHON "$py_script" "$rendered" "$expected" 5.0 2>/dev/null) || exit_code=$?
         LAST_RMSE="${score:-null}"
+        # Generate a diff image via ImageMagick if available (diagnostic only).
+        if [[ -n "$COMPARE" && "$exit_code" -ne 0 ]]; then
+            "$COMPARE" -metric RMSE "$rendered" "$expected" "$diff_out" 2>/dev/null || true
+        fi
         return $exit_code
     else
-        # Last resort: exact hash comparison
+        # Last resort: exact hash comparison (no Python available)
         local h1 h2
         h1=$(sha256sum "$rendered" | cut -d' ' -f1)
         h2=$(sha256sum "$expected"  | cut -d' ' -f1)
@@ -541,8 +539,9 @@ compare_png() {
 run_visual() {
     header "Layer 5 — Visual tests"
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
-    [[ -z "$COMPARE" && -z "$PYTHON" ]] && warn "ImageMagick and Python not found — using exact hash comparison"
-    [[ -z "$COMPARE" && -n "$PYTHON" ]] && warn "ImageMagick 'compare' not found — using Python RMSE comparison (threshold 5.0)"
+    [[ -z "$PYTHON" ]] && warn "Python not found — using exact hash comparison (install Python 3 for RMSE comparison)"
+    [[ -n "$PYTHON" && -z "$COMPARE" ]] && info "ImageMagick not found — diff images will not be generated on failure"
+    [[ -n "$PYTHON" && -n "$COMPARE" ]] && info "ImageMagick found — diff images will be generated on failure"
     "$CAPTURE_REFERENCES" && info "Mode: capturing reference images"
 
     local cases; mapfile -t cases < <(get_test_cases)
@@ -837,6 +836,16 @@ info "sca2d:       ${SCA2D:-NOT FOUND}"
 info "admesh:      ${ADMESH:-not found (manifold-only check in Layer 4)}"
 info "ImageMagick: ${COMPARE:-not found (will use hash comparison)}"
 info "timeout:     ${TIMEOUT_CMD:-not found (renders will not be time-limited)} (limit: ${RENDER_TIMEOUT}s)"
+
+# ── Log environment record ────────────────────────────────────────────────────
+SESSION_ID="$(date +'%Y-%m-%d_%H-%M-%S')"
+_os="$(uname -o 2>/dev/null || uname -s 2>/dev/null || true)"
+_openscad_ver="$(tool_version "$OPENSCAD")"
+_python_ver="$([[ -n "$PYTHON" ]] && "$PYTHON" --version 2>&1 | tr -d '\r' || true)"
+_sca2d_ver="$(tool_version "$SCA2D")"
+_admesh_ver="$(tool_version "$ADMESH")"
+_compare_ver="$(tool_version "$COMPARE")"
+log_event "{\"event\":\"env\",\"session\":\"$(json_str "$SESSION_ID")\",\"os\":$(json_val "$_os"),\"openscad\":$(json_val "$OPENSCAD"),\"openscad_version\":$(json_val "$_openscad_ver"),\"python\":$(json_val "$PYTHON"),\"python_version\":$(json_val "$_python_ver"),\"sca2d\":$(json_val "$SCA2D"),\"sca2d_version\":$(json_val "$_sca2d_ver"),\"admesh\":$(json_val "$ADMESH"),\"admesh_version\":$(json_val "$_admesh_ver"),\"imagemagick\":$(json_val "$COMPARE"),\"imagemagick_version\":$(json_val "$_compare_ver"),\"timeout_cmd\":$(json_val "$TIMEOUT_CMD"),\"render_timeout_s\":$RENDER_TIMEOUT,\"ts\":\"$(iso_ts)\"}"
 
 "$RUN_LINT"             && run_lint
 "$RUN_SYNTAX"           && run_syntax
