@@ -102,9 +102,24 @@ find_sca2d() {
 }
 
 find_compare() {
+    # ImageMagick 6: standalone 'compare' binary
     command -v compare &>/dev/null && echo "compare" && return
+    # ImageMagick 7: all tools unified under 'magick'; check PATH then Windows installs
+    command -v magick &>/dev/null && echo "magick" && return
+    local win_magick
+    for win_magick in \
+        "/c/Program Files/ImageMagick-"*"/magick.exe" \
+        "/mnt/c/Program Files/ImageMagick-"*"/magick.exe"
+    do
+        # glob expansion: check each match
+        [[ -x "$win_magick" ]] && echo "$win_magick" && return
+    done
     echo ""
 }
+
+# Returns true if COMPARE points to an ImageMagick 7 'magick' binary
+# (where the subcommand 'compare' must be passed explicitly).
+compare_is_im7() { [[ "$(basename "${COMPARE%.exe}")" == "magick" ]]; }
 
 find_admesh() {
     command -v admesh &>/dev/null && echo "admesh" && return
@@ -507,28 +522,37 @@ run_geometry() {
 # Compare two PNGs; return 0 if same/within threshold, 1 if different.
 # Sets the global LAST_RMSE to the numeric score (or "null" if unavailable).
 #
-# Pass/fail always uses Python RMSE (threshold 5.0 on the 0–255 scale) so
-# results are consistent across machines regardless of whether ImageMagick is
-# installed.  If ImageMagick is available it is used only to generate the diff
-# image; the decision is still made by Python.
+# Primary: ImageMagick (IM6: 'compare'; IM7: 'magick compare').
+#   Uses normalized RMSE (0–1 scale); threshold 0.02 ≈ 5/255.
+#   Also generates a diff image for failed comparisons.
+# Fallback: Python RMSE via compare_png.py (threshold 5.0 on 0–255 scale).
+# Last resort: exact SHA-256 hash comparison.
 LAST_RMSE="null"
 compare_png() {
     local rendered="$1" expected="$2" diff_out="$3"
     LAST_RMSE="null"
-    if [[ -n "$PYTHON" ]]; then
-        # Always use Python for the pass/fail decision (consistent across machines).
-        # Threshold 5.0 on the 0–255 scale (≈ 2% of full range).
-        local py_script; py_script="$(py_path "$SCRIPT_DIR/compare_png.py")"
-        local score exit_code=0
-        score=$($PYTHON "$py_script" "$rendered" "$expected" 5.0 2>/dev/null) || exit_code=$?
+    if [[ -n "$COMPARE" ]]; then
+        # Build the compare command: IM7 uses 'magick compare', IM6 uses 'compare'.
+        local im_cmd=("$COMPARE")
+        compare_is_im7 && im_cmd+=("compare")
+        # Note: 'compare' exits 1 when images differ (even slightly), so capture
+        # output before checking the exit code to avoid set -o pipefail issues.
+        local raw_output score
+        raw_output=$("${im_cmd[@]}" -metric RMSE "$rendered" "$expected" "$diff_out" 2>&1) || true
+        score=$(echo "$raw_output" | grep -oE '\([0-9.e+-]+\)' | tr -d '()' || echo "1")
         LAST_RMSE="${score:-null}"
-        # Generate a diff image via ImageMagick if available (diagnostic only).
-        if [[ -n "$COMPARE" && "$exit_code" -ne 0 ]]; then
-            "$COMPARE" -metric RMSE "$rendered" "$expected" "$diff_out" 2>/dev/null || true
-        fi
+        $PYTHON -c "import sys; sys.exit(0 if float('${score:-1}') < 0.02 else 1)" 2>/dev/null
+    elif [[ -n "$PYTHON" ]]; then
+        # Python fallback: pure-stdlib RMSE (threshold 5.0 on 0–255 scale ≈ 0.02 normalised).
+        # Normalise the reported score to 0–1 so LAST_RMSE is on the same scale as
+        # the ImageMagick path (both are stored as "rmse" in the NDJSON log).
+        local py_script; py_script="$(py_path "$SCRIPT_DIR/compare_png.py")"
+        local raw_score exit_code=0
+        raw_score=$($PYTHON "$py_script" "$rendered" "$expected" 5.0 2>/dev/null) || exit_code=$?
+        LAST_RMSE=$($PYTHON -c "print(f'{float(\"${raw_score:-255}\")/255:.4f}')" 2>/dev/null || echo "null")
         return $exit_code
     else
-        # Last resort: exact hash comparison (no Python available)
+        # Last resort: exact hash comparison
         local h1 h2
         h1=$(sha256sum "$rendered" | cut -d' ' -f1)
         h2=$(sha256sum "$expected"  | cut -d' ' -f1)
@@ -539,9 +563,8 @@ compare_png() {
 run_visual() {
     header "Layer 5 — Visual tests"
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
-    [[ -z "$PYTHON" ]] && warn "Python not found — using exact hash comparison (install Python 3 for RMSE comparison)"
-    [[ -n "$PYTHON" && -z "$COMPARE" ]] && info "ImageMagick not found — diff images will not be generated on failure"
-    [[ -n "$PYTHON" && -n "$COMPARE" ]] && info "ImageMagick found — diff images will be generated on failure"
+    [[ -z "$COMPARE" && -z "$PYTHON" ]] && warn "ImageMagick and Python not found — using exact hash comparison"
+    [[ -z "$COMPARE" && -n "$PYTHON" ]] && warn "ImageMagick not found — using Python RMSE fallback (install ImageMagick for best results)"
     "$CAPTURE_REFERENCES" && info "Mode: capturing reference images"
 
     local cases; mapfile -t cases < <(get_test_cases)
@@ -834,7 +857,12 @@ info "OpenSCAD:    ${OPENSCAD:-NOT FOUND}"
 info "Python:      ${PYTHON:-NOT FOUND}"
 info "sca2d:       ${SCA2D:-NOT FOUND}"
 info "admesh:      ${ADMESH:-not found (manifold-only check in Layer 4)}"
-info "ImageMagick: ${COMPARE:-not found (will use hash comparison)}"
+if [[ -n "$COMPARE" ]]; then
+    compare_is_im7 && _im_style="IM7 (magick compare)" || _im_style="IM6 (compare)"
+    info "ImageMagick: $COMPARE ($_im_style)"
+else
+    info "ImageMagick: not found (will use Python RMSE fallback)"
+fi
 info "timeout:     ${TIMEOUT_CMD:-not found (renders will not be time-limited)} (limit: ${RENDER_TIMEOUT}s)"
 
 # ── Log environment record ────────────────────────────────────────────────────
@@ -844,7 +872,7 @@ _openscad_ver="$(tool_version "$OPENSCAD")"
 _python_ver="$([[ -n "$PYTHON" ]] && "$PYTHON" --version 2>&1 | tr -d '\r' || true)"
 _sca2d_ver="$(tool_version "$SCA2D")"
 _admesh_ver="$(tool_version "$ADMESH")"
-_compare_ver="$(tool_version "$COMPARE")"
+_compare_ver="$( [[ -n "$COMPARE" ]] && { compare_is_im7 && "$COMPARE" --version 2>&1 | head -1 || "$COMPARE" --version 2>&1 | head -1; } | tr -d '\r' || true)"
 log_event "{\"event\":\"env\",\"session\":\"$(json_str "$SESSION_ID")\",\"os\":$(json_val "$_os"),\"openscad\":$(json_val "$OPENSCAD"),\"openscad_version\":$(json_val "$_openscad_ver"),\"python\":$(json_val "$PYTHON"),\"python_version\":$(json_val "$_python_ver"),\"sca2d\":$(json_val "$SCA2D"),\"sca2d_version\":$(json_val "$_sca2d_ver"),\"admesh\":$(json_val "$ADMESH"),\"admesh_version\":$(json_val "$_admesh_ver"),\"imagemagick\":$(json_val "$COMPARE"),\"imagemagick_version\":$(json_val "$_compare_ver"),\"timeout_cmd\":$(json_val "$TIMEOUT_CMD"),\"render_timeout_s\":$RENDER_TIMEOUT,\"ts\":\"$(iso_ts)\"}"
 
 "$RUN_LINT"             && run_lint
