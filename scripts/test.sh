@@ -105,6 +105,13 @@ find_admesh() {
     echo ""
 }
 
+find_timeout_cmd() {
+    # Prefer gtimeout (macOS homebrew coreutils) then timeout (Linux/Git Bash)
+    command -v gtimeout &>/dev/null && echo "gtimeout" && return
+    command -v timeout  &>/dev/null && echo "timeout"  && return
+    echo ""
+}
+
 find_python() {
     command -v python3 &>/dev/null && python3 -c "import sys; sys.exit(0)" 2>/dev/null && echo "python3" && return
     command -v python &>/dev/null && echo "python" && return
@@ -123,6 +130,10 @@ SCA2D="$(find_sca2d)"
 COMPARE="$(find_compare)"
 ADMESH="$(find_admesh)"
 PYTHON="$(find_python)"
+TIMEOUT_CMD="$(find_timeout_cmd)"
+
+# Per-step render timeout in seconds (0 = no timeout)
+RENDER_TIMEOUT=300
 
 # ── Argument parsing ───────────────────────────────────────────────────────────
 
@@ -654,9 +665,22 @@ run_visual() {
 
             local exit_code=0
             local console_log="$render_dir/step$((i+1))_${safe_label}_console.log"
-            "${cmd[@]}" > "$console_log" 2>&1 || exit_code=$?
+            if [[ -n "$TIMEOUT_CMD" && "$RENDER_TIMEOUT" -gt 0 ]]; then
+                "$TIMEOUT_CMD" "$RENDER_TIMEOUT" "${cmd[@]}" > "$console_log" 2>&1 || exit_code=$?
+            else
+                "${cmd[@]}" > "$console_log" 2>&1 || exit_code=$?
+            fi
 
             local t_step_elapsed=$(( $(date +%s) - t_step_start ))
+
+            if [[ "$exit_code" -eq 124 ]]; then
+                echo -e " ${RED}TIMED OUT${RESET} (>${RENDER_TIMEOUT}s)"
+                case_ok=false
+                case_step_failed=$((case_step_failed + 1))
+                case_rows+="| $((i+1))/$step_count | $STEP_LABEL | TIMED OUT (>${RENDER_TIMEOUT}s) |"$'\n'
+                log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"timed_out\",\"rmse\":null,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
+                continue
+            fi
 
             if [[ "$exit_code" -ne 0 || ! -s "$rendered_png" ]]; then
                 echo -e " ${RED}RENDER FAILED${RESET}"
@@ -812,6 +836,7 @@ info "Python:      ${PYTHON:-NOT FOUND}"
 info "sca2d:       ${SCA2D:-NOT FOUND}"
 info "admesh:      ${ADMESH:-not found (manifold-only check in Layer 4)}"
 info "ImageMagick: ${COMPARE:-not found (will use hash comparison)}"
+info "timeout:     ${TIMEOUT_CMD:-not found (renders will not be time-limited)} (limit: ${RENDER_TIMEOUT}s)"
 
 "$RUN_LINT"             && run_lint
 "$RUN_SYNTAX"           && run_syntax
