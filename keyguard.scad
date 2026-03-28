@@ -5127,12 +5127,12 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 				union(){
 					hull(){
 						translate([0,0,case_to_screen_depth+fudge])
-						linear_extrude(height=.0001)
+						linear_extrude(height=ff)
 						offset(r=cocr+sew)
 						square([(cow + sew*2)-(cocr+sew)*2,(coh + sew*2)-(cocr+sew)*2],true);
-						
+
 						translate([0,0,sloped_edge_starting_height])
-						linear_extrude(height=.0001)
+						linear_extrude(height=ff)
 						offset(r=cocr)
 						square([cow-cocr*2,coh-cocr*2],true);
 					}
