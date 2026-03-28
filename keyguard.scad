@@ -468,7 +468,7 @@ screenshotcolor = (MW_version) ? "white" : "magenta";
 // the "true" outcome of the following line of code is for controling keyguard frame mounting options
 // orientation = (generate=="keyguard frame") ? "landscape" : orientation;
 
-fudge = 0.001;
+fudge = 0.01;
 ff = fudge; // i.e. fudge factor
 camera_cut_angle = 50;
 
@@ -3859,8 +3859,28 @@ module hole_cutter_2d(hole_width,hole_height,radius){
 	cut_2d(hole_width,hole_height,radius);
 }
 
+// Produces a centred 2D rounded-rectangle profile.  When the corner radius is so
+// large relative to the bounding box that the inner square would be near-zero
+// (≤ 2·ff on a side), substitutes an ellipse to avoid degenerate CGAL geometry.
+// @param w  Bounding-box width in mm
+// @param h  Bounding-box height in mm
+// @param r  Corner radius in mm (0 = sharp corners)
+module rounded_rect(w, h, r) {
+	sw = w - 2*r;
+	sh = h - 2*r;
+	if (r <= 0)
+		square([w, h], center=true);
+	else if (sw <= 2*ff && sh <= 2*ff)
+		// Near-circular: substitute an ellipse to avoid a near-degenerate inner square
+		scale([w/max(w,h), h/max(w,h)]) circle(r=max(w,h)/2);
+	else
+		offset(r=r) square([max(sw,ff), max(sh,ff)], center=true);
+}
+
 // Core geometry primitive: produces a tapered hull solid (or 2D shape when thick=0)
 // centred at the origin, used by all hole_cutter variants.
+// The top slab of the hull is centred at ((right-left)/2, (top-bottom)/2), which
+// equals the original centre=false + complex-translate formulation.
 // @param cut_w         Base width in mm
 // @param cut_h         Base height in mm
 // @param top_angle     Slope angle on the top face in degrees
@@ -3873,7 +3893,7 @@ module cut(cut_w, cut_h, top_angle, bottom_angle, left_angle, right_angle, radiu
 	th1 = thick + 2*ff;
 
 	radius1 = (radius==0) ? 0 : radius-ff;
-	
+
 	left = th1 * tan(90-left_angle);
 	right = th1 * tan(90-right_angle);
 	top = th1 * tan(90-top_angle);
@@ -3882,28 +3902,25 @@ module cut(cut_w, cut_h, top_angle, bottom_angle, left_angle, right_angle, radiu
 	h1 = cut_h+top+bottom;
 	m1 = min(cut_w,cut_h);
 	m2 = min(w1,h1);
-	
-	rad = (radius>m1/2) ? m2/2 : 
+
+	rad = (radius>m1/2) ? m2/2 :
 		((cut_w==cut_h && radius<cut_w/2) || (cut_w!=cut_h) && radius!=m1/2) ? radius : m2/2;
-	
+
 	radius2 = (radius==0) ? 0 : rad-ff;
-	
+
 	if (thick > 0){
 		translate([0,0,-th1/2-ff])
 		hull(){
-			linear_extrude(.005)
-			offset(r=radius1)
-			square([cut_w-2*radius1, cut_h-2*radius1], center = true);
-			
-			translate([-(cut_w/2-radius2)-left,-(cut_h/2-radius2)-bottom,th1])
-			linear_extrude(.005)
-			offset(r=radius2)
-			square([cut_w-2*radius2+left+right, cut_h-2*radius2+top+bottom],center = false);
+			linear_extrude(ff)
+			rounded_rect(cut_w, cut_h, radius1);
+
+			translate([(right-left)/2,(top-bottom)/2,th1])
+			linear_extrude(ff)
+			rounded_rect(w1, h1, radius2);
 		}
 	}
 	else{
-		offset(r=radius1)
-		square([cut_w-2*radius1, cut_h-2*radius1], center = true);
+		rounded_rect(cut_w, cut_h, radius1);
 	}
 }
 
@@ -3915,9 +3932,7 @@ module cut(cut_w, cut_h, top_angle, bottom_angle, left_angle, right_angle, radiu
 // @param radius  Corner radius in mm (0 = sharp corners)
 module cut_2d(cut_w, cut_h, radius){
 	radius1 = (radius==0) ? 0 : radius-ff;
-	
-	offset(r=radius1)
-	square([cut_w-2*radius1, cut_h-2*radius1], center = true);
+	rounded_rect(cut_w, cut_h, radius1);
 }
 
 
@@ -6603,7 +6618,7 @@ module chamfered_shape(x, y, z, c, cr){
 	if (cell_shape=="rectangular"){
 		hull(){
 			translate([0,0,(y-c*2)/2+c])
-			linear_extrude(height=.005)
+			linear_extrude(height=ff)
 			offset(r=cr-c)
 			square([x-2*(cr),z-2*(cr)],center=true);
 
@@ -6613,7 +6628,7 @@ module chamfered_shape(x, y, z, c, cr){
 			square([x-2*cr,z-2*cr],center=true);
 			
 			translate([0,0,-(y-c*2)/2-c])
-			linear_extrude(height=.005)
+			linear_extrude(height=ff)
 			offset(r=cr-c)
 			square([x-2*(cr),z-2*(cr)],center=true);
 		}
@@ -6621,7 +6636,7 @@ module chamfered_shape(x, y, z, c, cr){
 	else{
 			hull(){
 			translate([0,0,(y-c*2)/2+c])
-			linear_extrude(height=.005)
+			linear_extrude(height=ff)
 			offset(r=-c)
 			circle(d=x);
 
@@ -6630,7 +6645,7 @@ module chamfered_shape(x, y, z, c, cr){
 			circle(d=x);
 			
 			translate([0,0,-(y-c*2)/2-c])
-			linear_extrude(height=.005)
+			linear_extrude(height=ff)
 			offset(r=-c)
 			circle(d=x);
 		}
