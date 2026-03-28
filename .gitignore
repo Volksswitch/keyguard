@@ -7,7 +7,6 @@ output/
 # Note: tests/baseline.sha256 is NOT ignored — it is committed to Git
 lint.txt
 test results/
-test-timings.ndjson
 *.stl
 *.amf
 *.3mf
