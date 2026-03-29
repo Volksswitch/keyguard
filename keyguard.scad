@@ -6019,71 +6019,76 @@ module cut_grid(){
 
 // Cuts the triangular snap-in grooves into the keyguard frame at the positions
 // where the inner keyguard's snap-in tabs will engage.
+// Grooves are centred on the screen area thickness (sat) so that they align with
+// the tabs when sat < kt (screen area thinner than the full keyguard body).
 module snap_in_tab_grooves(){
 	if (mount_keyguard_with=="snap-in tabs"){
-		translate([keyguard_width/2-ff,0,-keyguard_frame_thickness/2+kt/2])
+		translate([keyguard_width/2-ff,0,-keyguard_frame_thickness/2+sat/2])
 		make_snap_ins(groove_size,groove_width);
-		
-		translate([-keyguard_width/2+ff,0,-keyguard_frame_thickness/2+kt/2])
+
+		translate([-keyguard_width/2+ff,0,-keyguard_frame_thickness/2+sat/2])
 		rotate([0,0,180])
 		make_snap_ins(groove_size,groove_width);
 
-		translate([keyguard_width/2+.6,0,-keyguard_frame_thickness/2+kt/2-.05-ff])
-		cube([snap_in_size+.5,2,kt-.5],center=true);
-	
-		translate([-keyguard_width/2-.6,0,-keyguard_frame_thickness/2+kt/2-.05-ff])
-		cube([snap_in_size+.5,2,kt-.5],center=true);
+		translate([keyguard_width/2+.6,0,-keyguard_frame_thickness/2+sat/2-.05-ff])
+		cube([snap_in_size+.5,2,sat-.5],center=true);
+
+		translate([-keyguard_width/2-.6,0,-keyguard_frame_thickness/2+sat/2-.05-ff])
+		cube([snap_in_size+.5,2,sat-.5],center=true);
 	}
 
-	translate([0,keyguard_height/2-ff,-keyguard_frame_thickness/2+kt/2])
+	translate([0,keyguard_height/2-ff,-keyguard_frame_thickness/2+sat/2])
 	rotate([0,0,90])
 	make_snap_ins(groove_size,groove_width);
 
-	translate([0,keyguard_height/2+.6,-keyguard_frame_thickness/2+kt/2-.05-ff])
-	cube([2,snap_in_size+.5,kt-.5],center=true);
-		
-	translate([0,-keyguard_height/2+ff,-keyguard_frame_thickness/2+kt/2])
+	translate([0,keyguard_height/2+.6,-keyguard_frame_thickness/2+sat/2-.05-ff])
+	cube([2,snap_in_size+.5,sat-.5],center=true);
+
+	translate([0,-keyguard_height/2+ff,-keyguard_frame_thickness/2+sat/2])
 	rotate([0,0,-90])
 	make_snap_ins(groove_size,groove_width);
-	
-	translate([0,-keyguard_height/2-.6,-keyguard_frame_thickness/2+kt/2-.05-ff])
-	cube([2,snap_in_size+.5,kt-.5],center=true);
+
+	translate([0,-keyguard_height/2-.6,-keyguard_frame_thickness/2+sat/2-.05-ff])
+	cube([2,snap_in_size+.5,sat-.5],center=true);
 }
 
 
 // Adds the triangular snap-in tab protrusions to the edges of the inner keyguard
 // that click into the corresponding grooves in the keyguard frame.
+// Tabs are centred on the screen area thickness (sat) so that when sat < kt the tab
+// sits at the screen-area midpoint rather than the overall keyguard midpoint.
 module add_snap_ins(){
+	tab_z = sat/2 - kt/2; // Z offset: 0 when sat==kt, shifts toward screen face when sat<kt
 	if (snap_in_tabs_on_left_and_right_edges_of_keyguard=="yes" && mount_keyguard_with=="snap-in tabs"){
-		translate([kw/2,0,0])
+		translate([kw/2,0,tab_z])
 		make_snap_ins(snap_in_size,snap_in_width);
-		translate([kw/2+.4,0,-.5])
-		cube([snap_in_size,1.5,kt-1],center=true);
-		
-		translate([-kw/2,0,0])
+		translate([kw/2+.4,0,tab_z-.5])
+		cube([snap_in_size,1.5,sat-1],center=true);
+
+		translate([-kw/2,0,tab_z])
 		rotate([0,0,180])
 		make_snap_ins(snap_in_size,snap_in_width);
-		translate([-kw/2-.4,0,-.5])
-		cube([snap_in_size,1.5,kt-1],center=true);
+		translate([-kw/2-.4,0,tab_z-.5])
+		cube([snap_in_size,1.5,sat-1],center=true);
 	}
-	
+
 	if(snap_in_tab_on_bottom_edge_of_keyguard=="yes"){
-		translate([0,-kh/2,0])
+		translate([0,-kh/2,tab_z])
 		rotate([0,0,-90])
 		make_snap_ins(snap_in_size,snap_in_width);
-		
+
 		if(mount_keyguard_with=="snap-in tabs"){
-			translate([0,-kh/2-.4,-.5])
-			cube([1.5,snap_in_size,kt-1],center=true);
+			translate([0,-kh/2-.4,tab_z-.5])
+			cube([1.5,snap_in_size,sat-1],center=true);
 		}
 	}
 
 	if(snap_in_tab_on_top_edge_of_keyguard=="yes" && mount_keyguard_with=="snap-in tabs"){
-		translate([0,kh/2,0])
+		translate([0,kh/2,tab_z])
 		rotate([0,0,90])
 		make_snap_ins(snap_in_size,snap_in_width);
-		translate([0,kh/2+.4,-.5])
-		cube([1.5,snap_in_size,kt-1],center=true);
+		translate([0,kh/2+.4,tab_z-.5])
+		cube([1.5,snap_in_size,sat-1],center=true);
 	}
 }
 
