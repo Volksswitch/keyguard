@@ -251,7 +251,7 @@ It only needs to be present when this feature is in use.
 - [ ] (Low) Need to move clip-on strap pedestals and grooves inward as keyguard edge chamfer increases (Test Case 3: set keyguard edge chamfer to 3.2)
 - [ ] (Clean-up) Figure out when and how to put an outer arc on the sharp corner after merging
 - [ ] (Clean-up) Revisit Test Case 43 — ridges around merged cells. Also verify that widening the ridge (thickening) doesn't encroach on the interior space of a cell.
-- [ ] (Low) Should a portrait-oriented keyguard have raised tabs on its long side?
+- [x] (Low) Should a portrait-oriented keyguard have raised tabs on its long side?
 - [ ] (Medium) Should the outer corner on a ridge be pointed if the corner radius is 0? (If ridge gets narrow this may cause a break in the ridge at the corner — also a sharp raised feature)
 - [ ] (Medium) Tablet height and width should be bezel-to-bezel, not overall tablet size, because the keyguard would sit up on the edge of the bezel when used without a case. Requires updating all supported tablet dimensions and the wording on the "extending the keyguard designer" page.
 - [ ] (Low) Case elements showing up in keyguard when it has a frame and is split (Test Case 17 portrait)
