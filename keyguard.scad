@@ -3167,12 +3167,14 @@ module raised_tab(depth, tab_width, tab_length){
 
 // Creates a quarter-cylinder wedge used to cut outer-arc (oa) corners in keyguard
 // openings, with optional chamfering on the outer edge for 3D-printed keyguards.
-// @param rotation   Z-axis rotation in degrees to position the wedge at the correct corner
-// @param diameter   Diameter of the arc in mm
-// @param thickness  Keyguard thickness in mm
-// @param slope      Slope angle in degrees for the chamfer/taper
-// @param type       "oa" applies outer-arc chamfer; any other value omits it
-module create_cutting_tool(rotation,diameter,thickness,slope,type){
+// @param rotation     Z-axis rotation in degrees to position the wedge at the correct corner
+// @param diameter     Diameter of the arc in mm
+// @param thickness    Keyguard thickness in mm
+// @param slope        Slope angle in degrees for the chamfer/taper
+// @param type         "oa" applies outer-arc chamfer; any other value omits it
+// @param edge_chamfer Chamfer depth in mm — pass cec for screen-region arcs,
+//                     kec for case-region arcs (default 0.6 preserves legacy behaviour)
+module create_cutting_tool(rotation,diameter,thickness,slope,type,edge_chamfer=0.6){
 	rotate([0,0,rotation])
 	difference(){
 		translate([0,0,-thickness/2-ff/2])
@@ -3180,8 +3182,8 @@ module create_cutting_tool(rotation,diameter,thickness,slope,type){
 		intersection(){
 			cylinder(h=thickness+ff*4,r1=diameter/2,r2=diameter/2-(thickness/tan(slope)),center=true);
 			if (type=="oa" && is_3d_printed){ //outer arcs are chamfered
-				chamfer_circle_radius1 = diameter/2+(tan(45)*(thickness-.6)); // bottom radius
-				chamfer_circle_radius2 = diameter/2 -.6; //top radius
+				chamfer_circle_radius1 = diameter/2+(tan(45)*(thickness-edge_chamfer)); // bottom radius
+				chamfer_circle_radius2 = diameter/2 - edge_chamfer;                    // top radius
 				cylinder(h=thickness+ff*2,r1=chamfer_circle_radius1,r2=chamfer_circle_radius2,center=true);
 			}
 		}
@@ -3734,7 +3736,7 @@ module rr_corner_wall(width,hgt,corner_radius,thickness,hgt2){
 }
 
 // Primary opening cutter: cuts a tapered hole with per-side slope angles and an optional
-// corner radius. For 3D-printed keyguards, adds a cell-edge chamfer layer on top.
+// corner radius. For 3D-printed keyguards, adds an edge-chamfer layer on top.
 // @param hole_width    Opening width in mm
 // @param hole_height   Opening height in mm
 // @param top_slope     Slope angle on the top edge in degrees (90 = vertical)
@@ -3743,40 +3745,42 @@ module rr_corner_wall(width,hgt,corner_radius,thickness,hgt2){
 // @param right_slope   Slope angle on the right edge in degrees
 // @param radius        Corner radius in mm (0 = sharp corners)
 // @param depth         Cut depth in mm
-module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,depth){
-	d = (is_3d_printed) ? depth-cec : depth;
-	z = (is_3d_printed) ? -cec/2 : 0;
-	
+// @param edge_chamfer  Chamfer depth in mm — pass cec for screen-region cuts,
+//                      kec for case-region cuts (defaults to cec for all existing callers)
+module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,depth,edge_chamfer=cec){
+	d = (is_3d_printed) ? depth-edge_chamfer : depth;
+	z = (is_3d_printed) ? -edge_chamfer/2 : 0;
+
 	rad1=min(hole_width/2,hole_height/2,radius);
-	
-	if(depth>0 && cec>0){
+
+	if(depth>0 && edge_chamfer>0){
 		translate([0,0,z])
 		union(){
 			cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,rad1,d);
-			
-			if (is_3d_printed){  // add cell edge chamfer to cutting tool
+
+			if (is_3d_printed){  // add edge chamfer to cutting tool
 				l_s = (left_slope>=chamfer_angle_stop || left_slope<0) ? 45 : left_slope;
 				r_s = (right_slope>=chamfer_angle_stop || right_slope<0) ? 45 : right_slope;
 				t_s = (top_slope>=chamfer_angle_stop || top_slope<0) ? 45 : top_slope;
 				b_s = (bottom_slope>=chamfer_angle_stop || bottom_slope<0) ? 45 : bottom_slope;
-				
+
 				left = d * tan(90-left_slope);
 				right = d * tan(90-right_slope);
 				top = d * tan(90-top_slope);
 				bottom = d * tan(90-bottom_slope);
 				w1 = hole_width+left+right;
 				h1 = hole_height+top+bottom;
-				
+
 				m1 = min(hole_width,hole_height);
 				m2 = min(w1,h1);
-				
-				rad = (radius>m1/2) ? m2/2 : 
+
+				rad = (radius>m1/2) ? m2/2 :
 					((hole_width==hole_height && radius<hole_width/2) || (hole_width!=hole_height) && radius!=m1/2) ? radius : m2/2;
-				
+
 				radius2 = (radius==0) ? 0 : rad;
 
-				translate([(right-left)/2,(top-bottom)/2,d/2+cec/2])
-				cut(w1,h1,t_s,b_s,l_s,r_s,radius2,cec);
+				translate([(right-left)/2,(top-bottom)/2,d/2+edge_chamfer/2])
+				cut(w1,h1,t_s,b_s,l_s,r_s,radius2,edge_chamfer);
 			}
 		}
 	}
@@ -4310,26 +4314,27 @@ module cut_als_openings(a_o,depth){
 // 180° rotation (flipped), depending on the flip flag. Centralises the
 // flip/non-flip branch that would otherwise be repeated for every shape in
 // cut_opening.
-// @param tx    X translation
-// @param ty    Y translation
-// @param tz    Z translation
-// @param w     Cut width in mm
-// @param h     Cut height in mm
-// @param ts    Top-edge slope angle in degrees
-// @param bs    Bottom-edge slope angle in degrees
-// @param ls    Left-edge slope angle in degrees
-// @param rs    Right-edge slope angle in degrees
-// @param cr    Corner radius in mm
-// @param dep   Cut depth in mm
-// @param flip  true = use hole_cutter_3 with 180° flip; false = use hole_cutter
-module cut_hole(tx, ty, tz, w, h, ts, bs, ls, rs, cr, dep, flip){
+// @param tx           X translation
+// @param ty           Y translation
+// @param tz           Z translation
+// @param w            Cut width in mm
+// @param h            Cut height in mm
+// @param ts           Top-edge slope angle in degrees
+// @param bs           Bottom-edge slope angle in degrees
+// @param ls           Left-edge slope angle in degrees
+// @param rs           Right-edge slope angle in degrees
+// @param cr           Corner radius in mm
+// @param dep          Cut depth in mm
+// @param flip         true = use hole_cutter_3 with 180° flip; false = use hole_cutter
+// @param edge_chamfer Chamfer depth forwarded to hole_cutter (defaults to cec)
+module cut_hole(tx, ty, tz, w, h, ts, bs, ls, rs, cr, dep, flip, edge_chamfer=cec){
 	translate([tx, ty, tz]){
 		if (flip){
 			rotate([0,180,0])
 			hole_cutter_3(w, h, ts, bs, ls, rs, cr, dep);
 		}
 		else{
-			hole_cutter(w, h, ts, bs, ls, rs, cr, dep);
+			hole_cutter(w, h, ts, bs, ls, rs, cr, dep, edge_chamfer);
 		}
 	}
 }
@@ -4353,37 +4358,41 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 	other_number = is_num(other);
 	other_pos = other_number && other>=0;
 	other_neg = other_number && other<0;
-	
-	offset = (is_3d_printed && other_number && other_pos && type=="screen") ? depth - other : 
-			 (is_3d_printed && other_number && other_pos && type=="keyguard") ? (depth - other)/2 : 
+
+	// Select chamfer depth based on region: screen area uses cell_edge_chamfer (cec),
+	// case/keyguard and tablet regions use keyguard_edge_chamfer (kec).
+	region_chamfer = (type=="screen") ? cec : kec;
+
+	offset = (is_3d_printed && other_number && other_pos && type=="screen") ? depth - other :
+			 (is_3d_printed && other_number && other_pos && type=="keyguard") ? (depth - other)/2 :
 			 (is_3d_printed && other_number && other_neg && type=="screen") ? -depth-other :
 			 (is_3d_printed && other_number && other_neg && type=="keyguard") ? -(depth+other)/2 :
 			 0;
-			 			 		
-	dep = (is_3d_printed && other_number && other_pos) ? other : 
+
+	dep = (is_3d_printed && other_number && other_pos) ? other :
 		  (is_3d_printed && other_number && other_neg) ? -other :
 	      depth;
-		    
+
 	flip = (other_number && other_neg) ? true: false;
-		  
+
 
 	if (shape=="r"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, 0, dep, flip);
+			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, 0, dep, flip, region_chamfer);
 		}
 	}
 	else if (shape=="cr"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, 0, dep, flip);
+			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, 0, dep, flip, region_chamfer);
 		}
 	}
 	else if (shape=="c"){
 		if (cut_height > 0){
 			if (is_3d_printed){
 				trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-				cut_hole(0, 0, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip);
+				cut_hole(0, 0, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip, region_chamfer);
 			}
 			else{
 				//need to accomodate ALS sensors and other circular openings if slope is non-90 degrees
@@ -4396,47 +4405,47 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 		if (cut_width > 0 && cut_height > 0){
 			m = min(cut_width,cut_height);
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip);
+			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip, region_chamfer);
 		}
 	}
 	else if (shape=="rr"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner_radius, dep, flip);
+			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner_radius, dep, flip, region_chamfer);
 		}
 	}
 	else if (shape=="crr"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner_radius, dep, flip);
+			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner_radius, dep, flip, region_chamfer);
 		}
-	}	
+	}
 	else if (shape=="oa1"){
 		if (corner_radius > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat : 0;
 			translate([-corner_radius,-corner_radius,trans])
-			create_cutting_tool(0, corner_radius*2, depth+0.05, top_slope, "oa");
+			create_cutting_tool(0, corner_radius*2, depth+0.05, top_slope, "oa", region_chamfer);
 		}
 	}
 	else if (shape=="oa2"){
 		if (corner_radius > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat : 0;
 			translate([-corner_radius,corner_radius,trans])
-			create_cutting_tool(-90, corner_radius*2, depth+0.05, top_slope, "oa");	
+			create_cutting_tool(-90, corner_radius*2, depth+0.05, top_slope, "oa", region_chamfer);
 		}
 	}
 	else if (shape=="oa3"){
 		if (corner_radius > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat : 0;
 			translate([corner_radius,corner_radius,trans])
-			create_cutting_tool(180, corner_radius*2, depth+0.05, top_slope, "oa");
+			create_cutting_tool(180, corner_radius*2, depth+0.05, top_slope, "oa", region_chamfer);
 		}
 	}
 	else if (shape=="oa4"){
 		if (corner_radius > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat : 0;
 			translate([corner_radius,-corner_radius,trans])
-			create_cutting_tool(90, corner_radius*2, depth+0.05, top_slope, "oa");	
+			create_cutting_tool(90, corner_radius*2, depth+0.05, top_slope, "oa", region_chamfer);
 		}
 	}
 	else if (shape=="ttext"){
