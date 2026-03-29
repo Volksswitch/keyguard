@@ -301,6 +301,41 @@ Address these one at a time, running the test suite after each change.
 
 ---
 
+## Working Conventions
+
+### Git workflow
+1. Before starting any code change, run `git status` in the main project folder. If Ken has
+   made manual edits, commit them immediately with the message `"Save manual edits before
+   automated work"` before touching anything else.
+2. Do all code work in a worktree branch — never edit files directly in the main project
+   folder. This prevents keyguard.json merge conflicts. If a conflict does occur in
+   `keyguard.json`, resolve it with `git checkout --theirs keyguard.json` (the worktree
+   version is authoritative).
+3. After each successful change, immediately merge the worktree branch into `main` and push
+   — do not wait to be asked.
+4. Commit and push all changes immediately after completing them. Do not wait for the user
+   to ask.
+
+### Testing
+- `test-timings.ndjson` is deleted automatically at the start of every `test.sh` run —
+  no need to delete it manually.
+- Run `scripts/test.sh` (layers 1–3) after any change as a quick sanity check.
+- Run `scripts/test.sh --all` before declaring a feature complete.
+
+---
+
+## Code Style Preferences
+
+- **Cryptic variable names are intentional** — `sxo`, `xtls`, `ytbs`, `ff`, `sat`, `cts`,
+  `cbs`, `cec`, `kec`, `kw`, `kh`, `cm` (crescent moon shape), etc. are deliberate
+  abbreviations chosen by the author. Do not flag, rename, or "clean up" these names.
+- **Prefer short expressions over abstraction** — Ken prefers concise repeated patterns over
+  extracting shared logic into helper functions, unless duplication is extreme.
+- **Module index line numbers** drift after insertions and need periodic systematic updates —
+  do not update individual entries ad hoc.
+
+---
+
 ## OpenSCAD Gotchas — Please Read
 
 See `docs/openscad-reference.md` for a full reference. Critical points:
