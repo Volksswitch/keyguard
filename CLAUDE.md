@@ -261,7 +261,7 @@ It only needs to be present when this feature is in use.
 - [ ] (Low) Hiding the screen region doesn't play well with 2D rendering
 - [ ] (Low) Add support for a centre-anchored vertical, horizontal, and angled ridge
 - [ ] (Low) Test Case 10 — fillet shouldn't be in the first layer because it's removed by a `-f2` instruction. Low priority because `-` shapes are used to create features that sit up in the air, which is irrelevant for laser-cut keyguards.
-- [ ] (Medium) Move all quadrant and edge-based case addition shapes toward their anchor points by `ff` to eliminate the appearance of a small wall or gap on those surfaces
+- [x] (Medium) Move all quadrant and edge-based case addition shapes toward their anchor points by `ff` to eliminate the appearance of a small wall or gap on those surfaces
 - [ ] (Low) MakerWorld has three known bugs: (1) displaying a keyguard frame requires `have_a_keyguard_frame="yes"` first or an odd error appears; (2) it ignores shapes less than 1.00001 mm thick when differencing; (3) it ignores anything after a comment even if separated by a carriage return
 - [ ] (Medium v73) Add support for all `case_additions` shapes (including their negatives?) to `screen_openings` and `case_openings`
 - [ ] Make outer arcs (and potentially other shapes) placed in the screen region sensitive to cell chamfer values, and those in the case region sensitive to keyguard chamfer
