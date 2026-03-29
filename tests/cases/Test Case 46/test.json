@@ -28,6 +28,7 @@
     },
     {
       "label": "generate=svg",
+      "geometry": false,
       "params": "Test Case 46c",
       "vpt": [6.55008, -8.88552, -15.4543],
       "vpr": [55, 0, 25],

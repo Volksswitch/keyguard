@@ -381,14 +381,35 @@ run_smoke() {
 # machines and OpenSCAD versions.
 
 run_geometry() {
-    # Configs that intentionally produce non-3D output and cannot render to STL.
-    # These are skipped (not counted as failures) in the geometry validation layer.
-    local -a GEOMETRY_SKIP=(
-        "Test Case 0"    # generate="Customizer settings" — outputs parameter echoes, no geometry
-        "Test Case 10b"  # generate="first layer for SVG/DXF file" — 2D output only
-        "Test Case 13b"  # generate="first half of keyguard" + Laser-Cut — can't split laser-cut
-        "Test Case 46c"  # generate="first layer for SVG/DXF file" — 2D output only
-    )
+    # Configs to skip in the geometry validation layer.
+    # Built dynamically: any test step with "geometry": false in its test.json
+    # contributes its "params" value to this list.  To exclude a config, add
+    # "geometry": false to the relevant step(s) in tests/cases/*/test.json.
+    local -a GEOMETRY_SKIP=()
+    while IFS= read -r config_name; do
+        [[ -n "$config_name" ]] && GEOMETRY_SKIP+=("$config_name")
+    done < <($PYTHON - "$CASES_DIR" <<'PYEOF'
+import json, os, sys
+
+cases_dir = sys.argv[1]
+skip = set()
+for root, _dirs, files in os.walk(cases_dir):
+    for fn in files:
+        if fn != "test.json":
+            continue
+        path = os.path.join(root, fn)
+        try:
+            with open(path, encoding="utf-8") as fh:
+                test = json.load(fh)
+            for step in test.get("steps", []):
+                if step.get("geometry") is False and step.get("params"):
+                    skip.add(step["params"])
+        except Exception:
+            pass
+for name in sorted(skip):
+    print(name)
+PYEOF
+)
 
     header "Layer 4 — Geometry validation (all named configs)"
     local -a configs

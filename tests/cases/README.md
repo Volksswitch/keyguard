@@ -79,6 +79,7 @@ the committed reference image.
 | `vpr` | No | Viewport rotation `[x, y, z]` — equivalent to OpenSCAD's `$vpr`; defaults to `[55, 0, 25]` |
 | `vpd` | No | Viewport distance — equivalent to OpenSCAD's `$vpd`; defaults to `250` |
 | `render` | No | If `true`, passes `--render` to OpenSCAD (CGAL full render, equivalent to F6); default `false` (preview renderer). Useful for 2D/SVG-generate steps where preview and render look different. |
+| `geometry` | No | If `false`, the named config referenced by `params` is excluded from the geometry validation layer (`--geometry`). Use this for steps that produce non-3D output (e.g. `generate="first layer for SVG/DXF file"`) that cannot be rendered to STL. Default `true` (included). |
 | `console` | No | Filename of a text file in this folder containing expected console output (copy-pasted from a valid run). Every non-empty line in the file must appear somewhere in OpenSCAD's actual console output for this step to pass. Simple substring match; case-sensitive. |
 | `expected` | Yes | Filename of the committed reference PNG in this folder |
 

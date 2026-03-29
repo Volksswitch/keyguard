@@ -20,6 +20,7 @@
     },
     {
       "label": "3D-printed view",
+      "geometry": false,
       "params": "Test Case 13b",
       "vpt": [14.8701, -5.19949, -14.9901],
       "vpr": [53.6, 0, 18],
