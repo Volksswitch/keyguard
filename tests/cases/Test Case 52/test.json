@@ -1,0 +1,22 @@
+{
+  "description": "cec/kec region-sensitive chamfers: grid cells (screen region) use cell_edge_chamfer=0.3; custom case_opening in centre uses keyguard_edge_chamfer=3.0",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "full view",
+      "params": "Test Case 52",
+      "vpt": [0, 0, 0],
+      "vpr": [55, 0, 25],
+      "vpd": 350,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "close-up on centre opening chamfer",
+      "params": "Test Case 52",
+      "vpt": [0, 5, 3],
+      "vpr": [30, 0, 0],
+      "vpd": 150,
+      "expected": "step2_expected.png"
+    }
+  ]
+}

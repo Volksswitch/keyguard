@@ -41467,6 +41467,17 @@
             "vertical_slide_in_tab_length": "4",
             "vertical_slide_in_tab_width": "20",
             "width_of_opening_in_case": "200"
+        },
+        "Test Case 52": {
+            "cell_edge_chamfer": "0.3",
+            "have_a_case": "yes",
+            "keyguard_edge_chamfer": "3.0",
+            "keyguard_thickness": "6",
+            "number_of_columns": "3",
+            "number_of_rows": "3",
+            "orientation": "landscape",
+            "type_of_keyguard": "3D-Printed",
+            "type_of_tablet": "iPad 9th generation"
         }
     },
     "fileFormatVersion": "1"
