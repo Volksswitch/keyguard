@@ -246,7 +246,7 @@ It only needs to be present when this feature is in use.
 
 - [ ] (Clean-up) Go through all `translate` statements and ensure fudge is included where necessary (should be possible to make it as small as 0.001)
 - [ ] (Low) "ridge around cells" doesn't play well with "cell top edge slope" and bottom edge slope
-- [ ] (Medium v67) Make snap-in tabs a function of the screen area thickness, not keyguard thickness. Test case 17: snap-in features not playing well with screen area thickness (keyguard frame thickness=10, keyguard thickness=6, screen area thickness=4, keyguard height=119). It's currently possible to omit snap-in tabs on the top and/or bottom — that may resolve this if keyguard width is large enough to exceed screen width.
+- [x] (Medium v67) Make snap-in tabs a function of the screen area thickness, not keyguard thickness. Test case 17: snap-in features not playing well with screen area thickness (keyguard frame thickness=10, keyguard thickness=6, screen area thickness=4, keyguard height=119). It's currently possible to omit snap-in tabs on the top and/or bottom — that may resolve this if keyguard width is large enough to exceed screen width.
 - [ ] (Clean-up) Funky-looking raised tabs in Test Case 15
 - [ ] (Low) Need to move clip-on strap pedestals and grooves inward as keyguard edge chamfer increases (Test Case 3: set keyguard edge chamfer to 3.2)
 - [ ] (Clean-up) Figure out when and how to put an outer arc on the sharp corner after merging
