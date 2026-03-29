@@ -886,7 +886,8 @@ else
 fi
 info "timeout:     ${TIMEOUT_CMD:-not found (renders will not be time-limited)} (limit: ${RENDER_TIMEOUT}s)"
 
-# ── Log environment record ────────────────────────────────────────────────────
+# ── Start fresh timings file, then log environment record ────────────────────
+rm -f "$TIMINGS_FILE"
 SESSION_ID="$(date +'%Y-%m-%d_%H-%M-%S')"
 _os="$(uname -o 2>/dev/null || uname -s 2>/dev/null || true)"
 _openscad_ver="$(tool_version "$OPENSCAD")"
