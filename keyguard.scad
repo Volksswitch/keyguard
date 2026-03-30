@@ -3756,7 +3756,7 @@ module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,righ
 	if(depth>0 && edge_chamfer>0){
 		translate([0,0,z])
 		union(){
-			cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,rad1,d);
+			if(d>0) cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,rad1,d);
 
 			if (is_3d_printed){  // add edge chamfer to cutting tool
 				l_s = (left_slope>=chamfer_angle_stop || left_slope<0) ? 45 : left_slope;
@@ -4470,7 +4470,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 		  : (right_slope==4)? "top"
 		  : "bottom";
 		  
-		if (cut_height > 0){
+		if (cut_height > 0 && corner_radius < 0){
 			trans = (type=="screen") ? corner_radius-kt/2+sat-.005 : kt/2+corner_radius-ff;
 			translate([0,0,trans])
 			rotate([0,0,top_slope])
