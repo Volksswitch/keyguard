@@ -58,10 +58,17 @@ the committed reference image.
 | Field | Required | Description |
 |---|---|---|
 | `description` | Yes | What this test verifies |
-| `openings` | No | Filename of the custom openings file in this folder (e.g. `"openings.txt"`) |
+| `openings` | No | Filename of the case-level openings file in this folder (e.g. `"openings_and_additions.txt"`). Used for all steps unless a params-specific file is found (see below). |
 | `assets` | No | List of SVG filenames imported by name in `openings_and_additions.txt`; each is copied from this folder to the project root before rendering and removed afterwards |
 | `screenshot` | No | Filename of an SVG in this folder to use as `default.svg` (for fit-test overlay); copied to `default.svg` before rendering and restored afterwards |
 | `steps` | Yes | Ordered list of render steps |
+
+**Params-specific openings files:** If a step has `"params": "Test Case 2"`, the runner
+also looks for `Test Case 2_openings_and_additions.txt` in the case folder. If found, it
+overrides the case-level `openings` file for that step only — the case-level file is
+restored between steps. Camera defaults (`$vpt`/`$vpr`/`$vpd`) are read from the
+params-specific file first, then the case-level file, then the global defaults; explicit
+camera values in a step always take final precedence.
 
 **`assets` vs `screenshot`:**
 - Use `assets` for SVG files that `openings_and_additions.txt` references directly by name via `import("filename.svg")`. They are placed in the project root under their own names.
