@@ -75,9 +75,9 @@ the committed reference image.
 | `label` | Yes | Short name for this step (used in output and filenames) |
 | `params` | No | Named parameter set from `keyguard.json`; if absent, renders with current defaults |
 | `params_override` | No | Key/value pairs applied on top of `params` as `-D` flags |
-| `vpt` | No | Viewport translation `[x, y, z]` — equivalent to OpenSCAD's `$vpt`; defaults to `[0, 0, 0]` |
-| `vpr` | No | Viewport rotation `[x, y, z]` — equivalent to OpenSCAD's `$vpr`; defaults to `[55, 0, 25]` |
-| `vpd` | No | Viewport distance — equivalent to OpenSCAD's `$vpd`; defaults to `250` |
+| `vpt` | No | Viewport translation `[x, y, z]` — equivalent to OpenSCAD's `$vpt`; defaults to the value in the openings file, or `[0, 0, 0]` if absent |
+| `vpr` | No | Viewport rotation `[x, y, z]` — equivalent to OpenSCAD's `$vpr`; defaults to the value in the openings file, or `[55, 0, 25]` if absent |
+| `vpd` | No | Viewport distance — equivalent to OpenSCAD's `$vpd`; defaults to the value in the openings file, or `250` if absent |
 | `render` | No | If `true`, passes `--render` to OpenSCAD (CGAL full render, equivalent to F6); default `false` (preview renderer). Useful for 2D/SVG-generate steps where preview and render look different. |
 | `geometry` | No | If `false`, the named config referenced by `params` is excluded from the geometry validation layer (`--geometry`). Use this for steps that produce non-3D output (e.g. `generate="first layer for SVG/DXF file"`) that cannot be rendered to STL. Default `true` (included). |
 | `console` | No | Filename of a text file in this folder containing expected console output (copy-pasted from a valid run). Every non-empty line in the file must appear somewhere in OpenSCAD's actual console output for this step to pass. Simple substring match; case-sensitive. |
@@ -102,11 +102,21 @@ console reference.
 
 `vpt`, `vpr`, and `vpd` use the same names and values as OpenSCAD's `$vpt`, `$vpr`,
 and `$vpd` viewport variables. You can read current values directly from the OpenSCAD
-GUI (View → View All, then check the console for `echo($vpt=..., $vpr=..., $vpd=...)`),
-or set them in your `openings.txt` to control the interactive starting view.
+GUI (View → View All, then check the console for `echo($vpt=..., $vpr=..., $vpd=...)`).
 
-If `openings.txt` sets `$vpt`, `$vpr`, and `$vpd` at the top, the first step's camera
-values are a natural copy of those — keeping interactive and automated views in sync.
+**Camera defaults from the openings file:** If the openings file sets `$vpt`, `$vpr`,
+and/or `$vpd` using OpenSCAD assignment syntax, the test runner picks them up
+automatically and uses them as the default camera for every step in the case:
+
+```openscad
+$vpt = [14.87, -5.20, -14.99];
+$vpr = [53.6, 0, 18];
+$vpd = 1000;
+```
+
+Step-level `vpt`/`vpr`/`vpd` values still override these. This keeps the interactive
+OpenSCAD view and the automated test renders in sync without duplicating numbers in
+`test.json`.
 
 ---
 

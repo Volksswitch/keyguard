@@ -212,10 +212,49 @@ build_camera() {
     echo "${vpt},${vpr},${vpd}"
 }
 
-# Parse a test.json and emit shell-evaluable assignments for one step (by index)
+# Parse $vpt, $vpr, $vpd from an OpenSCAD openings file.
+# Prints three lines — vpt, vpr, vpd — as comma-separated values (empty if absent).
+parse_camera_from_openings() {
+    local _p; _p=$(py_path "$1")
+    $PYTHON -c "
+import re, sys
+
+try:
+    with open('$_p', encoding='utf-8') as f:
+        text = f.read()
+except FileNotFoundError:
+    print('')
+    print('')
+    print('')
+    sys.exit(0)
+
+def parse_vec(name):
+    m = re.search(r'\\\$' + name + r'\s*=\s*\[([^\]]+)\]', text)
+    if m:
+        parts = [v.strip() for v in m.group(1).split(',')]
+        if len(parts) == 3:
+            return ','.join(parts)
+    return ''
+
+def parse_scalar(name):
+    m = re.search(r'\\\$' + name + r'\s*=\s*([0-9.]+)', text)
+    return m.group(1) if m else ''
+
+print(parse_vec('vpt'))
+print(parse_vec('vpr'))
+print(parse_scalar('vpd'))
+" | tr -d '\r'
+}
+
+# Parse a test.json and emit shell-evaluable assignments for one step (by index).
+# Args 3-5 are optional case-level camera defaults (vpt, vpr, vpd); they override
+# the global defaults but are overridden by values present in the step itself.
 parse_step() {
     local test_json="$1"
     local step_idx="$2"
+    local case_vpt="${3:-$DEFAULT_VPT}"
+    local case_vpr="${4:-$DEFAULT_VPR}"
+    local case_vpd="${5:-$DEFAULT_VPD}"
     local _p; _p=$(py_path "$test_json")
     $PYTHON -c "
 import json, sys
@@ -238,9 +277,9 @@ def fmtlist(lst, default):
 label    = step.get('label', f'step{idx+1}')
 params   = step.get('params', '')
 override = step.get('params_override', {})
-vpt      = fmtlist(step.get('vpt'), '0,0,0')
-vpr      = fmtlist(step.get('vpr'), '55,0,25')
-vpd      = str(step.get('vpd', 250))
+vpt      = fmtlist(step.get('vpt'), '$case_vpt')
+vpr      = fmtlist(step.get('vpr'), '$case_vpr')
+vpd      = str(step.get('vpd')) if step.get('vpd') is not None else '$case_vpd'
 expected = step.get('expected', f'step{idx+1}_expected.png')
 render   = str(step.get('render', False)).lower()
 console  = step.get('console', '')
@@ -661,12 +700,22 @@ run_visual() {
             fi
         done
 
+        # ── Parse camera defaults from openings file (if any) ──────────────────
+        local case_vpt="$DEFAULT_VPT" case_vpr="$DEFAULT_VPR" case_vpd="$DEFAULT_VPD"
+        if [[ -n "$openings_override" && -f "$case_dir/$openings_override" ]]; then
+            local _cam_lines
+            mapfile -t _cam_lines < <(parse_camera_from_openings "$case_dir/$openings_override")
+            [[ -n "${_cam_lines[0]}" ]] && case_vpt="${_cam_lines[0]}"
+            [[ -n "${_cam_lines[1]}" ]] && case_vpr="${_cam_lines[1]}"
+            [[ -n "${_cam_lines[2]}" ]] && case_vpd="${_cam_lines[2]}"
+        fi
+
         # ── Run each step ───────────────────────────────────────────────────────
         local case_ok=true
         local case_rows=""   # table rows for this case's summary section
 
         for (( i=0; i<step_count; i++ )); do
-            local step_vars; step_vars=$(parse_step "$test_json" "$i") || {
+            local step_vars; step_vars=$(parse_step "$test_json" "$i" "$case_vpt" "$case_vpr" "$case_vpd") || {
                 fail "  Step $i: could not parse test.json"
                 case_ok=false
                 case_rows+="| $((i+1))/$step_count | (parse error) | FAIL |"$'\n'
