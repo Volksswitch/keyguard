@@ -274,15 +274,18 @@ def fmtlist(lst, default):
         return ','.join(str(v) for v in lst)
     return default
 
-label    = step.get('label', f'step{idx+1}')
-params   = step.get('params', '')
-override = step.get('params_override', {})
-vpt      = fmtlist(step.get('vpt'), '$case_vpt')
-vpr      = fmtlist(step.get('vpr'), '$case_vpr')
-vpd      = str(step.get('vpd')) if step.get('vpd') is not None else '$case_vpd'
-expected = step.get('expected', f'step{idx+1}_expected.png')
-render   = str(step.get('render', False)).lower()
-console  = step.get('console', '')
+label        = step.get('label', f'step{idx+1}')
+params       = step.get('params', '')
+override     = step.get('params_override', {})
+vpt_explicit = 'vpt' in step
+vpr_explicit = 'vpr' in step
+vpd_explicit = 'vpd' in step
+vpt          = fmtlist(step.get('vpt'), '$case_vpt')
+vpr          = fmtlist(step.get('vpr'), '$case_vpr')
+vpd          = str(step.get('vpd')) if step.get('vpd') is not None else '$case_vpd'
+expected     = step.get('expected', f'step{idx+1}_expected.png')
+render       = str(step.get('render', False)).lower()
+console      = step.get('console', '')
 
 # Build -D flags for params_override
 d_flags = []
@@ -299,6 +302,9 @@ print(f'STEP_PARAMS={json.dumps(params)}')
 print(f'STEP_VPT={json.dumps(vpt)}')
 print(f'STEP_VPR={json.dumps(vpr)}')
 print(f'STEP_VPD={json.dumps(vpd)}')
+print(f'STEP_VPT_EXPLICIT={json.dumps(str(vpt_explicit).lower())}')
+print(f'STEP_VPR_EXPLICIT={json.dumps(str(vpr_explicit).lower())}')
+print(f'STEP_VPD_EXPLICIT={json.dumps(str(vpd_explicit).lower())}')
 print(f'STEP_EXPECTED={json.dumps(expected)}')
 print(f'STEP_D_FLAGS={json.dumps(\" \".join(d_flags))}')
 print(f'STEP_RENDER={json.dumps(render)}')
@@ -710,6 +716,10 @@ run_visual() {
             [[ -n "${_cam_lines[2]}" ]] && case_vpd="${_cam_lines[2]}"
         fi
 
+        # Snapshot the case-base openings file so per-step params files can restore it
+        local case_base_openings_backup="/tmp/keyguard_case_base_$$.txt"
+        cp "$OPENINGS_FILE" "$case_base_openings_backup"
+
         # ── Run each step ───────────────────────────────────────────────────────
         local case_ok=true
         local case_rows=""   # table rows for this case's summary section
@@ -722,6 +732,24 @@ run_visual() {
                 continue
             }
             eval "$step_vars"
+
+            # ── Per-step params-specific openings file ───────────────────────────
+            local params_openings_applied=false
+            if [[ -n "$STEP_PARAMS" ]]; then
+                local params_openings_file="${case_dir}/${STEP_PARAMS}_openings_and_additions.txt"
+                if [[ -f "$params_openings_file" ]]; then
+                    cp "$params_openings_file" "$OPENINGS_FILE"
+                    params_openings_applied=true
+                    # Override camera values that weren't explicit in the step
+                    if [[ "$STEP_VPT_EXPLICIT" != "true" || "$STEP_VPR_EXPLICIT" != "true" || "$STEP_VPD_EXPLICIT" != "true" ]]; then
+                        local _pcam
+                        mapfile -t _pcam < <(parse_camera_from_openings "$params_openings_file")
+                        [[ "$STEP_VPT_EXPLICIT" != "true" && -n "${_pcam[0]}" ]] && STEP_VPT="${_pcam[0]}"
+                        [[ "$STEP_VPR_EXPLICIT" != "true" && -n "${_pcam[1]}" ]] && STEP_VPR="${_pcam[1]}"
+                        [[ "$STEP_VPD_EXPLICIT" != "true" && -n "${_pcam[2]}" ]] && STEP_VPD="${_pcam[2]}"
+                    fi
+                fi
+            fi
 
             local camera; camera=$(build_camera "$STEP_VPT" "$STEP_VPR" "$STEP_VPD")
             # Sanitise label for use in file names: spaces/slashes/commas → _
@@ -853,9 +881,13 @@ for m in missing:
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | FAIL ($fail_str) |"$'\n'
                 log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"fail\",\"rmse\":$LAST_RMSE,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
             fi
+
+            # Restore case-base openings after a params-specific swap
+            "$params_openings_applied" && cp "$case_base_openings_backup" "$OPENINGS_FILE"
         done
 
         # ── Teardown: restore original files ────────────────────────────────────
+        rm -f "$case_base_openings_backup"
         [[ -n "$saved_openings" ]] && cp "$saved_openings" "$OPENINGS_FILE" && rm "$saved_openings"
         if [[ -n "$saved_svg" ]]; then
             if [[ -s "$saved_svg" ]]; then cp "$saved_svg" "$DEFAULT_SVG"
