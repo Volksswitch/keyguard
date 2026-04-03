@@ -18,6 +18,7 @@
 #   ./scripts/test.sh --capture-references   # Re-render all visual tests; save new reference PNGs
 #   ./scripts/test.sh --capture-references --case "Test Case 25"  # Single test case only
 #   ./scripts/test.sh --visual --case "Test Case 25"              # Run one test case
+#   ./scripts/test.sh --geometry --visual --case "Test Case 0-10" # Range of test cases (N < M)
 #
 # Requirements:
 #   - openscad  (on PATH, or at a common Windows install location)
@@ -244,6 +245,32 @@ print(parse_vec('vpt'))
 print(parse_vec('vpr'))
 print(parse_scalar('vpd'))
 " | tr -d '\r'
+}
+
+# Return 0 (match) or 1 (no match) for a case/config name against CASE_FILTER.
+# If CASE_FILTER is empty, always returns 0.
+# Supports:
+#   Exact match:  CASE_FILTER="Test Case 5"
+#   Range:        CASE_FILTER="Test Case 0-10"  (matches "Test Case N" where 0 <= N <= 10)
+#                 Range is only recognised when both bounds are integers and start < end,
+#                 so names like "Test Case 44-1" are still treated as exact matches.
+case_matches_filter() {
+    local name="$1"
+    [[ -z "$CASE_FILTER" ]] && return 0
+    $PYTHON -c "
+import re, sys
+name   = sys.argv[1]
+filt   = sys.argv[2]
+m = re.match(r'^(.+) (\d+)-(\d+)$', filt)
+if m and int(m.group(2)) < int(m.group(3)):
+    prefix = m.group(1)
+    lo, hi = int(m.group(2)), int(m.group(3))
+    mn = re.match(r'^(.+) (\d+)$', name)
+    if mn and mn.group(1) == prefix and lo <= int(mn.group(2)) <= hi:
+        sys.exit(0)
+    sys.exit(1)
+sys.exit(0 if name == filt else 1)
+" "$name" "$CASE_FILTER"
 }
 
 # Parse a test.json and emit shell-evaluable assignments for one step (by index).
@@ -479,9 +506,7 @@ PYEOF
         current=$((current + 1))
 
         # Apply --case filter if specified
-        if [[ -n "$CASE_FILTER" && "$config" != "$CASE_FILTER" ]]; then
-            continue
-        fi
+        case_matches_filter "$config" || continue
 
         local skip=false
         for s in "${GEOMETRY_SKIP[@]}"; do
@@ -666,9 +691,7 @@ run_visual() {
         local case_name; case_name=$(basename "$case_dir")
 
         # Skip cases that don't match the filter (if one was specified)
-        if [[ -n "$CASE_FILTER" && "$case_name" != "$CASE_FILTER" ]]; then
-            continue
-        fi
+        case_matches_filter "$case_name" || continue
 
         local render_dir="$run_dir/$case_name"
         mkdir -p "$render_dir"
