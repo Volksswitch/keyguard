@@ -460,6 +460,7 @@ PYEOF
     local -a configs
     mapfile -t configs < <(get_configs)
     info "Found ${#configs[@]} named configs"
+    [[ -n "$CASE_FILTER" ]] && info "Filter: '$CASE_FILTER'"
     if [[ -n "$ADMESH" ]]; then
         info "admesh available — full mesh-integrity checks enabled"
     else
@@ -476,6 +477,12 @@ PYEOF
 
     for config in "${configs[@]}"; do
         current=$((current + 1))
+
+        # Apply --case filter if specified
+        if [[ -n "$CASE_FILTER" && "$config" != "$CASE_FILTER" ]]; then
+            continue
+        fi
+
         local skip=false
         for s in "${GEOMETRY_SKIP[@]}"; do
             [[ "$config" == "$s" ]] && skip=true && break
