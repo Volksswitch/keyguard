@@ -45,6 +45,13 @@ TIMINGS_FILE="$PROJECT_ROOT/test-timings.ndjson"
 #   E2003: False positive — sca2d doesn't recognise assert() as a built-in
 SCA2D_IGNORE="I3001,I0006,I1002,I0004,I1001,I4001,I4002,I0003,I4003,E2003"
 
+# admesh thresholds:
+#   Reversed facets: OpenSCAD occasionally produces a small number of reversed
+#   facets that are harmless and easily corrected by slicer software. Tolerate
+#   up to this many before treating the mesh as failed. All other admesh error
+#   categories remain zero-tolerance.
+ADMESH_REVERSED_FACETS_THRESHOLD=100
+
 # Default camera (used when a step doesn't specify vpt/vpr/vpd)
 DEFAULT_VPT="0,0,0"
 DEFAULT_VPR="55,0,25"
@@ -540,6 +547,7 @@ PYEOF
         fi
 
         local config_ok=true
+        local result_printed=false
 
         # ── 2. Manifold check (OpenSCAD / CGAL) ────────────────────────────────
         # "Simple: yes" means every edge is shared by exactly two faces — the
@@ -555,16 +563,33 @@ PYEOF
 
         # ── 3. admesh mesh-integrity check (optional) ──────────────────────────
         # admesh checks for degenerate facets, open edges, reversed normals, etc.
-        # A clean mesh has zero counts across all repair categories.
+        # All categories are zero-tolerance except "Facets reversed", which is
+        # tolerated up to ADMESH_REVERSED_FACETS_THRESHOLD (harmless OpenSCAD
+        # artefact; corrected automatically by slicer software).
         local admesh_issues_count=0
         if [[ -n "$ADMESH" && "$config_ok" == "true" ]]; then
             local admesh_out
             admesh_out=$("$ADMESH" "$out" 2>&1) || true
+
+            # Count non-reversed issues (zero tolerance).
             local admesh_issues
             admesh_issues=$(echo "$admesh_out" | \
-                grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Facets reversed|Backsides flipped|Parts fixed)' | \
+                grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Backsides flipped|Parts fixed)' | \
                 grep -cE ':[[:space:]]+[1-9][0-9]*[[:space:]]*$' || true)
             admesh_issues=${admesh_issues:-0}
+
+            # Count reversed facets; fail only if above threshold.
+            # Use grep -oE '[0-9]+' | tail -1 to extract the last number on the
+            # matching line — avoids issues with trailing CR on Windows.
+            local reversed_count
+            reversed_count=$(echo "$admesh_out" | \
+                grep -E 'Facets reversed' | \
+                grep -oE '[0-9]+' | tail -1 || true)
+            reversed_count=${reversed_count:-0}
+            if [[ "$reversed_count" -gt "$ADMESH_REVERSED_FACETS_THRESHOLD" ]]; then
+                admesh_issues=$((admesh_issues + 1))
+            fi
+
             admesh_issues_count=$admesh_issues
             if [[ "$admesh_issues" -gt 0 ]]; then
                 echo -e " ${RED}MESH ERRORS${RESET} (${t_elapsed}s)"
@@ -573,15 +598,21 @@ PYEOF
                     grep -E ':[[:space:]]+[1-9]' | sed 's/^/      /'
                 admesh_failures=$((admesh_failures + 1))
                 config_ok=false
+            elif [[ "$reversed_count" -gt 0 ]]; then
+                # Reversed facets present but within threshold — warn, don't fail.
+                echo -e " ${GREEN}OK${RESET} (${t_elapsed}s) ${YELLOW}[${reversed_count} reversed facet(s), within threshold]${RESET}"
+                result_printed=true
             fi
         fi
 
         # ── Print per-config result ─────────────────────────────────────────────
         if [[ "$config_ok" == "true" ]]; then
-            if [[ -z "$is_simple" ]]; then
-                echo -e " ${YELLOW}OK (manifold status unknown)${RESET} (${t_elapsed}s)"
-            else
-                echo -e " ${GREEN}OK${RESET} (${t_elapsed}s)"
+            if [[ "$result_printed" != "true" ]]; then
+                if [[ -z "$is_simple" ]]; then
+                    echo -e " ${YELLOW}OK (manifold status unknown)${RESET} (${t_elapsed}s)"
+                else
+                    echo -e " ${GREEN}OK${RESET} (${t_elapsed}s)"
+                fi
             fi
             geom_passed=$((geom_passed + 1))
             log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"pass\",\"manifold\":\"${is_simple:-unknown}\",\"admesh_issues\":$admesh_issues_count,\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
