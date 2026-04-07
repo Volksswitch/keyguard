@@ -1,25 +1,62 @@
+oa_version = 2; // operations and additions file data structure version
+
 $vpt = [1, 1, 1];
 $vpr = [15, 0, 0];
 $vpd = 500;
 
 screen_openings=[
-// *** the numbers in screen_openings are assumed to be in pixels or millimeters depending on the value of "unit of measure for screen" in "Free-form and Hybrid Keyguard Openings "***
-//  ID,       x,      y, width, height,  shape, top slope, bottom slope, left slope, right slope, corner radius,  other
+// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
 ];
 
 case_openings=[
-//  ID,       x,      y, width, height,  shape, top slope, bottom slope, left slope, right slope, corner radius,   other
+// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
 ];
 
 case_additions=[
-//  ID,       x,      y,  width, height,  shape, thickness,  trim above, trim below, trim to right, trim to left, corner radius
+// ID, shape, height, width, corner, x, y, cut/build, [trim]
+[   0,   "r",      0,     0,       , 0, 0,          ,     [] ],
 ];
 
 tablet_openings=[
-//  ID,       x,      y, width, height,  shape, top slope, bottom slope, left slope, right slope, corner radius,   other
+// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
 ];
 
 
+/*********** Column Usage
+
+** Screen, Case, Tablet Openings
+  Shape      height  width  corner  cut/build  anchor  surface  length  thickness  [edge shapes]  [special params]
+  r            x       x      x         x        x        x                              x
+  c            x                        x                 x                              x
+  hd           x       x                x        x        x                              x
+  oa1–4                       x
+  text         x                        x                 x                                              x
+  svg          x       x                x                                                                x
+  bump         x
+  ridge                                 x        x                x         x                            x
+  hridge                                x        x                x         x
+  vridge                                x        x                x         x
+  cridge       x                        x        x                          x
+  rridge       x       x      x         x        x                          x
+  aridge1–4                             x        x                          x
+
+  [special params]  Contents
+  text              [text string, direction, font style, h-align, v-align]
+  svg               [filename, direction]
+  ridge             [direction]
+
+** Case, Additions
+  Shape   height  width  corner  cut/build  [trim]
+  r         x       x      x         x
+  tab1–4    x       x      x         x        x
+  cm1–4     x       x                x        x
+  t1–4      x       x                x        x
+  f1–4      x       x      x         x        x
+  oa1–4                    x
+  ped1–4
 
 
 
@@ -144,6 +181,3 @@ ECHO: th = 184
 So the designer thinks that the height of the tablet is 184 millimeters.
 
 ************************************************************************************************************************************/
-
-
-
