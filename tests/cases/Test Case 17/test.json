@@ -5,97 +5,61 @@
     {
       "label": "shelf",
       "params": "Test Case 17",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step1_expected.png"
     },
     {
       "label": "vary shelf thickness, depth, and corner radius",
       "params": "Test Case 17a",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step2_expected.png"
     },
     {
       "label": "vary keyguard and frame thickness",
       "params": "Test Case 17b",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step3_expected.png"
     },
     {
       "label": "raised tabs",
       "params": "Test Case 17c",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step4_expected.png"
     },
     {
       "label": "clip-on straps, unequal left side of case opening - 20",
       "params": "Test Case 17d",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step5_expected.png"
     },
     {
       "label": "generate keyguard,snap-in tab on bottom edge of keyguard - no",
       "params": "Test Case 17e",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step6_expected.png"
     },
     {
       "label": "keyguard v/h tightness of fit - -1",
       "params": "Test Case 17f",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step7_expected.png"
     },
     {
       "label": "keyguard v/h tightness of fit - 1",
       "params": "Test Case 17g",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step8_expected.png"
     },
     {
       "label": "vertical raised tabs only",
       "params": "Test Case 17h",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step9_expected.png"
     },
     {
       "label": "horizontal and vertical raised tabs",
       "params": "Test Case 17i",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step10_expected.png"
     },
     {
       "label": "vertical raised tabs only - plain keyguard",
       "params": "Test Case 17j",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step11_expected.png"
     },
     {
       "label": "horizontal and vertical raised tabs - plain keyguard",
       "params": "Test Case 17k",
-      "vpt": [12.9599, -6.98467, -16.8626],
-      "vpr": [55, 0, 25],
-      "vpd": 700,
       "expected": "step12_expected.png"
     }
   ]

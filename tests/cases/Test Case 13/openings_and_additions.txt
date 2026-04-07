@@ -1,0 +1,255 @@
+$vpt = [14.8701, -5.19949, -14.9901];
+$vpr = [53.6, 0, 18];
+$vpd = 1000;
+
+screen_openings=[
+// *** the numbers in screen_openings are assumed to be in pixels or millimeters depending on the value of "unit of measure for screen" in "Free-form and Hybrid Keyguard Openings "***
+//  ID,       x,      y, width, height,  shape, top slope, bottom slope, left slope, right slope, corner radius,  other
+];
+
+case_openings=[
+//  ID,       x,      y, width, height,  shape, top slope, bottom slope, left slope, right slope, corner radius,   other
+[   "Ctrl",       0,      0,    24,     15,  "rr",        90,           90,         90,          90,             2,      ],
+["Windows",      28,      0,    19,     15,  "rr",        90,           90,         90,          90,             2,      ],
+[    "Alt",      52,      0,    19,     15,  "rr",        90,           90,         90,          90,             2,      ],
+[  "Space",      75,      0,   105,     15,  "rr",        90,           90,         90,          90,             2,      ],
+[    "Alt",     186,      0,    19,     15,  "rr",        90,           90,         90,          90,             2,      ],
+["Windows",     210,      0,    19,     15,  "rr",        90,           90,         90,          90,             2,      ],
+[   "Menu",     233,      0,    20,     15,  "rr",        90,           90,         90,          90,             2,      ],
+[   "Ctrl",     258,      0,    20,     15,  "rr",        90,           90,         90,          90,             2,      ],
+["Left", 294, 0, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Down", 313, 0, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Right", 332, 0, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["0", 360, 0, 34, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Del", 398, 0, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Enter", 417, 0, 15, 35, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Shift", 0, 18.5, 39, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Z", 42.5, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["X", 61.5, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["C", 81, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["V", 100, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["B", 119, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["N", 138, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["M", 157, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Comma", 176, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Period", 195, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["ForwardSlash", 214, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Shift", 233, 18.5, 48, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Up", 313, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["1", 360, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["2", 379, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["3", 398, 18.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Caps", 0, 38, 24, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["A", 33, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["S", 52, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["D", 71, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F", 90, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["G", 109, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["coh", 128, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["J", 146, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["K", 166, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["L", 185, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+[";", 205, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Apos", 223, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Enter", 242, 38, 39, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["4", 360, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["5", 379, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["6", 398, 38, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Plus", 417, 38, 15, 35, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Tab", 0, 57, 25, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Q", 28, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["cow", 47, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["E", 66, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["R", 85, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["T", 104, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Y", 123, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["U", 142, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["I", 161.5, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["O", 180.5, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["P", 199.5, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["LeftBracket", 218.5, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["RightBracket", 238, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["BackSlash", 257, 57, 25, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Delete", 294, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["End", 313, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["PageDown", 332, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["7", 360, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["8", 379, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["9", 398, 57, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Tilda", 0, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["1", 18, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["2", 37, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["3", 56, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["4", 75, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["5", 94, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["6", 114, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["7", 133, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["8", 152, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["9", 171, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["0", 190, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Minus", 209, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Equals", 228, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Backspace", 247, 75.5, 35, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Insert", 294, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Home", 313, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["PageUp", 332, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["NumLock", 360, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Divide", 379, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Times", 398, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+// ["Minus", 417, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["#", 417, 75.5, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Esc", 0, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F1", 26, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F2", 45, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F3", 64, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F4", 83, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F5", 107, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F6", 127, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F7", 145, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F8", 165, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F9", 190, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F10", 209, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F11", 228, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["F12", 247, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["PrtScn", 294, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["ScrollLock", 313, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ],
+["Break", 332, 103, 15, 15, "rr", 90, 90, 90, 90, 2,  ,  ]
+];
+
+case_additions=[
+//  ID,       x,      y,  width, height,  shape, thickness,  trim above, trim below, trim to right, trim to left, corner radius
+[    1,     216,      59,     452,    138,   "crr",         0,       -999,       -999,          -999,         -999,            10]
+];
+
+tablet_openings=[
+//  ID,       x,      y, width, height,  shape, top slope, bottom slope, left slope, right slope, corner radius,   other
+];
+
+
+
+
+
+/***********SCREEN VARIABLES
+These special variables can be used to locate screen openings relative to the (0,0) location of the screen opening region
+
+** screen variables
+	sh 	screen height (the value is in millimeters or pixels as appropriate)
+	sw	screen width (the value is in millimeters or pixels as appropriate)
+
+	mpp	millimeters per pixel	
+	ppm	pixels per millimeter
+
+	nr	number of rows in grid
+	nc	number of columns in grid
+
+** app variables (the value is in millimeters or pixels as appropriate)
+	sbh	status bar height
+	umbh	upper message bar height
+	ucbh	upper command bar height
+	lmbh	lower message bar height
+	lcbh	lower command bar height
+
+	sbb	status bar bottom
+	umbb	upper message bar bottom
+	ucbb	upper command bar bottom
+	lmbt	lower message bar top
+	lmbb	lower message bar bottom
+	lcbb	lower command bar bottom
+	
+** grid variables (the value is in millimeters or pixels as appropriate)
+	gw	grid width
+	gh	grid height
+	gt 	grid top
+	gb	grid bottom
+
+	tp	top padding - specified in Grid Special Settings
+	bp	bottom padding - specified in Grid Special Settings
+	lp	left padding - specified in Grid Special Settings
+	rp	right padding - specified in Grid Special Settings
+	
+** cell variables (the value is in millimeters)
+	cw	cell width (doesn't apply to cells that are affected by left/right compensation for tight cases)
+	ch	cell height (doesn't apply to cells that are affected by top/bottom compensation for tight cases)
+	ccr	cell corner radius
+
+	hor	height of ridge - specified in Grid Special Settings
+	tor	thickness of ridge - specified in Grid Special Settings
+
+
+
+
+/***********CASE VARIABLES
+These special variables can be used to locate openings and place additions relative to the (0,0) location of the case opening
+[Note that the (0,0) location of the case opening is not absolute and can move if the screen doesn't sit in the middle of the opening.  These variables are independent of that movement. All variables are in millimeters]
+	coh	case opening height - specified in Case Info
+	cow 	case opening width - specified in Case Info
+	cocr	case opening corner radius - specified in Case Info
+
+	kh	keyguard height - specified in Keyguard Frame Info
+	kw	keyguard width - specified in Keyguard Frame Info
+	kcr	keyguard corner radius - specified in Keyguard Frame Info
+	rh	rail height (also keyguard thickness)
+	hrw	horizontal rail width
+	vrw	vertical rail width
+
+	lcow	the default width of the left side of case opening when in landscape mode
+	bcoh	the default height of the bottom side of case opening when in landscape mode
+
+	c_h	case height
+	c_w	case width
+	c_cr	case corner_radius
+	ctsd	case to screen_depth
+	sew	sloped edge width
+
+
+
+/***********CAMERA and HOME BUTTON VARIABLES
+The designer thinks of the camera and home button as positioned relative to the edge of the screen, not the edge of the tablet or the edget of the case opening so these variables will work best in the screen_openings set of instructions. Note that all the measurements in this set are in millimeters.  If you use these in a design that assumes all screen measurements are in pixels, multiply the variable times ppm (pixels per millimeter).
+
+	hloc	home button location: 1,2,3,4 (adjusted for orientation)
+	hbd	distance from screen to home button in millimeters
+	hbh	home button height in millimeters
+	hbw	home button width in millimeters
+	cloc	camera location: 1,2,3,4 (adjusted for orientation)
+	cmd	distance from screen to camera in millimeters
+	cmh	camera height in millimeters
+	cmw	camera width in millimeters
+
+	sxo	sign of x offset, if measuring from standard home/camera locations
+	syo	sign of y offset, if measuring from standard home/camera locations
+	
+	xols	x location of the left side of the case opening adjusted for swapping camera and home button
+	xors	x location of the right side of the case opening adjusted for swapping camera and home button
+	yobs	y location of the bottom side of the case opening adjusted for swapping the camera and home button
+	yots	y location of the top side of the case opening adjusted for swapping the camera and home button
+
+
+
+
+/***********TABLET VARIABLES
+	r180   "yes" or "no" whether the tablet has been rotated 180 degrees
+	th     height of tablet in millimeters
+	tw     width of tablet in millimeters - specified in internal designer data
+	tcr    tablet corner radius in millimeters - specified in internal designer data
+
+
+
+
+/************ DISPLAYING THE VALUE OF A VARIABLE
+If you just want to see what the contents of a variable is you use the "echo" command and look for what is displayed in the console
+pane.  For example, if you wanted to see what the designer thinks the height of the tablet is in millimeters, put this line at the
+top of this file:
+
+echo(th=th);
+
+Don't forget the semicolon at the end of the line.  Save the file and look at the Console pane in OpenSCAD.  You should see a line that
+looks something like this:
+
+ECHO: th = 184
+
+So the designer thinks that the height of the tablet is 184 millimeters.
+
+************************************************************************************************************************************/
+
+
+

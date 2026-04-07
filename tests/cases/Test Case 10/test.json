@@ -5,26 +5,17 @@
     {
       "label": "full view",
       "params": "Test Case 10",
-      "vpt": [12.8751, -1.05844, -10.8098],
-      "vpr": [0, 0, 0],
-      "vpd": 900,
       "expected": "step1_expected.png"
     },
     {
       "label": "laser-cut version",
       "params": "Test Case 10a",
-      "vpt": [12.8751, -1.05844, -10.8098],
-      "vpr": [0, 0, 0],
-      "vpd": 900,
       "expected": "step2_expected.png"
     },
     {
       "label": "generate for SVG",
       "geometry": false,
       "params": "Test Case 10b",
-      "vpt": [12.8751, -1.05844, -10.8098],
-      "vpr": [0, 0, 0],
-      "vpd": 900,
       "expected": "step3_expected.png"
     },
     {
@@ -32,9 +23,6 @@
       "geometry": false,
       "params": "Test Case 10b",
       "render": true,
-      "vpt": [12.8751, -1.05844, -10.8098],
-      "vpr": [0, 0, 0],
-      "vpd": 900,
       "expected": "step4_expected.png"
     }
   ]

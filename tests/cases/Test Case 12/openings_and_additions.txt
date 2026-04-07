@@ -1,3 +1,7 @@
+$vpt = [0.41811, -11.7702, -17.4088];
+$vpr = [53.6, 0, 18];
+$vpd = 500;
+
 len=10;
 screen_openings=[
 //  ID,         x,       y, width,  height,   shape, top slope, bottom slope, left slope, right slope, corner radius, other

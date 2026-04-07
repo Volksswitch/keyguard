@@ -5,17 +5,11 @@
     {
       "label": "starting view",
       "params": "Test Case 2",
-      "vpt": [-8.39957, -16.3749, -16.125],
-      "vpr": [55, 0, 25],
-      "vpd": 500,
       "expected": "step1_expected.png"
     },
     {
       "label": "change keyguard thickness to 4, large bump drops to stay even with the keyguard edge",
       "params": "Test Case 2a",
-      "vpt": [-8.39957, -16.3749, -16.125],
-      "vpr": [55, 0, 25],
-      "vpd": 500,
       "expected": "step2_expected.png"
     }
   ]

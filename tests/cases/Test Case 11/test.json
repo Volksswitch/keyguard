@@ -5,9 +5,6 @@
     {
       "label": "full view",
       "params": "Test Case 11",
-      "vpt": [-0.45397, -13.9806, -17.8217],
-      "vpr": [55, 0, 25],
-      "vpd": 900,
       "expected": "step1_expected.png"
     }
   ]

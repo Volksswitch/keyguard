@@ -5,17 +5,11 @@
     {
       "label": "upper left",
       "params": "Test Case 26",
-      "vpt": [1, 1, 1],
-      "vpr": [0, 0, 0],
-      "vpd": 600,
       "expected": "step1_expected.png"
     },
     {
       "label": "lower left",
       "params": "Test Case 26a",
-      "vpt": [1, 1, 1],
-      "vpr": [0, 0, 0],
-      "vpd": 600,
       "expected": "step2_expected.png"
     }
   ]

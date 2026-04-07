@@ -5,26 +5,17 @@
     {
       "label": "laser-cut view",
       "params": "Test Case 13",
-      "vpt": [14.8701, -5.19949, -14.9901],
-      "vpr": [53.6, 0, 18],
-      "vpd": 1000,
       "expected": "step1_expected.png"
     },
     {
       "label": "3D-printed view",
       "params": "Test Case 13a",
-      "vpt": [14.8701, -5.19949, -14.9901],
-      "vpr": [53.6, 0, 18],
-      "vpd": 1000,
       "expected": "step2_expected.png"
     },
     {
       "label": "3D-printed view",
       "geometry": false,
       "params": "Test Case 13b",
-      "vpt": [14.8701, -5.19949, -14.9901],
-      "vpr": [53.6, 0, 18],
-      "vpd": 1000,
       "console": "step3_console.txt"
     }
   ]

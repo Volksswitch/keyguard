@@ -6,9 +6,6 @@
     {
       "label": "full view",
       "params": "Test Case 15",
-      "vpt": [5.27851, -8.21182, -13.8148],
-      "vpr": [55, 0, 25],
-      "vpd": 500,
       "expected": "step1_expected.png"
     },
     {
@@ -22,9 +19,6 @@
     {
       "label": "remove raised elements for laser-cut type",
       "params": "Test Case 15b",
-      "vpt": [5.27851, -8.21182, -13.8148],
-      "vpr": [55, 0, 25],
-      "vpd": 500,
       "expected": "step3_expected.png"
     }
   ]
