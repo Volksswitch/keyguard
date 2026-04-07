@@ -1514,7 +1514,11 @@ m_t_o = parse_user_vector(my_tablet_openings, /*strict=*/true);
 //**********************************************************************
 
 	include <openings_and_additions.txt>
-	
+
+// Detect the openings-file format version. V1 files do not define oa_version;
+// v2 files set oa_version = 2 at the top. Defaults to 1 when undefined.
+_oa_version = is_undef(oa_version) ? 1 : oa_version;
+
 //**********************************************************************
 
 
@@ -1880,10 +1884,10 @@ module keyguard(cheat){
 										   (has_frame && generate=="keyguard frame" && cheat=="no")
 										   ){
 										   
-											apply_flex_height_shapes(case_additions, false);
-											
+											if(_oa_version==2) apply_flex_height_shapes_v2(case_additions, false); else apply_flex_height_shapes(case_additions, false);
+
 											if(!is_laser_cut){
-												add_manual_mount_pedestals(case_additions);
+												if(_oa_version==2) add_manual_mount_pedestals_v2(case_additions); else add_manual_mount_pedestals(case_additions);
 											}
 										}
 									}
@@ -1925,7 +1929,7 @@ module keyguard(cheat){
 							// cut case openings
 							if(!is_undef(case_openings)){
 								if(has_case && len(case_openings)>0 && !(has_frame && generate=="keyguard") && cheat=="no"){
-									cut_case_openings(case_openings,kt);
+									if(_oa_version==2) cut_case_openings_v2(case_openings,kt); else cut_case_openings(case_openings,kt);
 								}
 							}
 								
@@ -1958,21 +1962,21 @@ module keyguard(cheat){
 									   (has_frame && generate=="keyguard frame" && cheat=="no")
 									   ){
 									   
-										apply_flex_height_shapes(case_additions, true);
-										
+										if(_oa_version==2) apply_flex_height_shapes_v2(case_additions, true); else apply_flex_height_shapes(case_additions, true);
+
 									}
 								}
 							}
-							
-							if(len(m_c_a)>0 && has_case && (!has_frame || 
+
+							if(len(m_c_a)>0 && has_case && (!has_frame ||
 										(has_frame && generate=="keyguard frame" && cheat=="no"))){
 								apply_flex_height_shapes(m_c_a, true);
-							}	
+							}
 
 							// add slots to manually added clip-on strap pedestals
 							if(!is_undef(case_additions)){
 								if(has_case && len(case_additions)>0 && !is_laser_cut && cheat=="no"){
-									cut_manual_mount_pedestal_slots(case_additions);
+									if(_oa_version==2) cut_manual_mount_pedestal_slots_v2(case_additions); else cut_manual_mount_pedestal_slots(case_additions);
 								}
 							}
 							
@@ -2025,28 +2029,28 @@ module keyguard(cheat){
 						// cut tablet openings
 						if (!is_undef(tablet_openings)){
 							if(tablet_height>0 && tablet_width>0 && len(tablet_openings)>0 && cheat=="no"){
-								cut_tablet_openings(tablet_openings,kt);
+								if(_oa_version==2) cut_tablet_openings_v2(tablet_openings,kt); else cut_tablet_openings(tablet_openings,kt);
 							}
 						}
 
 						if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
 							cut_tablet_openings(m_t_o,kt);
 						}
-						
+
 						// ambient light sensors
 						if (expose_ambient_light_sensors=="yes" && len(ttao)>0){
 							cut_als_openings(ttao,kt);
 						}
-						
+
 						//add embossed text to tablet region
 						if (text!="" && keyguard_region=="tablet region" && text_depth<0){
 							engrave_emboss_instruction();
 						}
-					
+
 						//cut screen openings
 						if(!is_undef(screen_openings)){
 							if(len(screen_openings)>0 && type_of_tablet!="blank"){
-								cut_screen_openings(screen_openings,sat);
+								if(_oa_version==2) cut_screen_openings_v2(screen_openings,sat); else cut_screen_openings(screen_openings,sat);
 							}
 						}
 						
@@ -2080,7 +2084,7 @@ module keyguard(cheat){
 					//add bumps and ridges
 					if(!is_undef(screen_openings)){
 						if(is_3d_printed && len(screen_openings)>0){
-							adding_plastic(screen_openings,"screen");
+							if(_oa_version==2) adding_plastic_v2(screen_openings,"screen"); else adding_plastic(screen_openings,"screen");
 						}
 					}
 					
@@ -2092,7 +2096,7 @@ module keyguard(cheat){
 					if(!is_undef(case_openings)){
 						translate(unequal_opening)
 						if(is_3d_printed && has_case && !has_frame && len(case_openings)>0 && cheat=="no"){
-							adding_plastic(case_openings,"case");
+							if(_oa_version==2) adding_plastic_v2(case_openings,"case"); else adding_plastic(case_openings,"case");
 						}
 					}
 					
@@ -2182,7 +2186,7 @@ module lc_keyguard(){
 							// cut case openings
 							if(!is_undef(case_openings)){
 								if(has_case && len(case_openings)>0 && !(has_frame && generate=="keyguard")){
-									cut_case_openings(case_openings,0);
+									if(_oa_version==2) cut_case_openings_v2(case_openings,0); else cut_case_openings(case_openings,0);
 								}
 							}
 							
@@ -2232,7 +2236,7 @@ module lc_keyguard(){
 						// cut tablet openings
 						if (!is_undef(tablet_openings)){
 							if(tablet_height>0 && tablet_width>0 && len(tablet_openings)>0){
-								cut_tablet_openings(tablet_openings,0);
+							if(_oa_version==2) cut_tablet_openings_v2(tablet_openings,0); else cut_tablet_openings(tablet_openings,0);
 							}
 						}
 						
@@ -2245,7 +2249,7 @@ module lc_keyguard(){
 						//cut screen openings
 						if(!is_undef(screen_openings)){
 							if(len(screen_openings)>0 && type_of_tablet!="blank"){
-								cut_screen_openings(screen_openings,0);
+							if(_oa_version==2) cut_screen_openings_v2(screen_openings,0); else cut_screen_openings(screen_openings,0);
 							}
 						}
 						
@@ -2305,7 +2309,7 @@ module keyguard_frame(cheat){
 				//add bumps and ridges from case_openings file
 				if(!is_undef(case_openings)){
 					if (len(case_openings)>0){
-						adding_plastic(case_openings,"case");
+						if(_oa_version==2) adding_plastic_v2(case_openings,"case"); else adding_plastic(case_openings,"case");
 					}
 				}
 				
@@ -2320,9 +2324,9 @@ module keyguard_frame(cheat){
 						   (has_frame && generate=="keyguard frame" && cheat=="no")
 						   ){
 						   
-							apply_flex_height_shapes(case_additions, false);
-							
-							add_manual_mount_pedestals(case_additions);
+							if(_oa_version==2) apply_flex_height_shapes_v2(case_additions, false); else apply_flex_height_shapes(case_additions, false);
+
+						if(_oa_version==2) add_manual_mount_pedestals_v2(case_additions); else add_manual_mount_pedestals(case_additions);
 						}
 					}
 				}
@@ -2342,7 +2346,7 @@ module keyguard_frame(cheat){
 			//cut case openings
 			if(!is_undef(case_openings)){
 				if(len(case_openings)>0){
-					cut_case_openings(case_openings,keyguard_frame_thickness);
+					if(_oa_version==2) cut_case_openings_v2(case_openings,keyguard_frame_thickness); else cut_case_openings(case_openings,keyguard_frame_thickness);
 				}
 			}
 			
@@ -2357,7 +2361,7 @@ module keyguard_frame(cheat){
 			// add slots to manually added clip-on strap pedestals
 			if(!is_undef(case_additions)){
 				if(len(case_additions)>0 && !is_laser_cut && cheat=="no"){
-					cut_manual_mount_pedestal_slots(case_additions);
+					if(_oa_version==2) cut_manual_mount_pedestal_slots_v2(case_additions); else cut_manual_mount_pedestal_slots(case_additions);
 				}
 			}
 			if(len(m_c_a)>0 && !is_laser_cut && cheat=="no"){
@@ -2385,7 +2389,7 @@ module keyguard_frame(cheat){
 		// cut tablet openings
 		if (!is_undef(tablet_openings)){
 			if(len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-				cut_tablet_openings(tablet_openings,kt);
+				if(_oa_version==2) cut_tablet_openings_v2(tablet_openings,kt); else cut_tablet_openings(tablet_openings,kt);
 			}
 		}
 
@@ -2396,10 +2400,10 @@ module keyguard_frame(cheat){
 		// remove non-full height "-" shapes
 		if(!is_undef(case_additions)){
 			if(len(case_additions)>0){
-				if (!has_frame || 
+				if (!has_frame ||
 				   (has_frame && generate=="keyguard frame" && cheat=="no")
 				   ){
-					apply_flex_height_shapes(case_additions, true);
+					if(_oa_version==2) apply_flex_height_shapes_v2(case_additions, true); else apply_flex_height_shapes(case_additions, true);
 				}
 			}
 		}
@@ -4176,6 +4180,220 @@ module cut_screen_openings(s_o,depth){
 	}
 }
 
+// =============================================================================
+// V2 OPENINGS-FILE SUPPORT
+//
+// These helpers and modules support openings_and_additions.txt files that use
+// the v2 data structure (identified by oa_version = 2 at the top of the file).
+// V1 modules are retained unchanged; the v2 modules convert each row to the
+// equivalent v1 layout and then delegate to the existing v1 module.
+//
+// V2 column layout — screen_openings / case_openings / tablet_openings:
+//   [ID, shape, height, width, corner, x, y, cut/build, anchor, surface,
+//    length, thickness, [edge_slopes], [special_parms]]
+//    [0]  [1]    [2]    [3]    [4]    [5] [6]   [7]      [8]     [9]
+//    [10]     [11]       [12]             [13]
+//
+// V2 column layout — case_additions:
+//   [ID, shape, height, width, corner, x, y, cut/build, [trim]]
+//    [0]  [1]    [2]    [3]    [4]    [5] [6]   [7]      [8]
+//
+// V1 equivalent column layout (for reference):
+//   screen/case/tablet openings:
+//     [ID, x, y, width, height, shape, top_slope, bottom_slope,
+//      left_slope, right_slope, corner_radius, other]
+//   case_additions:
+//     [ID, x, y, width, height, shape, thickness,
+//      trim_above, trim_below, trim_to_right, trim_to_left, corner_radius]
+// =============================================================================
+
+// Returns the raw slope value at index idx from a V2 [edge_slopes] array.
+// When the array has fewer than 4 entries the first value is reused for all
+// missing positions.  A value of 0 is mapped to 90 for ordinary shapes,
+// matching the V1 normalisation rule (0 means "vertical / no slope").
+// @param slopes  The [edge_slopes] sub-array from a V2 row
+// @param idx     0 = top, 1 = bottom, 2 = left, 3 = right
+// @param shape   Resolved V1 shape name (suppresses 0→90 for special shapes)
+function v2_slope(slopes, idx, shape) =
+	let(
+		n   = (slopes == undef) ? 0 : len(slopes),
+		raw = (n == 0)   ? 0 :
+		      (n == 1)   ? slopes[0] :
+		      (idx < n)  ? slopes[idx] : slopes[0],
+		is_special = (shape == "svg"    || shape == "ridge"   || shape == "hridge"  ||
+		              shape == "vridge" || shape == "cridge"  || shape == "rridge"  ||
+		              shape == "crridge"|| shape == "aridge1" || shape == "aridge2" ||
+		              shape == "aridge3"|| shape == "aridge4" ||
+		              shape == "ttext"  || shape == "btext"   || shape == "bump")
+	)
+	(raw == 0 && !is_special) ? 90 : raw;
+
+// Converts a V2 font-style string to the V1 numeric code expected by
+// cut_opening() and place_addition():  "bold"→1, "italic"→2,
+// "bold/italic"→3, anything else→0 (normal).
+function v2_font_style_code(s) =
+	(s == "bold")        ? 1 :
+	(s == "italic")      ? 2 :
+	(s == "bold/italic") ? 3 : 0;
+
+// Converts a V2 horizontal-alignment string to the V1 numeric code:
+// "left"→1, "center"→2, "right"→3; default→1.
+function v2_h_align_code(s) =
+	(s == "left")   ? 1 :
+	(s == "center") ? 2 :
+	(s == "right")  ? 3 : 1;
+
+// Converts a V2 vertical-alignment string to the V1 numeric code:
+// "bottom"→1, "baseline"→2, "center"→3, "top"→4; default→1.
+function v2_v_align_code(s) =
+	(s == "bottom")   ? 1 :
+	(s == "baseline") ? 2 :
+	(s == "center")   ? 3 :
+	(s == "top")      ? 4 : 1;
+
+// Resolves the V1-compatible shape code from a V2 shape name plus the
+// optional anchor and surface fields:
+//   "text" + surface "b"  → "btext"   "text" + other  → "ttext"
+//   "r"    + anchor  "c"  → "cr"      "rr"   + anchor "c" → "crr"
+//   all other shapes pass through unchanged.
+function v2_shape_code(shape_raw, anchor, surface) =
+	(shape_raw == "text" && surface == "b") ? "btext" :
+	(shape_raw == "text")                   ? "ttext" :
+	(shape_raw == "r"  && anchor == "c")    ? "cr"    :
+	(shape_raw == "rr" && anchor == "c")    ? "crr"   :
+	shape_raw;
+
+// Converts a single V2 screen/case/tablet opening row to the V1 equivalent.
+// Ridge shapes use the dedicated length[10] and thickness[11] fields for the
+// ridge length and base thickness respectively, with height[2] as the ridge
+// height.  Text and SVG shapes pull their parameters from [special_parms][13].
+// @param r  A single V2 opening row
+// Returns a 12-element array in V1 format:
+//   [ID, x, y, width, height, shape, top_slope, bot_slope,
+//    left_slope, right_slope, corner_radius, other]
+function v2_to_v1_opening_row(r) =
+	let(
+		shape_raw = r[1],
+		anchor    = r[8],
+		surface   = r[9],
+		shape     = v2_shape_code(shape_raw, anchor, surface),
+		es        = (r[12] == undef) ? [] : r[12],
+		sp        = (r[13] == undef) ? [] : r[13],
+		is_text   = (shape == "ttext" || shape == "btext"),
+		is_svg    = (shape == "svg"),
+		is_ridge  = (shape == "ridge"    || shape == "hridge"  || shape == "vridge"  ||
+		             shape == "cridge"   || shape == "rridge"  || shape == "crridge" ||
+		             shape == "aridge1"  || shape == "aridge2" ||
+		             shape == "aridge3"  || shape == "aridge4"),
+		// Width: ridge shapes use the length field; all others use the width field
+		width_v1  = is_ridge ? r[10] : ((r[3] == undef) ? 0 : r[3]),
+		// Height: V2 height field applies to all shapes
+		height_v1 = r[2],
+		// Slope fields: interpretation depends on shape type
+		//   ridge  : top = ridge height (mm); bot = base thickness; left = direction
+		//   text   : top = rotation angle; bot = font-style code; left = h-align; right = v-align
+		//   svg    : top = rotation angle
+		//   others : taken from [edge_slopes] array, normalised via v2_slope()
+		top_sl  = is_ridge           ? r[2] :
+		          (is_text || is_svg) ? (len(sp) >= 2 ? sp[1] : 0) :
+		          v2_slope(es, 0, shape),
+		bot_sl  = is_ridge ? r[11] :
+		          is_text  ? v2_font_style_code(len(sp) >= 3 ? sp[2] : "") :
+		          v2_slope(es, 1, shape),
+		left_sl = is_ridge ? (len(sp) >= 1 ? sp[0] : 0) :
+		          is_text  ? v2_h_align_code(len(sp) >= 4 ? sp[3] : "") :
+		          v2_slope(es, 2, shape),
+		rgt_sl  = is_ridge ? 0 :
+		          is_text  ? v2_v_align_code(len(sp) >= 5 ? sp[4] : "") :
+		          v2_slope(es, 3, shape),
+		// "other": text string / SVG filename from special_parms; cut/build value for others
+		other   = (is_text || is_svg) ? (len(sp) >= 1 ? sp[0] : undef) : r[7]
+	)
+	[r[0], r[5], r[6], width_v1, height_v1, shape, top_sl, bot_sl, left_sl, rgt_sl, r[4], other];
+
+// Converts a single V2 case_additions row to the V1 equivalent.
+// The cut/build field [7] becomes the V1 thickness; undef is treated as 0
+// (full-height shape).  The [trim] array [8] maps to the four V1 trim fields;
+// absent entries default to -999 (no clip).
+// @param r  A single V2 case_additions row
+// Returns a 12-element array in V1 format:
+//   [ID, x, y, width, height, shape, thickness,
+//    trim_above, trim_below, trim_to_right, trim_to_left, corner_radius]
+function v2_to_v1_case_addition_row(r) =
+	let(
+		trim_raw   = (r[8] == undef) ? [] : r[8],
+		thickness  = (r[7] == undef) ? 0 : r[7],
+		trim_above = (len(trim_raw) >= 1) ? trim_raw[0] : -999,
+		trim_below = (len(trim_raw) >= 2) ? trim_raw[1] : -999,
+		trim_right = (len(trim_raw) >= 3) ? trim_raw[2] : -999,
+		trim_left  = (len(trim_raw) >= 4) ? trim_raw[3] : -999
+	)
+	[r[0], r[5], r[6], r[3], r[2], r[1], thickness,
+	 trim_above, trim_below, trim_right, trim_left, r[4]];
+
+// ---------------------------------------------------------------------------
+// V2 dispatch modules — each converts its input vector to V1 format and
+// delegates to the corresponding V1 module.
+// ---------------------------------------------------------------------------
+
+// V2 version of cut_screen_openings.
+// @param s_o    Screen openings vector (V2 format)
+// @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
+module cut_screen_openings_v2(s_o, depth) {
+	cut_screen_openings([for(r = s_o) v2_to_v1_opening_row(r)], depth);
+}
+
+// V2 version of cut_case_openings.
+// @param c_o    Case openings vector (V2 format)
+// @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
+module cut_case_openings_v2(c_o, depth) {
+	cut_case_openings([for(r = c_o) v2_to_v1_opening_row(r)], depth);
+}
+
+// V2 version of cut_tablet_openings.
+// @param t_o    Tablet openings vector (V2 format)
+// @param depth  Cut depth in mm
+module cut_tablet_openings_v2(t_o, depth) {
+	cut_tablet_openings([for(r = t_o) v2_to_v1_opening_row(r)], depth);
+}
+
+// V2 version of adding_plastic.
+// @param additions  Screen or case openings vector (V2 format)
+// @param where      Coordinate context: "screen" or "case"
+module adding_plastic_v2(additions, where) {
+	adding_plastic([for(r = additions) v2_to_v1_opening_row(r)], where);
+}
+
+// V2 version of apply_flex_height_shapes.
+// @param c_a     Case additions vector (V2 format)
+// @param is_sub  false = add positive shapes; true = subtract negative shapes
+module apply_flex_height_shapes_v2(c_a, is_sub) {
+	apply_flex_height_shapes([for(r = c_a) v2_to_v1_case_addition_row(r)], is_sub);
+}
+
+// V2 version of add_case_full_height_shapes.
+// @param c_a   Case additions vector (V2 format)
+// @param type  "add" or "sub"
+module add_case_full_height_shapes_v2(c_a, type) {
+	add_case_full_height_shapes([for(r = c_a) v2_to_v1_case_addition_row(r)], type);
+}
+
+// V2 version of add_manual_mount_pedestals.
+// @param c_a  Case additions vector (V2 format)
+module add_manual_mount_pedestals_v2(c_a) {
+	add_manual_mount_pedestals([for(r = c_a) v2_to_v1_case_addition_row(r)]);
+}
+
+// V2 version of cut_manual_mount_pedestal_slots.
+// @param c_a  Case additions vector (V2 format)
+module cut_manual_mount_pedestal_slots_v2(c_a) {
+	cut_manual_mount_pedestal_slots([for(r = c_a) v2_to_v1_case_addition_row(r)]);
+}
+
+// =============================================================================
+// END V2 OPENINGS-FILE SUPPORT
+// =============================================================================
+
 // Iterates over the case_openings vector and cuts (or highlights with #) each
 // opening at the correct position relative to the case-opening coordinate origin.
 // @param c_o    Case openings vector (rows of opening definitions)
@@ -5248,7 +5466,7 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 				
 				if(!is_undef(case_additions)){
 					if(add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && len(case_additions)>0 && cheat=="no"){
-						add_case_full_height_shapes(case_additions,"add");
+						if(_oa_version==2) add_case_full_height_shapes_v2(case_additions,"add"); else add_case_full_height_shapes(case_additions,"add");
 					}
 				}
 				if(len(m_c_a)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && cheat=="no"){
@@ -5276,7 +5494,7 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 
 		if(!is_undef(case_additions)){
 			if(add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && len(case_additions)>0 && cheat=="no"){
-				add_case_full_height_shapes(case_additions,"sub");
+				if(_oa_version==2) add_case_full_height_shapes_v2(case_additions,"sub"); else add_case_full_height_shapes(case_additions,"sub");
 			}
 		}
 
