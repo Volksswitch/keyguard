@@ -4265,36 +4265,58 @@ function v2_shape_code(shape_raw, anchor, surface) =
 
 // Converts a single V2 screen/case/tablet opening row to the V1 equivalent.
 // Ridge shapes use the dedicated length[10] and thickness[11] fields for the
-// ridge length and base thickness respectively, with height[2] as the ridge
-// height.  Text and SVG shapes pull their parameters from [special_parms][13].
+// ridge length and base thickness respectively.  vridge/hridge take their ridge
+// height from the cut/build field[7] (= hor); other ridge types use height[2].
+// Text and SVG shapes pull their parameters from [special_parms][13].
+// Bump shapes use the height[2] field as the sphere diameter (V1 width).
+// "r" with a positive corner maps to "rr"; "cr" with a positive corner maps to "crr".
 // @param r  A single V2 opening row
 // Returns a 12-element array in V1 format:
 //   [ID, x, y, width, height, shape, top_slope, bot_slope,
 //    left_slope, right_slope, corner_radius, other]
 function v2_to_v1_opening_row(r) =
 	let(
-		shape_raw = r[1],
-		anchor    = r[8],
-		surface   = r[9],
-		shape     = v2_shape_code(shape_raw, anchor, surface),
+		shape_raw  = r[1],
+		anchor     = r[8],
+		surface    = r[9],
+		shape_base = v2_shape_code(shape_raw, anchor, surface),
+		// "r" with a positive corner radius maps to rounded-rectangle V1 shapes
+		shape     = (shape_base == "r"  && r[4] != undef && r[4] > 0) ? "rr" :
+		            (shape_base == "cr" && r[4] != undef && r[4] > 0) ? "crr" :
+		            shape_base,
 		es        = (r[12] == undef) ? [] : r[12],
 		sp        = (r[13] == undef) ? [] : r[13],
 		is_text   = (shape == "ttext" || shape == "btext"),
 		is_svg    = (shape == "svg"),
+		is_bump   = (shape_raw == "bump"),
+		is_vridge = (shape == "vridge"),
+		is_hridge = (shape == "hridge"),
+		is_vh_ridge = (is_vridge || is_hridge),
 		is_ridge  = (shape == "ridge"    || shape == "hridge"  || shape == "vridge"  ||
 		             shape == "cridge"   || shape == "rridge"  || shape == "crridge" ||
 		             shape == "aridge1"  || shape == "aridge2" ||
 		             shape == "aridge3"  || shape == "aridge4"),
-		// Width: ridge shapes use the length field; all others use the width field
-		width_v1  = is_ridge ? r[10] : ((r[3] == undef) ? 0 : r[3]),
-		// Height: V2 height field applies to all shapes
-		height_v1 = r[2],
+		// Width/height: special cases for bump and vridge/hridge
+		//   bump:   width_v1 = sphere diameter (from V2 height field); height_v1 unchanged
+		//   vridge: width_v1 = 0; height_v1 = ridge length (from V2 length field)
+		//   hridge: width_v1 = ridge length (from V2 length field); height_v1 = 0
+		//   other ridges: width_v1 = length field; height_v1 = V2 height field
+		//   others: width_v1 = V2 width field; height_v1 = V2 height field
+		width_v1  = is_bump   ? r[2] :
+		            is_vridge ? 0 :
+		            is_ridge  ? r[10] :
+		            ((r[3] == undef) ? 0 : r[3]),
+		height_v1 = is_vridge ? r[10] :
+		            is_hridge ? 0 :
+		            r[2],
 		// Slope fields: interpretation depends on shape type
-		//   ridge  : top = ridge height (mm); bot = base thickness; left = direction
+		//   vridge/hridge: top = ridge height (from V2 cut/build field = hor variable)
+		//   other ridge  : top = ridge height (from V2 height field); bot = base thickness; left = direction
 		//   text   : top = rotation angle; bot = font-style code; left = h-align; right = v-align
 		//   svg    : top = rotation angle
 		//   others : taken from [edge_slopes] array, normalised via v2_slope()
-		top_sl  = is_ridge           ? r[2] :
+		top_sl  = is_vh_ridge        ? r[7] :
+		          is_ridge           ? r[2] :
 		          (is_text || is_svg) ? (len(sp) >= 2 ? sp[1] : 0) :
 		          v2_slope(es, 0, shape),
 		bot_sl  = is_ridge ? r[11] :
