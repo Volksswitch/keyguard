@@ -11,7 +11,7 @@ screen_openings=[
 
 case_openings=[
 // ID,  shape, height, width, corner,       x,   y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   4, "bump",      0,      ,       , cow-3.5, 110,          ,       ,        ,       ,          ,            [],              [] ],
+[   4, "bump",      5,      ,       , cow-3.5, 110,          ,       ,        ,       ,          ,            [],              [] ],
 ];
 
 case_additions=[

@@ -1,288 +1,116 @@
-oa_version = 2; // operations and additions file data structure version
-
 stt = 15;
 red = 5; //reduce
 ht = stt - red;
 wt = stt - red;
-
-screen_openings=[
-// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
-];
+spe = "crr";
+tall = (spe=="crr") ? 35-red : ht;
 
 case_openings=[
-//        ID, shape, height,   width, corner,     x,     y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[     "Ctrl",   "r",     ht,  24-red,      2,    12,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[  "Windows",   "r",     ht,  19-red,      2,  37.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "Alt",   "r",     ht,  19-red,      2,  61.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Space",   "r",     ht, 105-red,      2, 127.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "Alt",   "r",     ht,  19-red,      2, 195.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[  "Windows",   "r",     ht,  19-red,      2, 219.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[     "Menu",   "r",     ht,  20-red,      2,   243,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[     "Ctrl",   "r",     ht,  20-red,      2,   268,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[     "Left",   "r",     ht,      wt,      2, 301.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[     "Down",   "r",     ht,      wt,      2, 320.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Right",   "r",     ht,      wt,      2, 339.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "0",   "r",     ht,  34-red,      2,   377,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "Del",   "r",     ht,      wt,      2, 405.5,   7.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Enter",   "r", 35-red,      wt,      2, 424.5,  17.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Shift",   "r",     ht,  39-red,      2,  19.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "Z",   "r",     ht,      wt,      2,    50,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "X",   "r",     ht,      wt,      2,    69,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "C",   "r",     ht,      wt,      2,  88.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "V",   "r",     ht,      wt,      2, 107.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "B",   "r",     ht,      wt,      2, 126.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "N",   "r",     ht,      wt,      2, 145.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "M",   "r",     ht,      wt,      2, 164.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Comma",   "r",     ht,      wt,      2, 183.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "Period",   "r",     ht,      wt,      2, 202.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[  "ForSlsh",   "r",     ht,      wt,      2, 221.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Shift",   "r",     ht,  48-red,      2,   257,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "Up",   "r",     ht,      wt,      2, 320.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "1",   "r",     ht,      wt,      2, 367.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "2",   "r",     ht,      wt,      2, 386.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "3",   "r",     ht,      wt,      2, 405.5,    26,          ,    "c",        ,       ,          ,            [],              [] ],
-[     "Caps",   "r",     ht,  24-red,      2,    12,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "A",   "r",     ht,      wt,      2,  40.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "S",   "r",     ht,      wt,      2,  59.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "D",   "r",     ht,      wt,      2,  78.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "F",   "r",     ht,      wt,      2,  97.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "G",   "r",     ht,      wt,      2, 116.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "coh",   "r",     ht,      wt,      2, 135.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "J",   "r",     ht,      wt,      2, 153.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "K",   "r",     ht,      wt,      2, 173.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "L",   "r",     ht,      wt,      2, 192.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        ";",   "r",     ht,      wt,      2, 212.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[     "Apos",   "r",     ht,      wt,      2, 230.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Enter",   "r",     ht,  39-red,      2, 261.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "4",   "r",     ht,      wt,      2, 367.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "5",   "r",     ht,      wt,      2, 386.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "6",   "r",     ht,      wt,      2, 405.5,  45.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[     "Plus",   "r", 35-red,      wt,      2, 424.5,  55.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "Tab",   "r",     ht,  25-red,      2,  12.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "Q",   "r",     ht,      wt,      2,  35.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "cow",   "r",     ht,      wt,      2,  54.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "E",   "r",     ht,      wt,      2,  73.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "R",   "r",     ht,      wt,      2,  92.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "T",   "r",     ht,      wt,      2, 111.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "Y",   "r",     ht,      wt,      2, 130.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "U",   "r",     ht,      wt,      2, 149.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "I",   "r",     ht,      wt,      2,   169,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "O",   "r",     ht,      wt,      2,   188,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "P",   "r",     ht,      wt,      2,   207,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[  "LtBrket",   "r",     ht,      wt,      2,   226,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[  "RtBrket",   "r",     ht,      wt,      2, 245.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[  "BckSlsh",   "r",     ht,  25-red,      2, 269.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "Delete",   "r",     ht,      wt,      2, 301.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "End",   "r",     ht,      wt,      2, 320.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "PgDown",   "r",     ht,      wt,      2, 339.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "7",   "r",     ht,      wt,      2, 367.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "8",   "r",     ht,      wt,      2, 386.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "9",   "r",     ht,      wt,      2, 405.5,  64.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Tilda",   "r",     ht,      wt,      2,   7.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "1",   "r",     ht,      wt,      2,  25.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "2",   "r",     ht,      wt,      2,  44.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "3",   "r",     ht,      wt,      2,  63.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "4",   "r",     ht,      wt,      2,  82.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "5",   "r",     ht,      wt,      2, 101.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "6",   "r",     ht,      wt,      2, 121.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "7",   "r",     ht,      wt,      2, 140.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "8",   "r",     ht,      wt,      2, 159.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "9",   "r",     ht,      wt,      2, 178.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "0",   "r",     ht,      wt,      2, 197.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Minus",   "r",     ht,      wt,      2, 216.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "Equals",   "r",     ht,      wt,      2, 235.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "Backsp",   "r",     ht,  35-red,      2, 264.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "Insert",   "r",     ht,      wt,      2, 301.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[     "Home",   "r",     ht,      wt,      2, 320.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "PageUp",   "r",     ht,      wt,      2, 339.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[  "NumLock",   "r",     ht,      wt,      2, 367.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "Divide",   "r",     ht,      wt,      2, 386.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Times",   "r",     ht,      wt,      2, 405.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Minus",   "r",     ht,      wt,      2, 424.5,    83,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "Esc",   "r",     ht,      wt,      2,   7.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F1",   "r",     ht,      wt,      2,  33.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F2",   "r",     ht,      wt,      2,  52.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F3",   "r",     ht,      wt,      2,  71.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F4",   "r",     ht,      wt,      2,  90.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F5",   "r",     ht,      wt,      2, 114.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F6",   "r",     ht,      wt,      2, 134.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F7",   "r",     ht,      wt,      2, 152.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F8",   "r",     ht,      wt,      2, 172.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[       "F9",   "r",     ht,      wt,      2, 197.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "F10",   "r",     ht,      wt,      2, 216.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "F11",   "r",     ht,      wt,      2, 235.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[      "F12",   "r",     ht,      wt,      2, 254.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[   "PrtScn",   "r",     ht,      wt,      2, 301.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[  "SclLock",   "r",     ht,      wt,      2, 320.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[    "Break",   "r",     ht,      wt,      2, 339.5, 110.5,          ,    "c",        ,       ,          ,            [],              [] ],
-[        "#",   "r",     15,      24,      2,     0,     0,          ,       ,        ,       ,          ,            [],              [] ],
+// ID,       x,      y,   width, height, shape, top slope, bottom slope, left slope, right slope, corner radius, other
+[    "Ctrl",      12,    7.5,  24-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[ "Windows",    37.5,    7.5,  19-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[     "Alt",    61.5,    7.5,  19-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Space",   127.5,    7.5, 105-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[     "Alt",   195.5,    7.5,  19-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[ "Windows",   219.5,    7.5,  19-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[    "Menu",     243,    7.5,  20-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[    "Ctrl",     268,    7.5,  20-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[    "Left",   301.5,    7.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[    "Down",   320.5,    7.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Right",   339.5,    7.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "0",     377,    7.5,  34-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[     "Del",   405.5,    7.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Enter",   424.5,   17.5,      wt,   tall,   spe,        90, 90, 90, 90, 2, ],
+[   "Shift",    19.5,     26,  39-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "Z",      50,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "X",      69,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "C",    88.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "V",   107.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "B",   126.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "N",   145.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "M",   164.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Comma",   183.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "Period",   202.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[ "ForSlsh",   221.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Shift",     257,     26,  48-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "Up",   320.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "1",   367.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "2",   386.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "3",   405.5,     26,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[    "Caps",      12,   45.5,  24-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "A",    40.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "S",    59.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "D",    78.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "F",    97.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "G",   116.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "coh",   135.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "J",   153.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "K",   173.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "L",   192.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       ";",   212.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[    "Apos",   230.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Enter",   261.5,   45.5,  39-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "4",   367.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "5",   386.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "6",   405.5,   45.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[    "Plus",   424.5,   55.5,      wt,   tall,   spe,        90, 90, 90, 90, 2, ],
+[     "Tab",    12.5,   64.5,  25-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "Q",    35.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "cow",    54.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "E",    73.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "R",    92.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "T",   111.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "Y",   130.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "U",   149.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "I",     169,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "O",     188,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "P",     207,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[ "LtBrket",     226,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[ "RtBrket",   245.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[ "BckSlsh",   269.5,   64.5,  25-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "Delete",   301.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[     "End",   320.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "PgDown",   339.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "7",   367.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "8",   386.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "9",   405.5,   64.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Tilda",     7.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "1",    25.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "2",    44.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "3",    63.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "4",    82.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "5",   101.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "6",   121.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "7",   140.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "8",   159.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "9",   178.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[       "0",   197.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Minus",   216.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "Equals",   235.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "Backsp",   264.5,     83,  35-red,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "Insert",   301.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[    "Home",   320.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "PageUp",   339.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[ "NumLock",   367.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "Divide",   386.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Times",   405.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Minus",   424.5,     83,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[     "Esc",     7.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F1",    33.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F2",    52.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F3",    71.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F4",    90.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F5",   114.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F6",   134.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F7",   152.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F8",   172.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[      "F9",   197.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[     "F10",   216.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[     "F11",   235.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[     "F12",   254.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[  "PrtScn",   301.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[ "SclLock",   320.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+[   "Break",   339.5,  110.5,      wt,     ht,   spe,        90, 90, 90, 90, 2, ],
+
+[   "#",       0,      0,    24,     15,  "rr",        90,           90,         90,          90,             2,      ],
 ];
-
-case_additions=[
-// ID, shape, height, width, corner, x, y, cut/build, [trim]
-[   0,   "r",      0,     0,       , 0, 0,          ,     [] ],
-];
-
-tablet_openings=[
-// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
-];
-
-
-/*********** Column Usage
-
-** Screen, Case, Tablet Openings
-  Shape      height  width  corner  cut/build  anchor  surface  length  thickness  [edge shapes]  [special params]
-  r            x       x      x         x        x        x                              x
-  c            x                        x                 x                              x
-  hd           x       x                x        x        x                              x
-  oa1–4                       x
-  text         x                        x                 x                                              x
-  svg          x       x                x                                                                x
-  bump         x
-  ridge                                 x        x                x         x                            x
-  hridge                                x        x                x         x
-  vridge                                x        x                x         x
-  cridge       x                        x        x                          x
-  rridge       x       x      x         x        x                          x
-  aridge1–4                             x        x                          x
-
-  [special params]  Contents
-  text              [text string, direction, font style, h-align, v-align]
-  svg               [filename, direction]
-  ridge             [direction]
-
-** Case, Additions
-  Shape   height  width  corner  cut/build  [trim]
-  r         x       x      x         x
-  tab1–4    x       x      x         x        x
-  cm1–4     x       x                x        x
-  t1–4      x       x                x        x
-  f1–4      x       x      x         x        x
-  oa1–4                    x
-  ped1–4
-
-
-
-/***********SCREEN VARIABLES
-These special variables can be used to locate screen openings relative to the (0,0) location of the screen opening region
-
-** screen variables
-	sh 	screen height (the value is in millimeters or pixels as appropriate)
-	sw	screen width (the value is in millimeters or pixels as appropriate)
-
-	mpp	millimeters per pixel	
-	ppm	pixels per millimeter
-
-	nr	number of rows in grid
-	nc	number of columns in grid
-
-** app variables (the value is in millimeters or pixels as appropriate)
-	sbh	status bar height
-	umbh	upper message bar height
-	ucbh	upper command bar height
-	lmbh	lower message bar height
-	lcbh	lower command bar height
-
-	sbb	status bar bottom
-	umbb	upper message bar bottom
-	ucbb	upper command bar bottom
-	lmbt	lower message bar top
-	lmbb	lower message bar bottom
-	lcbb	lower command bar bottom
-	
-** grid variables (the value is in millimeters or pixels as appropriate)
-	gw	grid width
-	gh	grid height
-	gt 	grid top
-	gb	grid bottom
-
-	tp	top padding - specified in Grid Special Settings
-	bp	bottom padding - specified in Grid Special Settings
-	lp	left padding - specified in Grid Special Settings
-	rp	right padding - specified in Grid Special Settings
-	
-** cell variables (the value is in millimeters)
-	cw	cell width (doesn't apply to cells that are affected by left/right compensation for tight cases)
-	ch	cell height (doesn't apply to cells that are affected by top/bottom compensation for tight cases)
-	ccr	cell corner radius
-
-	hor	height of ridge - specified in Grid Special Settings
-	tor	thickness of ridge - specified in Grid Special Settings
-
-
-
-
-/***********CASE VARIABLES
-These special variables can be used to locate openings and place additions relative to the (0,0) location of the case opening
-[Note that the (0,0) location of the case opening is not absolute and can move if the screen doesn't sit in the middle of the opening.  These variables are independent of that movement. All variables are in millimeters]
-	coh	case opening height - specified in Case Info
-	cow 	case opening width - specified in Case Info
-	cocr	case opening corner radius - specified in Case Info
-
-	kh	keyguard height - specified in Keyguard Frame Info
-	kw	keyguard width - specified in Keyguard Frame Info
-	kcr	keyguard corner radius - specified in Keyguard Frame Info
-	rh	rail height (also keyguard thickness)
-	hrw	horizontal rail width
-	vrw	vertical rail width
-
-	lcow	the default width of the left side of case opening when in landscape mode
-	bcoh	the default height of the bottom side of case opening when in landscape mode
-
-	c_h	case height
-	c_w	case width
-	c_cr	case corner_radius
-	ctsd	case to screen_depth
-	sew	sloped edge width
-
-
-
-/***********CAMERA and HOME BUTTON VARIABLES
-The designer thinks of the camera and home button as positioned relative to the edge of the screen, not the edge of the tablet or the edget of the case opening so these variables will work best in the screen_openings set of instructions. Note that all the measurements in this set are in millimeters.  If you use these in a design that assumes all screen measurements are in pixels, multiply the variable times ppm (pixels per millimeter).
-
-	hloc	home button location: 1,2,3,4 (adjusted for orientation)
-	hbd	distance from screen to home button in millimeters
-	hbh	home button height in millimeters
-	hbw	home button width in millimeters
-	cloc	camera location: 1,2,3,4 (adjusted for orientation)
-	cmd	distance from screen to camera in millimeters
-	cmh	camera height in millimeters
-	cmw	camera width in millimeters
-
-	sxo	sign of x offset, if measuring from standard home/camera locations
-	syo	sign of y offset, if measuring from standard home/camera locations
-	
-	xols	x location of the left side of the case opening adjusted for swapping camera and home button
-	xors	x location of the right side of the case opening adjusted for swapping camera and home button
-	yobs	y location of the bottom side of the case opening adjusted for swapping the camera and home button
-	yots	y location of the top side of the case opening adjusted for swapping the camera and home button
-
-
-
-
-/***********TABLET VARIABLES
-	r180   "yes" or "no" whether the tablet has been rotated 180 degrees
-	th     height of tablet in millimeters
-	tw     width of tablet in millimeters - specified in internal designer data
-	tcr    tablet corner radius in millimeters - specified in internal designer data
-
-
-
-
-/************ DISPLAYING THE VALUE OF A VARIABLE
-If you just want to see what the contents of a variable is you use the "echo" command and look for what is displayed in the console
-pane.  For example, if you wanted to see what the designer thinks the height of the tablet is in millimeters, put this line at the
-top of this file:
-
-echo(th=th);
-
-Don't forget the semicolon at the end of the line.  Save the file and look at the Console pane in OpenSCAD.  You should see a line that
-looks something like this:
-
-ECHO: th = 184
-
-So the designer thinks that the height of the tablet is 184 millimeters.
-
-************************************************************************************************************************************/
