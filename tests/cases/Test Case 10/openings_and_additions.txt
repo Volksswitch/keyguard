@@ -6,46 +6,46 @@ $vpd = 900;
 
 screen_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 case_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 case_additions=[
 //  ID, shape, height, width, corner,    x,    y, cut/build, [trim]
-[    1, "cm4",     kh,   3.5, undef,    0, kh/2, undef,     [] ],
-[    2, "cm2",     kh,   3.5, undef,   kw, kh/2, undef,     [] ],
-[    3,  "r2",     40,    45,     10,   kw, kh/2, undef,     [] ],
-[    4, "cm1",     15,   100, undef, kw/2,   kh, undef,     [] ],
-[    5,  "r1",     45,    40,     10, kw/2,   kh, undef,     [] ],
-[    6,  "r4",     40,    45,     10,    0, kh/2, undef,     [] ],
-[    7, "cm3",     15,   100, undef, kw/2,    0, undef,     [] ],
-[    8,  "r3",     45,    40,     10, kw/2,    0, undef,     [] ],
-[   11,   "r",     15,    30,      5, -7.5,   kh, undef,     [] ], //all case addition r shapes are center anchored
-[   12,   "r",     15,    15, undef,   kw,    0, undef,     [] ], //all case addition r shapes are center anchored
-[   13,  "t1",     15,    50, undef,  100,   kh, undef,     [] ],
-[   14,  "t4",     15,    50, undef,  100,   kh, undef,     [] ],
-[   15,  "t2",     15,    50, undef,   50,    0, undef,     [] ],
-[   16,  "t3",     15,    50, undef,  266,    0, undef,     [] ],
-[   17,  "t1",     10,    45, undef,   kw,  150, undef,     [] ],
-[   18,  "t2",     10,    45, undef,   kw,   35, undef,     [] ],
-[   19,  "t4",     20,    65, undef,    0,  150, undef,     [] ],
-[   20,  "t3",     20,    65, undef,    0,   30, undef,     [] ],
-[   21,  "f1",      0,   7.5, undef,  7.5,   kh, undef,     [] ],
-[   22,  "f2",      0,    15, undef,  266,    0, undef,     [] ],
-[   23,  "f3",      0,    30, undef,    0,  150, undef,     [] ],
-[  "#",  "f4",      0,    30, undef,    0,   30, undef,     [] ],
-[  "#",  "t3",     20,    65, undef,    0,   30,        -4,     [] ],
-[  "#",  "f1",      0,   7.5, undef,  7.5,   kh,        -4,     [] ],
-[  "#",  "f2",      0,    15, undef,  266,    0,        -4,     [] ],
+[1, "cm4", kh, 3.5, 0, 0, kh/2, []],
+[2, "cm2", kh, 3.5, 0, kw, kh/2, []],
+[3, "r2", 40, 45, 10, kw, kh/2, []],
+[4, "cm1", 15, 100, 0, kw/2, kh, []],
+[5, "r1", 45, 40, 10, kw/2, kh, []],
+[6, "r4", 40, 45, 10, 0, kh/2, []],
+[7, "cm3", 15, 100, 0, kw/2, 0, []],
+[8, "r3", 45, 40, 10, kw/2, 0, []],
+[11, "r", 15, 30, 5, -7.5, kh, []], //all case addition r shapes are center anchored
+[12, "r", 15, 15, 0, kw, 0, []], //all case addition r shapes are center anchored
+[13, "t1", 15, 50, 0, 100, kh, []],
+[14, "t4", 15, 50, 0, 100, kh, []],
+[15, "t2", 15, 50, 0, 50, 0, []],
+[16, "t3", 15, 50, 0, 266, 0, []],
+[17, "t1", 10, 45, 0, kw, 150, []],
+[18, "t2", 10, 45, 0, kw, 35, []],
+[19, "t4", 20, 65, 0, 0, 150, []],
+[20, "t3", 20, 65, 0, 0, 30, []],
+[21, "f1", 0, 7.5, 0, 7.5, kh, []],
+[22, "f2", 0, 15, 0, 266, 0, []],
+[23, "f3", 0, 30, 0, 0, 150, []],
+["#", "f4", 0, 30, 0, 0, 30, []],
+["#", "t3", 20, 65, 0, 0, 30, -4, []],
+["#", "f1", 0, 7.5, 0, 7.5, kh, -4, []],
+["#", "f2", 0, 15, 0, 266, 0, -4, []],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 

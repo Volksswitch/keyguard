@@ -4264,62 +4264,144 @@ function v2_shape_code(shape_raw, anchor, surface) =
 	shape_raw;
 
 // Converts a single V2 screen/case/tablet opening row to the V1 equivalent.
-// Ridge shapes use the dedicated length[10] and thickness[11] fields for the
-// ridge length and base thickness respectively.  vridge/hridge take their ridge
-// height from the cut/build field[7] (= hor); other ridge types use height[2].
-// Text and SVG shapes pull their parameters from [special_parms][13].
-// Bump shapes use the height[2] field as the sphere diameter (V1 width).
+//
+// Accepts two row formats:
+//
+//   EXPLICIT format (len == 14) — all 14 columns always present; unused ones are undef:
+//     [ID, shape, h, w, corner, x, y, cut/build, anchor, surface, length, thickness, [es], [sp]]
+//
+//   COMPACT format (len < 14) — unused columns omitted; shape-specific layouts:
+//     "r"/rr/r1-r4/rr2/rr4: [ID, shape, h, w, corner(explicit!), x, y, {cb}, {"c"}, {"b"}, [es], [sp]]
+//     "c":                   [ID, "c",   h, 0,                    x, y, {cb},        {"b"}, [es], [sp]]
+//     "hd":                  [ID, "hd",  h, w,                    x, y, {cb}, {"c"}, {"b"}, [es], [sp]]
+//     "bump":                [ID, "bump",h, x, y,                                            [es], [sp]]
+//     "vridge"/"hridge":     [ID, shape, x, y, cb, len, thickness,                           [es], [sp]]
+//     "text":                [ID, "text",h, z_pos,                x, y,        {"b"},        [es], [sp]]
+//     "svg":                 [ID, "svg", h, w, rotation,          x, y,                     [es], [sp]]
+//
+//   In compact "r"-type rows, corner is ALWAYS explicit (0 = no rounding, never omitted).
+//   Optional string fields after positional fields: "c" = anchor, "b" = surface (distinct values).
+//   Optional cb is always numeric. Trailing [es] and [sp] are always the last two elements.
+//
+// Ridge shapes use length and thickness fields for ridge geometry.  vridge/hridge take their
+// ridge height from the cut/build (cb) field.  Other ridge types use height[2].
+// Text and SVG shapes pull parameters from [sp]; bump uses height as sphere diameter (V1 width).
 // "r" with a positive corner maps to "rr"; "cr" with a positive corner maps to "crr".
-// @param r  A single V2 opening row
+//
+// @param r  A single V2 opening row (explicit or compact)
 // Returns a 12-element array in V1 format:
 //   [ID, x, y, width, height, shape, top_slope, bot_slope,
 //    left_slope, right_slope, corner_radius, other]
 function v2_to_v1_opening_row(r) =
 	let(
+		is_compact = (len(r) != 14),
 		shape_raw  = r[1],
-		anchor     = r[8],
-		surface    = r[9],
+		is_bump    = (shape_raw == "bump"),
+		is_vridge  = (shape_raw == "vridge"),
+		is_hridge  = (shape_raw == "hridge"),
+		is_vh      = (is_vridge || is_hridge),
+		is_c_shape = (shape_raw == "c"),
+		is_hd      = (shape_raw == "hd"),
+		is_text_raw = (shape_raw == "text"),
+		is_svg_raw  = (shape_raw == "svg"),
+
+		// ----- COMPACT format: extract x, y, corner, and optional fields -----
+		// Compact x/y positions vary by shape family:
+		//   bump:         r[3]=x, r[4]=y
+		//   vridge/hridge:r[2]=x, r[3]=y
+		//   c/hd/text:    r[4]=x, r[5]=y  (fixed leading fields: h, {w or z_pos})
+		//   r-type/svg:   r[5]=x, r[6]=y  (fixed: h, w, corner)
+		cx = is_bump        ? r[3] :
+		     is_vh          ? r[2] :
+		     (is_c_shape || is_hd || is_text_raw) ? r[4] :
+		     r[5],
+		cy = is_bump        ? r[4] :
+		     is_vh          ? r[3] :
+		     (is_c_shape || is_hd || is_text_raw) ? r[5] :
+		     r[6],
+		// Compact corner: 0 for shapes with no corner; r[3]=z_pos for text; r[4] for r-type/svg
+		c_corner = (is_bump || is_c_shape || is_hd || is_vh) ? 0 :
+		           is_text_raw ? r[3] :
+		           r[4],
+		// Compact trailing lists: [es] and [sp] are always the last two elements,
+		// except bump (fixed r[5]/r[6]) and vridge/hridge/svg (fixed r[7]/r[8])
+		c_es = is_bump             ? r[5] :
+		       (is_vh || is_svg_raw) ? r[7] :
+		       r[len(r)-2],
+		c_sp = is_bump             ? r[6] :
+		       (is_vh || is_svg_raw) ? r[8] :
+		       r[len(r)-1],
+		// Compact ridge length and thickness (vridge/hridge only)
+		c_len   = is_vh ? r[5] : 0,
+		c_thick = is_vh ? r[6] : 0,
+		// Compact optional field scanning (for r-type, c, hd, text; not bump/vh/svg).
+		// Optional fields start right after the last fixed positional field:
+		//   c/hd/text: after r[5]=y → opt_start=6
+		//   r-type:    after r[6]=y → opt_start=7
+		// cb is a number; anchor is the string "c"; surface is the string "b".
+		c_opt_s  = (is_c_shape || is_hd || is_text_raw) ? 6 : 7,
+		c_opt0   = r[c_opt_s],
+		c_cb_off = (!is_bump && !is_vh && is_num(c_opt0)) ? 1 : 0,
+		c_cb     = (c_cb_off > 0)  ? c_opt0 :
+		           is_vh           ? r[4] :
+		           undef,
+		c_opt1   = r[c_opt_s + c_cb_off],
+		c_anc_off = (!is_bump && !is_vh && !is_text_raw && !is_svg_raw &&
+		              is_string(c_opt1) && c_opt1 == "c") ? 1 : 0,
+		c_anchor  = (c_anc_off > 0) ? "c" : undef,
+		c_opt2   = r[c_opt_s + c_cb_off + c_anc_off],
+		c_surface = (!is_bump && !is_vh && !is_svg_raw &&
+		              is_string(c_opt2) && c_opt2 == "b") ? "b" : undef,
+
+		// ----- Select between EXPLICIT and COMPACT -----
+		corner  = is_compact ? c_corner  : r[4],
+		x_v1    = is_compact ? cx        : r[5],
+		y_v1    = is_compact ? cy        : r[6],
+		cb      = is_compact ? c_cb      : r[7],
+		anchor  = is_compact ? c_anchor  : r[8],
+		surface = is_compact ? c_surface : r[9],
+		len_r   = is_compact ? c_len     : r[10],
+		thick_r = is_compact ? c_thick   : r[11],
+		es      = is_compact ? c_es      : ((r[12] == undef) ? [] : r[12]),
+		sp      = is_compact ? c_sp      : ((r[13] == undef) ? [] : r[13]),
+
+		// ----- Common processing (shape resolution, widths, slopes) -----
 		shape_base = v2_shape_code(shape_raw, anchor, surface),
-		// "r" with a positive corner radius maps to rounded-rectangle V1 shapes
-		shape     = (shape_base == "r"  && r[4] != undef && r[4] > 0) ? "rr" :
-		            (shape_base == "cr" && r[4] != undef && r[4] > 0) ? "crr" :
+		shape     = (shape_base == "r"  && corner != undef && corner > 0) ? "rr"  :
+		            (shape_base == "cr" && corner != undef && corner > 0) ? "crr" :
 		            shape_base,
-		es        = (r[12] == undef) ? [] : r[12],
-		sp        = (r[13] == undef) ? [] : r[13],
 		is_text   = (shape == "ttext" || shape == "btext"),
 		is_svg    = (shape == "svg"),
-		is_bump   = (shape_raw == "bump"),
-		is_vridge = (shape == "vridge"),
-		is_hridge = (shape == "hridge"),
 		is_vh_ridge = (is_vridge || is_hridge),
-		is_ridge  = (shape == "ridge"    || shape == "hridge"  || shape == "vridge"  ||
-		             shape == "cridge"   || shape == "rridge"  || shape == "crridge" ||
-		             shape == "aridge1"  || shape == "aridge2" ||
-		             shape == "aridge3"  || shape == "aridge4"),
-		// Width/height: special cases for bump and vridge/hridge
-		//   bump:   width_v1 = sphere diameter (from V2 height field); height_v1 unchanged
-		//   vridge: width_v1 = 0; height_v1 = ridge length (from V2 length field)
-		//   hridge: width_v1 = ridge length (from V2 length field); height_v1 = 0
-		//   other ridges: width_v1 = length field; height_v1 = V2 height field
-		//   others: width_v1 = V2 width field; height_v1 = V2 height field
-		width_v1  = is_bump   ? r[2] :
+		is_ridge  = (shape == "ridge"   || shape == "hridge"  || shape == "vridge"  ||
+		             shape == "cridge"  || shape == "rridge"  || shape == "crridge" ||
+		             shape == "aridge1" || shape == "aridge2" ||
+		             shape == "aridge3" || shape == "aridge4"),
+		// Width/height mapping:
+		//   bump:       V1 width = sphere diameter (= V2 height); height unchanged
+		//   text:       V1 width = 0 (text has no width)
+		//   vridge:     V1 width = 0; height = ridge length
+		//   hridge:     V1 width = ridge length; height = 0
+		//   other ridge:V1 width = ridge length; height = V2 height
+		//   others:     V1 width = V2 width field; height = V2 height field
+		width_v1  = is_bump  ? r[2] :
+		            is_text  ? 0 :
 		            is_vridge ? 0 :
-		            is_ridge  ? r[10] :
+		            is_ridge  ? len_r :
 		            ((r[3] == undef) ? 0 : r[3]),
-		height_v1 = is_vridge ? r[10] :
+		height_v1 = is_vridge ? len_r :
 		            is_hridge ? 0 :
 		            r[2],
-		// Slope fields: interpretation depends on shape type
-		//   vridge/hridge: top = ridge height (from V2 cut/build field = hor variable)
-		//   other ridge  : top = ridge height (from V2 height field); bot = base thickness; left = direction
-		//   text   : top = rotation angle; bot = font-style code; left = h-align; right = v-align
-		//   svg    : top = rotation angle
-		//   others : taken from [edge_slopes] array, normalised via v2_slope()
-		top_sl  = is_vh_ridge        ? r[7] :
-		          is_ridge           ? r[2] :
-		          (is_text || is_svg) ? (len(sp) >= 2 ? sp[1] : 0) :
+		// Slope fields:
+		//   vridge/hridge: top = ridge height (cb = hor variable)
+		//   other ridge  : top = ridge height (h); bot = base thickness; left = direction
+		//   text/svg     : top = rotation angle (from sp[1]); others from sp
+		//   others       : from [edge_slopes] array via v2_slope()
+		top_sl  = is_vh_ridge         ? cb :
+		          is_ridge            ? r[2] :
+		          (is_text || is_svg)  ? (len(sp) >= 2 ? sp[1] : 0) :
 		          v2_slope(es, 0, shape),
-		bot_sl  = is_ridge ? r[11] :
+		bot_sl  = is_ridge ? thick_r :
 		          is_text  ? v2_font_style_code(len(sp) >= 3 ? sp[2] : "") :
 		          v2_slope(es, 1, shape),
 		left_sl = is_ridge ? (len(sp) >= 1 ? sp[0] : 0) :
@@ -4328,23 +4410,35 @@ function v2_to_v1_opening_row(r) =
 		rgt_sl  = is_ridge ? 0 :
 		          is_text  ? v2_v_align_code(len(sp) >= 5 ? sp[4] : "") :
 		          v2_slope(es, 3, shape),
-		// "other": text string / SVG filename from special_parms; cut/build value for others
-		other   = (is_text || is_svg) ? (len(sp) >= 1 ? sp[0] : undef) : r[7]
+		// "other": text string / SVG filename from sp; cut/build value for all others
+		other   = (is_text || is_svg) ? (len(sp) >= 1 ? sp[0] : undef) : cb
 	)
-	[r[0], r[5], r[6], width_v1, height_v1, shape, top_sl, bot_sl, left_sl, rgt_sl, r[4], other];
+	[r[0], x_v1, y_v1, width_v1, height_v1, shape, top_sl, bot_sl, left_sl, rgt_sl, corner, other];
 
 // Converts a single V2 case_additions row to the V1 equivalent.
-// The cut/build field [7] becomes the V1 thickness; undef is treated as 0
-// (full-height shape).  The [trim] array [8] maps to the four V1 trim fields;
-// absent entries default to -999 (no clip).
-// @param r  A single V2 case_additions row
+//
+// Accepts two row formats (fixed fields are always: ID, shape, h, w, corner, x, y):
+//
+//   EXPLICIT format (len == 9): r[7] = cut/build (or undef), r[8] = [trim]
+//   COMPACT format:
+//     without cut/build (len == 8): r[7] = [trim]
+//     with    cut/build (len == 9): r[7] = cut/build (number), r[8] = [trim]
+//
+// In compact format, corner is always explicit (0 = no effect, never omitted).
+// cut/build becomes the V1 thickness; absent means 0 (full-height shape).
+// The [trim] array maps to four V1 trim fields; absent entries default to -999 (no clip).
+//
+// @param r  A single V2 case_additions row (explicit or compact)
 // Returns a 12-element array in V1 format:
 //   [ID, x, y, width, height, shape, thickness,
 //    trim_above, trim_below, trim_to_right, trim_to_left, corner_radius]
 function v2_to_v1_case_addition_row(r) =
 	let(
-		trim_raw   = (r[8] == undef) ? [] : r[8],
-		thickness  = (r[7] == undef) ? 0 : r[7],
+		// trim is always the last element (a list).
+		// cb/thickness is r[7] if it is a number (explicit or compact-with-cb);
+		// otherwise (compact-without-cb or explicit-undef) it defaults to 0.
+		trim_raw   = (len(r) >= 9) ? ((r[8] == undef) ? [] : r[8]) : r[7],
+		thickness  = (len(r) >= 9 && is_num(r[7])) ? r[7] : 0,
 		trim_above = (len(trim_raw) >= 1) ? trim_raw[0] : -999,
 		trim_below = (len(trim_raw) >= 2) ? trim_raw[1] : -999,
 		trim_right = (len(trim_raw) >= 3) ? trim_raw[2] : -999,

@@ -7,38 +7,38 @@ len=10;
 
 screen_openings=[
 //  ID,    shape, height, width, corner,         x,     y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[    1, "vridge", undef, undef, undef,        37,    37,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "vridge", undef, undef, undef,      72.5,    37,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "vridge", undef, undef, undef,     108.5,    37,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "vridge", undef, undef, undef,       144,    37,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "vridge", undef, undef, undef,       180,    37,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "vridge", undef, undef, undef,        37,   142,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "vridge", undef, undef, undef,      72.5,   142,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "vridge", undef, undef, undef,     108.5,   140,       hor, undef, undef,  len-2,       2.5,            [],              [] ],
-[    1, "vridge", undef, undef, undef,       144,   142,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[  "#", "vridge", undef, undef, undef,       180,   142,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "hridge", undef, undef, undef,    -len/2,    77,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "hridge", undef, undef, undef,    -len/2, 105.5,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[    1, "hridge", undef, undef, undef, swm-len/2,    77,       hor, undef, undef,    len,       2.5,            [],              [] ],
-[  "#", "hridge", undef, undef, undef, swm-len/2, 105.5,       hor, undef, undef,    len,       2.5,            [],              [] ],
+[1, "vridge", 37, 37, hor, len, 2.5, [], []],
+[1, "vridge", 72.5, 37, hor, len, 2.5, [], []],
+[1, "vridge", 108.5, 37, hor, len, 2.5, [], []],
+[1, "vridge", 144, 37, hor, len, 2.5, [], []],
+[1, "vridge", 180, 37, hor, len, 2.5, [], []],
+[1, "vridge", 37, 142, hor, len, 2.5, [], []],
+[1, "vridge", 72.5, 142, hor, len, 2.5, [], []],
+[1, "vridge", 108.5, 140, hor, len-2, 2.5, [], []],
+[1, "vridge", 144, 142, hor, len, 2.5, [], []],
+["#", "vridge", 180, 142, hor, len, 2.5, [], []],
+[1, "hridge", -len/2, 77, hor, len, 2.5, [], []],
+[1, "hridge", -len/2, 105.5, hor, len, 2.5, [], []],
+[1, "hridge", swm-len/2, 77, hor, len, 2.5, [], []],
+["#", "hridge", swm-len/2, 105.5, hor, len, 2.5, [], []],
 ];
 
 case_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 case_additions=[
 // ID, shape, height, width, corner,    x,    y, cut/build, [trim]
-[   1, "cm2",   kh-4,   4.5, undef,   kw, kh/2, undef,     [] ],
-[   1, "cm4",   kh-4,   4.5, undef,    0, kh/2, undef,     [] ],
-[   1, "cm1",      4,  kw-4, undef, kw/2,   kh, undef,     [] ],
-[   1, "cm3",      4,  kw-4, undef, kw/2,    0, undef,     [] ],
+[1, "cm2", kh-4, 4.5, 0, kw, kh/2, []],
+[1, "cm4", kh-4, 4.5, 0, 0, kh/2, []],
+[1, "cm1", 4, kw-4, 0, kw/2, kh, []],
+[1, "cm3", 4, kw-4, 0, kw/2, 0, []],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 

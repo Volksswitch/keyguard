@@ -6,32 +6,32 @@ $vpd = 500;
 
 screen_openings=[
 // ID,  shape, height, width, corner,    x,     y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   1,    "c",     10,     0, undef,    0,     0, undef, undef, undef, undef, undef,            [],              [] ],
-[   1,    "c",     10,     0, undef,    0,   shp, undef, undef, undef, undef, undef,            [],              [] ],
-[   1,    "c",     10,     0, undef,  swp,   shp, undef, undef, undef, undef, undef,            [],              [] ],
-[   1,    "c",     10,     0, undef,  swp,     0, undef, undef, undef, undef, undef,            [],              [] ],
-[   1,    "c",     10,     0, undef,  swp, shp/2, undef, undef, undef, undef, undef,            [],              [] ],
-[   6, "bump",     30, undef, undef, sw/2, shp/2, undef, undef, undef, undef, undef,            [],              [] ],
+[1, "c", 10, 0, 0, 0, [], []],
+[1, "c", 10, 0, 0, shp, [], []],
+[1, "c", 10, 0, swp, shp, [], []],
+[1, "c", 10, 0, swp, 0, [], []],
+[1, "c", 10, 0, swp, shp/2, [], []],
+[6, "bump", 30, sw/2, shp/2, [], []],
 ];
 
 case_openings=[
 // ID,  shape, height, width, corner,   x,     y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   1,    "c",     10,     0, undef,   0,     0, undef, undef, undef, undef, undef,            [],              [] ],
-[   2,    "c",     10,     0, undef, 180,     0, undef, undef, undef, undef, undef,            [],              [] ],
-[   3,    "c",     10,     0, undef,   0,   220, undef, undef, undef, undef, undef,            [],              [] ],
-[   4,    "c",     10,     0, undef, 180,   220, undef, undef, undef, undef, undef,            [],              [] ],
-[   5,    "c",     10,     0, undef,  90,   110, undef, undef, undef, undef, undef,            [],              [] ],
-[   1, "bump", 50*mpp, undef, undef,  17, coh/2, undef, undef, undef, undef, undef,            [],              [] ],
+[1, "c", 10, 0, 0, 0, [], []],
+[2, "c", 10, 0, 180, 0, [], []],
+[3, "c", 10, 0, 0, 220, [], []],
+[4, "c", 10, 0, 180, 220, [], []],
+[5, "c", 10, 0, 90, 110, [], []],
+[1, "bump", 50*mpp, 17, coh/2, [], []],
 ];
 
 case_additions=[
 // ID, shape, height, width, corner, x, y, cut/build, [trim]
-[   0,   "r",      0,     0, undef, 0, 0, undef,     [] ],
+[0, "r", 0, 0, 0, 0, 0, []],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 

@@ -6,33 +6,33 @@ $vpd = 500;
 
 screen_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 case_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 case_additions=[
 // ID,  shape, height, width, corner,   x,   y, cut/build, [trim]
-[   2, "ped1",      0,     0, undef, 110, coh, undef,     [] ],
-[   2, "ped1",      0,     0, undef,  60, 164, undef,     [] ],
-[   3, "ped3",      0,     0, undef,  80,   0, undef,     [] ],
-[   3, "ped3",      0,     0, undef, 120,   0, undef,     [] ],
-[   4, "ped2",      0,     0, undef, 210,  40, undef,     [] ],
-[   4, "ped2",      0,     0, undef, 210,  70, undef,     [] ],
-[   5, "ped4",      0,     0, undef,   0,  50, undef,     [] ],
-[   5, "ped4",      0,     0, undef,   0,  25, undef,     [] ],
-[   6,   "r1",      5,    20,      2,  50,  kh,         1,     [] ],
-[   6,   "r2",     30,     5,      5,  kw,  80,         1,     [] ],
-[   6,   "r3",     15,    40,      7,  50,   0,         1,     [] ],
-[   6,   "r4",     50,    20,     10,   0,  80,         1,     [] ],
+[2, "ped1", 0, 0, 0, 110, coh, []],
+[2, "ped1", 0, 0, 0, 60, 164, []],
+[3, "ped3", 0, 0, 0, 80, 0, []],
+[3, "ped3", 0, 0, 0, 120, 0, []],
+[4, "ped2", 0, 0, 0, 210, 40, []],
+[4, "ped2", 0, 0, 0, 210, 70, []],
+[5, "ped4", 0, 0, 0, 0, 50, []],
+[5, "ped4", 0, 0, 0, 0, 25, []],
+[6, "r1", 5, 20, 2, 50, kh, 1, []],
+[6, "r2", 30, 5, 5, kw, 80, 1, []],
+[6, "r3", 15, 40, 7, 50, 0, 1, []],
+[6, "r4", 50, 20, 10, 0, 80, 1, []],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, [], []],
 ];
 
 
