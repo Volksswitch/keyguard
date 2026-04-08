@@ -268,15 +268,20 @@ case_matches_filter() {
 import re, sys
 name   = sys.argv[1]
 filt   = sys.argv[2]
-m = re.match(r'^(.+) (\d+)-(\d+)$', filt)
-if m and int(m.group(2)) < int(m.group(3)):
-    prefix = m.group(1)
-    lo, hi = int(m.group(2)), int(m.group(3))
-    mn = re.match(r'^(.+) (\d+)$', name)
-    if mn and mn.group(1) == prefix and lo <= int(mn.group(2)) <= hi:
-        sys.exit(0)
-    sys.exit(1)
-sys.exit(0 if name == filt else 1)
+
+def matches_one(name, filt):
+    m = re.match(r'^(.+) (\d+)-(\d+)$', filt)
+    if m and int(m.group(2)) < int(m.group(3)):
+        prefix = m.group(1)
+        lo, hi = int(m.group(2)), int(m.group(3))
+        mn = re.match(r'^(.+) (\d+)$', name)
+        if mn and mn.group(1) == prefix and lo <= int(mn.group(2)) <= hi:
+            return True
+        return False
+    return name == filt
+
+parts = [p.strip() for p in filt.split('|')]
+sys.exit(0 if any(matches_one(name, p) for p in parts) else 1)
 " "$name" "$CASE_FILTER"
 }
 
