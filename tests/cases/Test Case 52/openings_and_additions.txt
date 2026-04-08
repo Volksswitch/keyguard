@@ -2,22 +2,22 @@ oa_version = 2; // operations and additions file data structure version
 
 screen_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
 ];
 
 case_openings=[
 // ID, shape, height, width, corner,     x,     y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   1,   "r",     30,    40,       , cow/2, coh/2,          ,       ,        ,       ,          ,            [],              [] ],
+[   1,   "r",     30,    40, undef, cow/2, coh/2, undef, undef, undef, undef, undef,            [],              [] ],
 ];
 
 case_additions=[
 // ID, shape, height, width, corner, x, y, cut/build, [trim]
-[   0,   "r",      0,     0,       , 0, 0,          ,     [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef,     [] ],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
 ];
 
 

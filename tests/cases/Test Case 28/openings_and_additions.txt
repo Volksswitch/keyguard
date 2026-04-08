@@ -6,37 +6,37 @@ $vpd = 700;
 
 screen_openings=[
 //  ID,  shape, height, width, corner,      x,    y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[  "#", "bump",     10,      ,       ,      0,   sh,          ,       ,        ,       ,          ,            [],              [] ],
-[  "#", "bump",     10,      ,       ,     sw,   sh,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",     10,      ,       ,   sw/2, sh/2,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",      5,      ,       ,   sw/4,  sbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",      5,      ,       ,   sw/4, umbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",      5,      ,       ,   sw/4, ucbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",      5,      ,       ,   sw/4, lmbt,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",      5,      ,       ,   sw/4, lmbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",      5,      ,       ,   sw/4, lcbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",      5,      ,       , sw/4+5,   gt,          ,       ,        ,       ,          ,            [],              [] ],
-[    1, "bump",      5,      ,       , sw/4+5,   gb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1,    "r",    sbh,    30,      3, 3*sw/4,  sbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1,    "r",   umbh,    25,      3, 3*sw/4, umbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1,    "r",   ucbh,    20,      3, 3*sw/4, ucbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1,    "r",   lmbh,    15,      3, 3*sw/4, lmbb,          ,       ,        ,       ,          ,            [],              [] ],
-[    1,    "r",   lcbh,    10,      3, 3*sw/4, lcbb,          ,       ,        ,       ,          ,            [],              [] ],
+[  "#", "bump",     10, undef, undef,      0,   sh, undef, undef, undef, undef, undef,            [],              [] ],
+[  "#", "bump",     10, undef, undef,     sw,   sh, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",     10, undef, undef,   sw/2, sh/2, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",      5, undef, undef,   sw/4,  sbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",      5, undef, undef,   sw/4, umbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",      5, undef, undef,   sw/4, ucbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",      5, undef, undef,   sw/4, lmbt, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",      5, undef, undef,   sw/4, lmbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",      5, undef, undef,   sw/4, lcbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",      5, undef, undef, sw/4+5,   gt, undef, undef, undef, undef, undef,            [],              [] ],
+[    1, "bump",      5, undef, undef, sw/4+5,   gb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1,    "r",    sbh,    30,      3, 3*sw/4,  sbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1,    "r",   umbh,    25,      3, 3*sw/4, umbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1,    "r",   ucbh,    20,      3, 3*sw/4, ucbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1,    "r",   lmbh,    15,      3, 3*sw/4, lmbb, undef, undef, undef, undef, undef,            [],              [] ],
+[    1,    "r",   lcbh,    10,      3, 3*sw/4, lcbb, undef, undef, undef, undef, undef,            [],              [] ],
 ];
 
 case_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
 ];
 
 case_additions=[
 // ID, shape, height, width, corner, x, y, cut/build, [trim]
-[   0,   "r",      0,     0,       , 0, 0,          ,     [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef,     [] ],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
 ];
 
 

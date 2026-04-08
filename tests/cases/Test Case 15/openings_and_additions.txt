@@ -6,23 +6,23 @@ $vpd = 500;
 
 screen_openings=[
 // ID, shape, height, width, corner,   x,   y, cut/build, anchor, surface, length, thickness, [edge_slopes],      [special parms]
-[   1, "svg",    179,   310,    -10, 515, 285,       -10,       ,        ,       ,          ,            [],  ["butterfly.svg",0] ],
-[   1, "svg",     90,   155,     30, 515, 485,        30,       ,        ,       ,          ,            [], ["butterfly.svg",90] ],
+[   1, "svg",    179,   310,    -10, 515, 285,       -10, undef, undef, undef, undef,            [],  ["butterfly.svg",0] ],
+[   1, "svg",     90,   155,     30, 515, 485,        30, undef, undef, undef, undef,            [], ["butterfly.svg",90] ],
 ];
 
 case_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
 ];
 
 case_additions=[
 // ID, shape, height, width, corner, x, y, cut/build, [trim]
-[   0,   "r",      0,     0,       , 0, 0,          ,     [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef,     [] ],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[   0,   "r",      0,     0, undef, 0, 0, undef, undef, undef, undef, undef,            [],              [] ],
 ];
 
 
