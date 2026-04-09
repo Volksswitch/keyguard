@@ -39,6 +39,11 @@ OUTPUT_DIR="$PROJECT_ROOT/output/test"
 TEST_RESULTS_DIR="$PROJECT_ROOT/test results"
 CASES_DIR="$PROJECT_ROOT/tests/cases"
 TIMINGS_FILE="$PROJECT_ROOT/test-timings.ndjson"
+# When running from a git worktree, also mirror timings to the main project folder
+_MAIN_ROOT=$(git -C "$PROJECT_ROOT" worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | head -1)
+[[ -n "$_MAIN_ROOT" && "$_MAIN_ROOT" != "$PROJECT_ROOT" ]] \
+    && MIRROR_TIMINGS_FILE="$_MAIN_ROOT/test-timings.ndjson" \
+    || MIRROR_TIMINGS_FILE=""
 
 # sca2d ignore codes:
 #   User-configured: I3001 I0006 I1002 I0004 I1001 I4001 I4002 I0003 I4003
@@ -68,7 +73,10 @@ info()  { echo -e "${BLUE}  ·${RESET} $*"; }
 header(){ echo -e "\n${BOLD}$*${RESET}"; }
 
 # Append one NDJSON record to the timings file (one JSON object per line)
-log_event() { printf '%s\n' "$1" >> "$TIMINGS_FILE"; }
+log_event() {
+    printf '%s\n' "$1" >> "$TIMINGS_FILE"
+    [[ -n "$MIRROR_TIMINGS_FILE" ]] && printf '%s\n' "$1" >> "$MIRROR_TIMINGS_FILE"
+}
 
 # Current UTC timestamp in ISO 8601 format
 iso_ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
@@ -1035,6 +1043,7 @@ info "timeout:     ${TIMEOUT_CMD:-not found (renders will not be time-limited)} 
 
 # ── Start fresh timings file, then log environment record ────────────────────
 rm -f "$TIMINGS_FILE"
+[[ -n "$MIRROR_TIMINGS_FILE" ]] && rm -f "$MIRROR_TIMINGS_FILE"
 SESSION_ID="$(date +'%Y-%m-%d_%H-%M-%S')"
 _os="$(uname -o 2>/dev/null || uname -s 2>/dev/null || true)"
 _openscad_ver="$(tool_version "$OPENSCAD")"
