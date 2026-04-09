@@ -480,7 +480,7 @@ run_geometry() {
     local -a GEOMETRY_SKIP=()
     while IFS= read -r config_name; do
         [[ -n "$config_name" ]] && GEOMETRY_SKIP+=("$config_name")
-    done < <($PYTHON - "$CASES_DIR" <<'PYEOF'
+    done < <($PYTHON - "$CASES_DIR" <<'PYEOF' | tr -d '\r'
 import json, os, sys
 
 cases_dir = sys.argv[1]
