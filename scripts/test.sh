@@ -79,7 +79,14 @@ log_event() {
 }
 
 # Current UTC timestamp in ISO 8601 format
-iso_ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
+iso_ts() {
+    local m off tz
+    m=$((10#$(date -u +%m)))                              # current UTC month as integer
+    if (( m >= 4 && m <= 10 )); then off=-6; tz="-06:00" # MDT (Mountain Daylight Time)
+    else                              off=-7; tz="-07:00" # MST (Mountain Standard Time)
+    fi
+    date -u -d "$off hours" +"%Y-%m-%dT%H:%M:%S${tz}"
+}
 
 # Escape a value for use as a JSON string (handles backslashes and double-quotes)
 json_str() { local s="$1"; s="${s//\\/\\\\}"; s="${s//\"/\\\"}"; printf '%s' "$s"; }
