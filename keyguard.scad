@@ -4354,14 +4354,16 @@ function v2_to_v1_opening_row(r) =
 		              is_string(c_opt2) && c_opt2 == "b") ? "b" : undef,
 
 		// ----- Select between EXPLICIT and COMPACT -----
-		corner  = is_compact ? c_corner  : r[4],
+		// In the explicit format, optional columns are left blank (empty comma → undef).
+		// Default numeric fields to 0 here so downstream code never sees undef.
+		corner  = is_compact ? c_corner  : (r[4]  == undef ? 0 : r[4]),
 		x_v1    = is_compact ? cx        : r[5],
 		y_v1    = is_compact ? cy        : r[6],
 		cb      = is_compact ? c_cb      : r[7],
 		anchor  = is_compact ? c_anchor  : r[8],
 		surface = is_compact ? c_surface : r[9],
-		len_r   = is_compact ? c_len     : r[10],
-		thick_r = is_compact ? c_thick   : r[11],
+		len_r   = is_compact ? c_len     : (r[10] == undef ? 0 : r[10]),
+		thick_r = is_compact ? c_thick   : (r[11] == undef ? 0 : r[11]),
 		es      = is_compact ? c_es      : ((r[12] == undef) ? [] : r[12]),
 		sp      = is_compact ? c_sp      : ((r[13] == undef) ? [] : r[13]),
 
@@ -4437,7 +4439,9 @@ function v2_to_v1_case_addition_row(r) =
 		// trim is always the last element (a list).
 		// cb/thickness is r[7] if it is a number (explicit or compact-with-cb);
 		// otherwise (compact-without-cb or explicit-undef) it defaults to 0.
-		trim_raw   = (len(r) >= 9) ? ((r[8] == undef) ? [] : r[8]) : r[7],
+		// In all paths, guard against undef so len(trim_raw) is always safe.
+		trim_raw   = (len(r) >= 9) ? ((r[8] == undef) ? [] : r[8]) :
+		             ((r[7] == undef) ? [] : r[7]),
 		thickness  = (len(r) >= 9 && is_num(r[7])) ? r[7] : 0,
 		trim_above = (len(trim_raw) >= 1) ? trim_raw[0] : -999,
 		trim_below = (len(trim_raw) >= 2) ? trim_raw[1] : -999,
@@ -4445,7 +4449,7 @@ function v2_to_v1_case_addition_row(r) =
 		trim_left  = (len(trim_raw) >= 4) ? trim_raw[3] : -999
 	)
 	[r[0], r[5], r[6], r[3], r[2], r[1], thickness,
-	 trim_above, trim_below, trim_right, trim_left, r[4]];
+	 trim_above, trim_below, trim_right, trim_left, (r[4] == undef ? 0 : r[4])];
 
 // ---------------------------------------------------------------------------
 // V2 dispatch modules — each converts its input vector to V1 format and
