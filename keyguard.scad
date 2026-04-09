@@ -4185,8 +4185,8 @@ module cut_screen_openings(s_o,depth){
 //
 // These helpers and modules support openings_and_additions.txt files that use
 // the v2 data structure (identified by oa_version = 2 at the top of the file).
-// V1 modules are retained unchanged; the v2 modules convert each row to the
-// equivalent v1 layout and then delegate to the existing v1 module.
+// V1 and V2 are independent processing paths. V2 modules process rows
+// directly and call geometry modules without routing through V1 modules.
 //
 // V2 column layout — screen_openings / case_openings / tablet_openings:
 //   [ID, shape, height, width, corner, x, y, cut/build, anchor, surface,
@@ -4452,62 +4452,445 @@ function v2_to_v1_case_addition_row(r) =
 	 trim_above, trim_below, trim_right, trim_left, (r[4] == undef ? 0 : r[4])];
 
 // ---------------------------------------------------------------------------
-// V2 dispatch modules — each converts its input vector to V1 format and
-// delegates to the corresponding V1 module.
+// V2 dispatch modules — independent implementations that process V2 rows
+// directly and call geometry modules without routing through V1 modules.
+// Each module uses v2_to_v1_opening_row() or v2_to_v1_case_addition_row()
+// as an internal field-extraction helper only.
 // ---------------------------------------------------------------------------
 
 // V2 version of cut_screen_openings.
+// Iterates over the screen_openings vector and cuts each opening at the
+// correct position relative to the screen coordinate origin.
 // @param s_o    Screen openings vector (V2 format)
 // @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
 module cut_screen_openings_v2(s_o, depth) {
-	cut_screen_openings([for(r = s_o) v2_to_v1_opening_row(r)], depth);
+	for(i = [0 : len(s_o)-1]) {
+		v1r = v2_to_v1_opening_row(s_o[i]);
+		opening_ID    = v1r[0];
+		opening_x     = v1r[1];
+		opening_y     = v1r[2];
+		opening_width = (v1r[3] == undef) ? 0 : v1r[3];
+		opening_height = v1r[4];
+		opening_shape  = v1r[5];
+		opening_top_slope    = (is_laser_cut || (v1r[6]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : v1r[6];
+		opening_bottom_slope = (is_laser_cut || (v1r[7]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : v1r[7];
+		opening_left_slope   = (is_laser_cut || (v1r[8]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : v1r[8];
+		opening_right_slope  = (is_laser_cut || (v1r[9]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : v1r[9];
+		opening_corner_radius = v1r[10];
+		opening_other = v1r[11];
+		opening_width_mm  = (using_px) ? opening_width  * mpp : opening_width;
+		opening_height_mm = (using_px) ? opening_height * mpp : opening_height;
+		opening_x_mm      = (using_px) ? opening_x      * mpp : opening_x;
+
+		o_s   = opening_shape;
+		o_c_r = (o_s=="oa1" || o_s=="oa2" || o_s=="oa3" || o_s=="oa4") ? opening_corner_radius : min(opening_corner_radius, min(opening_width, opening_height)/2);
+		opening_corner_radius_mm = (using_px) ? o_c_r * mpp : o_c_r;
+
+		has_invalid_dims = (opening_width_mm < 0 || opening_height_mm < 0)
+		                && o_s != "ridge" && o_s != "ttext" && o_s != "btext" && o_s != "svg";
+		if (has_invalid_dims) {
+			echo(str("WARNING: screen_openings entry '", opening_ID,
+			         "' has negative dimensions (width=", opening_width_mm,
+			         "mm, height=", opening_height_mm, "mm) — skipping."));
+		}
+		if (!has_invalid_dims) {
+		if (depth > 0) {
+			if (opening_ID != "#") {
+				if (starting_corner_for_screen_measurements == "upper-left") {
+					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
+					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
+					cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other, depth, "screen");
+				} else {
+					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
+					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
+					cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other, depth, "screen");
+				}
+			} else {
+				if (starting_corner_for_screen_measurements == "upper-left") {
+					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
+					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
+					#cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other, depth, "screen");
+				} else {
+					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
+					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
+					#cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other, depth, "screen");
+				}
+			}
+		} else {
+			if (opening_ID != "#") {
+				if (starting_corner_for_screen_measurements == "upper-left") {
+					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
+					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
+					cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
+				} else {
+					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
+					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
+					cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
+				}
+			} else {
+				if (starting_corner_for_screen_measurements == "upper-left") {
+					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
+					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
+					#cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
+				} else {
+					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
+					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
+					#cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
+				}
+			}
+		}
+		} // end if (!has_invalid_dims)
+	}
 }
 
 // V2 version of cut_case_openings.
+// Iterates over the case_openings vector and cuts each opening at the
+// correct position relative to the case-opening coordinate origin.
 // @param c_o    Case openings vector (V2 format)
 // @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
 module cut_case_openings_v2(c_o, depth) {
-	cut_case_openings([for(r = c_o) v2_to_v1_opening_row(r)], depth);
+	for(i = [0 : len(c_o)-1]) {
+		v1r = v2_to_v1_opening_row(c_o[i]);
+		opening_ID     = v1r[0];
+		opening_x      = v1r[1];
+		opening_y      = v1r[2];
+		opening_width  = v1r[3];
+		opening_height = v1r[4];
+		opening_shape  = v1r[5];
+		opening_top_slope    = (is_laser_cut || (v1r[6]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : v1r[6];
+		opening_bottom_slope = (is_laser_cut || (v1r[7]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : v1r[7];
+		opening_left_slope   = (is_laser_cut || (v1r[8]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : v1r[8];
+		opening_right_slope  = (is_laser_cut || (v1r[9]==0 && opening_shape!="svg" && opening_shape!="ridge" && opening_shape!="ttext" && opening_shape!="btext")) ? 90 : v1r[9];
+		opening_corner_radius = v1r[10];
+		opening_other  = v1r[11];
+
+		o_c_r = (opening_width > 0 && opening_height > 0) ? min(opening_corner_radius, min(opening_width, opening_height)/2) : opening_corner_radius;
+
+		has_invalid_dims = (opening_width < 0 || opening_height < 0)
+		                && opening_shape != "ridge" && opening_shape != "ttext"
+		                && opening_shape != "btext" && opening_shape != "svg";
+		if (has_invalid_dims) {
+			echo(str("WARNING: case_openings entry '", opening_ID,
+			         "' has negative dimensions (width=", opening_width,
+			         "mm, height=", opening_height, "mm) — skipping."));
+		}
+		if (!has_invalid_dims) {
+			translate([cox0+opening_x, coy0+opening_y, 0])
+			if (depth > 0) {
+				if (opening_ID != "#") {
+					cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other, depth, "keyguard");
+				} else {
+					#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other, depth, "keyguard");
+				}
+			} else {
+				if (opening_ID != "#") {
+					cut_opening_2d(opening_width, opening_height, opening_shape, opening_top_slope, o_c_r);
+				} else {
+					#cut_opening_2d(opening_width, opening_height, opening_shape, opening_top_slope, o_c_r);
+				}
+			}
+		} // end if (!has_invalid_dims)
+	}
 }
 
 // V2 version of cut_tablet_openings.
+// Iterates over the tablet_openings vector and cuts each opening at the
+// correct position relative to the tablet coordinate origin.
 // @param t_o    Tablet openings vector (V2 format)
 // @param depth  Cut depth in mm
 module cut_tablet_openings_v2(t_o, depth) {
-	cut_tablet_openings([for(r = t_o) v2_to_v1_opening_row(r)], depth);
+	for(i = [0 : len(t_o)-1]) {
+		v1r = v2_to_v1_opening_row(t_o[i]);
+		opening_ID     = v1r[0];
+		opening_x      = v1r[1];
+		opening_y      = v1r[2];
+		opening_width  = v1r[3];
+		opening_height = v1r[4];
+		opening_shape  = v1r[5];
+		opening_top_slope    = (v1r[6]==0 || is_laser_cut) ? 90 : v1r[6];
+		opening_bottom_slope = (v1r[7]==0 || is_laser_cut) ? 90 : v1r[7];
+		opening_left_slope   = (v1r[8]==0 || is_laser_cut) ? 90 : v1r[8];
+		opening_right_slope  = (v1r[9]==0 || is_laser_cut) ? 90 : v1r[9];
+		opening_corner_radius = v1r[10];
+		opening_other  = v1r[11];
+
+		o_c_r = (opening_width > 0 && opening_height > 0) ? min(opening_corner_radius, min(opening_width, opening_height)/2) : opening_corner_radius;
+
+		has_invalid_dims = (opening_width < 0 || opening_height < 0)
+		                && opening_shape != "ridge" && opening_shape != "ttext"
+		                && opening_shape != "btext" && opening_shape != "svg";
+		if (has_invalid_dims) {
+			echo(str("WARNING: tablet_openings entry '", opening_ID,
+			         "' has negative dimensions (width=", opening_width,
+			         "mm, height=", opening_height, "mm) — skipping."));
+		}
+		if (!has_invalid_dims) {
+			trans = (is_landscape) ? [tx0+opening_x, ty0+opening_y, 0] : [tx0+opening_y, -ty0-opening_x, 0];
+			translate(trans)
+			if (opening_ID != "#") {
+				cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other, depth, "tablet");
+			} else {
+				#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other, depth, "tablet");
+			}
+		} // end if (!has_invalid_dims)
+	}
 }
 
 // V2 version of adding_plastic.
+// Iterates over screen or case openings and builds solid additions (bumps,
+// ridges, text, SVG imports) at the correct coordinate-system origin.
 // @param additions  Screen or case openings vector (V2 format)
 // @param where      Coordinate context: "screen" or "case"
 module adding_plastic_v2(additions, where) {
-	adding_plastic([for(r = additions) v2_to_v1_opening_row(r)], where);
+	for(i = [0 : len(additions)-1]) {
+		v1r = v2_to_v1_opening_row(additions[i]);
+		addition_ID     = v1r[0];
+		addition_x      = v1r[1];
+		addition_y      = v1r[2];
+		addition_width  = v1r[3];
+		addition_height = v1r[4];
+		addition_shape  = v1r[5];
+		addition_top_slope    = v1r[6];
+		addition_bottom_slope = v1r[7];
+		addition_left_slope   = v1r[8];
+		addition_right_slope  = v1r[9];
+		addition_corner_radius = v1r[10];
+		addition_other = v1r[11];
+
+		x0 = (where == "screen") ? sx0 : cox0;
+		y0 = (where == "screen") ? sy0 : coy0;
+
+		trans = (where == "screen") ? -kt/2+sat :
+		        (where == "case" && generate == "keyguard") ? kt/2 :
+		        keyguard_frame_thickness/2;
+
+		if (addition_shape == "bump" || addition_shape == "hridge" || addition_shape == "vridge" || addition_shape == "cridge" || addition_shape == "rridge" || addition_shape == "crridge" || addition_shape == "ridge" || addition_shape == "aridge1" || addition_shape == "aridge2" || addition_shape == "aridge3" || addition_shape == "aridge4" || addition_shape == "svg" || addition_shape == "ttext") {
+			addition_width_mm  = (using_px && where == "screen") ? addition_width  * mpp : addition_width;
+			addition_height_mm = (using_px && where == "screen") ? addition_height * mpp : addition_height;
+			addition_x_mm      = (using_px && where == "screen") ? addition_x      * mpp : addition_x;
+			addition_corner_radius_mm = (using_px && where == "screen") ? addition_corner_radius * mpp : addition_corner_radius;
+			addition_top_slope_mm    = (using_px && where == "screen") ? addition_top_slope    * mpp : addition_top_slope;
+			addition_bottom_slope_mm = (using_px && where == "screen") ? addition_bottom_slope * mpp : addition_bottom_slope;
+
+			if (addition_ID != "#") {
+				if (starting_corner_for_screen_measurements == "upper-left" && where == "screen") {
+					addition_y_mm = (using_px) ? (shp - addition_y) * mpp : (shm - addition_y);
+					translate([x0+addition_x_mm, y0+addition_y_mm, trans-ff])
+					place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
+				} else {
+					addition_y_mm = (using_px && where == "screen") ? addition_y * mpp : addition_y;
+					translate([x0+addition_x_mm, y0+addition_y_mm, trans-ff])
+					place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
+				}
+			} else {
+				if (starting_corner_for_screen_measurements == "upper-left" && where == "screen") {
+					addition_y_mm = (using_px) ? (shp - addition_y) * mpp : (shm - addition_y);
+					translate([x0+addition_x_mm, y0+addition_y_mm, trans-ff])
+					#place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
+				} else {
+					addition_y_mm = (using_px && where == "screen") ? addition_y * mpp : addition_y;
+					translate([x0+addition_x_mm, y0+addition_y_mm, trans-ff])
+					#place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
+				}
+			}
+		}
+	}
 }
 
 // V2 version of apply_flex_height_shapes.
+// Iterates over the case_additions vector and applies (or subtracts) shapes
+// that have an explicit thickness (flex-height shapes).
 // @param c_a     Case additions vector (V2 format)
 // @param is_sub  false = add positive shapes; true = subtract negative shapes
 module apply_flex_height_shapes_v2(c_a, is_sub) {
-	apply_flex_height_shapes([for(r = c_a) v2_to_v1_case_addition_row(r)], is_sub);
+	if (len(c_a) > 0) {
+		for(i = [0 : len(c_a)-1]) {
+			v1r = v2_to_v1_case_addition_row(c_a[i]);
+			addition_ID    = v1r[0];
+			addition_x     = v1r[1];
+			addition_y     = v1r[2];
+			addition_width     = is_sub ? v1r[3]+ff : v1r[3];
+			addition_height    = is_sub ? v1r[4]+ff : v1r[4];
+			addition_thickness = (is_laser_cut && generate=="first layer for SVG/DXF file") ? 0
+			                   : is_sub ? v1r[6]+ff : v1r[6];
+			addition_shape = v1r[5];
+			addition_trim_above   = v1r[7];
+			addition_trim_below   = v1r[8];
+			addition_trim_to_right = v1r[9];
+			addition_trim_to_left  = v1r[10];
+			addition_corner_radius = v1r[11];
+
+			is_negative = search("-", addition_shape) != [];
+			if (addition_thickness > 0 && is_sub == is_negative) {
+				translate([0, 0, is_sub ? -kt/2-ff : -kt/2])
+				if (addition_ID == "#") {
+					#linear_extrude(height=addition_thickness)
+					build_trimmed_addition(addition_x, addition_y, addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left, addition_corner_radius);
+				} else {
+					linear_extrude(height=addition_thickness)
+					build_trimmed_addition(addition_x, addition_y, addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left, addition_corner_radius);
+				}
+			}
+		}
+	}
 }
 
 // V2 version of add_case_full_height_shapes.
+// Iterates over the case_additions vector and adds (or subtracts) full-height
+// 2D shapes extruded through the entire keyguard thickness.
 // @param c_a   Case additions vector (V2 format)
 // @param type  "add" or "sub"
 module add_case_full_height_shapes_v2(c_a, type) {
-	add_case_full_height_shapes([for(r = c_a) v2_to_v1_case_addition_row(r)], type);
+	x0 = (generate_keyguard) ? kx0 : case_x0;
+	y0 = (generate_keyguard) ? ky0 : case_y0;
+
+	for(i = [0 : len(c_a)-1]) {
+		v1r = v2_to_v1_case_addition_row(c_a[i]);
+		addition_ID    = v1r[0];
+		addition_x     = v1r[1];
+		addition_y     = v1r[2];
+		addition_width = v1r[3];
+		addition_height = v1r[4];
+		addition_shape  = v1r[5];
+		addition_thickness = v1r[6];
+		addition_trim_above   = v1r[7];
+		addition_trim_below   = v1r[8];
+		addition_trim_to_right = v1r[9];
+		addition_trim_to_left  = v1r[10];
+		addition_corner_radius = v1r[11];
+
+		if (addition_thickness == 0 && addition_shape != undef) {
+			if (addition_ID == "#") {
+				if (type == "add" && search("-", addition_shape) == []) {
+					difference() {
+						translate([x0+addition_x, y0+addition_y])
+						#build_addition(addition_width, addition_height, addition_shape, addition_corner_radius);
+						if (addition_trim_below > -999) { translate([0,-kh+addition_trim_below]) square([kw*2,kh*2],center=true); }
+						if (addition_trim_above > -999) { translate([0, kh+addition_trim_above]) square([kw*2,kh*2],center=true); }
+						if (addition_trim_to_right > -999) { translate([addition_trim_to_right,0]) square([kw*2,kh*2],center=true); }
+						if (addition_trim_to_left  > -999) { translate([-kw+addition_trim_to_left,0]) square([kw*2,kh*2],center=true); }
+					}
+				}
+				if (type == "sub" && search("-", addition_shape) != []) {
+					translate([x0+addition_x, y0+addition_y])
+					#build_addition(addition_width, addition_height, addition_shape, addition_corner_radius);
+				}
+			} else {
+				if (type == "add" && search("-", addition_shape) == []) {
+					if (addition_thickness == 0) {
+						difference() {
+							translate([x0+addition_x, y0+addition_y])
+							build_addition(addition_width, addition_height, addition_shape, addition_corner_radius);
+							if (addition_trim_below > -999) { translate([0,-kh+addition_trim_below]) square([kw*2,kh*2],center=true); }
+							if (addition_trim_above > -999) { translate([0, kh+addition_trim_above]) square([kw*2,kh*2],center=true); }
+							if (addition_trim_to_right > -999) { translate([addition_trim_to_right,0]) square([kw*2,kh*2],center=true); }
+							if (addition_trim_to_left  > -999) { translate([-kw+addition_trim_to_left,0]) square([kw*2,kh*2],center=true); }
+						}
+					}
+				}
+				if (type == "sub" && search("-", addition_shape) != []) {
+					translate([x0+addition_x, y0+addition_y])
+					build_addition(addition_width, addition_height, addition_shape, addition_corner_radius);
+				}
+			}
+		}
+	}
 }
 
 // V2 version of add_manual_mount_pedestals.
+// Iterates over the case_additions vector and places ped1-4 mount pedestals.
 // @param c_a  Case additions vector (V2 format)
 module add_manual_mount_pedestals_v2(c_a) {
-	add_manual_mount_pedestals([for(r = c_a) v2_to_v1_case_addition_row(r)]);
+	x0 = (generate_keyguard) ? kx0 : case_x0;
+	y0 = (generate_keyguard) ? ky0 : case_y0;
+
+	for(i = [0 : len(c_a)-1]) {
+		v1r = v2_to_v1_case_addition_row(c_a[i]);
+		addition_ID = v1r[0];
+		addition_x  = v1r[1];
+		addition_y  = v1r[2];
+		s = v1r[5];
+		addition_shape = ((s=="rr1" || s=="rr2" || s=="rr3" || s=="rr4") && v1r[11]==0) ? "r" : s;
+
+		translate([addition_x, addition_y])
+		if (addition_ID != "#") {
+			if (addition_shape == "ped1") {
+				translate([x0, y0-manual_pedestal_edge_inset, kt/2]) rotate([0,0,-90])
+				linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, vertical_pedestal_width], center=true);
+			} else if (addition_shape == "ped2") {
+				translate([x0-manual_pedestal_edge_inset, y0, kt/2]) rotate([0,0,0])
+				linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, horizontal_pedestal_width], center=true);
+			} else if (addition_shape == "ped3") {
+				translate([x0, y0+manual_pedestal_edge_inset, kt/2]) rotate([0,0,-90])
+				linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, vertical_pedestal_width], center=true);
+			} else if (addition_shape == "ped4") {
+				translate([x0+manual_pedestal_edge_inset, y0, kt/2]) rotate([0,0,0])
+				linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, horizontal_pedestal_width], center=true);
+			}
+		} else {
+			if (addition_shape == "ped1") {
+				translate([x0, y0-manual_pedestal_edge_inset, kt/2]) rotate([0,0,-90])
+				#linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, vertical_pedestal_width], center=true);
+			} else if (addition_shape == "ped2") {
+				translate([x0-manual_pedestal_edge_inset, y0, kt/2]) rotate([0,0,0])
+				#linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, horizontal_pedestal_width], center=true);
+			} else if (addition_shape == "ped3") {
+				translate([x0, y0+manual_pedestal_edge_inset, kt/2]) rotate([0,0,-90])
+				#linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, vertical_pedestal_width], center=true);
+			} else if (addition_shape == "ped4") {
+				translate([x0+manual_pedestal_edge_inset, y0, kt/2]) rotate([0,0,0])
+				#linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, horizontal_pedestal_width], center=true);
+			}
+		}
+	}
 }
 
 // V2 version of cut_manual_mount_pedestal_slots.
+// Iterates over the case_additions vector and cuts wedge grooves for ped1-4.
 // @param c_a  Case additions vector (V2 format)
 module cut_manual_mount_pedestal_slots_v2(c_a) {
-	cut_manual_mount_pedestal_slots([for(r = c_a) v2_to_v1_case_addition_row(r)]);
+	x0 = (generate_keyguard) ? kx0 : case_x0;
+	y0 = (generate_keyguard) ? ky0 : case_y0;
+
+	for(i = [0 : len(c_a)-1]) {
+		v1r = v2_to_v1_case_addition_row(c_a[i]);
+		addition_ID = v1r[0];
+		addition_x  = v1r[1];
+		addition_y  = v1r[2];
+		s = v1r[5];
+		addition_shape = ((s=="rr1" || s=="rr2" || s=="rr3" || s=="rr4") && v1r[11]==0) ? "r" : s;
+
+		translate([x0+addition_x, y0+addition_y])
+		if (addition_ID != "#") {
+			if (addition_shape == "ped1") {
+				translate([vertical_slot_width/2, -manual_pedestal_slot_inset-kec, vertical_offset]) rotate([90,0,-90])
+				linear_extrude(height=vertical_slot_width) polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+			} else if (addition_shape == "ped3") {
+				translate([-vertical_slot_width/2, manual_pedestal_slot_inset+kec, vertical_offset]) rotate([90,0,90])
+				linear_extrude(height=vertical_slot_width) polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+			} else if (addition_shape == "ped2") {
+				translate([-kec-manual_pedestal_slot_inset, -horizontal_slot_width/2, vertical_offset]) rotate([90,0,180])
+				linear_extrude(height=horizontal_slot_width) polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+			} else if (addition_shape == "ped4") {
+				translate([kec+manual_pedestal_slot_inset, horizontal_slot_width/2, vertical_offset]) rotate([90,0,0])
+				linear_extrude(height=horizontal_slot_width) polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+			}
+		} else {
+			if (addition_shape == "ped1") {
+				translate([vertical_slot_width/2, -manual_pedestal_slot_inset-kec, vertical_offset]) rotate([90,0,-90])
+				#linear_extrude(height=vertical_slot_width) polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+			} else if (addition_shape == "ped3") {
+				translate([-vertical_slot_width/2, manual_pedestal_slot_inset+kec, vertical_offset]) rotate([90,0,90])
+				#linear_extrude(height=vertical_slot_width) polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+			} else if (addition_shape == "ped2") {
+				translate([-kec-manual_pedestal_slot_inset, -horizontal_slot_width/2, vertical_offset]) rotate([90,0,180])
+				#linear_extrude(height=horizontal_slot_width) polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+			} else if (addition_shape == "ped4") {
+				translate([kec+manual_pedestal_slot_inset, horizontal_slot_width/2, vertical_offset]) rotate([90,0,0])
+				#linear_extrude(height=horizontal_slot_width) polygon(points=[[0,0],[groove_slot_width,0],[groove_slot_width+groove_slant,groove_depth],[groove_slant,groove_depth]]);
+			}
+		}
+	}
 }
 
 // =============================================================================
