@@ -185,7 +185,7 @@ def fill_addition_defaults(tokens):
 def is_data_row_line(line):
     """
     Return True if the line looks like a data row (starts with '[' after stripping,
-    and the first token is a number or "#").
+    and the first token is a valid opening ID: a number, "#", or a quoted string).
     Comment lines, section headers, and the reference comment block are excluded.
     """
     stripped = line.strip()
@@ -196,9 +196,20 @@ def is_data_row_line(line):
     tokens = tokenize_row_content(inner.rstrip('],').rstrip())
     if not tokens:
         return False
-    id_tok = tokens[0].strip().strip('"').strip("'")
-    # Valid IDs: numeric (possibly with sign), "#", or expressions starting with digit
-    return id_tok == '#' or id_tok.lstrip('-').replace('.','',1).isdigit()
+    id_tok = tokens[0].strip()
+    # Accept: numeric literal, "#", or a quoted string (any valid OpenSCAD ID value)
+    if id_tok == '"#"' or id_tok == '#':
+        return True
+    unquoted = id_tok.strip('"').strip("'")
+    if unquoted == '#':
+        return True
+    if unquoted.lstrip('-').replace('.','',1).isdigit():
+        return True
+    # Also accept quoted string IDs (e.g. "Ctrl", "Windows") — valid in case_openings
+    if (id_tok.startswith('"') and id_tok.endswith('"')) or \
+       (id_tok.startswith("'") and id_tok.endswith("'")):
+        return True
+    return False
 
 
 def convert_data_row(line, ncols=14):

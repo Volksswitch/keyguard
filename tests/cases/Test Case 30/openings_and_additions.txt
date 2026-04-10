@@ -6,37 +6,37 @@ $vpd = 600;
 
 screen_openings=[
 //  ID,  shape, height, width, corner,       x,    y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-["#", "bump", 104, 0, 0, 0, sh, 0, "L", "T", 0, 0, [], []],
-["#", "bump", 104, 0, 0, sw, sh, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 104, 0, 0, sw/2, sh/2, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 52, 0, 0, sw/4, sbb, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 52, 0, 0, sw/4, umbb, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 52, 0, 0, sw/4, ucbb, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 52, 0, 0, sw/4, lmbt, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 52, 0, 0, sw/4, lmbb, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 52, 0, 0, sw/4, lcbb, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 52, 0, 0, sw/4+53, gt, 0, "L", "T", 0, 0, [], []],
-[1, "bump", 52, 0, 0, sw/4+53, gb, 0, "L", "T", 0, 0, [], []],
-[1, "r", sbh, 312, 31, 3*sw/4, sbb, 0, "L", "T", 0, 0, [], []],
-[1, "r", umbh, 260, 31, 3*sw/4, umbb, 0, "L", "T", 0, 0, [], []],
-[1, "r", ucbh, 208, 31, 3*sw/4, ucbb, 0, "L", "T", 0, 0, [], []],
-[1, "r", lmbh, 156, 31, 3*sw/4, lmbb, 0, "L", "T", 0, 0, [], []],
-[1, "r", lcbh, 104, 31, 3*sw/4, lcbb, 0, "L", "T", 0, 0, [], []],
+[  "#", "bump",    104,     0,      0,       0,   sh,         0,    "L",     "T",      0,         0,            [],              [] ],
+[  "#", "bump",    104,     0,      0,      sw,   sh,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",    104,     0,      0,    sw/2, sh/2,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4,  sbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, umbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, ucbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, lmbt,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, lmbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, lcbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0, sw/4+53,   gt,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0, sw/4+53,   gb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",    sbh,   312,     31,  3*sw/4,  sbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",   umbh,   260,     31,  3*sw/4, umbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",   ucbh,   208,     31,  3*sw/4, ucbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",   lmbh,   156,     31,  3*sw/4, lmbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",   lcbh,   104,     31,  3*sw/4, lcbb,         0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 case_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[0, "r", 0, 0, 0, 0, 0, 0, "L", "T", 0, 0, [], []],
+[   0,   "r",      0,     0,      0, 0, 0,         0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 case_additions=[
 // ID, shape, height, width, corner, x, y, cut/build, [trim]
-[0, "r", 0, 0, 0, 0, 0, 0, []],
+[   0,   "r",      0,     0,      0, 0, 0,         0,     [] ],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[0, "r", 0, 0, 0, 0, 0, 0, "L", "T", 0, 0, [], []],
+[   0,   "r",      0,     0,      0, 0, 0,         0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 
