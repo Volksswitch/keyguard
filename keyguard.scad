@@ -4381,9 +4381,9 @@ module cut_screen_openings_v2(s_o, depth) {
 				       ((using_px) ? y_raw * mpp : y_raw);
 				translate([sx0+x_mm, sy0+y_mm, 0])
 				if (opening_ID != "#") {
-					cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, r[7], depth, "screen");
+					cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, (r[7]==0 ? undef : r[7]), depth, "screen");
 				} else {
-					#cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, r[7], depth, "screen");
+					#cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, (r[7]==0 ? undef : r[7]), depth, "screen");
 				}
 			}
 
@@ -4461,9 +4461,9 @@ module cut_screen_openings_v2(s_o, depth) {
 					       ((using_px) ? y_raw * mpp : y_raw);
 					translate([sx0+x_mm, sy0+y_mm, 0])
 					if (opening_ID != "#") {
-						cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, r[7], depth, "screen");
+						cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : r[7]), depth, "screen");
 					} else {
-						#cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, r[7], depth, "screen");
+						#cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : r[7]), depth, "screen");
 					}
 				} else {
 					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
@@ -4515,9 +4515,9 @@ module cut_case_openings_v2(c_o, depth) {
 			if (depth > 0) {
 				translate([cox0+r[5], coy0+r[6], 0])
 				if (opening_ID != "#") {
-					cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], r[7], depth, "keyguard");
+					cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]), depth, "keyguard");
 				} else {
-					#cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], r[7], depth, "keyguard");
+					#cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]), depth, "keyguard");
 				}
 			}
 
@@ -4575,9 +4575,9 @@ module cut_case_openings_v2(c_o, depth) {
 				translate([cox0+r[5], coy0+r[6], 0])
 				if (depth > 0) {
 					if (opening_ID != "#") {
-						cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, r[7], depth, "keyguard");
+						cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : r[7]), depth, "keyguard");
 					} else {
-						#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, r[7], depth, "keyguard");
+						#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : r[7]), depth, "keyguard");
 					}
 				} else {
 					if (opening_ID != "#") {
@@ -4624,9 +4624,9 @@ module cut_tablet_openings_v2(t_o, depth) {
 			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
 			translate(trans)
 			if (opening_ID != "#") {
-				cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], r[7], depth, "tablet");
+				cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]), depth, "tablet");
 			} else {
-				#cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], r[7], depth, "tablet");
+				#cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]), depth, "tablet");
 			}
 
 		} else if (r[1] == "text") {
@@ -4681,9 +4681,9 @@ module cut_tablet_openings_v2(t_o, depth) {
 				trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
 				translate(trans)
 				if (opening_ID != "#") {
-					cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, r[7], depth, "tablet");
+					cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : r[7]), depth, "tablet");
 				} else {
-					#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, r[7], depth, "tablet");
+					#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : r[7]), depth, "tablet");
 				}
 			} // end if (!has_invalid_dims)
 		}
@@ -4724,9 +4724,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, r[7]);
+				place_addition(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, (r[7]==0 ? undef : r[7]));
 			} else {
-				#place_addition(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, r[7]);
+				#place_addition(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, (r[7]==0 ? undef : r[7]));
 			}
 
 		} else if (r[1] == "vridge" || r[1] == "hridge") {
@@ -4743,9 +4743,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, r[7]);
+				place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
 			} else {
-				#place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, r[7]);
+				#place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
 			}
 
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
@@ -4762,9 +4762,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], r[7]);
+				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]));
 			} else {
-				#place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], r[7]);
+				#place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]));
 			}
 
 		} else if (r[1] == "text") {
