@@ -6,22 +6,22 @@ $vpd = 200;
 
 screen_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, 0, "L", "T", 0, 0, [], []],
 ];
 
 case_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, 0, "L", "T", 0, 0, [], []],
 ];
 
 case_additions=[
 // ID, shape, height, width, corner, x, y, cut/build, [trim]
-[   0,   "r",      0,     0,       , 0, 0,          ,     [] ],
+[0, "r", 0, 0, 0, 0, 0, 0, []],
 ];
 
 tablet_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,       , 0, 0,          ,       ,        ,       ,          ,            [],              [] ],
+[0, "r", 0, 0, 0, 0, 0, 0, "L", "T", 0, 0, [], []],
 ];
 
 

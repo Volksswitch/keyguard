@@ -4272,138 +4272,30 @@ function v2_shape_code(shape_raw, anchor, surface) =
 	(shape_raw == "rr" && anchor == "c")    ? "crr"   :
 	shape_raw;
 
-// Parses a single V2 compact opening row (screen/case/tablet openings).
+// ---------------------------------------------------------------------------
+// V2 explicit opening row format — 14 fixed columns, all fields mandatory:
 //
-// Each shape family has its own compact layout — all fields must be explicit;
-// blank/undef entries are not supported (OpenSCAD drops them at parse time).
+//   [ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [es], [sp]]
+//   [0]  [1]    [2]     [3]    [4]    [5] [6]  [7]      [8]     [9]     [10]    [11]       [12]  [13]
 //
-//   Standard (r, rr, r1–4, cr, crr, o, oa1–4, etc.):
-//     [ID, shape, height, width, corner, x, y, {cb}, {"c"}, {"b"}, [es], [sp]]
-//     corner is ALWAYS explicit (use 0 for no rounding).
+//   ID       — string label; "#" enables OpenSCAD debug highlight
+//   shape    — shape family name
+//   height   — opening height (mm or px); diameter for "bump"; ridge_height for other ridges
+//   width    — opening width; 0 for "bump"/"c"/"text"; ridge length for other ridges (use [10])
+//   corner   — corner radius (0 = none); z_pos for "text"; rotation for "svg"; 0 for bump/vh/c/hd
+//   x        — x position (all shapes use [5])
+//   y        — y position (all shapes use [6])
+//   cut/build— cb value; ridge_height for "vridge"/"hridge"
+//   anchor   — "L" (left, default) or "C" (centre)
+//   surface  — "T" (top, default) or "B" (bottom)
+//   length   — ridge length for "vridge","hridge" and other ridges; 0 otherwise
+//   thickness— ridge base thickness for "vridge","hridge" and other ridges; 0 otherwise
+//   [es]     — edge slopes [top,bot,left,right]; [] = use defaults
+//   [sp]     — special params (text string, SVG filename, ridge direction, etc.)
 //
-//   Circle ("c"):
-//     [ID, "c", height, 0, x, y, {cb}, {"b"}, [es], [sp]]
-//
-//   Half-disc ("hd"):
-//     [ID, "hd", height, width, x, y, {cb}, {"c"}, {"b"}, [es], [sp]]
-//
-//   Bump ("bump"):
-//     [ID, "bump", diameter, x, y, [es], [sp]]
-//
-//   Vertical / horizontal ridges ("vridge" / "hridge"):
-//     [ID, shape, x, y, ridge_height, length, thickness, [es], [sp]]
-//
-//   Text ("text"):
-//     [ID, "text", font_height, z_pos, x, y, {"b"}, [es], [sp]]
-//     z_pos is returned in the corner slot of the result.
-//
-//   SVG ("svg"):
-//     [ID, "svg", height, width, rotation, x, y, [es], [sp]]
-//     rotation is returned in the corner slot of the result.
-//
-//   Other ridges (ridge, cridge, rridge, crridge, aridge1–4):
-//     [ID, shape, ridge_height, length, thickness, x, y, {cb}, [es], [sp]]
-//     thickness is returned in the corner slot of the result.
-//
-// Returns: [ID, shape, height, width, corner, x, y, other, top_sl, bot_sl, lft_sl, rgt_sl, [es], [sp]]
-//   [0]     [1]   [2]    [3]    [4]   [5] [6]  [7]    [8]    [9]    [10]    [11]   [12]   [13]
-//
-//   shape   = resolved (v2_shape_code applied; "r" + corner > 0 → "rr"; "cr" + corner > 0 → "crr")
-//   height  = value to pass as cut_opening / place_addition height argument
-//   width   = value to pass as cut_opening / place_addition width argument
-//   corner  = corner_radius arg for cut_opening (z_pos for text; rotation for svg; thickness for ridges)
-//   other   = sp[0] for text/svg; cb for all other shapes
-//   top_sl–rgt_sl = raw slopes (apply laser-cut override in the calling module, not here)
-//
-// @param r  A single compact V2 opening row; all positional fields must be explicit
-function v2_parse_opening(r) =
-	let(
-		shape_raw = r[1],
-		is_bump   = (shape_raw == "bump"),
-		is_vridge = (shape_raw == "vridge"),
-		is_hridge = (shape_raw == "hridge"),
-		is_vh     = (is_vridge || is_hridge),
-		is_c      = (shape_raw == "c"),
-		is_hd     = (shape_raw == "hd"),
-		is_c_hd   = (is_c || is_hd),
-		is_text   = (shape_raw == "text"),
-		is_svg    = (shape_raw == "svg"),
-		is_ridge  = (shape_raw == "ridge"   || shape_raw == "cridge"  || shape_raw == "rridge"  ||
-		             shape_raw == "crridge" || shape_raw == "aridge1" || shape_raw == "aridge2" ||
-		             shape_raw == "aridge3" || shape_raw == "aridge4"),
-
-		// Position fields (shape-specific)
-		x = is_bump ? r[3] : is_vh ? r[2] : is_c_hd ? r[4] : is_text ? r[4] : r[5],
-		y = is_bump ? r[4] : is_vh ? r[3] : is_c_hd ? r[5] : is_text ? r[5] : r[6],
-
-		// Corner slot — repurposed by some shapes:
-		//   text: z_pos (r[3])    svg: rotation (r[4])    ridges: thickness (r[4])
-		//   bump / vh / c / hd: 0    standard: r[4] (actual corner radius, always explicit)
-		corner = (is_bump || is_vh || is_c || is_hd) ? 0 :
-		         is_text  ? r[3] :
-		         (r[4] == undef ? 0 : r[4]),
-
-		// Height / width as expected by cut_opening and place_addition
-		h = is_bump   ? r[2] :
-		    is_vridge ? r[5] :
-		    is_hridge ? 0 :
-		    r[2],
-		w = is_bump   ? r[2] :
-		    is_vridge ? 0 :
-		    is_hridge ? r[5] :
-		    is_c      ? 0 :
-		    is_text   ? 0 :
-		    r[3],
-
-		// Edge slopes [es] and special params [sp] — always the last two list elements
-		es = (r[len(r)-2] == undef) ? [] : r[len(r)-2],
-		sp = (r[len(r)-1] == undef) ? [] : r[len(r)-1],
-
-		// Cut / build (cb): vh ridges use r[4]; others use an optional number field
-		cb_idx = is_vh ? 4 : (is_bump || is_text || is_svg) ? undef : (is_c_hd ? 6 : 7),
-		cb     = cb_idx == undef ? undef :
-		         (cb_idx == 4)   ? r[4] :
-		         (cb_idx < len(r)-2 && is_num(r[cb_idx])) ? r[cb_idx] : undef,
-
-		// Anchor / surface — scan optional string fields after the last positional field
-		opt_s     = (is_bump || is_vh || is_svg) ? undef : (is_c_hd || is_text) ? 6 : 7,
-		has_cb_f  = (opt_s != undef && !is_vh && is_num(r[opt_s])),
-		str_s     = (opt_s == undef) ? undef : opt_s + (has_cb_f ? 1 : 0),
-		s0        = (str_s != undef && str_s   < len(r)-2) ? r[str_s]   : undef,
-		s1        = (str_s != undef && str_s+1 < len(r)-2) ? r[str_s+1] : undef,
-		anchor    = (!is_bump && !is_vh && !is_text && !is_svg && is_string(s0) && s0=="c") ? "c" : undef,
-		surf_v    = (anchor != undef) ? s1 : s0,
-		surface   = (!is_bump && !is_vh && !is_svg && is_string(surf_v) && surf_v=="b") ? "b" : undef,
-
-		// Resolved shape name
-		shape_base = v2_shape_code(shape_raw, anchor, surface),
-		shape      = (shape_base=="r"  && corner > 0) ? "rr"  :
-		             (shape_base=="cr" && corner > 0) ? "crr" :
-		             shape_base,
-		is_ttext   = (shape == "ttext" || shape == "btext"),
-		is_svg_s   = (shape == "svg"),
-		is_any_r   = (is_vh || is_ridge),
-
-		// Slope values (ridge shapes repurpose these fields for geometry parameters)
-		top_sl = is_vh     ? r[4] :
-		         is_ridge  ? r[2] :
-		         (is_ttext || is_svg_s) ? (len(sp) >= 2 ? sp[1] : 0) :
-		         v2_slope(es, 0, shape),
-		bot_sl = is_vh     ? r[6] :
-		         is_ridge  ? r[4] :
-		         is_ttext  ? v2_font_style_code(len(sp) >= 3 ? sp[2] : "") :
-		         v2_slope(es, 1, shape),
-		lft_sl = is_any_r  ? (len(sp) >= 1 ? sp[0] : 0) :
-		         is_ttext  ? v2_h_align_code(len(sp) >= 4 ? sp[3] : "") :
-		         v2_slope(es, 2, shape),
-		rgt_sl = is_any_r  ? 0 :
-		         is_ttext  ? v2_v_align_code(len(sp) >= 5 ? sp[4] : "") :
-		         v2_slope(es, 3, shape),
-
-		// "other" for cut_opening / place_addition
-		other = (is_ttext || is_svg_s) ? (len(sp) >= 1 ? sp[0] : undef) : cb
-	)
-	[r[0], shape, h, w, corner, x, y, other, top_sl, bot_sl, lft_sl, rgt_sl, es, sp];
+// No parsing function — dispatch modules read columns directly and use
+// if/else-if blocks per shape family, matching the V1 dispatch style.
+// ---------------------------------------------------------------------------
 
 
 // Parses a single V2 compact case_additions row.
@@ -4435,248 +4327,487 @@ function v2_parse_addition(r) =
 
 
 // ---------------------------------------------------------------------------
-// V2 dispatch modules — process V2 rows directly via v2_parse_opening() and
-// v2_parse_addition(); no V1 intermediate format or mapping.
+// V2 dispatch modules — read fixed columns directly from each row;
+// one if/else-if block per shape family, each using only the columns it needs.
 // ---------------------------------------------------------------------------
 
 // V2 version of cut_screen_openings.
 // Iterates over the screen_openings vector and cuts each opening at the
 // correct position relative to the screen coordinate origin.
-// @param s_o    Screen openings vector (V2 format)
+// @param s_o    Screen openings vector (V2 explicit 14-column format)
 // @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
 module cut_screen_openings_v2(s_o, depth) {
 	for(i = [0 : len(s_o)-1]) {
-		p = v2_parse_opening(s_o[i]);
-		opening_ID            = p[0];
-		opening_shape         = p[1];
-		opening_height        = p[2];
-		opening_width         = (p[3] == undef) ? 0 : p[3];
-		opening_corner_radius = p[4];
-		opening_x             = p[5];
-		opening_y             = p[6];
-		opening_other         = p[7];
-		is_special = (opening_shape=="svg" || opening_shape=="ridge" || opening_shape=="ttext" || opening_shape=="btext");
-		opening_top_slope    = (is_laser_cut || (!is_special && p[8]==0))  ? 90 : p[8];
-		opening_bottom_slope = (is_laser_cut || (!is_special && p[9]==0))  ? 90 : p[9];
-		opening_left_slope   = (is_laser_cut || (!is_special && p[10]==0)) ? 90 : p[10];
-		opening_right_slope  = (is_laser_cut || (!is_special && p[11]==0)) ? 90 : p[11];
-		opening_width_mm  = (using_px) ? opening_width  * mpp : opening_width;
-		opening_height_mm = (using_px) ? opening_height * mpp : opening_height;
-		opening_x_mm      = (using_px) ? opening_x      * mpp : opening_x;
+		r = s_o[i];
+		opening_ID = r[0];
+		// r[5]=x, r[6]=y — same for all shapes; pixel-convert here once
+		x_mm = (using_px) ? r[5] * mpp : r[5];
+		y_raw = r[6];
 
-		o_s   = opening_shape;
-		o_c_r = (o_s=="oa1" || o_s=="oa2" || o_s=="oa3" || o_s=="oa4") ? opening_corner_radius : min(opening_corner_radius, min(opening_width, opening_height)/2);
-		opening_corner_radius_mm = (using_px) ? o_c_r * mpp : o_c_r;
-
-		has_invalid_dims = (opening_width_mm < 0 || opening_height_mm < 0)
-		                && o_s != "ridge" && o_s != "ttext" && o_s != "btext" && o_s != "svg";
-		if (has_invalid_dims) {
-			echo(str("WARNING: screen_openings entry '", opening_ID,
-			         "' has negative dimensions (width=", opening_width_mm,
-			         "mm, height=", opening_height_mm, "mm) — skipping."));
-		}
-		if (!has_invalid_dims) {
-		if (depth > 0) {
-			if (opening_ID != "#") {
-				if (starting_corner_for_screen_measurements == "upper-left") {
-					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
-					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
-					cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other, depth, "screen");
+		if (r[1] == "vridge" || r[1] == "hridge") {
+			// r[7]=ridge_height(cb), r[10]=length, r[11]=thickness, r[13]=sp
+			sp = r[13];
+			h = (r[1] == "vridge") ? r[10] : 0;
+			w = (r[1] == "hridge") ? r[10] : 0;
+			h_mm = (using_px) ? h * mpp : h;
+			w_mm = (using_px) ? w * mpp : w;
+			top_sl = r[7]; top_sl_mm = (using_px) ? top_sl * mpp : top_sl;
+			bot_sl = r[11]; bot_sl_mm = (using_px) ? bot_sl * mpp : bot_sl;
+			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
+			if (depth > 0) {
+				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
+				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+				       ((using_px) ? y_raw * mpp : y_raw);
+				translate([sx0+x_mm, sy0+y_mm, 0])
+				if (opening_ID != "#") {
+					cut_opening(w_mm, h_mm, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, "screen");
 				} else {
-					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
-					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
-					cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other, depth, "screen");
-				}
-			} else {
-				if (starting_corner_for_screen_measurements == "upper-left") {
-					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
-					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
-					#cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other, depth, "screen");
-				} else {
-					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
-					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
-					#cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other, depth, "screen");
+					#cut_opening(w_mm, h_mm, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, "screen");
 				}
 			}
+
+		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
+		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
+		           r[1] == "aridge3" || r[1] == "aridge4") {
+			// r[2]=ridge_height, r[10]=length, r[11]=thickness, r[13]=sp
+			sp = r[13];
+			ridge_h = r[2]; w_mm = (using_px) ? r[10] * mpp : r[10];
+			top_sl = ridge_h; bot_sl = r[11];
+			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
+			c_r = r[11]; // thickness repurposed as corner slot for cut_opening
+			if (depth > 0) {
+				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
+				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+				       ((using_px) ? y_raw * mpp : y_raw);
+				translate([sx0+x_mm, sy0+y_mm, 0])
+				if (opening_ID != "#") {
+					cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, r[7], depth, "screen");
+				} else {
+					#cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, r[7], depth, "screen");
+				}
+			}
+
+		} else if (r[1] == "text") {
+			// r[2]=font_height, r[4]=z_pos, r[9]=surface, r[12]=es, r[13]=sp
+			sp = r[13];
+			surface = (r[9] == "B") ? "b" : undef;
+			shape   = (surface == "b") ? "btext" : "ttext";
+			h_mm = (using_px) ? r[2] * mpp : r[2];
+			top_sl = (len(sp) >= 2) ? sp[1] : 0;
+			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
+			lft_sl = v2_h_align_code((len(sp) >= 4) ? sp[3] : "");
+			rgt_sl = v2_v_align_code((len(sp) >= 5) ? sp[4] : "");
+			other  = (len(sp) >= 1) ? sp[0] : undef;
+			if (depth > 0) {
+				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
+				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+				       ((using_px) ? y_raw * mpp : y_raw);
+				translate([sx0+x_mm, sy0+y_mm, 0])
+				if (opening_ID != "#") {
+					cut_opening(0, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "screen");
+				} else {
+					#cut_opening(0, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "screen");
+				}
+			}
+
+		} else if (r[1] == "svg") {
+			// r[2]=height, r[3]=width, r[4]=rotation, r[13]=sp
+			sp = r[13];
+			h_mm = (using_px) ? r[2] * mpp : r[2];
+			w_mm = (using_px) ? r[3] * mpp : r[3];
+			top_sl = (len(sp) >= 2) ? sp[1] : 0;
+			other  = (len(sp) >= 1) ? sp[0] : undef;
+			if (depth > 0) {
+				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
+				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+				       ((using_px) ? y_raw * mpp : y_raw);
+				translate([sx0+x_mm, sy0+y_mm, 0])
+				if (opening_ID != "#") {
+					cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, r[4], other, depth, "screen");
+				} else {
+					#cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, r[4], other, depth, "screen");
+				}
+			}
+
 		} else {
-			if (opening_ID != "#") {
-				if (starting_corner_for_screen_measurements == "upper-left") {
-					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
-					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
-					cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
-				} else {
-					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
-					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
-					cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
-				}
-			} else {
-				if (starting_corner_for_screen_measurements == "upper-left") {
-					opening_y_mm = (using_px) ? (shp - opening_y) * mpp : (shm - opening_y);
-					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
-					#cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
-				} else {
-					opening_y_mm = (using_px) ? opening_y * mpp : opening_y;
-					translate([sx0+opening_x_mm, sy0+opening_y_mm, 0])
-					#cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
-				}
+			// Standard shapes: r, rr, r1-4, rr2, rr4, o, oa1-4, c, hd, cr, crr, bump, etc.
+			// r[2]=height, r[3]=width, r[4]=corner, r[7]=cb, r[8]=anchor, r[9]=surface, r[12]=es
+			es = r[12];
+			anchor  = (r[8] == "C") ? "c" : undef;
+			surface = (r[9] == "B") ? "b" : undef;
+			shape_base = v2_shape_code(r[1], anchor, surface);
+			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
+			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
+			h = (r[1] == "bump") ? r[2] : r[2];
+			w = (r[1] == "bump") ? r[2] : (r[1] == "c" ? 0 : r[3]);
+			h_mm = (using_px) ? h * mpp : h;
+			w_mm = (using_px) ? w * mpp : w;
+			c_r  = (shape == "oa1" || shape == "oa2" || shape == "oa3" || shape == "oa4") ? r[4] :
+			       min(r[4], min(w, h)/2);
+			c_r_mm = (using_px) ? c_r * mpp : c_r;
+			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, shape);
+			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, shape);
+			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, shape);
+			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, shape);
+			has_invalid_dims = (w_mm < 0 || h_mm < 0);
+			if (has_invalid_dims) {
+				echo(str("WARNING: screen_openings entry '", opening_ID,
+				         "' has negative dimensions (w=", w_mm, "mm h=", h_mm, "mm) — skipping."));
 			}
+			if (!has_invalid_dims) {
+				if (depth > 0) {
+					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
+					       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+					       ((using_px) ? y_raw * mpp : y_raw);
+					translate([sx0+x_mm, sy0+y_mm, 0])
+					if (opening_ID != "#") {
+						cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, r[7], depth, "screen");
+					} else {
+						#cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, r[7], depth, "screen");
+					}
+				} else {
+					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
+					       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+					       ((using_px) ? y_raw * mpp : y_raw);
+					translate([sx0+x_mm, sy0+y_mm, 0])
+					if (opening_ID != "#") {
+						cut_opening_2d(w_mm, h_mm, shape, top_sl, c_r_mm);
+					} else {
+						#cut_opening_2d(w_mm, h_mm, shape, top_sl, c_r_mm);
+					}
+				}
+			} // end if (!has_invalid_dims)
 		}
-		} // end if (!has_invalid_dims)
 	}
 }
 
 // V2 version of cut_case_openings.
 // Iterates over the case_openings vector and cuts each opening at the
 // correct position relative to the case-opening coordinate origin.
-// @param c_o    Case openings vector (V2 format)
+// @param c_o    Case openings vector (V2 explicit 14-column format)
 // @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
 module cut_case_openings_v2(c_o, depth) {
 	for(i = [0 : len(c_o)-1]) {
-		p = v2_parse_opening(c_o[i]);
-		opening_ID            = p[0];
-		opening_shape         = p[1];
-		opening_height        = p[2];
-		opening_width         = p[3];
-		opening_corner_radius = p[4];
-		opening_x             = p[5];
-		opening_y             = p[6];
-		opening_other         = p[7];
-		is_special = (opening_shape=="svg" || opening_shape=="ridge" || opening_shape=="ttext" || opening_shape=="btext");
-		opening_top_slope    = (is_laser_cut || (!is_special && p[8]==0))  ? 90 : p[8];
-		opening_bottom_slope = (is_laser_cut || (!is_special && p[9]==0))  ? 90 : p[9];
-		opening_left_slope   = (is_laser_cut || (!is_special && p[10]==0)) ? 90 : p[10];
-		opening_right_slope  = (is_laser_cut || (!is_special && p[11]==0)) ? 90 : p[11];
+		r = c_o[i];
+		opening_ID = r[0];
 
-		o_c_r = (opening_width > 0 && opening_height > 0) ? min(opening_corner_radius, min(opening_width, opening_height)/2) : opening_corner_radius;
-
-		has_invalid_dims = (opening_width < 0 || opening_height < 0)
-		                && opening_shape != "ridge" && opening_shape != "ttext"
-		                && opening_shape != "btext" && opening_shape != "svg";
-		if (has_invalid_dims) {
-			echo(str("WARNING: case_openings entry '", opening_ID,
-			         "' has negative dimensions (width=", opening_width,
-			         "mm, height=", opening_height, "mm) — skipping."));
-		}
-		if (!has_invalid_dims) {
-			translate([cox0+opening_x, coy0+opening_y, 0])
+		if (r[1] == "vridge" || r[1] == "hridge") {
+			sp = r[13];
+			h = (r[1] == "vridge") ? r[10] : 0;
+			w = (r[1] == "hridge") ? r[10] : 0;
+			top_sl = r[7]; bot_sl = r[11];
+			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			if (depth > 0) {
+				translate([cox0+r[5], coy0+r[6], 0])
 				if (opening_ID != "#") {
-					cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other, depth, "keyguard");
+					cut_opening(w, h, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, "keyguard");
 				} else {
-					#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other, depth, "keyguard");
-				}
-			} else {
-				if (opening_ID != "#") {
-					cut_opening_2d(opening_width, opening_height, opening_shape, opening_top_slope, o_c_r);
-				} else {
-					#cut_opening_2d(opening_width, opening_height, opening_shape, opening_top_slope, o_c_r);
+					#cut_opening(w, h, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, "keyguard");
 				}
 			}
-		} // end if (!has_invalid_dims)
+
+		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
+		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
+		           r[1] == "aridge3" || r[1] == "aridge4") {
+			sp = r[13];
+			top_sl = r[2]; bot_sl = r[11];
+			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
+			if (depth > 0) {
+				translate([cox0+r[5], coy0+r[6], 0])
+				if (opening_ID != "#") {
+					cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], r[7], depth, "keyguard");
+				} else {
+					#cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], r[7], depth, "keyguard");
+				}
+			}
+
+		} else if (r[1] == "text") {
+			sp = r[13];
+			surface = (r[9] == "B") ? "b" : undef;
+			shape   = (surface == "b") ? "btext" : "ttext";
+			top_sl = (len(sp) >= 2) ? sp[1] : 0;
+			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
+			lft_sl = v2_h_align_code((len(sp) >= 4) ? sp[3] : "");
+			rgt_sl = v2_v_align_code((len(sp) >= 5) ? sp[4] : "");
+			other  = (len(sp) >= 1) ? sp[0] : undef;
+			if (depth > 0) {
+				translate([cox0+r[5], coy0+r[6], 0])
+				if (opening_ID != "#") {
+					cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "keyguard");
+				} else {
+					#cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "keyguard");
+				}
+			}
+
+		} else if (r[1] == "svg") {
+			sp = r[13];
+			top_sl = (len(sp) >= 2) ? sp[1] : 0;
+			other  = (len(sp) >= 1) ? sp[0] : undef;
+			if (depth > 0) {
+				translate([cox0+r[5], coy0+r[6], 0])
+				if (opening_ID != "#") {
+					cut_opening(r[3], r[2], "svg", top_sl, 0, 0, 0, r[4], other, depth, "keyguard");
+				} else {
+					#cut_opening(r[3], r[2], "svg", top_sl, 0, 0, 0, r[4], other, depth, "keyguard");
+				}
+			}
+
+		} else {
+			es = r[12];
+			anchor  = (r[8] == "C") ? "c" : undef;
+			surface = (r[9] == "B") ? "b" : undef;
+			shape_base = v2_shape_code(r[1], anchor, surface);
+			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
+			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
+			w = (r[1] == "bump") ? r[2] : (r[1] == "c" ? 0 : r[3]);
+			h = r[2];
+			c_r = (w > 0 && h > 0) ? min(r[4], min(w, h)/2) : r[4];
+			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, shape);
+			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, shape);
+			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, shape);
+			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, shape);
+			has_invalid_dims = (w < 0 || h < 0);
+			if (has_invalid_dims) {
+				echo(str("WARNING: case_openings entry '", opening_ID,
+				         "' has negative dimensions (w=", w, "mm h=", h, "mm) — skipping."));
+			}
+			if (!has_invalid_dims) {
+				translate([cox0+r[5], coy0+r[6], 0])
+				if (depth > 0) {
+					if (opening_ID != "#") {
+						cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, r[7], depth, "keyguard");
+					} else {
+						#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, r[7], depth, "keyguard");
+					}
+				} else {
+					if (opening_ID != "#") {
+						cut_opening_2d(w, h, shape, top_sl, c_r);
+					} else {
+						#cut_opening_2d(w, h, shape, top_sl, c_r);
+					}
+				}
+			} // end if (!has_invalid_dims)
+		}
 	}
 }
 
 // V2 version of cut_tablet_openings.
 // Iterates over the tablet_openings vector and cuts each opening at the
 // correct position relative to the tablet coordinate origin.
-// @param t_o    Tablet openings vector (V2 format)
+// @param t_o    Tablet openings vector (V2 explicit 14-column format)
 // @param depth  Cut depth in mm
 module cut_tablet_openings_v2(t_o, depth) {
 	for(i = [0 : len(t_o)-1]) {
-		p = v2_parse_opening(t_o[i]);
-		opening_ID            = p[0];
-		opening_shape         = p[1];
-		opening_height        = p[2];
-		opening_width         = p[3];
-		opening_corner_radius = p[4];
-		opening_x             = p[5];
-		opening_y             = p[6];
-		opening_other         = p[7];
-		opening_top_slope    = (p[8]==0  || is_laser_cut) ? 90 : p[8];
-		opening_bottom_slope = (p[9]==0  || is_laser_cut) ? 90 : p[9];
-		opening_left_slope   = (p[10]==0 || is_laser_cut) ? 90 : p[10];
-		opening_right_slope  = (p[11]==0 || is_laser_cut) ? 90 : p[11];
+		r = t_o[i];
+		opening_ID = r[0];
 
-		o_c_r = (opening_width > 0 && opening_height > 0) ? min(opening_corner_radius, min(opening_width, opening_height)/2) : opening_corner_radius;
-
-		has_invalid_dims = (opening_width < 0 || opening_height < 0)
-		                && opening_shape != "ridge" && opening_shape != "ttext"
-		                && opening_shape != "btext" && opening_shape != "svg";
-		if (has_invalid_dims) {
-			echo(str("WARNING: tablet_openings entry '", opening_ID,
-			         "' has negative dimensions (width=", opening_width,
-			         "mm, height=", opening_height, "mm) — skipping."));
-		}
-		if (!has_invalid_dims) {
-			trans = (is_landscape) ? [tx0+opening_x, ty0+opening_y, 0] : [tx0+opening_y, -ty0-opening_x, 0];
+		if (r[1] == "vridge" || r[1] == "hridge") {
+			sp = r[13];
+			h = (r[1] == "vridge") ? r[10] : 0;
+			w = (r[1] == "hridge") ? r[10] : 0;
+			top_sl = r[7]; bot_sl = r[11];
+			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
+			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
 			translate(trans)
 			if (opening_ID != "#") {
-				cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other, depth, "tablet");
+				cut_opening(w, h, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, "tablet");
 			} else {
-				#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other, depth, "tablet");
+				#cut_opening(w, h, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, "tablet");
 			}
-		} // end if (!has_invalid_dims)
+
+		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
+		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
+		           r[1] == "aridge3" || r[1] == "aridge4") {
+			sp = r[13];
+			top_sl = r[2]; bot_sl = r[11];
+			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
+			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
+			translate(trans)
+			if (opening_ID != "#") {
+				cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], r[7], depth, "tablet");
+			} else {
+				#cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], r[7], depth, "tablet");
+			}
+
+		} else if (r[1] == "text") {
+			sp = r[13];
+			surface = (r[9] == "B") ? "b" : undef;
+			shape   = (surface == "b") ? "btext" : "ttext";
+			top_sl = (len(sp) >= 2) ? sp[1] : 0;
+			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
+			lft_sl = v2_h_align_code((len(sp) >= 4) ? sp[3] : "");
+			rgt_sl = v2_v_align_code((len(sp) >= 5) ? sp[4] : "");
+			other  = (len(sp) >= 1) ? sp[0] : undef;
+			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
+			translate(trans)
+			if (opening_ID != "#") {
+				cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "tablet");
+			} else {
+				#cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "tablet");
+			}
+
+		} else if (r[1] == "svg") {
+			sp = r[13];
+			top_sl = (len(sp) >= 2) ? sp[1] : 0;
+			other  = (len(sp) >= 1) ? sp[0] : undef;
+			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
+			translate(trans)
+			if (opening_ID != "#") {
+				cut_opening(r[3], r[2], "svg", top_sl, 0, 0, 0, r[4], other, depth, "tablet");
+			} else {
+				#cut_opening(r[3], r[2], "svg", top_sl, 0, 0, 0, r[4], other, depth, "tablet");
+			}
+
+		} else {
+			es = r[12];
+			anchor  = (r[8] == "C") ? "c" : undef;
+			surface = (r[9] == "B") ? "b" : undef;
+			shape_base = v2_shape_code(r[1], anchor, surface);
+			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
+			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
+			w = (r[1] == "bump") ? r[2] : (r[1] == "c" ? 0 : r[3]);
+			h = r[2];
+			c_r = (w > 0 && h > 0) ? min(r[4], min(w, h)/2) : r[4];
+			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, shape);
+			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, shape);
+			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, shape);
+			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, shape);
+			has_invalid_dims = (w < 0 || h < 0);
+			if (has_invalid_dims) {
+				echo(str("WARNING: tablet_openings entry '", opening_ID,
+				         "' has negative dimensions (w=", w, "mm h=", h, "mm) — skipping."));
+			}
+			if (!has_invalid_dims) {
+				trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
+				translate(trans)
+				if (opening_ID != "#") {
+					cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, r[7], depth, "tablet");
+				} else {
+					#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, r[7], depth, "tablet");
+				}
+			} // end if (!has_invalid_dims)
+		}
 	}
 }
 
 // V2 version of adding_plastic.
 // Iterates over screen or case openings and builds solid additions (bumps,
 // ridges, text, SVG imports) at the correct coordinate-system origin.
-// @param additions  Screen or case openings vector (V2 format)
+// @param additions  Screen or case openings vector (V2 explicit 14-column format)
 // @param where      Coordinate context: "screen" or "case"
 module adding_plastic_v2(additions, where) {
+	x0    = (where == "screen") ? sx0 : cox0;
+	y0    = (where == "screen") ? sy0 : coy0;
+	trans = (where == "screen") ? -kt/2+sat :
+	        (where == "case" && generate == "keyguard") ? kt/2 :
+	        keyguard_frame_thickness/2;
+
 	for(i = [0 : len(additions)-1]) {
-		p = v2_parse_opening(additions[i]);
-		addition_ID            = p[0];
-		addition_shape         = p[1];
-		addition_height        = p[2];
-		addition_width         = p[3];
-		addition_corner_radius = p[4];
-		addition_x             = p[5];
-		addition_y             = p[6];
-		addition_other         = p[7];
-		addition_top_slope     = p[8];
-		addition_bottom_slope  = p[9];
-		addition_left_slope    = p[10];
-		addition_right_slope   = p[11];
+		r = additions[i];
+		addition_ID = r[0];
+		px = (using_px && where == "screen");
+		x_mm = px ? r[5] * mpp : r[5];
+		y_raw = r[6];
 
-		x0 = (where == "screen") ? sx0 : cox0;
-		y0 = (where == "screen") ? sy0 : coy0;
-
-		trans = (where == "screen") ? -kt/2+sat :
-		        (where == "case" && generate == "keyguard") ? kt/2 :
-		        keyguard_frame_thickness/2;
-
-		if (addition_shape == "bump" || addition_shape == "hridge" || addition_shape == "vridge" || addition_shape == "cridge" || addition_shape == "rridge" || addition_shape == "crridge" || addition_shape == "ridge" || addition_shape == "aridge1" || addition_shape == "aridge2" || addition_shape == "aridge3" || addition_shape == "aridge4" || addition_shape == "svg" || addition_shape == "ttext") {
-			addition_width_mm  = (using_px && where == "screen") ? addition_width  * mpp : addition_width;
-			addition_height_mm = (using_px && where == "screen") ? addition_height * mpp : addition_height;
-			addition_x_mm      = (using_px && where == "screen") ? addition_x      * mpp : addition_x;
-			addition_corner_radius_mm = (using_px && where == "screen") ? addition_corner_radius * mpp : addition_corner_radius;
-			addition_top_slope_mm    = (using_px && where == "screen") ? addition_top_slope    * mpp : addition_top_slope;
-			addition_bottom_slope_mm = (using_px && where == "screen") ? addition_bottom_slope * mpp : addition_bottom_slope;
-
+		if (r[1] == "bump") {
+			// r[2]=diameter; sphere: height=width=diameter
+			diam    = r[2];
+			diam_mm = px ? diam * mpp : diam;
+			top_sl  = v2_slope(r[12], 0, "bump");
+			top_sl_mm = px ? top_sl * mpp : top_sl;
+			bot_sl  = v2_slope(r[12], 1, "bump");
+			bot_sl_mm = px ? bot_sl * mpp : bot_sl;
+			lft_sl  = v2_slope(r[12], 2, "bump");
+			rgt_sl  = v2_slope(r[12], 3, "bump");
+			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
+			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? y_raw * mpp : y_raw);
+			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				if (starting_corner_for_screen_measurements == "upper-left" && where == "screen") {
-					addition_y_mm = (using_px) ? (shp - addition_y) * mpp : (shm - addition_y);
-					translate([x0+addition_x_mm, y0+addition_y_mm, trans-ff])
-					place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
-				} else {
-					addition_y_mm = (using_px && where == "screen") ? addition_y * mpp : addition_y;
-					translate([x0+addition_x_mm, y0+addition_y_mm, trans-ff])
-					place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
-				}
+				place_addition(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, r[7]);
 			} else {
-				if (starting_corner_for_screen_measurements == "upper-left" && where == "screen") {
-					addition_y_mm = (using_px) ? (shp - addition_y) * mpp : (shm - addition_y);
-					translate([x0+addition_x_mm, y0+addition_y_mm, trans-ff])
-					#place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
-				} else {
-					addition_y_mm = (using_px && where == "screen") ? addition_y * mpp : addition_y;
-					translate([x0+addition_x_mm, y0+addition_y_mm, trans-ff])
-					#place_addition(addition_width_mm, addition_height_mm, addition_shape, addition_top_slope, addition_top_slope_mm, addition_bottom_slope, addition_bottom_slope_mm, addition_left_slope, addition_right_slope, addition_corner_radius_mm, addition_other);
-				}
+				#place_addition(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, r[7]);
+			}
+
+		} else if (r[1] == "vridge" || r[1] == "hridge") {
+			// r[7]=ridge_height, r[10]=length, r[11]=thickness, r[13]=sp
+			sp = r[13];
+			h = (r[1] == "vridge") ? r[10] : 0;
+			w = (r[1] == "hridge") ? r[10] : 0;
+			h_mm = px ? h * mpp : h; w_mm = px ? w * mpp : w;
+			top_sl = r[7]; top_sl_mm = px ? top_sl * mpp : top_sl;
+			bot_sl = r[11]; bot_sl_mm = px ? bot_sl * mpp : bot_sl;
+			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
+			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
+			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? y_raw * mpp : y_raw);
+			translate([x0+x_mm, y0+y_mm, trans-ff])
+			if (addition_ID != "#") {
+				place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, r[7]);
+			} else {
+				#place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, r[7]);
+			}
+
+		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
+		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
+		           r[1] == "aridge3" || r[1] == "aridge4") {
+			// r[2]=ridge_height, r[10]=length, r[11]=thickness, r[13]=sp
+			sp = r[13];
+			w_mm = px ? r[10] * mpp : r[10];
+			top_sl = r[2]; top_sl_mm = px ? top_sl * mpp : top_sl;
+			bot_sl = r[11]; bot_sl_mm = px ? bot_sl * mpp : bot_sl;
+			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
+			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
+			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? y_raw * mpp : y_raw);
+			translate([x0+x_mm, y0+y_mm, trans-ff])
+			if (addition_ID != "#") {
+				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], r[7]);
+			} else {
+				#place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], r[7]);
+			}
+
+		} else if (r[1] == "text") {
+			// r[2]=font_height, r[4]=z_pos, r[9]=surface, r[13]=sp
+			sp = r[13];
+			surface = (r[9] == "B") ? "b" : undef;
+			shape   = (surface == "b") ? "btext" : "ttext";
+			h_mm = px ? r[2] * mpp : r[2];
+			top_sl = (len(sp) >= 2) ? sp[1] : 0;
+			top_sl_mm = px ? top_sl * mpp : top_sl;
+			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
+			bot_sl_mm = px ? bot_sl * mpp : bot_sl;
+			lft_sl = v2_h_align_code((len(sp) >= 4) ? sp[3] : "");
+			rgt_sl = v2_v_align_code((len(sp) >= 5) ? sp[4] : "");
+			other  = (len(sp) >= 1) ? sp[0] : undef;
+			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
+			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? y_raw * mpp : y_raw);
+			translate([x0+x_mm, y0+y_mm, trans-ff])
+			if (addition_ID != "#") {
+				place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, r[4], other);
+			} else {
+				#place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, r[4], other);
+			}
+
+		} else if (r[1] == "svg") {
+			// r[2]=height, r[3]=width, r[4]=rotation, r[13]=sp
+			sp = r[13];
+			h_mm = px ? r[2] * mpp : r[2]; w_mm = px ? r[3] * mpp : r[3];
+			top_sl = (len(sp) >= 2) ? sp[1] : 0;
+			top_sl_mm = px ? top_sl * mpp : top_sl;
+			other  = (len(sp) >= 1) ? sp[0] : undef;
+			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
+			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? y_raw * mpp : y_raw);
+			translate([x0+x_mm, y0+y_mm, trans-ff])
+			if (addition_ID != "#") {
+				place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, r[4], other);
+			} else {
+				#place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, r[4], other);
 			}
 		}
+		// Standard rectangular shapes are cuts, not additions — no else block needed here
 	}
 }
 
