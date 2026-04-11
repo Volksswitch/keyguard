@@ -4411,7 +4411,7 @@ module cut_screen_openings_v2(s_o, depth) {
 			}
 
 		} else if (r[1] == "svg") {
-			// r[2]=height, r[3]=width, r[4]=rotation, r[13]=sp
+			// r[2]=height, r[3]=width, r[4]=depth (negative=cut, positive=raise), r[13]=sp
 			sp = r[13];
 			h_mm = (using_px) ? r[2] * mpp : r[2];
 			w_mm = (using_px) ? r[3] * mpp : r[3];
@@ -4423,9 +4423,9 @@ module cut_screen_openings_v2(s_o, depth) {
 				       ((using_px) ? y_raw * mpp : y_raw);
 				translate([sx0+x_mm, sy0+y_mm, 0])
 				if (opening_ID != "#") {
-					cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, r[4], other, depth, "screen");
+					cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, (using_px ? r[4]*mpp : r[4]), other, depth, "screen");
 				} else {
-					#cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, r[4], other, depth, "screen");
+					#cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, (using_px ? r[4]*mpp : r[4]), other, depth, "screen");
 				}
 			}
 
@@ -4785,13 +4785,13 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, r[4], other);
+				place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, (px ? r[4]*mpp : r[4]), other);
 			} else {
-				#place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, r[4], other);
+				#place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, (px ? r[4]*mpp : r[4]), other);
 			}
 
 		} else if (r[1] == "svg") {
-			// r[2]=height, r[3]=width, r[4]=rotation, r[13]=sp
+			// r[2]=height, r[3]=width, r[4]=depth (negative=cut, positive=raise), r[13]=sp
 			sp = r[13];
 			h_mm = px ? r[2] * mpp : r[2]; w_mm = px ? r[3] * mpp : r[3];
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
@@ -4802,9 +4802,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, r[4], other);
+				place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, (px ? r[4]*mpp : r[4]), other);
 			} else {
-				#place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, r[4], other);
+				#place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, (px ? r[4]*mpp : r[4]), other);
 			}
 		}
 		// Standard rectangular shapes are cuts, not additions — no else block needed here
