@@ -42,7 +42,7 @@ tablet_openings=[
   vridge                                x        x                x         x
   cridge       x                        x        x                          x
   rridge       x       x      x         x        x                          x
-  aridge1–4                             x        x                          x
+  aridge1–4                             x                                   x
 
   [special params]  Contents
   text              [text string, direction, font style, h-align, v-align]

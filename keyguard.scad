@@ -4741,7 +4741,9 @@ module adding_plastic_v2(additions, where) {
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
-			translate([x0+x_mm, y0+y_mm, trans-ff])
+			c_ax = (r[8] == "C" && r[1] == "hridge") ? -w_mm/2 : 0;
+			c_ay = (r[8] == "C" && r[1] == "vridge") ? -h_mm/2 : 0;
+			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
 				place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
 			} else {
@@ -4760,7 +4762,11 @@ module adding_plastic_v2(additions, where) {
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
-			translate([x0+x_mm, y0+y_mm, trans-ff])
+			c_ax = (r[8] == "C" && r[1] == "ridge")  ? -w_mm/2 * cos(lft_sl) :
+			       (r[8] == "C" && r[1] == "rridge") ? -w_mm/2 : 0;
+			c_ay = (r[8] == "C" && r[1] == "ridge")  ? -w_mm/2 * sin(lft_sl) :
+			       (r[8] == "C" && r[1] == "rridge") ? -top_sl_mm/2 : 0;
+			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
 				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]));
 			} else {
