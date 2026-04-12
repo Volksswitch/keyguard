@@ -1,0 +1,11 @@
+{
+  "description": "C-anchor ridges in screen_openings",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "centre-anchored hridge, vridge, and angled ridge",
+      "params": "Test Case 12",
+      "expected": "step1_expected.png"
+    }
+  ]
+}
