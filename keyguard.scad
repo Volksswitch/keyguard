@@ -423,6 +423,8 @@ other_tablet_general_sizes = "";
 //3 entries e.g., 1000,1500,0.100
 other_tablet_pixel_sizes = "";
 //for use with Maker World's online customizer
+my_OA_version = 2; // [1,2]
+//for use with Maker World's online customizer
 my_screen_openings = "";
 //for use with Maker World's online customizer
 my_case_openings = "";
@@ -1528,6 +1530,10 @@ m_t_o = parse_user_vector(my_tablet_openings, /*strict=*/true);
 // v2 files set oa_version = 2 at the top. Defaults to 1 when undefined.
 _oa_version = is_undef(oa_version) ? 1 : oa_version;
 
+// Version to use when processing my_* (MakerWorld) parameters. The O&A file's
+// oa_version takes precedence when present; otherwise my_OA_version applies.
+_my_oa_version = is_undef(oa_version) ? my_OA_version : oa_version;
+
 //**********************************************************************
 
 
@@ -1902,12 +1908,12 @@ module keyguard(cheat){
 									}
 								}
 
-								if(len(m_c_a)>0 && has_case && (!has_frame || 
+								if(len(m_c_a)>0 && has_case && (!has_frame ||
 											(has_frame && generate=="keyguard frame" && cheat=="no"))){
-									apply_flex_height_shapes(m_c_a, false);
-									
+									if(_my_oa_version==2) apply_flex_height_shapes_v2(m_c_a, false); else apply_flex_height_shapes(m_c_a, false);
+
 									if(!is_laser_cut){
-										add_manual_mount_pedestals(m_c_a);
+										if(_my_oa_version==2) add_manual_mount_pedestals_v2(m_c_a); else add_manual_mount_pedestals(m_c_a);
 									}
 								}
 
@@ -1943,7 +1949,7 @@ module keyguard(cheat){
 							}
 								
 							if(len(m_c_o)>0 && has_case && !(has_frame && generate=="keyguard") && cheat=="no"){
-								cut_case_openings(m_c_o,kt);
+								if(_my_oa_version==2) cut_case_openings_v2(m_c_o,kt); else cut_case_openings(m_c_o,kt);
 							}
 						
 							//add engraved text to case region
@@ -1979,7 +1985,7 @@ module keyguard(cheat){
 
 							if(len(m_c_a)>0 && has_case && (!has_frame ||
 										(has_frame && generate=="keyguard frame" && cheat=="no"))){
-								apply_flex_height_shapes(m_c_a, true);
+								if(_my_oa_version==2) apply_flex_height_shapes_v2(m_c_a, true); else apply_flex_height_shapes(m_c_a, true);
 							}
 
 							// add slots to manually added clip-on strap pedestals
@@ -1990,7 +1996,7 @@ module keyguard(cheat){
 							}
 							
 							if(len(m_c_a)>0 && has_case && !is_laser_cut && cheat=="no"){
-								cut_manual_mount_pedestal_slots(m_c_a);
+								if(_my_oa_version==2) cut_manual_mount_pedestal_slots_v2(m_c_a); else cut_manual_mount_pedestal_slots(m_c_a);
 							}
 						}
 						
@@ -2043,7 +2049,7 @@ module keyguard(cheat){
 						}
 
 						if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-							cut_tablet_openings(m_t_o,kt);
+							if(_my_oa_version==2) cut_tablet_openings_v2(m_t_o,kt); else cut_tablet_openings(m_t_o,kt);
 						}
 
 						// ambient light sensors
@@ -2064,9 +2070,9 @@ module keyguard(cheat){
 						}
 						
 						if(len(m_s_o)>0 && type_of_tablet!="blank"){
-							cut_screen_openings(m_s_o,sat);
+							if(_my_oa_version==2) cut_screen_openings_v2(m_s_o,sat); else cut_screen_openings(m_s_o,sat);
 						}
-						
+
 						// add engraved text in the screen region
 						if (text!="" && keyguard_region=="screen region" && text_depth < 0){
 							engrave_emboss_instruction();
@@ -2098,7 +2104,7 @@ module keyguard(cheat){
 					}
 					
 					if(len(m_s_o)>0 && is_3d_printed){
-						adding_plastic(m_s_o,"screen");
+						if(_my_oa_version==2) adding_plastic_v2(m_s_o,"screen"); else adding_plastic(m_s_o,"screen");
 					}
 						
 					//add bumps and ridges from case_openings file and adjust for unequal case opening
@@ -2112,7 +2118,7 @@ module keyguard(cheat){
 					if(len(m_c_o)>0){
 						translate(unequal_opening)
 						if(is_3d_printed && has_case && !has_frame && cheat=="no"){
-							adding_plastic(m_c_o,"case");
+							if(_my_oa_version==2) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
 						}
 					}
 
@@ -2201,7 +2207,7 @@ module lc_keyguard(){
 							
 							if(len(m_c_o)>0){
 								if(has_case && !(has_frame && generate=="keyguard")){
-									cut_case_openings(m_c_o,0);
+									if(_my_oa_version==2) cut_case_openings_v2(m_c_o,0); else cut_case_openings(m_c_o,0);
 								}
 							}
 
@@ -2251,7 +2257,7 @@ module lc_keyguard(){
 						
 						if(len(m_t_o)>0){
 							if(tablet_height>0 && tablet_width>0){
-								cut_tablet_openings(m_t_o,0);
+								if(_my_oa_version==2) cut_tablet_openings_v2(m_t_o,0); else cut_tablet_openings(m_t_o,0);
 							}
 						}
 
@@ -2263,7 +2269,7 @@ module lc_keyguard(){
 						}
 						
 						if(len(m_s_o)>0 && type_of_tablet!="blank"){
-							cut_screen_openings(m_s_o,0);
+							if(_my_oa_version==2) cut_screen_openings_v2(m_s_o,0); else cut_screen_openings(m_s_o,0);
 						}
 
 					}
@@ -2323,7 +2329,7 @@ module keyguard_frame(cheat){
 				}
 				
 				if(len(m_c_o)>0){
-					adding_plastic(m_c_o,"case");
+					if(_my_oa_version==2) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
 				}
 
 				// adding manual slide-in tabs and pedestals for clip-on straps
@@ -2340,12 +2346,12 @@ module keyguard_frame(cheat){
 					}
 				}
 				
-				if(len(m_c_a)>0 && (!has_frame || 
+				if(len(m_c_a)>0 && (!has_frame ||
 				   (has_frame && generate=="keyguard frame" && cheat=="no"))){
-				   
-					apply_flex_height_shapes(m_c_a, false);
-					
-					add_manual_mount_pedestals(m_c_a);
+
+					if(_my_oa_version==2) apply_flex_height_shapes_v2(m_c_a, false); else apply_flex_height_shapes(m_c_a, false);
+
+					if(_my_oa_version==2) add_manual_mount_pedestals_v2(m_c_a); else add_manual_mount_pedestals(m_c_a);
 				}
 
 				//add engraved text
@@ -2360,7 +2366,7 @@ module keyguard_frame(cheat){
 			}
 			
 			if(len(m_c_o)>0){
-				cut_case_openings(m_c_o,keyguard_frame_thickness);
+				if(_my_oa_version==2) cut_case_openings_v2(m_c_o,keyguard_frame_thickness); else cut_case_openings(m_c_o,keyguard_frame_thickness);
 			}
 
 			if (m_m=="Clip-on Straps" && !no_clips){
@@ -2374,7 +2380,7 @@ module keyguard_frame(cheat){
 				}
 			}
 			if(len(m_c_a)>0 && !is_laser_cut && cheat=="no"){
-				cut_manual_mount_pedestal_slots(m_c_a);
+				if(_my_oa_version==2) cut_manual_mount_pedestal_slots_v2(m_c_a); else cut_manual_mount_pedestal_slots(m_c_a);
 			}
 
 		}
