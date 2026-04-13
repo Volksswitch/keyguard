@@ -28,18 +28,18 @@ tablet_openings=[
 /*********** Column Usage
 
 ** Screen, Case, Tablet Openings
-  Shape      height  width  corner  cut/build  anchor  surface  length  thickness  [edge shapes]  [special params]
+  Shape      height  width  corner  cut/build  anchor  surface  length  thickness  [edge slopes]  [special params]
   r            x       x      x         x        x        x                              x
   c            x                        x                 x                              x
   hd           x       x                x        x        x                              x
-  oa1–4                       x
+  oa1–4                       x                                                          x
   text         x                        x                 x                                              x
   svg          x       x                x                                                                x
   bump         x
   ridge                                 x        x                x         x                            x
   hridge                                x        x                x         x
   vridge                                x        x                x         x
-  cridge       x                        x        x                          x
+  cridge       x                        x                                   x
   rridge       x       x      x         x        x                          x
   aridge1–4                             x                                   x
 
