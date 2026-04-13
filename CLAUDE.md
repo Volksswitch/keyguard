@@ -86,8 +86,8 @@ Use `scripts/test.sh` to validate changes. It has five layers, selectable via fl
 | `--lint` | 1 | Fast | sca2d static analysis — fails on fatal errors only |
 | `--syntax` | 2 | Fast | OpenSCAD `--hardwarnings` parse check |
 | `--smoke` | 3 | Minutes | Render default config to STL |
-| `--geometry` | 4 | Slow | Render all named configs; verify each STL is manifold + passes admesh checks |
-| `--visual` | 5 | Slow | Run `test.json` cases in `tests/cases/`; compare PNGs against references |
+| `--visual` | 4 | Slow | Run `test.json` cases in `tests/cases/`; compare PNGs against references |
+| `--geometry` | 5 | Slow | Render all named configs; verify each STL is manifold + passes admesh checks |
 | `--all` | 1–5 | Slow | All of the above |
 | _(no flag)_ | 1–3 | Fast | Lint + syntax + smoke (good for quick checks during development) |
 

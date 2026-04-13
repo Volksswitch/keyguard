@@ -5,10 +5,10 @@
 #   --lint               Layer 1: sca2d static analysis (fast, no render)
 #   --syntax             Layer 2: OpenSCAD --hardwarnings parse check (fast, no render)
 #   --smoke              Layer 3: Render default config to STL
-#   --geometry           Layer 4: Render all named configs from keyguard.json;
+#   --visual             Layer 4: Run test.json cases; compare PNGs against references
+#   --geometry           Layer 5: Render all named configs from keyguard.json;
 #                                  verify each STL is manifold (Simple: yes) and
 #                                  passes admesh mesh-integrity checks (if available)
-#   --visual             Layer 5: Run test.json cases; compare PNGs against references
 #
 # Usage:
 #   ./scripts/test.sh                        # Layers 1–3 (fast default)
@@ -24,8 +24,8 @@
 #   - openscad  (on PATH, or at a common Windows install location)
 #   - python3   (for JSON parsing)
 #   - sca2d     (pip install sca2d)  — Layer 1 only
-#   - admesh    (optional)           — Layer 4 supplementary mesh-integrity check
-#   - imagemagick (compare command)  — Layer 5 PNG comparison; falls back to hash if absent
+#   - admesh    (optional)           — Layer 5 supplementary mesh-integrity check
+#   - imagemagick (compare command)  — Layer 4 PNG comparison; falls back to hash if absent
 
 set -euo pipefail
 
@@ -469,7 +469,7 @@ run_smoke() {
     fi
 }
 
-# ── Layer 4: Geometry validation ──────────────────────────────────────────────
+# ── Layer 5: Geometry validation ──────────────────────────────────────────────
 #
 # Renders every named config to STL and validates the resulting mesh:
 #   1. Render must succeed and produce a non-empty STL
@@ -510,7 +510,7 @@ for name in sorted(skip):
 PYEOF
 )
 
-    header "Layer 4 — Geometry validation (all named configs)"
+    header "Layer 5 — Geometry validation (all named configs)"
     local -a configs
     mapfile -t configs < <(get_configs)
     info "Found ${#configs[@]} named configs"
@@ -666,7 +666,7 @@ PYEOF
     info "Timings appended to: test-timings.ndjson"
 }
 
-# ── Layer 5: Visual tests ─────────────────────────────────────────────────────
+# ── Layer 4: Visual tests ─────────────────────────────────────────────────────
 
 # Compare two PNGs; return 0 if same/within threshold, 1 if different.
 # Sets the global LAST_RMSE to the numeric score (or "null" if unavailable).
@@ -710,7 +710,7 @@ compare_png() {
 }
 
 run_visual() {
-    header "Layer 5 — Visual tests"
+    header "Layer 4 — Visual tests"
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
     [[ -z "$COMPARE" && -z "$PYTHON" ]] && warn "ImageMagick and Python not found — using exact hash comparison"
     [[ -z "$COMPARE" && -n "$PYTHON" ]] && warn "ImageMagick not found — using Python RMSE fallback (install ImageMagick for best results)"
@@ -1039,7 +1039,7 @@ echo    "==============================="
 info "OpenSCAD:    ${OPENSCAD:-NOT FOUND}"
 info "Python:      ${PYTHON:-NOT FOUND}"
 info "sca2d:       ${SCA2D:-NOT FOUND}"
-info "admesh:      ${ADMESH:-not found (manifold-only check in Layer 4)}"
+info "admesh:      ${ADMESH:-not found (manifold-only check in Layer 5)}"
 if [[ -n "$COMPARE" ]]; then
     compare_is_im7 && _im_style="IM7 (magick compare)" || _im_style="IM6 (compare)"
     info "ImageMagick: $COMPARE ($_im_style)"
@@ -1063,8 +1063,8 @@ log_event "{\"event\":\"env\",\"session\":\"$(json_str "$SESSION_ID")\",\"os\":$
 "$RUN_LINT"             && run_lint
 "$RUN_SYNTAX"           && run_syntax
 "$RUN_SMOKE"            && run_smoke
-"$RUN_GEOMETRY"         && run_geometry
 "$RUN_VISUAL"           && run_visual
+"$RUN_GEOMETRY"         && run_geometry
 
 echo ""
 echo "==============================="
