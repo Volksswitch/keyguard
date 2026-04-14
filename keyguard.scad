@@ -423,8 +423,6 @@ other_tablet_general_sizes = "";
 //3 entries e.g., 1000,1500,0.100
 other_tablet_pixel_sizes = "";
 //for use with Maker World's online customizer
-my_OA_version = 2; // [1,2]
-//for use with Maker World's online customizer
 my_screen_openings = "";
 //for use with Maker World's online customizer
 my_case_openings = "";
@@ -1526,13 +1524,10 @@ m_t_o = parse_user_vector(my_tablet_openings, /*strict=*/true);
 
 	include <openings_and_additions.txt>
 
-// Detect the openings-file format version. V1 files do not define oa_version;
-// v2 files set oa_version = 2 at the top. Defaults to 1 when undefined.
-_oa_version = is_undef(oa_version) ? 1 : oa_version;
-
-// Version to use when processing my_* (MakerWorld) parameters. The O&A file's
-// oa_version takes precedence when present; otherwise my_OA_version applies.
-_my_oa_version = is_undef(oa_version) ? my_OA_version : oa_version;
+// Format is auto-detected per vector: V2 rows have a string at [1]; V1 rows have a number.
+// The O&A and my_* vectors are processed independently — template placeholder rows
+// (e.g. "r" with h=0 and w=0) are silently skipped by each shape's own validation code.
+function is_v2(v) = len(v) > 0 && is_string(v[0][1]);
 
 //**********************************************************************
 
@@ -1893,27 +1888,20 @@ module keyguard(cheat){
 								}
 								
 								// adding manual slide-in tabs, other shapes not full keyguard height, and pedestals for clip-on straps
-								if(!is_undef(case_additions)){
-									if(has_case && len(case_additions)>0){
-										if (!has_frame || 
-										   (has_frame && generate=="keyguard frame" && cheat=="no")
-										   ){
-										   
-											if(_oa_version==2) apply_flex_height_shapes_v2(case_additions, false); else apply_flex_height_shapes(case_additions, false);
-
-											if(!is_laser_cut){
-												if(_oa_version==2) add_manual_mount_pedestals_v2(case_additions); else add_manual_mount_pedestals(case_additions);
-											}
-										}
-									}
-								}
-
-								if(len(m_c_a)>0 && has_case && (!has_frame ||
-											(has_frame && generate=="keyguard frame" && cheat=="no"))){
-									if(_my_oa_version==2) apply_flex_height_shapes_v2(m_c_a, false); else apply_flex_height_shapes(m_c_a, false);
+								if(!is_undef(case_additions) && len(case_additions)>0 && has_case && (!has_frame ||
+										(has_frame && generate=="keyguard frame" && cheat=="no"))){
+									if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, false); else apply_flex_height_shapes(case_additions, false);
 
 									if(!is_laser_cut){
-										if(_my_oa_version==2) add_manual_mount_pedestals_v2(m_c_a); else add_manual_mount_pedestals(m_c_a);
+										if(is_v2(case_additions)) add_manual_mount_pedestals_v2(case_additions); else add_manual_mount_pedestals(case_additions);
+									}
+								}
+								if(len(m_c_a)>0 && has_case && (!has_frame ||
+										(has_frame && generate=="keyguard frame" && cheat=="no"))){
+									if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, false); else apply_flex_height_shapes(m_c_a, false);
+
+									if(!is_laser_cut){
+										if(is_v2(m_c_a)) add_manual_mount_pedestals_v2(m_c_a); else add_manual_mount_pedestals(m_c_a);
 									}
 								}
 
@@ -1942,14 +1930,11 @@ module keyguard(cheat){
 							//*** cut away from keyguard blank those things that will be moved when the case opening is unequal
 							
 							// cut case openings
-							if(!is_undef(case_openings)){
-								if(has_case && len(case_openings)>0 && !(has_frame && generate=="keyguard") && cheat=="no"){
-									if(_oa_version==2) cut_case_openings_v2(case_openings,kt); else cut_case_openings(case_openings,kt);
-								}
+							if(!is_undef(case_openings) && len(case_openings)>0 && has_case && !(has_frame && generate=="keyguard") && cheat=="no"){
+								if(is_v2(case_openings)) cut_case_openings_v2(case_openings,kt); else cut_case_openings(case_openings,kt);
 							}
-								
 							if(len(m_c_o)>0 && has_case && !(has_frame && generate=="keyguard") && cheat=="no"){
-								if(_my_oa_version==2) cut_case_openings_v2(m_c_o,kt); else cut_case_openings(m_c_o,kt);
+								if(is_v2(m_c_o)) cut_case_openings_v2(m_c_o,kt); else cut_case_openings(m_c_o,kt);
 							}
 						
 							//add engraved text to case region
@@ -1971,32 +1956,21 @@ module keyguard(cheat){
 							}							
 
 							// "-" shapes not full keyguard height
-							if(!is_undef(case_additions)){
-								if(has_case && len(case_additions)>0){
-									if (!has_frame || 
-									   (has_frame && generate=="keyguard frame" && cheat=="no")
-									   ){
-									   
-										if(_oa_version==2) apply_flex_height_shapes_v2(case_additions, true); else apply_flex_height_shapes(case_additions, true);
-
-									}
-								}
+							if(!is_undef(case_additions) && len(case_additions)>0 && has_case && (!has_frame ||
+									(has_frame && generate=="keyguard frame" && cheat=="no"))){
+								if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, true); else apply_flex_height_shapes(case_additions, true);
 							}
-
 							if(len(m_c_a)>0 && has_case && (!has_frame ||
-										(has_frame && generate=="keyguard frame" && cheat=="no"))){
-								if(_my_oa_version==2) apply_flex_height_shapes_v2(m_c_a, true); else apply_flex_height_shapes(m_c_a, true);
+									(has_frame && generate=="keyguard frame" && cheat=="no"))){
+								if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, true); else apply_flex_height_shapes(m_c_a, true);
 							}
 
 							// add slots to manually added clip-on strap pedestals
-							if(!is_undef(case_additions)){
-								if(has_case && len(case_additions)>0 && !is_laser_cut && cheat=="no"){
-									if(_oa_version==2) cut_manual_mount_pedestal_slots_v2(case_additions); else cut_manual_mount_pedestal_slots(case_additions);
-								}
+							if(!is_undef(case_additions) && len(case_additions)>0 && has_case && !is_laser_cut && cheat=="no"){
+								if(is_v2(case_additions)) cut_manual_mount_pedestal_slots_v2(case_additions); else cut_manual_mount_pedestal_slots(case_additions);
 							}
-							
 							if(len(m_c_a)>0 && has_case && !is_laser_cut && cheat=="no"){
-								if(_my_oa_version==2) cut_manual_mount_pedestal_slots_v2(m_c_a); else cut_manual_mount_pedestal_slots(m_c_a);
+								if(is_v2(m_c_a)) cut_manual_mount_pedestal_slots_v2(m_c_a); else cut_manual_mount_pedestal_slots(m_c_a);
 							}
 						}
 						
@@ -2042,14 +2016,11 @@ module keyguard(cheat){
 						//    - can affect slide-in tabs and raised tabs (in particular)
 
 						// cut tablet openings
-						if (!is_undef(tablet_openings)){
-							if(tablet_height>0 && tablet_width>0 && len(tablet_openings)>0 && cheat=="no"){
-								if(_oa_version==2) cut_tablet_openings_v2(tablet_openings,kt); else cut_tablet_openings(tablet_openings,kt);
-							}
+						if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+							if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings,kt); else cut_tablet_openings(tablet_openings,kt);
 						}
-
 						if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-							if(_my_oa_version==2) cut_tablet_openings_v2(m_t_o,kt); else cut_tablet_openings(m_t_o,kt);
+							if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o,kt); else cut_tablet_openings(m_t_o,kt);
 						}
 
 						// ambient light sensors
@@ -2063,14 +2034,11 @@ module keyguard(cheat){
 						}
 
 						//cut screen openings
-						if(!is_undef(screen_openings)){
-							if(len(screen_openings)>0 && type_of_tablet!="blank"){
-								if(_oa_version==2) cut_screen_openings_v2(screen_openings,sat); else cut_screen_openings(screen_openings,sat);
-							}
+						if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
+							if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings,sat); else cut_screen_openings(screen_openings,sat);
 						}
-						
 						if(len(m_s_o)>0 && type_of_tablet!="blank"){
-							if(_my_oa_version==2) cut_screen_openings_v2(m_s_o,sat); else cut_screen_openings(m_s_o,sat);
+							if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o,sat); else cut_screen_openings(m_s_o,sat);
 						}
 
 						// add engraved text in the screen region
@@ -2097,28 +2065,24 @@ module keyguard(cheat){
 					}
 
 					//add bumps and ridges
-					if(!is_undef(screen_openings)){
-						if(is_3d_printed && len(screen_openings)>0){
-							if(_oa_version==2) adding_plastic_v2(screen_openings,"screen"); else adding_plastic(screen_openings,"screen");
-						}
+					if(!is_undef(screen_openings) && len(screen_openings)>0 && is_3d_printed){
+						if(is_v2(screen_openings)) adding_plastic_v2(screen_openings,"screen"); else adding_plastic(screen_openings,"screen");
 					}
-					
 					if(len(m_s_o)>0 && is_3d_printed){
-						if(_my_oa_version==2) adding_plastic_v2(m_s_o,"screen"); else adding_plastic(m_s_o,"screen");
+						if(is_v2(m_s_o)) adding_plastic_v2(m_s_o,"screen"); else adding_plastic(m_s_o,"screen");
 					}
-						
+
 					//add bumps and ridges from case_openings file and adjust for unequal case opening
-					if(!is_undef(case_openings)){
+					if(!is_undef(case_openings) && len(case_openings)>0){
 						translate(unequal_opening)
-						if(is_3d_printed && has_case && !has_frame && len(case_openings)>0 && cheat=="no"){
-							if(_oa_version==2) adding_plastic_v2(case_openings,"case"); else adding_plastic(case_openings,"case");
+						if(is_3d_printed && has_case && !has_frame && cheat=="no"){
+							if(is_v2(case_openings)) adding_plastic_v2(case_openings,"case"); else adding_plastic(case_openings,"case");
 						}
 					}
-					
 					if(len(m_c_o)>0){
 						translate(unequal_opening)
 						if(is_3d_printed && has_case && !has_frame && cheat=="no"){
-							if(_my_oa_version==2) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
+							if(is_v2(m_c_o)) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
 						}
 					}
 
@@ -2199,16 +2163,11 @@ module lc_keyguard(){
 							//*** cut away from keyguard blank those things that will be moved when the case opening is unequal
 
 							// cut case openings
-							if(!is_undef(case_openings)){
-								if(has_case && len(case_openings)>0 && !(has_frame && generate=="keyguard")){
-									if(_oa_version==2) cut_case_openings_v2(case_openings,0); else cut_case_openings(case_openings,0);
-								}
+							if(!is_undef(case_openings) && len(case_openings)>0 && has_case && !(has_frame && generate=="keyguard")){
+								if(is_v2(case_openings)) cut_case_openings_v2(case_openings,0); else cut_case_openings(case_openings,0);
 							}
-							
-							if(len(m_c_o)>0){
-								if(has_case && !(has_frame && generate=="keyguard")){
-									if(_my_oa_version==2) cut_case_openings_v2(m_c_o,0); else cut_case_openings(m_c_o,0);
-								}
+							if(len(m_c_o)>0 && has_case && !(has_frame && generate=="keyguard")){
+								if(is_v2(m_c_o)) cut_case_openings_v2(m_c_o,0); else cut_case_openings(m_c_o,0);
 							}
 
 							//*** cut away from keyguard blank those things that will be moved when the case opening is unequal
@@ -2249,27 +2208,19 @@ module lc_keyguard(){
 						}
 											
 						// cut tablet openings
-						if (!is_undef(tablet_openings)){
-							if(tablet_height>0 && tablet_width>0 && len(tablet_openings)>0){
-							if(_oa_version==2) cut_tablet_openings_v2(tablet_openings,0); else cut_tablet_openings(tablet_openings,0);
-							}
+						if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0){
+							if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings,0); else cut_tablet_openings(tablet_openings,0);
 						}
-						
-						if(len(m_t_o)>0){
-							if(tablet_height>0 && tablet_width>0){
-								if(_my_oa_version==2) cut_tablet_openings_v2(m_t_o,0); else cut_tablet_openings(m_t_o,0);
-							}
+						if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0){
+							if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o,0); else cut_tablet_openings(m_t_o,0);
 						}
 
 						//cut screen openings
-						if(!is_undef(screen_openings)){
-							if(len(screen_openings)>0 && type_of_tablet!="blank"){
-							if(_oa_version==2) cut_screen_openings_v2(screen_openings,0); else cut_screen_openings(screen_openings,0);
-							}
+						if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
+							if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings,0); else cut_screen_openings(screen_openings,0);
 						}
-						
 						if(len(m_s_o)>0 && type_of_tablet!="blank"){
-							if(_my_oa_version==2) cut_screen_openings_v2(m_s_o,0); else cut_screen_openings(m_s_o,0);
+							if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o,0); else cut_screen_openings(m_s_o,0);
 						}
 
 					}
@@ -2322,36 +2273,25 @@ module keyguard_frame(cheat){
 				case_mounts(keyguard_frame_thickness);
 											
 				//add bumps and ridges from case_openings file
-				if(!is_undef(case_openings)){
-					if (len(case_openings)>0){
-						if(_oa_version==2) adding_plastic_v2(case_openings,"case"); else adding_plastic(case_openings,"case");
-					}
+				if(!is_undef(case_openings) && len(case_openings)>0){
+					if(is_v2(case_openings)) adding_plastic_v2(case_openings,"case"); else adding_plastic(case_openings,"case");
 				}
-				
 				if(len(m_c_o)>0){
-					if(_my_oa_version==2) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
+					if(is_v2(m_c_o)) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
 				}
 
 				// adding manual slide-in tabs and pedestals for clip-on straps
-				if(!is_undef(case_additions)){
-					if(len(case_additions)>0){
-						if (!has_frame || 
-						   (has_frame && generate=="keyguard frame" && cheat=="no")
-						   ){
-						   
-							if(_oa_version==2) apply_flex_height_shapes_v2(case_additions, false); else apply_flex_height_shapes(case_additions, false);
+				if(!is_undef(case_additions) && len(case_additions)>0 && (!has_frame ||
+				   (has_frame && generate=="keyguard frame" && cheat=="no"))){
+					if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, false); else apply_flex_height_shapes(case_additions, false);
 
-						if(_oa_version==2) add_manual_mount_pedestals_v2(case_additions); else add_manual_mount_pedestals(case_additions);
-						}
-					}
+					if(is_v2(case_additions)) add_manual_mount_pedestals_v2(case_additions); else add_manual_mount_pedestals(case_additions);
 				}
-				
 				if(len(m_c_a)>0 && (!has_frame ||
 				   (has_frame && generate=="keyguard frame" && cheat=="no"))){
+					if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, false); else apply_flex_height_shapes(m_c_a, false);
 
-					if(_my_oa_version==2) apply_flex_height_shapes_v2(m_c_a, false); else apply_flex_height_shapes(m_c_a, false);
-
-					if(_my_oa_version==2) add_manual_mount_pedestals_v2(m_c_a); else add_manual_mount_pedestals(m_c_a);
+					if(is_v2(m_c_a)) add_manual_mount_pedestals_v2(m_c_a); else add_manual_mount_pedestals(m_c_a);
 				}
 
 				//add engraved text
@@ -2359,28 +2299,23 @@ module keyguard_frame(cheat){
 			}
 			
 			//cut case openings
-			if(!is_undef(case_openings)){
-				if(len(case_openings)>0){
-					if(_oa_version==2) cut_case_openings_v2(case_openings,keyguard_frame_thickness); else cut_case_openings(case_openings,keyguard_frame_thickness);
-				}
+			if(!is_undef(case_openings) && len(case_openings)>0){
+				if(is_v2(case_openings)) cut_case_openings_v2(case_openings,keyguard_frame_thickness); else cut_case_openings(case_openings,keyguard_frame_thickness);
 			}
-			
 			if(len(m_c_o)>0){
-				if(_my_oa_version==2) cut_case_openings_v2(m_c_o,keyguard_frame_thickness); else cut_case_openings(m_c_o,keyguard_frame_thickness);
+				if(is_v2(m_c_o)) cut_case_openings_v2(m_c_o,keyguard_frame_thickness); else cut_case_openings(m_c_o,keyguard_frame_thickness);
 			}
 
 			if (m_m=="Clip-on Straps" && !no_clips){
 				clip_on_straps_groove();
 			}
-			
+
 			// add slots to manually added clip-on strap pedestals
-			if(!is_undef(case_additions)){
-				if(len(case_additions)>0 && !is_laser_cut && cheat=="no"){
-					if(_oa_version==2) cut_manual_mount_pedestal_slots_v2(case_additions); else cut_manual_mount_pedestal_slots(case_additions);
-				}
+			if(!is_undef(case_additions) && len(case_additions)>0 && !is_laser_cut && cheat=="no"){
+				if(is_v2(case_additions)) cut_manual_mount_pedestal_slots_v2(case_additions); else cut_manual_mount_pedestal_slots(case_additions);
 			}
 			if(len(m_c_a)>0 && !is_laser_cut && cheat=="no"){
-				if(_my_oa_version==2) cut_manual_mount_pedestal_slots_v2(m_c_a); else cut_manual_mount_pedestal_slots(m_c_a);
+				if(is_v2(m_c_a)) cut_manual_mount_pedestal_slots_v2(m_c_a); else cut_manual_mount_pedestal_slots(m_c_a);
 			}
 
 		}
@@ -2402,30 +2337,21 @@ module keyguard_frame(cheat){
 		home_camera(keyguard_frame_thickness);
 		
 		// cut tablet openings
-		if (!is_undef(tablet_openings)){
-			if(len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-				if(_oa_version==2) cut_tablet_openings_v2(tablet_openings,kt); else cut_tablet_openings(tablet_openings,kt);
-			}
+		if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+			if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings,kt); else cut_tablet_openings(tablet_openings,kt);
+		}
+		if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+			if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o,kt); else cut_tablet_openings(m_t_o,kt);
 		}
 
-		if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-			cut_tablet_openings(m_t_o,kt);
-		}
-		
 		// remove non-full height "-" shapes
-		if(!is_undef(case_additions)){
-			if(len(case_additions)>0){
-				if (!has_frame ||
-				   (has_frame && generate=="keyguard frame" && cheat=="no")
-				   ){
-					if(_oa_version==2) apply_flex_height_shapes_v2(case_additions, true); else apply_flex_height_shapes(case_additions, true);
-				}
-			}
-		}
-		
-		if(len(m_c_a)>0 && (!has_frame || 
+		if(!is_undef(case_additions) && len(case_additions)>0 && (!has_frame ||
 		   (has_frame && generate=="keyguard frame" && cheat=="no"))){
-			apply_flex_height_shapes(m_c_a, true);
+			if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, true); else apply_flex_height_shapes(case_additions, true);
+		}
+		if(len(m_c_a)>0 && (!has_frame ||
+		   (has_frame && generate=="keyguard frame" && cheat=="no"))){
+			if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, true); else apply_flex_height_shapes(m_c_a, true);
 		}
 
 
@@ -6097,13 +6023,11 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 				offset(r=c_r[0])
 				square([shape_x-c_r[0]*2,shape_y-c_r[0]*2],center=true);
 				
-				if(!is_undef(case_additions)){
-					if(add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && len(case_additions)>0 && cheat=="no"){
-						if(_oa_version==2) add_case_full_height_shapes_v2(case_additions,"add"); else add_case_full_height_shapes(case_additions,"add");
-					}
+				if(!is_undef(case_additions) && len(case_additions)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && cheat=="no"){
+					if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions,"add"); else add_case_full_height_shapes(case_additions,"add");
 				}
 				if(len(m_c_a)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && cheat=="no"){
-					add_case_full_height_shapes(m_c_a,"add");
+					if(is_v2(m_c_a)) add_case_full_height_shapes_v2(m_c_a,"add"); else add_case_full_height_shapes(m_c_a,"add");
 				}
 			}
 		}
@@ -6125,14 +6049,11 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 			}
 		}
 
-		if(!is_undef(case_additions)){
-			if(add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && len(case_additions)>0 && cheat=="no"){
-				if(_oa_version==2) add_case_full_height_shapes_v2(case_additions,"sub"); else add_case_full_height_shapes(case_additions,"sub");
-			}
+		if(!is_undef(case_additions) && len(case_additions)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && cheat=="no"){
+			if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions,"sub"); else add_case_full_height_shapes(case_additions,"sub");
 		}
-
 		if(len(m_c_a)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && cheat=="no"){
-			add_case_full_height_shapes(m_c_a,"sub");
+			if(is_v2(m_c_a)) add_case_full_height_shapes_v2(m_c_a,"sub"); else add_case_full_height_shapes(m_c_a,"sub");
 		}
 
 		if(has_case && m_m=="Posts"){
