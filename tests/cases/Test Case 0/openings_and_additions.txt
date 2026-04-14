@@ -1,58 +1,74 @@
-oa_version = 2; // operations and additions file data structure version
-
 screen_openings=[
-// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,      0, 0, 0,         0,    "L",     "T",      0,         0,            [],              [] ],
+// ID, shape, height, width, corner, x, y, cut | build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   0,   "r",      0,     0,      0, 0, 0,           0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 case_openings=[
-// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,      0, 0, 0,         0,    "L",     "T",      0,         0,            [],              [] ],
+// ID, shape, height, width, corner, x, y, cut | build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   0,   "r",      0,     0,      0, 0, 0,           0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 case_additions=[
-// ID, shape, height, width, corner, x, y, cut/build, [trim]
-[   0,   "r",      0,     0,      0, 0, 0,         0,     [] ],
+// ID, shape, height, width, corner, x, y, cut | build, [trim]
+[   0,  "r1",      0,     0,      0, 0, 0,           0,     [] ],
 ];
 
 tablet_openings=[
-// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,      0, 0, 0,         0,    "L",     "T",      0,         0,            [],              [] ],
+// ID, shape, height, width, corner, x, y, cut | build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   0,   "r",      0,     0,      0, 0, 0,           0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 
 /*********** Column Usage
 
 ** Screen, Case, Tablet Openings
-  Shape      height  width  corner  cut/build  anchor  surface  length  thickness  [edge slopes]  [special params]
-  r            x       x      x         x        x        x                              x
-  c            x                        x                 x                              x
-  hd           x       x                x        x        x                              x
-  oa1–4                       x                                                          x
-  text         x                        x                 x                                              x
-  svg          x       x                x                                                                x
+  Shape      height  width  corner  cut | build  anchor  surface  length  thickness  [edge slopes]  [special params]
+  r            x       x      x          x         x        x                              x
+  c            x                          x                 x                              x
+  hd           x       x                  x         x        x                              x
+  oa1–4                       x                                                             x
+  text         x                          x                 x                                              x
+  svg          x       x                  x                                                                x
   bump         x
-  ridge                                 x        x                x         x                            x
-  hridge                                x        x                x         x
-  vridge                                x        x                x         x
-  cridge       x                        x                                   x
-  rridge       x       x      x         x        x                          x
-  aridge1–4                             x                                   x
+  ridge                                   x         x                x         x                            x
+  hridge                                  x         x                x         x
+  vridge                                  x         x                x         x
+  cridge       x                          x                                    x
+  rridge       x       x      x           x         x                          x
+  aridge1–4                               x                                    x
+
+  Notes:
+  - anchor: ignored for "c", "cridge", and "oa1-4" shapes
+  - oa1-4: [edge slopes] supports a single value [n] that applies to all four edges
 
   [special params]  Contents
-  text              [text string, direction, font style, h-align, v-align]
+  text              [text value, direction, font style, h-align, v-align]
   svg               [filename, direction]
   ridge             [direction]
 
-** Case, Additions
-  Shape   height  width  corner  cut/build  [trim]
-  r         x       x      x         x
-  tab1–4    x       x      x         x        x
-  cm1–4     x       x                x        x
-  t1–4      x       x                x        x
-  f1–4      x       x      x         x        x
-  oa1–4                    x
+** Case Additions
+  Shape     height  width  corner  cut | build  [trim]
+  r1–4        x       x      x          x
+  -r1–4       x       x      x          x
+  rr          x       x      x          x
+  -rr         x       x      x          x
+  tab1–4      x       x      x          x         x
+  -tab1–4     x       x      x          x         x
+  cm1–4       x       x                 x         x
+  -cm1–4      x       x                 x         x
+  t1–4        x       x                 x         x
+  -t1–4       x       x                 x         x
+  f1–4        x       x      x          x         x
+  -f1–4       x       x      x          x         x
+  oa1–4                      x
   ped1–4
+
+  Notes:
+  - Negative shapes (prefix "-") create edge subtractions:
+      cut | build = 0  → applied in the 2D outline phase; cut inherits keyguard edge chamfer
+      cut | build > 0  → applied in the 3D phase with specified depth
+  - "r" and "c" are not supported in V2 case_additions; use r1-4 instead
+  - cut | build = 0 means full height/depth (the common case)
 
 
 
@@ -63,7 +79,7 @@ These special variables can be used to locate screen openings relative to the (0
 	sh 	screen height (the value is in millimeters or pixels as appropriate)
 	sw	screen width (the value is in millimeters or pixels as appropriate)
 
-	mpp	millimeters per pixel	
+	mpp	millimeters per pixel
 	ppm	pixels per millimeter
 
 	nr	number of rows in grid
@@ -82,7 +98,7 @@ These special variables can be used to locate screen openings relative to the (0
 	lmbt	lower message bar top
 	lmbb	lower message bar bottom
 	lcbb	lower command bar bottom
-	
+
 ** grid variables (the value is in millimeters or pixels as appropriate)
 	gw	grid width
 	gh	grid height
@@ -93,7 +109,7 @@ These special variables can be used to locate screen openings relative to the (0
 	bp	bottom padding - specified in Grid Special Settings
 	lp	left padding - specified in Grid Special Settings
 	rp	right padding - specified in Grid Special Settings
-	
+
 ** cell variables (the value is in millimeters)
 	cw	cell width (doesn't apply to cells that are affected by left/right compensation for tight cases)
 	ch	cell height (doesn't apply to cells that are affected by top/bottom compensation for tight cases)
@@ -144,7 +160,7 @@ The designer thinks of the camera and home button as positioned relative to the 
 
 	sxo	sign of x offset, if measuring from standard home/camera locations
 	syo	sign of y offset, if measuring from standard home/camera locations
-	
+
 	xols	x location of the left side of the case opening adjusted for swapping camera and home button
 	xors	x location of the right side of the case opening adjusted for swapping camera and home button
 	yobs	y location of the bottom side of the case opening adjusted for swapping the camera and home button

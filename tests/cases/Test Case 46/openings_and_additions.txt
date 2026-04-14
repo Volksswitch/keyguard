@@ -1,5 +1,3 @@
-oa_version = 2; // operations and additions file data structure version
-
 cshapea1 = (r180=="no") ? "rr2" : "rr4";
 
 screen_openings=[

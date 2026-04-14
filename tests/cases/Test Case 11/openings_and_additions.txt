@@ -1,5 +1,3 @@
-oa_version = 2; // operations and additions file data structure version
-
 $vpt = [-0.45397, -13.9806, -17.8217];
 $vpr = [55, 0, 25];
 $vpd = 900;

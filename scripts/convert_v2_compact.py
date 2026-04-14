@@ -313,12 +313,13 @@ def convert_file(path):
 # ---------------------------------------------------------------------------
 
 def find_v2_files(root):
-    """Find all openings files that declare oa_version = 2."""
+    """Find all V2 openings files (detected by V2 row format, not oa_version declaration)."""
     files = []
     for p in sorted(root.rglob('openings_and_additions.txt')):
         try:
             text = p.read_text(encoding='utf-8', errors='replace')
-            if 'oa_version = 2' in text:
+            # V2 files have rows where the second field is a quoted shape name, e.g. "r", "c".
+            if re.search(r'\[\s*[^,\[\]]+\s*,\s*"[a-z]', text):
                 files.append(p)
         except Exception:
             pass

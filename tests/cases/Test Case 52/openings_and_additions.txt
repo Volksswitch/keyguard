@@ -1,5 +1,3 @@
-oa_version = 2; // operations and additions file data structure version
-
 screen_openings=[
 // ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
 [   0,   "r",      0,     0,      0, 0, 0,         0,    "L",     "T",      0,         0,            [],              [] ],

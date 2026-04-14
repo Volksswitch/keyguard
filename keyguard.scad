@@ -4207,23 +4207,23 @@ function v2_shape_code(shape_raw, anchor, surface) =
 // ---------------------------------------------------------------------------
 // V2 explicit opening row format — 14 fixed columns, all fields mandatory:
 //
-//   [ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [es], [sp]]
-//   [0]  [1]    [2]     [3]    [4]    [5] [6]  [7]      [8]     [9]     [10]    [11]       [12]  [13]
+//   [ID, shape, height, width, corner, x, y, cut | build, anchor, surface, length, thickness, [es], [sp]]
+//   [0]  [1]    [2]     [3]    [4]    [5] [6]     [7]     [8]     [9]     [10]    [11]       [12]  [13]
 //
-//   ID       — string label; "#" enables OpenSCAD debug highlight
-//   shape    — shape family name
-//   height   — opening height (mm or px); diameter for "bump"; ridge_height for other ridges
-//   width    — opening width; 0 for "bump"/"c"/"text"; ridge length for other ridges (use [10])
-//   corner   — corner radius (0 = none); z_pos for "text"; rotation for "svg"; 0 for bump/vh/c/hd
-//   x        — x position (all shapes use [5])
-//   y        — y position (all shapes use [6])
-//   cut/build— cb value; ridge_height for "vridge"/"hridge"
-//   anchor   — "L" (left, default) or "C" (centre)
-//   surface  — "T" (top, default) or "B" (bottom)
-//   length   — ridge length for "vridge","hridge" and other ridges; 0 otherwise
-//   thickness— ridge base thickness for "vridge","hridge" and other ridges; 0 otherwise
-//   [es]     — edge slopes [top,bot,left,right]; [] = use defaults
-//   [sp]     — special params (text string, SVG filename, ridge direction, etc.)
+//   ID         — string label; "#" enables OpenSCAD debug highlight
+//   shape      — shape family name
+//   height     — opening height (mm or px); diameter for "bump"; ridge_height for other ridges
+//   width      — opening width; 0 for "bump"/"c"/"text"; ridge length for other ridges (use [10])
+//   corner     — corner radius (0 = none); z_pos for "text"; rotation for "svg"; 0 for bump/vh/c/hd
+//   x          — x position (all shapes use [5])
+//   y          — y position (all shapes use [6])
+//   cut | build— cb value; ridge_height for "vridge"/"hridge"
+//   anchor     — "L" (left, default) or "C" (centre); ignored for "c", "cridge", "oa1-4"
+//   surface    — "T" (top, default) or "B" (bottom)
+//   length     — ridge length for "vridge","hridge" and other ridges; 0 otherwise
+//   thickness  — ridge base thickness for "vridge","hridge" and other ridges; 0 otherwise
+//   [es]       — edge slopes [top,bot,left,right]; single value [n] applies to all edges for "oa" shapes
+//   [sp]       — special params (text value, SVG filename, ridge direction, etc.)
 //
 // No parsing function — dispatch modules read columns directly and use
 // if/else-if blocks per shape family, matching the V1 dispatch style.
@@ -4232,9 +4232,15 @@ function v2_shape_code(shape_raw, anchor, surface) =
 
 // Parses a single V2 compact case_additions row.
 //
+// Supported shapes: r1-4, -r1-4, rr, -rr, tab1-4, -tab1-4, cm1-4, -cm1-4,
+//                   t1-4, -t1-4, f1-4, -f1-4, oa1-4, ped1-4.
+// Negative shapes (prefix "-") create edge subtractions applied in the 2D outline
+// phase when cut | build = 0 (full-height), or in the 3D phase when > 0.
+// "c" and "r" are not supported in V2 case_additions; use r1-4 instead.
+//
 // Compact format (all fields explicit — no blank entries):
-//   without cut/build: [ID, shape, height, width, corner, x, y,      [trim]]
-//   with    cut/build: [ID, shape, height, width, corner, x, y, cb,  [trim]]
+//   without cut | build: [ID, shape, height, width, corner, x, y,      [trim]]
+//   with    cut | build: [ID, shape, height, width, corner, x, y, cb,  [trim]]
 //
 // cb is present when r[7] is a number. [trim] is always the last element.
 // [trim] entries: [trim_above, trim_below, trim_to_right, trim_to_left].
@@ -4772,8 +4778,12 @@ module apply_flex_height_shapes_v2(c_a, is_sub) {
 			addition_trim_to_right = p[10];
 			addition_trim_to_left  = p[11];
 
-			is_negative = search("-", addition_shape) != [];
-			if (addition_thickness > 0 && is_sub == is_negative) {
+			is_negative    = search("-", addition_shape) != [];
+			is_unsupported = addition_shape == "r"  || addition_shape == "-r" ||
+			                 addition_shape == "c"  || addition_shape == "-c";
+			if (is_unsupported) {
+				echo(str("WARNING: V2 case_additions shape '", addition_shape, "' not supported; use r1-4 instead (ID=", addition_ID, ")"));
+			} else if (addition_thickness > 0 && is_sub == is_negative) {
 				translate([0, 0, is_sub ? -kt/2-ff : -kt/2])
 				if (addition_ID == "#") {
 					#linear_extrude(height=addition_thickness)
@@ -4811,7 +4821,11 @@ module add_case_full_height_shapes_v2(c_a, type) {
 		addition_trim_to_right = p[10];
 		addition_trim_to_left  = p[11];
 
-		if (addition_thickness == 0 && addition_shape != undef) {
+		is_unsupported = addition_shape == "r"  || addition_shape == "-r" ||
+		                 addition_shape == "c"  || addition_shape == "-c";
+		if (is_unsupported) {
+			echo(str("WARNING: V2 case_additions shape '", addition_shape, "' not supported; use r1-4 instead (ID=", addition_ID, ")"));
+		} else if (addition_thickness == 0 && addition_shape != undef) {
 			if (addition_ID == "#") {
 				if (type == "add" && search("-", addition_shape) == []) {
 					difference() {

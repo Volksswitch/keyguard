@@ -307,7 +307,9 @@ def main():
     for fp in sorted(files):
         with open(fp, 'r', encoding='utf-8') as f:
             content = f.read()
-        if re.search(r'oa_version\s*=\s*2', content):
+        # V2 files have rows where the second field is a quoted shape name, e.g. "r", "c".
+        # Detect by looking for a data row with a quoted string at position [1].
+        if re.search(r'\[\s*[^,\[\]]+\s*,\s*"[a-z]', content):
             v2_files.append(fp)
 
     print(f"Found {len(v2_files)} V2 openings files.")
