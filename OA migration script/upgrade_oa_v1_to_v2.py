@@ -568,8 +568,25 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
             cut_build,
             trim_vector(ta, tb, tr, tl),
         ], comment=comment)
-    elif base_shape in ('rr', 'crr'):
-        warnings.append(f"Dropped case_additions '{base_shape}' (V2 case_additions does not support '{base_shape}').")
+    elif base_shape == 'crr':
+        # V1 "crr" = centre-anchored rounded rectangle → V2 "r" with corner radius
+        new_shape = ('-' if negative else '') + 'r'
+        new_corner = '' if compact_number_or_expr(corner) in ('0', '') else atom(corner)
+        new_corner = new_corner or '0'
+        cut_build = atom(thickness) if thickness not in ('', '0') else '0'
+        return Row([
+            atom(id_),
+            f'"{new_shape}"',
+            atom(height) or '0',
+            atom(width)  or '0',
+            new_corner,
+            atom(x),
+            atom(y),
+            cut_build,
+            trim_vector(ta, tb, tr, tl),
+        ], comment=comment)
+    elif base_shape == 'rr':
+        warnings.append(f"Dropped case_additions 'rr' (V2 case_additions does not support 'rr'; use 'r' for a centre-anchored rectangle).")
         return None
     elif re.fullmatch(r'rr([1-4])', base_shape):
         m = re.fullmatch(r'rr([1-4])', base_shape)
