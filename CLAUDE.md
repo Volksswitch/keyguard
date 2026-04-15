@@ -320,7 +320,10 @@ Address these one at a time, running the test suite after each change.
 - `test-timings.ndjson` is deleted automatically at the start of every `test.sh` run —
   no need to delete it manually.
 - Run `scripts/test.sh` (layers 1–3) after any change as a quick sanity check.
-- Run `scripts/test.sh --all` before declaring a feature complete.
+- Run `scripts/test.sh --visual` before declaring a feature complete.
+- **Never run `--geometry` or `--all` without explicit permission from Ken.** Geometry
+  tests render every named config to STL and take a very long time. Always explain why
+  they are needed and wait for approval before running them.
 
 ---
 
