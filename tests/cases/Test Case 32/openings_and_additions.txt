@@ -1,75 +1,74 @@
-oa_version = 2; // operations and additions file data structure version
-
 $vpt = [1, 1, 1];
 $vpr = [0, 0, 0];
 $vpd = 600;
 
 screen_openings=[
-//  ID,  shape, height, width, corner,       x,    y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[  "#", "bump",    104,     0,      0,       0,   sh,         0,    "L",     "T",      0,         0,            [],              [] ],
-[  "#", "bump",    104,     0,      0,      sw,   sh,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",    104,     0,      0,    sw/2, sh/2,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",     52,     0,      0,    sw/4,  sbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",     52,     0,      0,    sw/4, umbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",     52,     0,      0,    sw/4, ucbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",     52,     0,      0,    sw/4, lmbt,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",     52,     0,      0,    sw/4, lmbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",     52,     0,      0,    sw/4, lcbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",     52,     0,      0, sw/4+53,   gt,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1, "bump",     52,     0,      0, sw/4+53,   gb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1,    "r",    sbh,   312,     31,  3*sw/4,  sbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1,    "r",   umbh,   260,     31,  3*sw/4, umbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1,    "r",   ucbh,   208,     31,  3*sw/4, ucbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1,    "r",   lmbh,   156,     31,  3*sw/4, lmbb,         0,    "L",     "T",      0,         0,            [],              [] ],
-[    1,    "r",   lcbh,   104,     31,  3*sw/4, lcbb,         0,    "L",     "T",      0,         0,            [],              [] ],
+//  ID,  shape, height, width, corner,       x,    y, cut | build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[  "#", "bump",    104,     0,      0,       0,   sh,           0,    "L",     "T",      0,         0,            [],              [] ],
+[  "#", "bump",    104,     0,      0,      sw,   sh,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",    104,     0,      0,    sw/2, sh/2,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4,  sbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, umbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, ucbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, lmbt,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, lmbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0,    sw/4, lcbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0, sw/4+53,   gt,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1, "bump",     52,     0,      0, sw/4+53,   gb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",    sbh,   312,     31,  3*sw/4,  sbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",   umbh,   260,     31,  3*sw/4, umbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",   ucbh,   208,     31,  3*sw/4, ucbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",   lmbh,   156,     31,  3*sw/4, lmbb,           0,    "L",     "T",      0,         0,            [],              [] ],
+[    1,    "r",   lcbh,   104,     31,  3*sw/4, lcbb,           0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 case_openings=[
-// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,      0, 0, 0,         0,    "L",     "T",      0,         0,            [],              [] ],
+// ID, shape, height, width, corner,    x,    y, cut | build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   0,   "r",      0,     0,      0,    0,    0,           0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 case_additions=[
-// ID, shape, height, width, corner, x, y, cut/build, [trim]
-[   0,   "r",      0,     0,      0, 0, 0,         0,     [] ],
+// ID, shape, height, width, corner,    x,    y, cut | build, [trim]
+[   0,  "r1",      0,     0,      0,    0,    0,           0,     [] ],
 ];
 
 tablet_openings=[
-// ID, shape, height, width, corner, x, y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-[   0,   "r",      0,     0,      0, 0, 0,         0,    "L",     "T",      0,         0,            [],              [] ],
+// ID, shape, height, width, corner,    x,    y, cut | build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   0,   "r",      0,     0,      0,    0,    0,           0,    "L",     "T",      0,         0,            [],              [] ],
 ];
 
 
 /*********** Column Usage
+  All shapes require values in the x and y columns.
 
 ** Screen, Case, Tablet Openings
-  Shape      height  width  corner  cut/build  anchor  surface  length  thickness  [edge slopes]  [special params]
-  r            x       x      x         x        x        x                              x
-  c            x                        x                 x                              x
-  hd           x       x                x        x        x                              x
-  oa1–4                       x
-  text         x                        x                 x                                              x
-  svg          x       x                x                                                                x
+  Shape      height  width  corner  cut | build  anchor  surface  length  thickness  [edge slopes]  [special params]
+  r            x       x      x          x         x        x                              x
+  c            x                         x                  x                              x
+  hd           x       x                 x         x        x                              x
+  oa1–4                       x          x
+  text         x                         x                  x                                              x
+  svg          x       x                 x                                                                 x
   bump         x
-  ridge                                 x        x                x         x                            x
-  hridge                                x        x                x         x
-  vridge                                x        x                x         x
-  cridge       x                        x                                   x
-  rridge       x       x      x         x        x                          x
-  aridge1–4                             x                                   x
+  ridge                                  x         x                x         x                            x
+  hridge                                 x         x                x         x
+  vridge                                 x         x                x         x
+  cridge       x                         x                                    x
+  rridge       x       x      x          x         x                          x
+  aridge1–4                              x                                    x
 
   [special params]  Contents
-  text              [text value, direction, font style, h-align, v-align]
-  svg               [filename, direction]
+  text              ["text value", direction, font style, h-align, v-align]
+  svg               ["filename", direction]
   ridge             [direction]
 
 ** Case Additions
-  Shape   height  width  corner  cut/build  [trim]
-  r         x       x      x         x
-  tab1–4    x       x      x         x        x
-  cm1–4     x       x                x        x
-  t1–4      x       x                x        x
-  f1–4      x       x      x         x        x
+  Shape   height  width  corner  cut | build  [trim]
+  r1–4      x       x      x          x         x
+  tab1–4    x       x      x          x         x
+  cm1–4     x       x                 x         x
+  t1–4      x       x                 x         x
+  f1–4      x       x      x          x         x
   oa1–4                    x
   ped1–4
 
