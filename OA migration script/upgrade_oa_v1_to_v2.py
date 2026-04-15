@@ -58,6 +58,7 @@ def build_standard_footer() -> str:
 
     case_addition_rows = [
         ["Shape", "height", "width", "corner", "cut | build", "[trim]"],
+        ["r", "x", "x", "x", "x", "x"],
         ["r1–4", "x", "x", "x", "x", "x"],
         ["tab1–4", "x", "x", "x", "x", "x"],
         ["cm1–4", "x", "x", "", "x", "x"],
@@ -104,6 +105,7 @@ REGION_SHAPES = {
     "ridge", "hridge", "vridge", "cridge", "rridge", "aridge1", "aridge2", "aridge3", "aridge4",
 }
 CASE_ADD_SHAPES = {
+    "r",
     "tab1", "tab2", "tab3", "tab4", "cm1", "cm2", "cm3", "cm4",
     "t1", "t2", "t3", "t4", "f1", "f2", "f3", "f4", "oa1", "oa2", "oa3", "oa4",
     "ped1", "ped2", "ped3", "ped4", "r1", "r2", "r3", "r4",
@@ -549,7 +551,24 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
     if base_shape == 'c':
         warnings.append(f"Dropped case_additions 'c' circle (V2 case_additions does not support circles).")
         return None
-    elif base_shape in ('cr', 'rr', 'crr'):
+    elif base_shape == 'cr':
+        # V1 "cr" = centre-anchored rectangle → V2 "r" (always centre-anchored)
+        new_shape = ('-' if negative else '') + 'r'
+        new_corner = '' if compact_number_or_expr(corner) in ('0', '') else atom(corner)
+        new_corner = new_corner or '0'
+        cut_build = atom(thickness) if thickness not in ('', '0') else '0'
+        return Row([
+            atom(id_),
+            f'"{new_shape}"',
+            atom(height) or '0',
+            atom(width)  or '0',
+            new_corner,
+            atom(x),
+            atom(y),
+            cut_build,
+            trim_vector(ta, tb, tr, tl),
+        ], comment=comment)
+    elif base_shape in ('rr', 'crr'):
         warnings.append(f"Dropped case_additions '{base_shape}' (V2 case_additions does not support '{base_shape}').")
         return None
     elif re.fullmatch(r'rr([1-4])', base_shape):

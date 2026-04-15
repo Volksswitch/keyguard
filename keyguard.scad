@@ -4781,9 +4781,7 @@ module apply_flex_height_shapes_v2(c_a, is_sub) {
 			addition_trim_to_left  = p[11];
 
 			is_negative    = search("-", addition_shape) != [];
-			is_unsupported = addition_shape == "r"   || addition_shape == "-r"   ||
-			                 addition_shape == "c"   || addition_shape == "-c"   ||
-			                 addition_shape == "cr"  || addition_shape == "-cr"  ||
+			is_unsupported = addition_shape == "c"   || addition_shape == "-c"   ||
 			                 addition_shape == "rr"  || addition_shape == "-rr"  ||
 			                 addition_shape == "crr" || addition_shape == "-crr";
 			if (is_unsupported) {
@@ -4826,9 +4824,7 @@ module add_case_full_height_shapes_v2(c_a, type) {
 		addition_trim_to_right = p[10];
 		addition_trim_to_left  = p[11];
 
-		is_unsupported = addition_shape == "r"   || addition_shape == "-r"   ||
-		                 addition_shape == "c"   || addition_shape == "-c"   ||
-		                 addition_shape == "cr"  || addition_shape == "-cr"  ||
+		is_unsupported = addition_shape == "c"   || addition_shape == "-c"   ||
 		                 addition_shape == "rr"  || addition_shape == "-rr"  ||
 		                 addition_shape == "crr" || addition_shape == "-crr";
 		if (is_unsupported) {
@@ -6185,13 +6181,22 @@ module add_case_full_height_shapes(c_a,type){
 // @param addition_corner_radius  Corner radius in mm (used by rr/crr/oa shapes)
 module build_addition(addition_width, addition_height, addition_shape, addition_corner_radius){
 	if (addition_shape=="r" || addition_shape=="-r"){
+		// V2: "r" in case_additions is always centre-anchored; corner radius optional
 		if (addition_width > 0 && addition_height > 0){
-			square([addition_width,addition_height]);
+			if (addition_corner_radius > 0) {
+				rounded_rect(addition_width, addition_height, min(addition_corner_radius, min(addition_width, addition_height)/2));
+			} else {
+				square([addition_width,addition_height],center=true);
+			}
 		}
 	}
 	else if (addition_shape=="cr" || addition_shape=="-cr"){
 		if (addition_width > 0 && addition_height > 0){
-			square([addition_width,addition_height],center=true);
+			if (addition_corner_radius > 0) {
+				rounded_rect(addition_width, addition_height, min(addition_corner_radius, min(addition_width, addition_height)/2));
+			} else {
+				square([addition_width,addition_height],center=true);
+			}
 		}
 	}
 	else if (addition_shape=="r1" || addition_shape=="-r1"){
