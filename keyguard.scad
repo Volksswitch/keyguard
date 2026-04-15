@@ -6192,11 +6192,7 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 	}
 	else if (addition_shape=="cr" || addition_shape=="-cr"){
 		if (addition_width > 0 && addition_height > 0){
-			if (addition_corner_radius > 0) {
-				rounded_rect(addition_width, addition_height, min(addition_corner_radius, min(addition_width, addition_height)/2));
-			} else {
-				square([addition_width,addition_height],center=true);
-			}
+			square([addition_width,addition_height],center=true);
 		}
 	}
 	else if (addition_shape=="r1" || addition_shape=="-r1"){
