@@ -40,11 +40,11 @@ def _render_comment_table(title: str, rows: list[list[str]]) -> str:
 
 def build_standard_footer() -> str:
     region_rows = [
-        ["Shape", "height", "width", "corner", "cut/build", "anchor", "surface", "length", "thickness", "[edge slopes]", "[special params]"],
+        ["Shape", "height", "width", "corner", "cut | build", "anchor", "surface", "length", "thickness", "[edge slopes]", "[special params]"],
         ["r", "x", "x", "x", "x", "x", "x", "", "", "x", ""],
         ["c", "x", "", "", "x", "", "x", "", "", "x", ""],
         ["hd", "x", "x", "", "x", "x", "x", "", "", "x", ""],
-        ["oa1–4", "", "", "x", "", "", "", "", "", "", ""],
+        ["oa1–4", "", "", "x", "x", "", "", "", "", "", ""],
         ["text", "x", "", "", "x", "", "x", "", "", "", "x"],
         ["svg", "x", "x", "", "x", "", "", "", "", "", "x"],
         ["bump", "x", "", "", "", "", "", "", "", "", ""],
@@ -57,8 +57,8 @@ def build_standard_footer() -> str:
     ]
 
     case_addition_rows = [
-        ["Shape", "height", "width", "corner", "cut/build", "[trim]"],
-        ["r", "x", "x", "x", "x", ""],
+        ["Shape", "height", "width", "corner", "cut | build", "[trim]"],
+        ["r1–4", "x", "x", "x", "x", "x"],
         ["tab1–4", "x", "x", "x", "x", "x"],
         ["cm1–4", "x", "x", "", "x", "x"],
         ["t1–4", "x", "x", "", "x", "x"],
@@ -69,12 +69,13 @@ def build_standard_footer() -> str:
 
     parts = [
         "/*********** Column Usage",
+        "  All shapes require values in the x and y columns.",
         "",
         _render_comment_table("** Screen, Case, Tablet Openings", region_rows),
         "",
         "  [special params]  Contents",
-        "  text              [text value, direction, font style, h-align, v-align]",
-        "  svg               [filename, direction]",
+        '  text              ["text value", direction, font style, h-align, v-align]',
+        '  svg               ["filename", direction]',
         "  ridge             [direction]",
         "",
         _render_comment_table("** Case Additions", case_addition_rows),
@@ -92,11 +93,11 @@ SECTION_RE = re.compile(
 )
 
 REGION_HEADERS = {
-    "screen_openings": ["ID", "shape", "height", "width", "corner", "x", "y", "cut/build", "anchor", "surface", "length", "thickness", "[edge_slopes]", "[special parms]"],
-    "case_openings": ["ID", "shape", "height", "width", "corner", "x", "y", "cut/build", "anchor", "surface", "length", "thickness", "[edge_slopes]", "[special parms]"],
-    "tablet_openings": ["ID", "shape", "height", "width", "corner", "x", "y", "cut/build", "anchor", "surface", "length", "thickness", "[edge_slopes]", "[special parms]"],
+    "screen_openings": ["ID", "shape", "height", "width", "corner", "x", "y", "cut | build", "anchor", "surface", "length", "thickness", "[edge_slopes]", "[special parms]"],
+    "case_openings": ["ID", "shape", "height", "width", "corner", "x", "y", "cut | build", "anchor", "surface", "length", "thickness", "[edge_slopes]", "[special parms]"],
+    "tablet_openings": ["ID", "shape", "height", "width", "corner", "x", "y", "cut | build", "anchor", "surface", "length", "thickness", "[edge_slopes]", "[special parms]"],
 }
-CASE_ADD_HEADERS = ["ID", "shape", "height", "width", "corner", "x", "y", "cut/build", "[trim]"]
+CASE_ADD_HEADERS = ["ID", "shape", "height", "width", "corner", "x", "y", "cut | build", "[trim]"]
 
 REGION_SHAPES = {
     "r", "c", "hd", "oa1", "oa2", "oa3", "oa4", "text", "svg", "bump",
@@ -329,7 +330,7 @@ def additions_row_is_placeholder(values: list[str]) -> bool:
     _id, x, y, width, height, shape, thickness, ta, tb, tr, tl, corner = [normalize_atom(v) for v in vals[:12]]
     return (
         x in ('0', '') and y in ('0', '') and width in ('0', '') and height in ('0', '')
-        and shape in ('"r"', 'r') and thickness in ('0', '') and corner in ('0', '')
+        and shape in ('"r"', '"r1"', 'r', 'r1') and thickness in ('0', '') and corner in ('0', '')
         and ta in ('-999', '') and tb in ('-999', '') and tr in ('-999', '') and tl in ('-999', '')
     )
 
@@ -562,7 +563,7 @@ def default_region_row() -> Row:
 
 
 def default_addition_row() -> Row:
-    return Row(['0', '"r"', '0', '0', '0', '0', '0', '0', '[]'])
+    return Row(['0', '"r1"', '0', '0', '0', '0', '0', '0', '[]'])
 
 
 def convert_sections(sections: dict[str, str]) -> tuple[dict[str, list[Row]], list[str]]:
@@ -611,6 +612,10 @@ def compute_widths(rows: list[Row], headers: list[str]) -> list[int]:
     for row in rows:
         for i, value in enumerate(row.values):
             widths[i] = max(widths[i], len(value))
+    # Ensure x and y column headers have at least 3 leading spaces (minimum width 4)
+    for i, h in enumerate(headers):
+        if h in ('x', 'y'):
+            widths[i] = max(widths[i], 4)
     return widths
 
 
@@ -639,9 +644,8 @@ def format_rows(rows: list[Row], headers: list[str], section_name: str) -> list[
 
 def build_output(converted: dict[str, list[Row]], preserved_assignments: list[str] | None = None) -> str:
     preserved_assignments = preserved_assignments or []
-    parts = ['oa_version = 2; // operations and additions file data structure version']
+    parts = []
     if preserved_assignments:
-        parts.append('')
         parts.extend(preserved_assignments)
     parts.append('')
     for name in ('screen_openings', 'case_openings', 'case_additions', 'tablet_openings'):
