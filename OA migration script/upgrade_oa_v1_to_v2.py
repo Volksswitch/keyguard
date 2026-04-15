@@ -524,25 +524,19 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
     elif re.fullmatch(r'rr([1-4])', base_shape):
         m = re.fullmatch(r'rr([1-4])', base_shape)
         assert m is not None
-        new_shape = f'r{m.group(1)}'
+        new_shape = ('-' if negative else '') + f'r{m.group(1)}'
         new_corner = '' if compact_number_or_expr(corner) in ('0', '') else atom(corner)
     elif base_shape in CASE_ADD_SHAPES:
-        new_shape = base_shape
+        new_shape = bare  # preserve negative prefix if present
         new_corner = '' if compact_number_or_expr(corner) in ('0', '') else atom(corner)
     else:
         warnings.append(f"Dropped unsupported case_additions shape {shape}.")
         return None
 
-    cut_build = ''
-    if thickness not in ('', '0'):
-        cut_build = atom(thickness)
-        if negative:
-            cut_build = '-' + cut_build.lstrip('-')
-    elif negative:
-        cut_build = '-0'
+    cut_build = atom(thickness) if thickness not in ('', '0') else ''
 
     new_corner = new_corner or '0'
-    cut_build  = '0' if cut_build in ('', '-0') else cut_build
+    cut_build  = '0' if cut_build == '' else cut_build
 
     return Row([
         atom(id_),
@@ -743,9 +737,10 @@ def validate_case_addition_row(row: Row, row_index: int) -> list[str]:
 
     shape = vals[1]
     bare_shape = shape.strip('"')
+    base_shape = bare_shape.lstrip('-')
     if shape == '' or not is_string_literal(shape):
         errors.append(f'case_additions row {row_index}: shape must be a quoted string')
-    elif bare_shape not in CASE_ADD_SHAPES:
+    elif base_shape not in CASE_ADD_SHAPES:
         errors.append(f'case_additions row {row_index}: unsupported V2 shape {shape}')
 
     try:
