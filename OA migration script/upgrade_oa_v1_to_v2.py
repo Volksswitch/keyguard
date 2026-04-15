@@ -378,6 +378,21 @@ def convert_region_row(values: list[str], warnings: list[str], section_name: str
     id_, x, y, width, height, shape, top, bottom, left, right, corner, other = map(normalize_atom, [id_, x, y, width, height, shape, top, bottom, left, right, corner, other])
     bare_shape = shape.strip('"')
 
+    # Non-literal shape (variable or expression): pass through with column reordering only
+    if not is_string_literal(shape) and shape != '':
+        cut_build = atom(other) if other not in ('', '0') else '0'
+        return Row([
+            atom(id_),
+            shape,
+            atom(height) or '0',
+            atom(width)  or '0',
+            atom(corner) if corner not in ('', '0') else '0',
+            atom(x),
+            atom(y),
+            cut_build,
+            '"L"', '"T"', '0', '0', '[]', '[]',
+        ])
+
     new_shape = bare_shape
     anchor = ''
     surface = ''
@@ -514,6 +529,22 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
     negative = bare.startswith('-')
     base_shape = bare[1:] if negative else bare
     comment = ''
+
+    # Non-literal shape (variable or expression): pass through with column reordering only
+    if not is_string_literal(shape) and shape != '':
+        new_corner = atom(corner) if corner not in ('', '0', '-999') else '0'
+        cut_build  = atom(thickness) if thickness not in ('', '0', '-999') else '0'
+        return Row([
+            atom(id_),
+            shape,
+            atom(height) or '0',
+            atom(width)  or '0',
+            new_corner,
+            atom(x),
+            atom(y),
+            cut_build,
+            trim_vector(ta, tb, tr, tl),
+        ], comment=comment)
 
     if base_shape == 'c':
         warnings.append(f"Dropped case_additions 'c' circle (V2 case_additions does not support circles).")
@@ -678,8 +709,10 @@ def validate_region_row(row: Row, section_name: str, row_index: int) -> list[str
 
     shape = vals[1]
     bare_shape = shape.strip('"')
-    if shape == '' or not is_string_literal(shape):
-        errors.append(f'{section_name} row {row_index}: shape must be a quoted string')
+    if shape == '':
+        errors.append(f'{section_name} row {row_index}: shape must not be empty')
+    elif not is_string_literal(shape):
+        pass  # variable or expression — validated by OpenSCAD at render time
     elif bare_shape not in REGION_SHAPES:
         errors.append(f'{section_name} row {row_index}: unsupported V2 shape {shape}')
 
@@ -738,8 +771,10 @@ def validate_case_addition_row(row: Row, row_index: int) -> list[str]:
     shape = vals[1]
     bare_shape = shape.strip('"')
     base_shape = bare_shape.lstrip('-')
-    if shape == '' or not is_string_literal(shape):
-        errors.append(f'case_additions row {row_index}: shape must be a quoted string')
+    if shape == '':
+        errors.append(f'case_additions row {row_index}: shape must not be empty')
+    elif not is_string_literal(shape):
+        pass  # variable or expression — validated by OpenSCAD at render time
     elif base_shape not in CASE_ADD_SHAPES:
         errors.append(f'case_additions row {row_index}: unsupported V2 shape {shape}')
 
