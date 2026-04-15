@@ -1,3 +1,5 @@
+oa_version = 2; // operations and additions file data structure version
+
 $vpt = [12.8751, -1.05844, -10.8098];
 $vpr = [0, 0, 0];
 $vpd = 900;
@@ -16,14 +18,12 @@ case_additions=[
 //  ID, shape, height, width, corner,    x,    y, cut/build, [trim]
 [    1, "cm4",     kh,   3.5,      0,    0, kh/2,         0,     [] ],
 [    2, "cm2",     kh,   3.5,      0,   kw, kh/2,         0,     [] ],
-[    3, "rr2",     40,    45,     10,   kw, kh/2,         0,     [] ],
+[    3,  "r2",     40,    45,     10,   kw, kh/2,         0,     [] ],
 [    4, "cm1",     15,   100,      0, kw/2,   kh,         0,     [] ],
-[    5, "rr1",     45,    40,     10, kw/2,   kh,         0,     [] ],
-[    6, "rr4",     40,    45,     10,    0, kh/2,         0,     [] ],
+[    5,  "r1",     45,    40,     10, kw/2,   kh,         0,     [] ],
+[    6,  "r4",     40,    45,     10,    0, kh/2,         0,     [] ],
 [    7, "cm3",     15,   100,      0, kw/2,    0,         0,     [] ],
-[    8, "rr3",     45,    40,     10, kw/2,    0,         0,     [] ],
-[    9,   "c",     15,     0,      0,    0,    0,         0,     [] ],
-[   10,   "c",     15,     0,      0,   kw,   kh,         0,     [] ],
+[    8,  "r3",     45,    40,     10, kw/2,    0,         0,     [] ],
 [   11, "crr",     15,    30,      5, -7.5,   kh,         0,     [] ],
 [   12,  "cr",     15,    15,      0,   kw,    0,         0,     [] ],
 [   13,  "t1",     15,    50,      0,  100,   kh,         0,     [] ],
@@ -56,7 +56,7 @@ tablet_openings=[
   r            x       x      x         x        x        x                              x
   c            x                        x                 x                              x
   hd           x       x                x        x        x                              x
-  oa1–4                       x                                                          x
+  oa1–4                       x
   text         x                        x                 x                                              x
   svg          x       x                x                                                                x
   bump         x
@@ -68,11 +68,11 @@ tablet_openings=[
   aridge1–4                             x                                   x
 
   [special params]  Contents
-  text              [text string, direction, font style, h-align, v-align]
+  text              [text value, direction, font style, h-align, v-align]
   svg               [filename, direction]
   ridge             [direction]
 
-** Case, Additions
+** Case Additions
   Shape   height  width  corner  cut/build  [trim]
   r         x       x      x         x
   tab1–4    x       x      x         x        x

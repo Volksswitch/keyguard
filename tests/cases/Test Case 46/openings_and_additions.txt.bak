@@ -1,5 +1,0 @@
-cshapea1 = (r180=="no") ? "rr2" : "rr4";
-case_additions=[
-//  ID,       x,      y,  width, height,   shape, thickness,  trim above, trim below, trim to right, trim to left, corner radius
-[    0,    xors,  coh/2,   2.75,    39, cshapea1,         0,        -999,       -999,          -999,         -999,             6],
-];

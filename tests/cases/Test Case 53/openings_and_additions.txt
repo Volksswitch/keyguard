@@ -1,17 +1,16 @@
+oa_version = 2; // operations and additions file data structure version
+
 $vpt = [0.41811, -11.7702, -17.4088];
 $vpr = [53.6, 0, 18];
 $vpd = 500;
 
 screen_openings=[
-//  ID,    shape, height, width, corner,       x,       y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
-// hridge: anchor "C" — x is the horizontal midpoint of the ridge
-[    1, "hridge",      0,     0,      0,   swm/2,   shm/3,       hor,    "C",     "T",     40,         3,            [],              [] ],
-[    1, "hridge",      0,     0,      0,   swm/2, 2*shm/3,       hor,    "C",     "T",     40,         3,            [],              [] ],
-// vridge: anchor "C" — y is the vertical midpoint of the ridge
-[    1, "vridge",      0,     0,      0,   swm/3,   shm/2,       hor,    "C",     "T",     30,         3,            [],              [] ],
-[    1, "vridge",      0,     0,      0, 2*swm/3,   shm/2,       hor,    "C",     "T",     30,         3,            [],              [] ],
-// ridge at 45°: anchor "C" — (x,y) is the midpoint of the ridge
-[    1,  "ridge",    hor,     0,      0,   swm/2,   shm/2,         0,    "C",     "T",     50,         3,            [], [45] ],
+// ID,    shape, height, width, corner,       x,       y, cut/build, anchor, surface, length, thickness, [edge_slopes], [special parms]
+[   1, "hridge",      0,     0,      0,   swm/2,   shm/3,       hor,    "C",     "T",     40,         3,            [],              [] ],
+[   1, "hridge",      0,     0,      0,   swm/2, 2*shm/3,       hor,    "C",     "T",     40,         3,            [],              [] ],
+[   1, "vridge",      0,     0,      0,   swm/3,   shm/2,       hor,    "C",     "T",     30,         3,            [],              [] ],
+[   1, "vridge",      0,     0,      0, 2*swm/3,   shm/2,       hor,    "C",     "T",     30,         3,            [],              [] ],
+[   1,  "ridge",    hor,     0,      0,   swm/2,   shm/2,         0,    "C",     "T",     50,         3,            [],            [45] ],
 ];
 
 case_openings=[
@@ -20,11 +19,11 @@ case_openings=[
 ];
 
 case_additions=[
-//  ID, shape, height, width, corner,    x,    y, cut/build, [trim]
-[    1, "cm2",   kh-4,   4.5,      0,   kw, kh/2,         0,     [] ],
-[    1, "cm4",   kh-4,   4.5,      0,    0, kh/2,         0,     [] ],
-[    1, "cm1",      4,  kw-4,      0, kw/2,   kh,         0,     [] ],
-[    1, "cm3",      4,  kw-4,      0, kw/2,    0,         0,     [] ],
+// ID, shape, height, width, corner,    x,    y, cut/build, [trim]
+[   1, "cm2",   kh-4,   4.5,      0,   kw, kh/2,         0,     [] ],
+[   1, "cm4",   kh-4,   4.5,      0,    0, kh/2,         0,     [] ],
+[   1, "cm1",      4,  kw-4,      0, kw/2,   kh,         0,     [] ],
+[   1, "cm3",      4,  kw-4,      0, kw/2,    0,         0,     [] ],
 ];
 
 tablet_openings=[
@@ -40,7 +39,7 @@ tablet_openings=[
   r            x       x      x         x        x        x                              x
   c            x                        x                 x                              x
   hd           x       x                x        x        x                              x
-  oa1–4                       x                                                          x
+  oa1–4                       x
   text         x                        x                 x                                              x
   svg          x       x                x                                                                x
   bump         x
@@ -52,11 +51,11 @@ tablet_openings=[
   aridge1–4                             x                                   x
 
   [special params]  Contents
-  text              [text string, direction, font style, h-align, v-align]
+  text              [text value, direction, font style, h-align, v-align]
   svg               [filename, direction]
   ridge             [direction]
 
-** Case, Additions
+** Case Additions
   Shape   height  width  corner  cut/build  [trim]
   r         x       x      x         x
   tab1–4    x       x      x         x        x
@@ -75,7 +74,7 @@ These special variables can be used to locate screen openings relative to the (0
 	sh 	screen height (the value is in millimeters or pixels as appropriate)
 	sw	screen width (the value is in millimeters or pixels as appropriate)
 
-	mpp	millimeters per pixel
+	mpp	millimeters per pixel	
 	ppm	pixels per millimeter
 
 	nr	number of rows in grid
@@ -94,7 +93,7 @@ These special variables can be used to locate screen openings relative to the (0
 	lmbt	lower message bar top
 	lmbb	lower message bar bottom
 	lcbb	lower command bar bottom
-
+	
 ** grid variables (the value is in millimeters or pixels as appropriate)
 	gw	grid width
 	gh	grid height
@@ -105,7 +104,7 @@ These special variables can be used to locate screen openings relative to the (0
 	bp	bottom padding - specified in Grid Special Settings
 	lp	left padding - specified in Grid Special Settings
 	rp	right padding - specified in Grid Special Settings
-
+	
 ** cell variables (the value is in millimeters)
 	cw	cell width (doesn't apply to cells that are affected by left/right compensation for tight cases)
 	ch	cell height (doesn't apply to cells that are affected by top/bottom compensation for tight cases)
@@ -156,7 +155,7 @@ The designer thinks of the camera and home button as positioned relative to the 
 
 	sxo	sign of x offset, if measuring from standard home/camera locations
 	syo	sign of y offset, if measuring from standard home/camera locations
-
+	
 	xols	x location of the left side of the case opening adjusted for swapping camera and home button
 	xors	x location of the right side of the case opening adjusted for swapping camera and home button
 	yobs	y location of the bottom side of the case opening adjusted for swapping the camera and home button

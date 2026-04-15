@@ -1,3 +1,5 @@
+oa_version = 2; // operations and additions file data structure version
+
 $vpt = [-8.39957, -16.3749, -16.125];
 $vpr = [55, 0, 25];
 $vpd = 500;
@@ -40,7 +42,7 @@ tablet_openings=[
   r            x       x      x         x        x        x                              x
   c            x                        x                 x                              x
   hd           x       x                x        x        x                              x
-  oa1–4                       x                                                          x
+  oa1–4                       x
   text         x                        x                 x                                              x
   svg          x       x                x                                                                x
   bump         x
@@ -52,11 +54,11 @@ tablet_openings=[
   aridge1–4                             x                                   x
 
   [special params]  Contents
-  text              [text string, direction, font style, h-align, v-align]
+  text              [text value, direction, font style, h-align, v-align]
   svg               [filename, direction]
   ridge             [direction]
 
-** Case, Additions
+** Case Additions
   Shape   height  width  corner  cut/build  [trim]
   r         x       x      x         x
   tab1–4    x       x      x         x        x
