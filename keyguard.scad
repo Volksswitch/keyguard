@@ -4781,8 +4781,11 @@ module apply_flex_height_shapes_v2(c_a, is_sub) {
 			addition_trim_to_left  = p[11];
 
 			is_negative    = search("-", addition_shape) != [];
-			is_unsupported = addition_shape == "r"  || addition_shape == "-r" ||
-			                 addition_shape == "c"  || addition_shape == "-c";
+			is_unsupported = addition_shape == "r"   || addition_shape == "-r"   ||
+			                 addition_shape == "c"   || addition_shape == "-c"   ||
+			                 addition_shape == "cr"  || addition_shape == "-cr"  ||
+			                 addition_shape == "rr"  || addition_shape == "-rr"  ||
+			                 addition_shape == "crr" || addition_shape == "-crr";
 			if (is_unsupported) {
 				echo(str("WARNING: V2 case_additions shape '", addition_shape, "' not supported; use r1-4 instead (ID=", addition_ID, ")"));
 			} else if (addition_thickness > 0 && is_sub == is_negative) {
@@ -4823,8 +4826,11 @@ module add_case_full_height_shapes_v2(c_a, type) {
 		addition_trim_to_right = p[10];
 		addition_trim_to_left  = p[11];
 
-		is_unsupported = addition_shape == "r"  || addition_shape == "-r" ||
-		                 addition_shape == "c"  || addition_shape == "-c";
+		is_unsupported = addition_shape == "r"   || addition_shape == "-r"   ||
+		                 addition_shape == "c"   || addition_shape == "-c"   ||
+		                 addition_shape == "cr"  || addition_shape == "-cr"  ||
+		                 addition_shape == "rr"  || addition_shape == "-rr"  ||
+		                 addition_shape == "crr" || addition_shape == "-crr";
 		if (is_unsupported) {
 			echo(str("WARNING: V2 case_additions shape '", addition_shape, "' not supported; use r1-4 instead (ID=", addition_ID, ")"));
 		} else if (addition_thickness == 0 && addition_shape != undef) {
@@ -6190,26 +6196,49 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 	}
 	else if (addition_shape=="r1" || addition_shape=="-r1"){
 		if (addition_width > 0 && addition_height > 0){
-			translate([0,addition_height/2-ff])
-			square([addition_width,addition_height],center=true);
+			if (addition_corner_radius > 0) {
+				translate([0,-ff])
+				half_rounded_rectangle(addition_height, addition_width, addition_corner_radius);
+			} else {
+				translate([0,addition_height/2-ff])
+				square([addition_width,addition_height],center=true);
+			}
 		}
 	}
 	else if (addition_shape=="r2" || addition_shape=="-r2"){
 		if (addition_width > 0 && addition_height > 0){
-			translate([addition_width/2-ff,0])
-			square([addition_width,addition_height],center=true);
+			if (addition_corner_radius > 0) {
+				translate([-ff,0])
+				rotate([0,0,-90])
+				half_rounded_rectangle(addition_width, addition_height, addition_corner_radius);
+			} else {
+				translate([addition_width/2-ff,0])
+				square([addition_width,addition_height],center=true);
+			}
 		}
 	}
 	else if (addition_shape=="r3" || addition_shape=="-r3"){
 		if (addition_width > 0 && addition_height > 0){
-			translate([0,-addition_height/2+ff])
-			square([addition_width,addition_height],center=true);
+			if (addition_corner_radius > 0) {
+				translate([0,ff])
+				rotate([0,0,180])
+				half_rounded_rectangle(addition_height, addition_width, addition_corner_radius);
+			} else {
+				translate([0,-addition_height/2+ff])
+				square([addition_width,addition_height],center=true);
+			}
 		}
 	}
 	else if (addition_shape=="r4" || addition_shape=="-r4"){
 		if (addition_width > 0 && addition_height > 0){
-			translate([-addition_width/2+ff,0])
-			square([addition_width,addition_height],center=true);
+			if (addition_corner_radius > 0) {
+				translate([ff,0])
+				rotate([0,0,90])
+				half_rounded_rectangle(addition_width, addition_height, addition_corner_radius);
+			} else {
+				translate([-addition_width/2+ff,0])
+				square([addition_width,addition_height],center=true);
+			}
 		}
 	}
 	else if (addition_shape=="c" || addition_shape=="-c"){

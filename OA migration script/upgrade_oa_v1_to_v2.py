@@ -104,7 +104,6 @@ REGION_SHAPES = {
     "ridge", "hridge", "vridge", "cridge", "rridge", "aridge1", "aridge2", "aridge3", "aridge4",
 }
 CASE_ADD_SHAPES = {
-    "r", "cr", "rr", "crr", "c",
     "tab1", "tab2", "tab3", "tab4", "cm1", "cm2", "cm3", "cm4",
     "t1", "t2", "t3", "t4", "f1", "f2", "f3", "f4", "oa1", "oa2", "oa3", "oa4",
     "ped1", "ped2", "ped3", "ped4", "r1", "r2", "r3", "r4",
@@ -517,11 +516,11 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
     comment = ''
 
     if base_shape == 'c':
-        warnings.append(f"Dropped case_additions 'c' circle (V2 case_additions does not support circles; use a 'crr' approximation instead).")
+        warnings.append(f"Dropped case_additions 'c' circle (V2 case_additions does not support circles).")
         return None
     elif base_shape in ('cr', 'rr', 'crr'):
-        new_shape = base_shape
-        new_corner = '' if base_shape == 'cr' or compact_number_or_expr(corner) in ('0', '') else atom(corner)
+        warnings.append(f"Dropped case_additions '{base_shape}' (V2 case_additions does not support '{base_shape}').")
+        return None
     elif re.fullmatch(r'rr([1-4])', base_shape):
         m = re.fullmatch(r'rr([1-4])', base_shape)
         assert m is not None
