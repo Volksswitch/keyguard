@@ -416,7 +416,7 @@ def convert_region_row(values: list[str], warnings: list[str], section_name: str
     elif bare_shape in ('ttext', 'btext'):
         new_shape = 'text'
         new_width = ''
-        new_corner = '' if corner == '' else atom(corner)
+        new_corner = ''
         cut_build = atom(corner) if corner != '' else ''
         surface = '"b"' if bare_shape == 'btext' else ''
         special = '[' + ','.join([

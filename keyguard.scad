@@ -4326,7 +4326,7 @@ module cut_screen_openings_v2(s_o, depth) {
 			}
 
 		} else if (r[1] == "text") {
-			// r[2]=font_height, r[4]=z_pos, r[9]=surface, r[12]=es, r[13]=sp
+			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[12]=es, r[13]=sp
 			sp = r[13];
 			surface = (r[9] == "B") ? "b" : undef;
 			shape   = (surface == "b") ? "btext" : "ttext";
@@ -4342,9 +4342,9 @@ module cut_screen_openings_v2(s_o, depth) {
 				       ((using_px) ? y_raw * mpp : y_raw);
 				translate([sx0+x_mm, sy0+y_mm, 0])
 				if (opening_ID != "#") {
-					cut_opening(0, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "screen");
+					cut_opening(0, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, "screen");
 				} else {
-					#cut_opening(0, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "screen");
+					#cut_opening(0, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, "screen");
 				}
 			}
 
@@ -4460,6 +4460,7 @@ module cut_case_openings_v2(c_o, depth) {
 			}
 
 		} else if (r[1] == "text") {
+			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
 			surface = (r[9] == "B") ? "b" : undef;
 			shape   = (surface == "b") ? "btext" : "ttext";
@@ -4471,9 +4472,9 @@ module cut_case_openings_v2(c_o, depth) {
 			if (depth > 0) {
 				translate([cox0+r[5], coy0+r[6], 0])
 				if (opening_ID != "#") {
-					cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "keyguard");
+					cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "keyguard");
 				} else {
-					#cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "keyguard");
+					#cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "keyguard");
 				}
 			}
 
@@ -4568,6 +4569,7 @@ module cut_tablet_openings_v2(t_o, depth) {
 			}
 
 		} else if (r[1] == "text") {
+			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
 			surface = (r[9] == "B") ? "b" : undef;
 			shape   = (surface == "b") ? "btext" : "ttext";
@@ -4579,9 +4581,9 @@ module cut_tablet_openings_v2(t_o, depth) {
 			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
 			translate(trans)
 			if (opening_ID != "#") {
-				cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "tablet");
+				cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "tablet");
 			} else {
-				#cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[4], other, depth, "tablet");
+				#cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "tablet");
 			}
 
 		} else if (r[1] == "svg") {
@@ -4712,7 +4714,7 @@ module adding_plastic_v2(additions, where) {
 			}
 
 		} else if (r[1] == "text") {
-			// r[2]=font_height, r[4]=z_pos, r[9]=surface, r[13]=sp
+			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
 			surface = (r[9] == "B") ? "b" : undef;
 			shape   = (surface == "b") ? "btext" : "ttext";
@@ -4729,9 +4731,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, (px ? r[4]*mpp : r[4]), other);
+				place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other);
 			} else {
-				#place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, (px ? r[4]*mpp : r[4]), other);
+				#place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other);
 			}
 
 		} else if (r[1] == "svg") {
