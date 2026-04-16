@@ -136,6 +136,22 @@ class ValidationError(Exception):
     pass
 
 
+@dataclass
+class TernaryBody:
+    """A vector assigned via a ternary expression: name = condition ? [true] : [false]"""
+    condition: str
+    true_body: str
+    false_body: str
+
+
+@dataclass
+class TernaryRows:
+    """Converted output of a ternary-assigned vector."""
+    condition: str
+    true_rows: list[Row]
+    false_rows: list[Row]
+
+
 def strip_block_comments(text: str) -> str:
     return re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
 
@@ -172,28 +188,154 @@ def extract_preserved_assignment_statements(text: str) -> list[str]:
     return assignments
 
 
-SECTION_NONPLAIN_RE = re.compile(
-    r'(?P<name>screen_openings|case_openings|case_additions|tablet_openings)\s*=\s*(?!\[)',
-    re.DOTALL,
+SECTION_NAME_RE = re.compile(
+    r'(?P<name>screen_openings|case_openings|case_additions|tablet_openings)\s*=\s*'
 )
 
 
-def extract_section_bodies(text: str, warnings: list[str]) -> dict[str, str]:
+def _extract_bracket_body(text: str) -> tuple[str | None, str]:
+    """Given text starting with '[', return (inner_body, remainder) up to the matching ']'.
+    Returns (None, text) if no matching ']' is found."""
+    assert text.startswith('[')
+    depth = 0
+    in_str = False
+    str_char = ''
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if in_str:
+            if ch == '\\':
+                i += 2
+                continue
+            if ch == str_char:
+                in_str = False
+        elif ch in ('"', "'"):
+            in_str = True
+            str_char = ch
+        elif ch == '[':
+            depth += 1
+        elif ch == ']':
+            depth -= 1
+            if depth == 0:
+                return text[1:i], text[i + 1:]
+        i += 1
+    return None, text
+
+
+def _extract_assignment_rhs(text: str, pos: int) -> tuple[str, int]:
+    """Extract the RHS of an assignment from pos (position just after '=').
+    Returns (rhs_stripped, end_pos) where end_pos is just after the terminating ';'.
+    Handles bracket counting, strings, and '//' line comments."""
+    depth = 0
+    in_str = False
+    str_char = ''
+    i = pos
+    while i < len(text):
+        ch = text[i]
+        if in_str:
+            if ch == '\\':
+                i += 2
+                continue
+            if ch == str_char:
+                in_str = False
+        elif ch in ('"', "'"):
+            in_str = True
+            str_char = ch
+        elif ch == '/' and i + 1 < len(text) and text[i + 1] == '/':
+            while i < len(text) and text[i] != '\n':
+                i += 1
+            continue
+        elif ch in ('([{'):
+            depth += 1
+        elif ch in (')]}'):
+            depth -= 1
+        elif ch == ';' and depth == 0:
+            return text[pos:i].strip(), i + 1
+        i += 1
+    return text[pos:].strip(), len(text)
+
+
+def _parse_ternary_rhs(rhs: str) -> TernaryBody | None:
+    """Parse 'condition ? [true_body] : [false_body]' from an assignment RHS.
+    Returns None if the RHS is not a simple ternary with plain-array branches."""
+    # Find '?' at depth 0 (outside brackets and strings)
+    depth = 0
+    in_str = False
+    str_char = ''
+    q_pos: int | None = None
+    i = 0
+    while i < len(rhs):
+        ch = rhs[i]
+        if in_str:
+            if ch == '\\':
+                i += 2
+                continue
+            if ch == str_char:
+                in_str = False
+        elif ch in ('"', "'"):
+            in_str = True
+            str_char = ch
+        elif ch in ('([{'):
+            depth += 1
+        elif ch in (')]}'):
+            depth -= 1
+        elif ch == '?' and depth == 0:
+            q_pos = i
+            break
+        i += 1
+
+    if q_pos is None:
+        return None  # not a ternary
+
+    condition = rhs[:q_pos].strip()
+    rest = rhs[q_pos + 1:].lstrip()
+
+    if not rest.startswith('['):
+        return None  # true branch is not a plain array
+
+    true_body, rest = _extract_bracket_body(rest)
+    if true_body is None:
+        return None
+
+    rest = rest.lstrip()
+    if not rest.startswith(':'):
+        return None  # no colon separator
+
+    rest = rest[1:].lstrip()
+    if not rest.startswith('['):
+        return None  # false branch is not a plain array
+
+    false_body, _ = _extract_bracket_body(rest)
+    if false_body is None:
+        return None
+
+    return TernaryBody(condition=condition, true_body=true_body, false_body=false_body)
+
+
+def extract_section_bodies(text: str, warnings: list[str]) -> dict[str, str | TernaryBody]:
     cleaned = strip_block_comments(text)
-    out: dict[str, str] = {}
+    out: dict[str, str | TernaryBody] = {}
+
+    # First pass: plain array assignments  name = [...];
     for m in SECTION_RE.finditer(cleaned):
         out[m.group('name')] = m.group('body')
 
-    # Warn about vectors assigned via expressions (e.g. ternary) that the script cannot parse.
-    for m in SECTION_NONPLAIN_RE.finditer(cleaned):
+    # Second pass: try to parse any remaining section as a ternary
+    for m in SECTION_NAME_RE.finditer(cleaned):
         name = m.group('name')
-        if name not in out:
+        if name in out:
+            continue
+        rhs, _ = _extract_assignment_rhs(cleaned, m.end())
+        ternary = _parse_ternary_rhs(rhs)
+        if ternary is not None:
+            out[name] = ternary
+        else:
             warnings.append(
-                f"'{name}' is assigned via an expression (e.g. a ternary), not a plain array literal. "
+                f"'{name}' is assigned via an expression the script cannot parse. "
                 f"Its rows could not be automatically migrated — please convert them manually."
             )
 
-    # Missing vectors are treated as empty sections rather than hard errors.
+    # Missing vectors fall back to empty
     for name in ('screen_openings', 'case_openings', 'case_additions', 'tablet_openings'):
         out.setdefault(name, '')
 
@@ -641,38 +783,60 @@ def default_addition_row() -> Row:
     return Row(['0', '"r"', '0', '0', '0', '0', '0', '0', '[]'])
 
 
-def convert_sections(sections: dict[str, str]) -> tuple[dict[str, list[Row]], list[str]]:
+def _convert_region_body(body: str, name: str, warnings: list[str]) -> list[Row]:
+    parsed = parse_rows(body)
+    if not parsed or (len(parsed) == 1 and region_row_is_placeholder(parsed[0][0])):
+        return [default_region_row()]
+    rows: list[Row] = []
+    for values, _comment in parsed:
+        if is_known_shape_literal(values[1] if len(values) > 1 else '', REGION_SHAPES):
+            rows.append(as_preserved_region_v2_row(values))
+            continue
+        converted = convert_region_row(values, warnings, name)
+        if converted is not None:
+            rows.append(converted)
+    return rows or [default_region_row()]
+
+
+def _convert_addition_body(body: str, warnings: list[str]) -> list[Row]:
+    parsed = parse_rows(body)
+    if not parsed or (len(parsed) == 1 and additions_row_is_placeholder(parsed[0][0])):
+        return [default_addition_row()]
+    rows: list[Row] = []
+    for values, _comment in parsed:
+        if is_known_shape_literal(values[1] if len(values) > 1 else '', CASE_ADD_SHAPES):
+            rows.append(as_preserved_case_add_v2_row(values))
+            continue
+        converted = convert_addition_row(values, warnings)
+        if converted is not None:
+            rows.append(converted)
+    return rows or [default_addition_row()]
+
+
+def convert_sections(sections: dict[str, str | TernaryBody]) -> tuple[dict[str, list[Row] | TernaryRows], list[str]]:
     warnings: list[str] = []
-    out: dict[str, list[Row]] = {}
+    out: dict[str, list[Row] | TernaryRows] = {}
 
     for name in ('screen_openings', 'case_openings', 'tablet_openings'):
-        parsed = parse_rows(sections[name])
-        if not parsed or (len(parsed) == 1 and region_row_is_placeholder(parsed[0][0])):
-            out[name] = [default_region_row()]
+        body = sections[name]
+        if isinstance(body, TernaryBody):
+            out[name] = TernaryRows(
+                condition=body.condition,
+                true_rows=_convert_region_body(body.true_body, name, warnings),
+                false_rows=_convert_region_body(body.false_body, name, warnings),
+            )
         else:
-            rows: list[Row] = []
-            for values, _comment in parsed:
-                if is_known_shape_literal(values[1] if len(values) > 1 else '', REGION_SHAPES):
-                    rows.append(as_preserved_region_v2_row(values))
-                    continue
-                converted = convert_region_row(values, warnings, name)
-                if converted is not None:
-                    rows.append(converted)
-            out[name] = rows or [default_region_row()]
+            out[name] = _convert_region_body(body, name, warnings)
 
-    parsed_add = parse_rows(sections['case_additions'])
-    if not parsed_add or (len(parsed_add) == 1 and additions_row_is_placeholder(parsed_add[0][0])):
-        out['case_additions'] = [default_addition_row()]
+    body = sections['case_additions']
+    if isinstance(body, TernaryBody):
+        out['case_additions'] = TernaryRows(
+            condition=body.condition,
+            true_rows=_convert_addition_body(body.true_body, warnings),
+            false_rows=_convert_addition_body(body.false_body, warnings),
+        )
     else:
-        rows: list[Row] = []
-        for values, _comment in parsed_add:
-            if is_known_shape_literal(values[1] if len(values) > 1 else '', CASE_ADD_SHAPES):
-                rows.append(as_preserved_case_add_v2_row(values))
-                continue
-            converted = convert_addition_row(values, warnings)
-            if converted is not None:
-                rows.append(converted)
-        out['case_additions'] = rows or [default_addition_row()]
+        out['case_additions'] = _convert_addition_body(body, warnings)
 
     return out, warnings
 
@@ -717,17 +881,33 @@ def format_rows(rows: list[Row], headers: list[str], section_name: str) -> list[
     return out
 
 
-def build_output(converted: dict[str, list[Row]], preserved_assignments: list[str] | None = None) -> str:
+def _format_ternary_section(name: str, ternary: TernaryRows) -> list[str]:
+    headers = REGION_HEADERS.get(name, CASE_ADD_HEADERS)
+    parts = [f'{name} = {ternary.condition} ?']
+    parts.append('[')
+    parts.extend(format_rows(ternary.true_rows, headers, name))
+    parts.append('] :')
+    parts.append('[')
+    parts.extend(format_rows(ternary.false_rows, headers, name))
+    parts.append('];')
+    return parts
+
+
+def build_output(converted: dict[str, list[Row] | TernaryRows], preserved_assignments: list[str] | None = None) -> str:
     preserved_assignments = preserved_assignments or []
     parts = []
     if preserved_assignments:
         parts.extend(preserved_assignments)
     parts.append('')
     for name in ('screen_openings', 'case_openings', 'case_additions', 'tablet_openings'):
-        parts.append(f'{name}=[')
-        headers = REGION_HEADERS.get(name, CASE_ADD_HEADERS)
-        parts.extend(format_rows(converted[name], headers, name))
-        parts.append('];')
+        section = converted[name]
+        if isinstance(section, TernaryRows):
+            parts.extend(_format_ternary_section(name, section))
+        else:
+            parts.append(f'{name}=[')
+            headers = REGION_HEADERS.get(name, CASE_ADD_HEADERS)
+            parts.extend(format_rows(section, headers, name))
+            parts.append('];')
         parts.append('')
     parts.append('')
     parts.append(STANDARD_FOOTER.rstrip())
@@ -843,13 +1023,16 @@ def validate_case_addition_row(row: Row, row_index: int) -> list[str]:
     return errors
 
 
-def validate_converted_sections(converted: dict[str, list[Row]]) -> list[str]:
+def validate_converted_sections(converted: dict[str, list[Row] | TernaryRows]) -> list[str]:
     errors: list[str] = []
     for section_name in ('screen_openings', 'case_openings', 'tablet_openings'):
-        rows = converted[section_name]
-        for idx, row in enumerate(rows, start=1):
+        section = converted[section_name]
+        all_rows = (section.true_rows + section.false_rows) if isinstance(section, TernaryRows) else section
+        for idx, row in enumerate(all_rows, start=1):
             errors.extend(validate_region_row(row, section_name, idx))
-    for idx, row in enumerate(converted['case_additions'], start=1):
+    section = converted['case_additions']
+    all_rows = (section.true_rows + section.false_rows) if isinstance(section, TernaryRows) else section
+    for idx, row in enumerate(all_rows, start=1):
         errors.extend(validate_case_addition_row(row, idx))
     return errors
 
