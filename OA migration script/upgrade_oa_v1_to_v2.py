@@ -172,11 +172,26 @@ def extract_preserved_assignment_statements(text: str) -> list[str]:
     return assignments
 
 
-def extract_section_bodies(text: str) -> dict[str, str]:
+SECTION_NONPLAIN_RE = re.compile(
+    r'(?P<name>screen_openings|case_openings|case_additions|tablet_openings)\s*=\s*(?!\[)',
+    re.DOTALL,
+)
+
+
+def extract_section_bodies(text: str, warnings: list[str]) -> dict[str, str]:
     cleaned = strip_block_comments(text)
     out: dict[str, str] = {}
     for m in SECTION_RE.finditer(cleaned):
         out[m.group('name')] = m.group('body')
+
+    # Warn about vectors assigned via expressions (e.g. ternary) that the script cannot parse.
+    for m in SECTION_NONPLAIN_RE.finditer(cleaned):
+        name = m.group('name')
+        if name not in out:
+            warnings.append(
+                f"'{name}' is assigned via an expression (e.g. a ternary), not a plain array literal. "
+                f"Its rows could not be automatically migrated — please convert them manually."
+            )
 
     # Missing vectors are treated as empty sections rather than hard errors.
     for name in ('screen_openings', 'case_openings', 'case_additions', 'tablet_openings'):
@@ -623,7 +638,7 @@ def default_region_row() -> Row:
 
 
 def default_addition_row() -> Row:
-    return Row(['0', '"r1"', '0', '0', '0', '0', '0', '0', '[]'])
+    return Row(['0', '"r"', '0', '0', '0', '0', '0', '0', '[]'])
 
 
 def convert_sections(sections: dict[str, str]) -> tuple[dict[str, list[Row]], list[str]]:
@@ -840,9 +855,11 @@ def validate_converted_sections(converted: dict[str, list[Row]]) -> list[str]:
 
 
 def convert_text(source: str, validate: bool = True) -> tuple[str, list[str], list[str]]:
-    sections = extract_section_bodies(source)
+    warnings: list[str] = []
+    sections = extract_section_bodies(source, warnings)
     preserved_assignments = extract_preserved_assignment_statements(source)
-    converted, warnings = convert_sections(sections)
+    converted, conv_warnings = convert_sections(sections)
+    warnings.extend(conv_warnings)
     validation_errors = validate_converted_sections(converted) if validate else []
     if validation_errors:
         raise ValidationError('\n'.join(validation_errors))
