@@ -1343,121 +1343,122 @@ e_t = engraved_text;
 case_thick = (!has_case)? tablet_thickness+kt : case_thickness+max(kt-case_to_screen_depth,0);
 
 //currently only openings for ambient light sensors - may need to become specific to ALS if other types of openings are added - especially if they don't map to tablet models in the same way that ALS openings do
-als_openings=[  
+// V2 format: [ID, shape, height, width, corner, x, y, cb, anchor, surface, length, thickness, [es], [sp]]
+als_openings=[
 	/* iPad 1st generation */
-	[[  "1ALS1", xtls+sxo*10.4,   ytbs+syo*94.9,   0,      2.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "1ALS1",         "c",   2.5,   0,   0,   xtls+sxo*10.4,            ytbs+syo*94.9,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad 2nd, 3rd, & 4th generation */
-	[[  "23ALS1", xtls+sxo*6.7,   ytbs+syo*92.9,   0,      2.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "23ALS1",        "c",   2.0,   0,   0,   xtls+sxo*6.7,             ytbs+syo*92.9,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad 5th & 6th generation */
-	[[ "56ALS1", xtls+sxo*11.07, ytbs+syo*80.34,   0,    3.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "56ALS1",        "c",   3.5,   0,   0,   xtls+sxo*11.07,           ytbs+syo*80.34,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad 7th & 8th generation */
-	[[ "78ALS1", xtls+sxo*11.03, ytbs+syo*82.64,   0,    3.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "78ALS1",        "c",   3.5,   0,   0,   xtls+sxo*11.03,           ytbs+syo*82.64,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad 9th generation */
 	// the first entry copied for consistency with ready-made-designs
-	[[ "78ALS1", xtls+sxo*11.03, ytbs+syo*82.64,   0,    3.5,   "c",        60,           60,         60,          60,            0,         ],
-	[ "9ALS1", xtls+sxo*11.03, ytbs+syo*21.83,   0,    3.5,   "c",        60,           60,         60,          60,            0,         ],
-	[ "9ALS2", xtls+sxo*11.03, ytts-syo*21.53,   0,    3.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "78ALS1",        "c",   3.5,   0,   0,   xtls+sxo*11.03,           ytbs+syo*82.64,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "9ALS1",         "c",   3.5,   0,   0,   xtls+sxo*11.03,           ytbs+syo*21.83,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "9ALS2",         "c",   3.5,   0,   0,   xtls+sxo*11.03,           ytts-syo*21.53,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad 10th & 11th generation */
-	[[ "10ALS1", xtls+sxo*35.02,      ytts-syo*4.53,   0,    3.5,   "c",        60,           60,         60,          60,            0,         ],
-	[ "10ALS2", xtls+sxo*(tw-111.15), ytts-syo*5.24,   0,    3.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "10ALS1",        "c",   3.5,   0,   0,   xtls+sxo*35.02,           ytts-syo*4.53,    0,   "",   "",   0,   0,   [60],   [] ],
+	[  "10ALS2",        "c",   3.5,   0,   0,   xtls+sxo*(tw-111.15),     ytts-syo*5.24,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 9.7-inch */
-	[[ "9.7ALS1", xtls+sxo*13.55,   ytbs+syo*18.86,   0,     3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[ "9.7ALS2", xtls+sxo*13.55,   ytts-syo*18.86,   0,     3.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "9.7ALS1",       "c",   3.0,   0,   0,   xtls+sxo*13.55,           ytbs+syo*18.86,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "9.7ALS2",       "c",   3.0,   0,   0,   xtls+sxo*13.55,           ytts-syo*18.86,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 10.5-inch */
-	[[ "10.5ALS1", xtls+sxo*9.62,   ytbs+syo*18.72,   0,     2.5,   "c",        60,           60,         60,          60,            0,         ],
-	[ "10.5ALS2", xtls+sxo*9.62,   ytts-syo*18.72,   0,     2.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "10.5ALS1",      "c",   2.5,   0,   0,   xtls+sxo*9.62,            ytbs+syo*18.72,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "10.5ALS2",      "c",   2.5,   0,   0,   xtls+sxo*9.62,            ytts-syo*18.72,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 11, 1st & 2nd generation  & Via Pro*/
-	[[ "11-12ALS1", xtls+sxo*4.37,   ytbs+syo*30.73,   0,      3.5,   "c",        60,           60,         60,          60,            0,         ],
-	[ "11-12ALS2", xtls+sxo*4.37,   ytts-syo*30.73,   0,      3.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "11-12ALS1",     "c",   3.5,   0,   0,   xtls+sxo*4.37,            ytbs+syo*30.73,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "11-12ALS2",     "c",   3.5,   0,   0,   xtls+sxo*4.37,            ytts-syo*30.73,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 11, 3rd & 4th generation */
-	[[ "11-34ALS1", xtls+sxo*3.60,   ytbs+syo*43.49,   0,      4.0,   "c",        60,           60,         60,          60,            0,         ],
-	[ "11-34ALS2", xtls+sxo*3.60,   ytts-syo*43.49,   0,      4.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "11-34ALS1",     "c",   4.0,   0,   0,   xtls+sxo*3.60,            ytbs+syo*43.49,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "11-34ALS2",     "c",   4.0,   0,   0,   xtls+sxo*3.60,            ytts-syo*43.49,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 12.9, 1st generation */
-	[[ "12.9-1ALS1", xtls+sxo*13.41,   ytbs+syo*18.48,   0,    2.5,   "c",        60,           60,         60,          60,            0,         ],
-	[ "12.9-1ALS2", xtls+sxo*13.41,   ytts-syo*18.48,   0,    2.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "12.9-1ALS1",    "c",   2.5,   0,   0,   xtls+sxo*13.41,           ytbs+syo*18.48,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "12.9-1ALS2",    "c",   2.5,   0,   0,   xtls+sxo*13.41,           ytts-syo*18.48,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 12.9, 2nd generation */
-	[[ "12.9-2ALS1", xtls+sxo*11.07,   ytbs+syo*22.38,   0,    2.5,   "c",        60,           60,         60,          60,            0,         ],
-	[ "12.9-2ALS2", xtls+sxo*11.07,   ytts-syo*22.38,   0,    2.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "12.9-2ALS1",    "c",   2.5,   0,   0,   xtls+sxo*11.07,           ytbs+syo*22.38,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "12.9-2ALS2",    "c",   2.5,   0,   0,   xtls+sxo*11.07,           ytts-syo*22.38,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 12.9, 3rd generation */
-	[[ "12.9-3ALS1", xtls+sxo*4.37,   ytbs+syo*30.73,   0,    3.8,   "c",        60,           60,         60,          60,            0,         ],
-	[ "12.9-3ALS2", xtls+sxo*4.37,   ytts-syo*30.73,   0,    3.8,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "12.9-3ALS1",    "c",   3.8,   0,   0,   xtls+sxo*4.37,            ytbs+syo*30.73,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "12.9-3ALS2",    "c",   3.8,   0,   0,   xtls+sxo*4.37,            ytts-syo*30.73,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 12.9, 4th generation */
-	[[ "12.9-4ALS1", xtls+sxo*3.5,   ytbs+syo*30.72,   0,    3.8,   "c",        60,           60,         60,          60,            0,         ],
-	[ "12.9-4ALS2", xtls+sxo*3.5,   ytts-syo*30.72,   0,    3.8,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "12.9-4ALS1",    "c",   3.8,   0,   0,   xtls+sxo*3.5,             ytbs+syo*30.72,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "12.9-4ALS2",    "c",   3.8,   0,   0,   xtls+sxo*3.5,             ytts-syo*30.72,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 12.9, 5th & 6th generation */
-	[[ "12.9-56ALS1", xtls+sxo*4.13,  ytbs+syo*43.49,   0,    3.8,   "c",        60,           60,         60,          60,            0,         ],
-	[ "12.9-56ALS2", xtls+sxo*4.13,  ytts-syo*43.49,   0,    3.8,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "12.9-56ALS1",   "c",   3.8,   0,   0,   xtls+sxo*4.13,            ytbs+syo*43.49,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "12.9-56ALS2",   "c",   3.8,   0,   0,   xtls+sxo*4.13,            ytts-syo*43.49,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Mini */
-	[[ "MiniALS1", xtls+sxo*10.7,   ytts-syo*71.8,   0,      2.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "MiniALS1",      "c",   2.0,   0,   0,   xtls+sxo*10.7,            ytts-syo*71.8,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Mini, 2nd & 3rd generation */
-	[[ "Mini-23ALS1", xtls+sxo*10.7,   ytts-syo*71.7,   0,      2.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Mini-23ALS1",   "c",   2.0,   0,   0,   xtls+sxo*10.7,            ytts-syo*71.7,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Mini, 4th generation */
-	[[ "Mini-4ALS1", xtls+sxo*5.14,   ytbs+syo*16.46,   0,      4.0,   "c",        60,           60,         60,          60,            0,         ],
-	[ "Mini-4ALS2", xtls+sxo*5.14,   ytts-syo*16.46,   0,      4.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Mini-4ALS1",    "c",   4.0,   0,   0,   xtls+sxo*5.14,            ytbs+syo*16.46,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Mini-4ALS2",    "c",   4.0,   0,   0,   xtls+sxo*5.14,            ytts-syo*16.46,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Mini, 5th generation */
-	[[ "Mini-5ALS1", xtls+sxo*13.57,   ytbs+syo*18.60,   0,      4.0,   "c",        60,           60,         60,          60,            0,         ],
-	[ "Mini-5ALS2", xtls+sxo*13.57,   ytts-syo*18.60,   0,      4.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Mini-5ALS1",    "c",   4.0,   0,   0,   xtls+sxo*13.57,           ytbs+syo*18.60,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Mini-5ALS2",    "c",   4.0,   0,   0,   xtls+sxo*13.57,           ytts-syo*18.60,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Mini, 6th, 7th A17 generation & Via Mini*/
-	[[ "Mini-67ALS1", xtls+sxo*4.38,   ytts-syo*23.99,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[ "Mini-67ALS2", xtls+sxo*16.61,   ytts-syo*3.34,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[ "Mini-67ALS3", xtrs-sxo*40.24,   ytts-syo*3.34,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Mini-67ALS1",   "c",   3.0,   0,   0,   xtls+sxo*4.38,            ytts-syo*23.99,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Mini-67ALS2",   "c",   3.0,   0,   0,   xtls+sxo*16.61,           ytts-syo*3.34,    0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Mini-67ALS3",   "c",   3.0,   0,   0,   xtrs-sxo*40.24,           ytts-syo*3.34,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Air */
-	[[ "AirALS1", xtls+sxo*11.1,   ytts-syo*89.1,   0,      2.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "AirALS1",       "c",   2.0,   0,   0,   xtls+sxo*11.1,            ytts-syo*89.1,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Air, 2nd generation */
-	[[ "Air-2ALS1", xtls+sxo*5.14,   ytbs+syo*16.44,   0,      2.5,   "c",        60,           60,         60,          60,            0,         ],
-	[ "Air-2ALS2", xtls+sxo*5.14,   ytts-syo*16.44,   0,      2.5,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Air-2ALS1",     "c",   2.5,   0,   0,   xtls+sxo*5.14,            ytbs+syo*16.44,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Air-2ALS2",     "c",   2.5,   0,   0,   xtls+sxo*5.14,            ytts-syo*16.44,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Air, 3rd generation */
-	[[ "Air-3ALS1", xtls+sxo*9.62,   ytbs+syo*18.72,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[ "Air-3ALS2", xtls+sxo*9.62,   ytts-syo*18.72,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Air-3ALS1",     "c",   3.0,   0,   0,   xtls+sxo*9.62,            ytbs+syo*18.72,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Air-3ALS2",     "c",   3.0,   0,   0,   xtls+sxo*9.62,            ytts-syo*18.72,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Air, 4th & 5th generation */
-	[[ "Air-45ALS1", xtls+sxo*4.62,   ytbs+syo*22.13,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[  "Air-45ALS2", xtls+sxo*4.62,   ytbs+syo*51.40,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[  "Air-45ALS3", xtls+sxo*4.62,   ytts-syo*26.47,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Air-45ALS1",    "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytbs+syo*22.13,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Air-45ALS2",    "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytbs+syo*51.40,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Air-45ALS3",    "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytts-syo*26.47,   0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 11-inch M4 */
-	[[ "Pro-11M4ALS1", xtls+sxo*4.71,   ytbs+syo*88.76,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[  "Pro-11M4ALS2", xtls+sxo*124.85,  ytts-syo*4.71,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Pro-11M4ALS1",  "c",   3.0,   0,   0,   xtls+sxo*4.71,            ytbs+syo*88.76,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Pro-11M4ALS2",  "c",   3.0,   0,   0,   xtls+sxo*124.85,          ytts-syo*4.71,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Pro 13-inch M4 */
-	[[ "Pro-13M4ALS1",   xtls+sxo*4.71,  ytbs+syo*107.76,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[  "Pro-13M4ALS2", xtls+sxo*140.79,    ytts-syo*4.71,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Pro-13M4ALS1",  "c",   3.0,   0,   0,   xtls+sxo*4.71,            ytbs+syo*107.76,  0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Pro-13M4ALS2",  "c",   3.0,   0,   0,   xtls+sxo*140.79,          ytts-syo*4.71,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Air 11-inch M2 & M3 */
-	[[ "Air-11M23ALS1",   xtls+sxo*4.62,   ytbs+syo*22.13,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[  "Air-11M23ALS2",   xtls+sxo*4.62,   ytbs+syo*51.40,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[  "Air-11M23ALS3", xtls+sxo*138.92,    ytts-syo*4.49,   0,      3.7,   "c",        60,           60,         60,          60,            0,         ]],
+	[[ "Air-11M23ALS1", "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytbs+syo*22.13,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Air-11M23ALS2", "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytbs+syo*51.40,   0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Air-11M23ALS3", "c",   3.7,   0,   0,   xtls+sxo*138.92,          ytts-syo*4.49,    0,   "",   "",   0,   0,   [60],   [] ]],
 
 	/* iPad Air 13-inch M2 & M3 */
-	[[ "Air-13M23ALS1", xtls+tw/2-sxo*94.66,   ytts-syo*4.22,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ],
-	[  "Air-13M23ALS2", xtls+tw/2+sxo*15.56,   ytts-syo*4.22,   0,      3.0,   "c",        60,           60,         60,          60,            0,         ]],
-	
+	[[ "Air-13M23ALS1", "c",   3.0,   0,   0,   xtls+tw/2-sxo*94.66,      ytts-syo*4.22,    0,   "",   "",   0,   0,   [60],   [] ],
+	[  "Air-13M23ALS2", "c",   3.0,   0,   0,   xtls+tw/2+sxo*15.56,      ytts-syo*4.22,    0,   "",   "",   0,   0,   [60],   [] ]],
+
 	/* Tobii I-16 */
-	[[ "Tobii-I16ALS1",     xtls+sxo*63,     ytts-syo*10.75,    0,      5.0,   "c",        50,           50,         50,          50,            0,       ],
-	[  "Tobii-I16ALS1",     xtls+sxo*81,     ytts-syo*10.75,    0,      3.0,   "c",        50,           50,         50,          50,            0,       ],
-	[  "Tobii-I16ALS1",     xtls+sxo*91,     ytts-syo*10.75,    0,      3.0,   "c",        50,           50,         50,          50,            0,       ]],
+	[[ "Tobii-I16ALS1", "c",   5.0,   0,   0,   xtls+sxo*63,              ytts-syo*10.75,   0,   "",   "",   0,   0,   [50],   [] ],
+	[  "Tobii-I16ALS2", "c",   3.0,   0,   0,   xtls+sxo*81,              ytts-syo*10.75,   0,   "",   "",   0,   0,   [50],   [] ],
+	[  "Tobii-I16ALS3", "c",   3.0,   0,   0,   xtls+sxo*91,              ytts-syo*10.75,   0,   "",   "",   0,   0,   [50],   [] ]],
 ];
 
 //this tablet's abient light sensor openings
@@ -5070,35 +5071,34 @@ module cut_tablet_openings(t_o,depth){
 }
 // Iterates over the ambient-light-sensor openings vector and cuts each opening at
 // the correct tablet-relative position, respecting the current orientation.
-// @param a_o    ALS openings vector (rows of opening definitions)
+// @param a_o    ALS openings vector (V2 14-column format rows)
 // @param depth  Cut depth in mm
 module cut_als_openings(a_o,depth){
 
 	for(i = [0 : len(a_o)-1]){
-		opening = a_o[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:top slope, 7:bottom slope, 8:left slope, 9:right slope, 10:corner_radius, 11:other
-		
-		opening_ID = opening[0];
-		opening_x = opening[1];
-		opening_y = opening[2];
-		opening_width = opening[3];
-		opening_height = opening[4];
-		opening_shape = opening[5];
-		opening_top_slope = (opening[6]==0) ? 90 : opening[6];
-		opening_bottom_slope = (opening[7]==0) ? 90 : opening[7];
-		opening_left_slope = (opening[8]==0) ? 90 : opening[8];
-		opening_right_slope = (opening[9]==0) ? 90 : opening[9];
-		opening_corner_radius = opening[10];
-		opening_other = opening[11];
-		
-		o_c_r = (opening_width>0 && opening_height>0) ? min(opening_corner_radius,min(opening_width,opening_height)/2) : opening_corner_radius;
-		
-		trans = (is_landscape) ? [tx0+opening_x,ty0+opening_y,0] : [tx0+opening_y,-ty0-opening_x,0];
+		r = a_o[i]; // V2: 0:ID, 1:shape, 2:height, 3:width, 4:corner, 5:x, 6:y, 7:cb, 8:anchor, 9:surface, 10:length, 11:thickness, 12:[es], 13:[sp]
+
+		opening_ID     = r[0];
+		opening_shape  = r[1];
+		opening_height = r[2];
+		opening_width  = r[3];
+		opening_corner = r[4];
+		opening_x      = r[5];
+		opening_y      = r[6];
+		es             = r[12];
+
+		top_sl = v2_slope(es, 0, opening_shape);
+		bot_sl = v2_slope(es, 1, opening_shape);
+		lft_sl = v2_slope(es, 2, opening_shape);
+		rgt_sl = v2_slope(es, 3, opening_shape);
+
+		trans = (is_landscape) ? [tx0+opening_x, ty0+opening_y, 0] : [tx0+opening_y, -ty0-opening_x, 0];
 		translate(trans)
-		if(opening_ID!="#"){
-			cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "tablet");
+		if(opening_ID != "#"){
+			cut_opening(opening_width, opening_height, opening_shape, top_sl, bot_sl, lft_sl, rgt_sl, opening_corner, undef, depth, "tablet");
 		}
 		else{
-			#cut_opening(opening_width, opening_height, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, o_c_r, opening_other,depth, "tablet");
+			#cut_opening(opening_width, opening_height, opening_shape, top_sl, bot_sl, lft_sl, rgt_sl, opening_corner, undef, depth, "tablet");
 		}
 	}
 }
