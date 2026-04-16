@@ -4781,8 +4781,7 @@ module apply_flex_height_shapes_v2(c_a, is_sub) {
 			addition_trim_to_left  = p[11];
 
 			is_negative    = search("-", addition_shape) != [];
-			is_unsupported = addition_shape == "c"   || addition_shape == "-c"   ||
-			                 addition_shape == "rr"  || addition_shape == "-rr"  ||
+			is_unsupported = addition_shape == "rr"  || addition_shape == "-rr"  ||
 			                 addition_shape == "crr" || addition_shape == "-crr";
 			if (is_unsupported) {
 				echo(str("WARNING: V2 case_additions shape '", addition_shape, "' not supported; use r1-4 instead (ID=", addition_ID, ")"));
@@ -4824,8 +4823,7 @@ module add_case_full_height_shapes_v2(c_a, type) {
 		addition_trim_to_right = p[10];
 		addition_trim_to_left  = p[11];
 
-		is_unsupported = addition_shape == "c"   || addition_shape == "-c"   ||
-		                 addition_shape == "rr"  || addition_shape == "-rr"  ||
+		is_unsupported = addition_shape == "rr"  || addition_shape == "-rr"  ||
 		                 addition_shape == "crr" || addition_shape == "-crr";
 		if (is_unsupported) {
 			echo(str("WARNING: V2 case_additions shape '", addition_shape, "' not supported; use r1-4 instead (ID=", addition_ID, ")"));
