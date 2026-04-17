@@ -55,6 +55,7 @@ tablet_openings=[
 ** Case Additions
   Shape   height  width  corner  cut | build  [trim]
   r         x       x      x          x         x
+  c         x                         x         x
   r1–4      x       x      x          x         x
   tab1–4    x       x      x          x         x
   cm1–4     x       x                 x         x

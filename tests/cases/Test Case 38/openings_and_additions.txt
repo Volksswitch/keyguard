@@ -10,8 +10,42 @@ case_openings=[
 ];
 
 case_additions=[
-// ID, shape, height, width, corner,    x,    y, cut | build, [trim]
-[   0,  "r1",      0,     0,      0,    0,    0,           0,     [] ],
+//  ID, shape, height, width, corner,        x,        y, cut | build, [trim]
+[    1, "cm4",    coh,   3.5,      0,        0,    coh/2,           0,     [] ],
+[    2, "cm2",    coh,   3.5,      0,      cow,    coh/2,           0,     [] ],
+[    3,  "r2",     40,    45,     10,      cow,    coh/2,           0,     [] ],
+[    4, "cm1",     15,   100,      0,      158,      coh,           0,     [] ],
+[    5,  "r1",     45,    40,     10,      158,      coh,           0,     [] ],
+[    6,  "r4",     40,    45,     10,        0,    coh/2,           0,     [] ],
+[    7, "cm3",     15,   100,      0,      158,        0,           0,     [] ],
+[    8,  "r3",     45,    40,     10,      158,        0,           0,     [] ],
+[    9,   "c",     15,     0,      0,        0,        0,           0,     [] ],
+[   10,   "c",     15,     0,      0,      cow,      coh,           0,     [] ],
+[   11,  "r1",     15,    15,      0,        0,  coh-7.5,           0,     [] ],
+[   12,  "r2",     15,    15,      0,    cow-7,        0,           0,     [] ],
+[   13,  "t1",     15,    50,      0,      100,      coh,           0,     [] ],
+[   14,  "t4",     15,    50,      0,      100,      coh,           0,     [] ],
+[   15,  "t2",     15,    50,      0,       50,        0,           0,     [] ],
+[   16,  "t3",     15,    50,      0,      266,        0,           0,     [] ],
+[   17,  "t1",     10,    45,      0,      cow,      150,           0,     [] ],
+[   18,  "t2",     10,    45,      0,      cow,       35,           0,     [] ],
+[   19,  "t4",     20,    65,      0,        0,      150,           0,     [] ],
+[   20,  "t3",     20,    65,      0,        0,       30,           0,     [] ],
+[   21,  "f1",      0,   7.5,      0,      7.5,      coh,           0,     [] ],
+[   22,  "f2",      0,    15,      0,      266,        0,           0,     [] ],
+[   23,  "f3",      0,    30,      0,        0,      150,           0,     [] ],
+[   24,  "f4",      0,    30,      0,        0,       30,           0,     [] ],
+[    1, "cm2",    coh,    10,      0,        0,    coh/2,          -9,     [] ],
+[    2, "cm4",    coh,    10,      0,      cow,    coh/2,          -9,     [] ],
+[  "#", "cm1",     15,   100,      0,      158,      coh,          -9,     [] ],
+[  "#",  "r1",     45,    40,     10,      158,      coh,          -9,     [] ],
+[  "#", "cm3",     15,   100,      0,      158,        0,          -5,     [] ],
+[  "#",  "r3",     45,    40,     10,      158,        0,          -5,     [] ],
+[    9,   "c",     15,     0,      0, cow/2-20, coh/2-20,          -9,     [] ],
+[   10,   "c",     15,     0,      0, cow/2+20, coh/2+20,          -9,     [] ],
+[   11,  "r1",     15,    15,      0, cow/2-20, coh/2+20,          -9,     [] ],
+[   12,  "r2",     15,    15,      0, cow/2+20, coh/2-20,          -9,     [] ],
+[  "#",  "t4",     10,    45,      0,      cow,      150,          -9,     [] ],
 ];
 
 tablet_openings=[
@@ -46,6 +80,8 @@ tablet_openings=[
 
 ** Case Additions
   Shape   height  width  corner  cut | build  [trim]
+  r         x       x      x          x         x
+  c         x                         x         x
   r1–4      x       x      x          x         x
   tab1–4    x       x      x          x         x
   cm1–4     x       x                 x         x
@@ -53,12 +89,6 @@ tablet_openings=[
   f1–4      x       x      x          x         x
   oa1–4                    x
   ped1–4
-
-  cut | build values:
-    > 0         add shape, extruded to this depth (mm)
-    0 or omit   add shape, full keyguard height (2D outline addition)
-    -0.01–-8.99 subtract shape, pocket to this depth (mm)
-    <= -9       subtract shape, full keyguard height (2D outline subtraction)
 
 
 

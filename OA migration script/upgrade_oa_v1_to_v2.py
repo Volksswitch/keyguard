@@ -682,6 +682,21 @@ def convert_region_row(values: list[str], warnings: list[str], section_name: str
     ])
 
 
+def _encode_cb(negative: bool, thickness: str) -> str:
+    """Encode the V2 cut/build value for a case_additions row.
+
+    negative, thickness == 0  → -9  (full-height 2-D subtraction)
+    negative, thickness > 0   → -thickness  (pocket subtraction)
+    positive, thickness == 0  → 0   (full-height 2-D addition)
+    positive, thickness > 0   → thickness   (extruded addition)
+    """
+    if negative:
+        t = atom(thickness) if thickness not in ('', '-999') else ''
+        return '-9' if t in ('', '0') else '-' + t
+    t = atom(thickness) if thickness not in ('', '-999') else ''
+    return t if t not in ('', '0') else '0'
+
+
 def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row]:
     vals = values + [''] * (12 - len(values))
     id_, x, y, width, height, shape, thickness, ta, tb, tr, tl, corner = map(normalize_atom, vals[:12])
@@ -693,7 +708,7 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
     # Non-literal shape (variable or expression): pass through with column reordering only
     if not is_string_literal(shape) and shape != '':
         new_corner = atom(corner) if corner not in ('', '0', '-999') else '0'
-        cut_build  = atom(thickness) if thickness not in ('', '0', '-999') else '0'
+        cut_build  = _encode_cb(negative, thickness)
         return Row([
             atom(id_),
             shape,
@@ -708,8 +723,8 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
 
     if base_shape == 'c':
         # V1 "c" = circle; height holds the diameter; width and corner unused
-        new_shape = ('-' if negative else '') + 'c'
-        cut_build = atom(thickness) if thickness not in ('', '0') else '0'
+        new_shape = 'c'
+        cut_build = _encode_cb(negative, thickness)
         return Row([
             atom(id_),
             f'"{new_shape}"',
@@ -723,10 +738,10 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
         ], comment=comment)
     elif base_shape == 'cr':
         # V1 "cr" = centre-anchored rectangle → V2 "r" (always centre-anchored)
-        new_shape = ('-' if negative else '') + 'r'
+        new_shape = 'r'
         new_corner = '' if compact_number_or_expr(corner) in ('0', '') else atom(corner)
         new_corner = new_corner or '0'
-        cut_build = atom(thickness) if thickness not in ('', '0') else '0'
+        cut_build = _encode_cb(negative, thickness)
         return Row([
             atom(id_),
             f'"{new_shape}"',
@@ -740,10 +755,10 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
         ], comment=comment)
     elif base_shape == 'crr':
         # V1 "crr" = centre-anchored rounded rectangle → V2 "r" with corner radius
-        new_shape = ('-' if negative else '') + 'r'
+        new_shape = 'r'
         new_corner = '' if compact_number_or_expr(corner) in ('0', '') else atom(corner)
         new_corner = new_corner or '0'
-        cut_build = atom(thickness) if thickness not in ('', '0') else '0'
+        cut_build = _encode_cb(negative, thickness)
         return Row([
             atom(id_),
             f'"{new_shape}"',
@@ -761,19 +776,18 @@ def convert_addition_row(values: list[str], warnings: list[str]) -> Optional[Row
     elif re.fullmatch(r'rr([1-4])', base_shape):
         m = re.fullmatch(r'rr([1-4])', base_shape)
         assert m is not None
-        new_shape = ('-' if negative else '') + f'r{m.group(1)}'
+        new_shape = f'r{m.group(1)}'
         new_corner = '' if compact_number_or_expr(corner) in ('0', '') else atom(corner)
     elif base_shape in CASE_ADD_SHAPES:
-        new_shape = bare  # preserve negative prefix if present
+        new_shape = base_shape  # always use positive shape name; subtraction encoded in cb
         new_corner = '' if compact_number_or_expr(corner) in ('0', '') else atom(corner)
     else:
         warnings.append(f"Dropped unsupported case_additions shape {shape}.")
         return None
 
-    cut_build = atom(thickness) if thickness not in ('', '0') else ''
+    cut_build = _encode_cb(negative, thickness)
 
     new_corner = new_corner or '0'
-    cut_build  = '0' if cut_build == '' else cut_build
 
     return Row([
         atom(id_),
@@ -1014,12 +1028,11 @@ def validate_case_addition_row(row: Row, row_index: int) -> list[str]:
 
     shape = vals[1]
     bare_shape = shape.strip('"')
-    base_shape = bare_shape.lstrip('-')
     if shape == '':
         errors.append(f'case_additions row {row_index}: shape must not be empty')
     elif not is_string_literal(shape):
         pass  # variable or expression — validated by OpenSCAD at render time
-    elif base_shape not in CASE_ADD_SHAPES:
+    elif bare_shape not in CASE_ADD_SHAPES:
         errors.append(f'case_additions row {row_index}: unsupported V2 shape {shape}')
 
     try:

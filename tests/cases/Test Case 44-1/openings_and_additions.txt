@@ -119,7 +119,7 @@ case_openings=[
 
 case_additions=[
 // ID, shape, height, width, corner,    x,    y, cut | build, [trim]
-[   0,  "r1",      0,     0,      0,    0,    0,           0,     [] ],
+[   0,   "r",      0,     0,      0,    0,    0,           0,     [] ],
 ];
 
 tablet_openings=[
@@ -155,6 +155,7 @@ tablet_openings=[
 ** Case Additions
   Shape   height  width  corner  cut | build  [trim]
   r         x       x      x          x         x
+  c         x                         x         x
   r1–4      x       x      x          x         x
   tab1–4    x       x      x          x         x
   cm1–4     x       x                 x         x
