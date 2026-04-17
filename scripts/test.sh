@@ -222,7 +222,7 @@ for name in data.get('parameterSets', {}).keys():
 
 # List test case folders that contain a test.json
 get_test_cases() {
-    find "$CASES_DIR" -name "test.json" -maxdepth 2 | sort | while read -r f; do
+    find "$CASES_DIR" -name "test.json" -maxdepth 2 | sort -V | while read -r f; do
         dirname "$f"
     done
 }
