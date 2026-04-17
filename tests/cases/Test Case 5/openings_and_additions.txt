@@ -71,6 +71,12 @@ tablet_openings=[
   oa1–4                    x
   ped1–4
 
+  cut | build values:
+    > 0         add shape, extruded to this depth (mm)
+    0 or omit   add shape, full keyguard height (2D outline addition)
+    -0.01–-8.99 subtract shape, pocket to this depth (mm)
+    <= -9       subtract shape, full keyguard height (2D outline subtraction)
+
 
 
 /***********SCREEN VARIABLES

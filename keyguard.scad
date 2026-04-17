@@ -4233,10 +4233,8 @@ function v2_shape_code(shape_raw, anchor, surface) =
 
 // Parses a single V2 compact case_additions row.
 //
-// Supported shapes: r1-4, -r1-4, rr, -rr, tab1-4, -tab1-4, cm1-4, -cm1-4,
-//                   t1-4, -t1-4, f1-4, -f1-4, oa1-4, ped1-4.
-// Negative shapes (prefix "-") create edge subtractions applied in the 2D outline
-// phase when cut | build = 0 (full-height), or in the 3D phase when > 0.
+// Supported shapes: r1-4, rr, tab1-4, cm1-4, t1-4, f1-4, oa1-4, ped1-4.
+// Subtractive shapes use a negative cb value instead of a "-" shape name prefix.
 // "c" and "r" are not supported in V2 case_additions; use r1-4 instead.
 //
 // Compact format (all fields explicit — no blank entries):
@@ -4247,22 +4245,33 @@ function v2_shape_code(shape_raw, anchor, surface) =
 // [trim] entries: [trim_above, trim_below, trim_to_right, trim_to_left].
 // Missing trim entries default to -999 (no clipping on that edge).
 //
-// Returns: [ID, shape, height, width, corner, x, y, cut_build, trim_above, trim_below, trim_right, trim_left]
-//   [0]     [1]   [2]    [3]    [4]   [5] [6]    [7]      [8]         [9]        [10]       [11]
+// cb semantics:
+//   cb > 0          add shape, extruded to this depth (mm)
+//   cb = 0 or omitted  add shape, full keyguard height (2D outline addition)
+//   -8.99 to -0.01  subtract shape, pocket to this depth (mm)
+//   cb <= -9        subtract shape, full keyguard height (2D outline subtraction)
+//                   (safe threshold: keyguards are never >= 9 mm thick)
+//
+// Returns: [ID, shape, height, width, corner, x, y, thickness, trim_above, trim_below, trim_right, trim_left, is_sub]
+//   [0]     [1]   [2]    [3]    [4]   [5] [6]    [7]      [8]         [9]        [10]       [11]    [12]
 //
 // @param r  A single compact V2 case_additions row
 function v2_parse_addition(r) =
 	let(
-		has_cb   = (len(r) >= 9 && is_num(r[7])),
-		cb       = has_cb ? r[7] : 0,
-		trim_raw = has_cb ? ((r[8] == undef) ? [] : r[8]) :
-		                    (!is_num(r[7]) && r[7] != undef ? r[7] : []),
+		has_cb    = (len(r) >= 9 && is_num(r[7])),
+		cb_raw    = has_cb ? r[7] : 0,
+		is_2d_sub = (cb_raw <= -9),
+		is_3d_sub = (cb_raw < 0 && !is_2d_sub),
+		is_sub    = is_2d_sub || is_3d_sub,
+		thickness = is_2d_sub ? 0 : is_3d_sub ? -cb_raw : cb_raw,
+		trim_raw  = has_cb ? ((r[8] == undef) ? [] : r[8]) :
+		                     (!is_num(r[7]) && r[7] != undef ? r[7] : []),
 		ta = (len(trim_raw) >= 1) ? trim_raw[0] : -999,
 		tb = (len(trim_raw) >= 2) ? trim_raw[1] : -999,
 		tr = (len(trim_raw) >= 3) ? trim_raw[2] : -999,
 		tl = (len(trim_raw) >= 4) ? trim_raw[3] : -999
 	)
-	[r[0], r[1], r[2], r[3], (r[4] == undef ? 0 : r[4]), r[5], r[6], cb, ta, tb, tr, tl];
+	[r[0], r[1], r[2], r[3], (r[4] == undef ? 0 : r[4]), r[5], r[6], thickness, ta, tb, tr, tl, is_sub];
 
 
 // ---------------------------------------------------------------------------
@@ -4781,12 +4790,11 @@ module apply_flex_height_shapes_v2(c_a, is_sub) {
 			addition_trim_to_right = p[10];
 			addition_trim_to_left  = p[11];
 
-			is_negative    = search("-", addition_shape) != [];
-			is_unsupported = addition_shape == "rr"  || addition_shape == "-rr"  ||
-			                 addition_shape == "crr" || addition_shape == "-crr";
+			is_sub_shape   = p[12];
+			is_unsupported = addition_shape == "rr" || addition_shape == "crr";
 			if (is_unsupported) {
 				echo(str("WARNING: V2 case_additions shape '", addition_shape, "' not supported; use r1-4 instead (ID=", addition_ID, ")"));
-			} else if (addition_thickness > 0 && is_sub == is_negative) {
+			} else if (addition_thickness > 0 && is_sub == is_sub_shape) {
 				translate([0, 0, is_sub ? -kt/2-ff : -kt/2])
 				if (addition_ID == "#") {
 					#linear_extrude(height=addition_thickness)
@@ -4823,14 +4831,14 @@ module add_case_full_height_shapes_v2(c_a, type) {
 		addition_trim_below    = p[9];
 		addition_trim_to_right = p[10];
 		addition_trim_to_left  = p[11];
+		is_sub_shape           = p[12];
 
-		is_unsupported = addition_shape == "rr"  || addition_shape == "-rr"  ||
-		                 addition_shape == "crr" || addition_shape == "-crr";
+		is_unsupported = addition_shape == "rr" || addition_shape == "crr";
 		if (is_unsupported) {
 			echo(str("WARNING: V2 case_additions shape '", addition_shape, "' not supported; use r1-4 instead (ID=", addition_ID, ")"));
 		} else if (addition_thickness == 0 && addition_shape != undef) {
 			if (addition_ID == "#") {
-				if (type == "add" && search("-", addition_shape) == []) {
+				if (type == "add" && !is_sub_shape) {
 					difference() {
 						translate([x0+addition_x, y0+addition_y])
 						#build_addition(addition_width, addition_height, addition_shape, addition_corner_radius);
@@ -4840,12 +4848,12 @@ module add_case_full_height_shapes_v2(c_a, type) {
 						if (addition_trim_to_left  > -999) { translate([-kw+addition_trim_to_left,0]) square([kw*2,kh*2],center=true); }
 					}
 				}
-				if (type == "sub" && search("-", addition_shape) != []) {
+				if (type == "sub" && is_sub_shape) {
 					translate([x0+addition_x, y0+addition_y])
 					#build_addition(addition_width, addition_height, addition_shape, addition_corner_radius);
 				}
 			} else {
-				if (type == "add" && search("-", addition_shape) == []) {
+				if (type == "add" && !is_sub_shape) {
 					if (addition_thickness == 0) {
 						difference() {
 							translate([x0+addition_x, y0+addition_y])
@@ -4857,7 +4865,7 @@ module add_case_full_height_shapes_v2(c_a, type) {
 						}
 					}
 				}
-				if (type == "sub" && search("-", addition_shape) != []) {
+				if (type == "sub" && is_sub_shape) {
 					translate([x0+addition_x, y0+addition_y])
 					build_addition(addition_width, addition_height, addition_shape, addition_corner_radius);
 				}
