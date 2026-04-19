@@ -4197,12 +4197,15 @@ function v2_v_align_code(s) =
 // optional anchor and surface fields:
 //   "text" + surface "b"  → "btext"   "text" + other  → "ttext"
 //   "r"    + anchor  "c"  → "cr"      "rr"   + anchor "c" → "crr"
+//   "hd"   + anchor  "L" (default)  → "lhd" (L-anchored half-disc)
+//   "hd"   + anchor  "c"            → "hd"  (C-anchored, unchanged)
 //   all other shapes pass through unchanged.
 function v2_shape_code(shape_raw, anchor, surface) =
 	(shape_raw == "text" && surface == "b") ? "btext" :
 	(shape_raw == "text")                   ? "ttext" :
 	(shape_raw == "r"  && anchor == "c")    ? "cr"    :
 	(shape_raw == "rr" && anchor == "c")    ? "crr"   :
+	(shape_raw == "hd" && anchor != "c")    ? "lhd"   :
 	shape_raw;
 
 // ---------------------------------------------------------------------------
@@ -4219,7 +4222,7 @@ function v2_shape_code(shape_raw, anchor, surface) =
 //   x          — x position (all shapes use [5])
 //   y          — y position (all shapes use [6])
 //   cut | build— cb value; ridge_height for "vridge"/"hridge"
-//   anchor     — "L" (left, default) or "C" (centre); ignored for "c", "cridge", "oa1-4"
+//   anchor     — "L" (left, default) or "C" (centre); supported for "r", "rr", "hd"; ignored for "c", "cridge", "oa1-4"
 //   surface    — "T" (top, default) or "B" (bottom)
 //   length     — ridge length for "vridge","hridge" and other ridges; 0 otherwise
 //   thickness  — ridge base thickness for "vridge","hridge" and other ridges; 0 otherwise
@@ -5142,7 +5145,7 @@ module cut_hole(tx, ty, tz, w, h, ts, bs, ls, rs, cr, dep, flip, edge_chamfer=ce
 
 // Dispatches to the correct 3D cutting geometry for a single opening based on its
 // shape code, slope parameters, and depth offset. Handles all built-in shape types
-// (r, cr, c, hd, rr, crr, oa1-4, svg, ttext/btext, ridges, etc.).
+// (r, cr, c, hd, lhd, rr, crr, oa1-4, svg, ttext/btext, ridges, etc.).
 // @param cut_width     Opening width in mm
 // @param cut_height    Opening height in mm
 // @param shape         Shape code string (e.g. "r", "c", "rr", "oa1", "svg")
@@ -5209,6 +5212,13 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip, region_chamfer);
 		}
 	}
+	else if (shape=="lhd"){
+		if (cut_width > 0 && cut_height > 0){
+			m = min(cut_width,cut_height);
+			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
+			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip, region_chamfer);
+		}
+	}
 	else if (shape=="rr"){
 		if (cut_width > 0 && cut_height > 0){
 			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
@@ -5223,30 +5233,30 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 	}
 	else if (shape=="oa1"){
 		if (corner_radius > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat : 0;
+			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
 			translate([-corner_radius,-corner_radius,trans])
-			create_cutting_tool(0, corner_radius*2, depth+0.05, top_slope, "oa", region_chamfer);
+			create_cutting_tool(0, corner_radius*2, dep+0.05, top_slope, "oa", region_chamfer);
 		}
 	}
 	else if (shape=="oa2"){
 		if (corner_radius > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat : 0;
+			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
 			translate([-corner_radius,corner_radius,trans])
-			create_cutting_tool(-90, corner_radius*2, depth+0.05, top_slope, "oa", region_chamfer);
+			create_cutting_tool(-90, corner_radius*2, dep+0.05, top_slope, "oa", region_chamfer);
 		}
 	}
 	else if (shape=="oa3"){
 		if (corner_radius > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat : 0;
+			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
 			translate([corner_radius,corner_radius,trans])
-			create_cutting_tool(180, corner_radius*2, depth+0.05, top_slope, "oa", region_chamfer);
+			create_cutting_tool(180, corner_radius*2, dep+0.05, top_slope, "oa", region_chamfer);
 		}
 	}
 	else if (shape=="oa4"){
 		if (corner_radius > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat : 0;
+			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
 			translate([corner_radius,-corner_radius,trans])
-			create_cutting_tool(90, corner_radius*2, depth+0.05, top_slope, "oa", region_chamfer);
+			create_cutting_tool(90, corner_radius*2, dep+0.05, top_slope, "oa", region_chamfer);
 		}
 	}
 	else if (shape=="ttext"){
@@ -5327,7 +5337,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 // shape code. Used for laser-cut keyguard outlines.
 // @param cut_width     Opening width in mm
 // @param cut_height    Opening height in mm
-// @param shape         Shape code string (e.g. "r", "c", "rr", "oa1")
+// @param shape         Shape code string (e.g. "r", "c", "rr", "lhd", "oa1")
 // @param top_slope     Top-edge slope angle in degrees (default 0)
 // @param corner_radius Corner radius in mm (default 0)
 module cut_opening_2d(cut_width, cut_height, shape, top_slope=0, corner_radius=0){
@@ -5354,6 +5364,13 @@ module cut_opening_2d(cut_width, cut_height, shape, top_slope=0, corner_radius=0
 		if (cut_width > 0 && cut_height > 0){
 			m = min(cut_width,cut_height);
 			translate([0,0])
+			hole_cutter_2d(cut_width,cut_height,m/2);
+		}
+	}
+	else if (shape=="lhd"){
+		if (cut_width > 0 && cut_height > 0){
+			m = min(cut_width,cut_height);
+			translate([cut_width/2,cut_height/2])
 			hole_cutter_2d(cut_width,cut_height,m/2);
 		}
 	}
