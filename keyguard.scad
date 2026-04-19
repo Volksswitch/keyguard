@@ -5240,7 +5240,7 @@ module cut_hole(tx, ty, tz, w, h, ts, bs, ls, rs, cr, dep, flip, edge_chamfer=ce
 		if (flip){
 			rotate([0,180,0])
 			rotate([0,0,rotation])
-			hole_cutter(w, h, ts, bs, ls, rs, cr, dep, edge_chamfer);
+			hole_cutter(w, h, -ts, -bs, -ls, -rs, cr, dep, edge_chamfer);
 		}
 		else{
 			rotate([0,0,rotation])
