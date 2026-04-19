@@ -4780,7 +4780,10 @@ module adding_plastic_v2(additions, where) {
 				#place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, (px ? r[4]*mpp : r[4]), other);
 			}
 		} else if (r[7] > 0) {
-			// Standard opening shape with positive cb — extrude solid upward from surface
+			// Standard opening shape with positive cb — extrude solid upward from surface.
+			// Geometry: main body (full width, no chamfer) + inward-chamfer cap at top edge.
+			// cut() narrows from bottom to top, so rotate([180,0,0]) gives wide-at-base,
+			// narrow-at-top — the inward bevel shape we need.
 			es = r[12];
 			sp_b = r[13];
 			rot_b = (len(sp_b) > 0 && is_num(sp_b[0])) ? sp_b[0] : 0;
@@ -4796,43 +4799,70 @@ module adding_plastic_v2(additions, where) {
 			bot_sl_b = is_laser_cut ? 90 : v2_slope(es, 1, shape_b);
 			lft_sl_b = is_laser_cut ? 90 : v2_slope(es, 2, shape_b);
 			rgt_sl_b = is_laser_cut ? 90 : v2_slope(es, 3, shape_b);
-			region_chamfer_b = (where == "screen") ? cec : kec;
+			ec_b     = (where == "screen") ? cec : kec;
+			has_ch_b = ec_b > 0 && dep_b > ec_b;
+			main_dep_b = has_ch_b ? dep_b - ec_b : dep_b;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
-			build_z = trans + dep_b/2;  // center hole_cutter so its top face = trans + dep_b
 			if (is_3d_printed && h_mm_b > 0) {
 				if (shape_b == "r" || shape_b == "rr") {
-					if (w_mm_b > 0)
-						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, build_z])
+					if (w_mm_b > 0) {
+						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
 						rotate([0,0,rot_b])
-						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, c_r_b, dep_b, region_chamfer_b);
+						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
+						if (has_ch_b)
+							translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
+							rotate([0,0,rot_b]) rotate([180,0,0])
+							cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, c_r_b-ec_b), ec_b);
+					}
 				} else if (shape_b == "cr" || shape_b == "crr") {
-					if (w_mm_b > 0)
-						translate([x0+x_mm, y0+y_mm, build_z])
+					if (w_mm_b > 0) {
+						translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
 						rotate([0,0,rot_b])
-						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, c_r_b, dep_b, region_chamfer_b);
+						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
+						if (has_ch_b)
+							translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
+							rotate([0,0,rot_b]) rotate([180,0,0])
+							cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, c_r_b-ec_b), ec_b);
+					}
 				} else if (shape_b == "lc") {
-					translate([x0+x_mm+h_mm_b/2, y0+y_mm+h_mm_b/2, build_z])
+					translate([x0+x_mm+h_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
 					rotate([0,0,rot_b])
-					hole_cutter(h_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, dep_b, region_chamfer_b);
+					hole_cutter(h_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
+					if (has_ch_b)
+						translate([x0+x_mm+h_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
+						rotate([0,0,rot_b]) rotate([180,0,0])
+						cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
 				} else if (shape_b == "c") {
-					translate([x0+x_mm, y0+y_mm, build_z])
+					translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
 					rotate([0,0,rot_b])
-					hole_cutter(h_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, dep_b, region_chamfer_b);
+					hole_cutter(h_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
+					if (has_ch_b)
+						translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
+						rotate([0,0,rot_b]) rotate([180,0,0])
+						cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
 				} else if (shape_b == "lhd") {
 					if (w_mm_b > 0) {
 						m_b = min(w_mm_b, h_mm_b);
-						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, build_z])
+						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
 						rotate([0,0,rot_b])
-						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, m_b/2, dep_b, region_chamfer_b);
+						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
+						if (has_ch_b)
+							translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
+							rotate([0,0,rot_b]) rotate([180,0,0])
+							cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, m_b/2-ec_b), ec_b);
 					}
 				} else if (shape_b == "hd") {
 					if (w_mm_b > 0) {
 						m_b = min(w_mm_b, h_mm_b);
-						translate([x0+x_mm, y0+y_mm, build_z])
+						translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
 						rotate([0,0,rot_b])
-						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, m_b/2, dep_b, region_chamfer_b);
+						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
+						if (has_ch_b)
+							translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
+							rotate([0,0,rot_b]) rotate([180,0,0])
+							cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, m_b/2-ec_b), ec_b);
 					}
 				}
 			}
