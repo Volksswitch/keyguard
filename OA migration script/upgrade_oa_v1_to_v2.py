@@ -665,11 +665,12 @@ def convert_region_row(values: list[str], warnings: list[str], section_name: str
 
     if bare_shape not in ('ttext', 'btext', 'svg', 'ridge', 'hridge', 'vridge', 'cridge', 'rridge', 'crridge') and not bare_shape.startswith('aridge'):
         if other != '' and not other.startswith('"'):
+            other_atom = atom(other)
             if other.startswith('-'):
-                cut_build = atom(other)
+                cut_build = other_atom   # negative V1 → bottom cut (surface "B")
                 surface = '"b"'
-            else:
-                cut_build = atom(other)
+            elif other_atom not in ('0', ''):
+                cut_build = '-' + other_atom  # positive V1 → top cut, negated for V2 convention
 
     # Apply explicit defaults for all blank fields
     anchor    = '"C"' if anchor  in ('"c"', '"C"') else '"L"'
