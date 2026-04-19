@@ -4225,8 +4225,8 @@ function v2_shape_code(shape_raw, anchor, surface) =
 //   x          — x position (all shapes use [5])
 //   y          — y position (all shapes use [6])
 //   cut | build— cb value; ridge_height for "vridge"/"hridge"
-//   anchor     — "L" (left, default) or "C" (centre); supported for "r", "rr", "hd", "c"; ignored for "cridge", "oa1-4"
-//   surface    — "T" (top, default) or "B" (bottom)
+//   anchor     — "L"/"l" (left, default) or "C"/"c" (centre); supported for "r", "rr", "hd", "c"; ignored for "cridge", "oa1-4"
+//   surface    — "T"/"t" (top, default) or "B"/"b" (bottom)
 //   length     — ridge length for "vridge","hridge" and other ridges; 0 otherwise
 //   thickness  — ridge base thickness for "vridge","hridge" and other ridges; 0 otherwise
 //   [es]       — edge slopes [top,bot,left,right]; single value [n] applies to all edges for "oa" shapes
@@ -4344,7 +4344,7 @@ module cut_screen_openings_v2(s_o, depth) {
 		} else if (r[1] == "text") {
 			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[12]=es, r[13]=sp
 			sp = r[13];
-			surface = (r[9] == "B") ? "b" : undef;
+			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
 			shape   = (surface == "b") ? "btext" : "ttext";
 			h_mm = (using_px) ? r[2] * mpp : r[2];
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
@@ -4387,8 +4387,8 @@ module cut_screen_openings_v2(s_o, depth) {
 			// Standard shapes: r, c, hd, oa1-4, bump (+ r1-4 for case_openings/tablet_openings)
 			// r[2]=height, r[3]=width, r[4]=corner, r[7]=cb, r[8]=anchor, r[9]=surface, r[12]=es
 			es = r[12];
-			anchor  = (r[8] == "C") ? "c" : undef;
-			surface = (r[9] == "B") ? "b" : undef;
+			anchor  = ((r[8] == "C" || r[8] == "c")) ? "c" : undef;
+			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
 			shape_base = v2_shape_code(r[1], anchor, surface);
 			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
 			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
@@ -4478,7 +4478,7 @@ module cut_case_openings_v2(c_o, depth) {
 		} else if (r[1] == "text") {
 			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
-			surface = (r[9] == "B") ? "b" : undef;
+			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
 			shape   = (surface == "b") ? "btext" : "ttext";
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
 			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
@@ -4509,8 +4509,8 @@ module cut_case_openings_v2(c_o, depth) {
 
 		} else {
 			es = r[12];
-			anchor  = (r[8] == "C") ? "c" : undef;
-			surface = (r[9] == "B") ? "b" : undef;
+			anchor  = ((r[8] == "C" || r[8] == "c")) ? "c" : undef;
+			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
 			shape_base = v2_shape_code(r[1], anchor, surface);
 			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
 			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
@@ -4587,7 +4587,7 @@ module cut_tablet_openings_v2(t_o, depth) {
 		} else if (r[1] == "text") {
 			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
-			surface = (r[9] == "B") ? "b" : undef;
+			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
 			shape   = (surface == "b") ? "btext" : "ttext";
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
 			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
@@ -4616,8 +4616,8 @@ module cut_tablet_openings_v2(t_o, depth) {
 
 		} else {
 			es = r[12];
-			anchor  = (r[8] == "C") ? "c" : undef;
-			surface = (r[9] == "B") ? "b" : undef;
+			anchor  = ((r[8] == "C" || r[8] == "c")) ? "c" : undef;
+			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
 			shape_base = v2_shape_code(r[1], anchor, surface);
 			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
 			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
@@ -4697,8 +4697,8 @@ module adding_plastic_v2(additions, where) {
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
-			c_ax = (r[8] == "C" && r[1] == "hridge") ? -w_mm/2 : 0;
-			c_ay = (r[8] == "C" && r[1] == "vridge") ? -h_mm/2 : 0;
+			c_ax = ((r[8] == "C" || r[8] == "c") && r[1] == "hridge") ? -w_mm/2 : 0;
+			c_ay = ((r[8] == "C" || r[8] == "c") && r[1] == "vridge") ? -h_mm/2 : 0;
 			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
 				place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
@@ -4718,10 +4718,10 @@ module adding_plastic_v2(additions, where) {
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
-			c_ax = (r[8] == "C" && r[1] == "ridge")  ? -w_mm/2 * cos(lft_sl) :
-			       (r[8] == "C" && r[1] == "rridge") ? -w_mm/2 : 0;
-			c_ay = (r[8] == "C" && r[1] == "ridge")  ? -w_mm/2 * sin(lft_sl) :
-			       (r[8] == "C" && r[1] == "rridge") ? -top_sl_mm/2 : 0;
+			c_ax = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge")  ? -w_mm/2 * cos(lft_sl) :
+			       ((r[8] == "C" || r[8] == "c") && r[1] == "rridge") ? -w_mm/2 : 0;
+			c_ay = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge")  ? -w_mm/2 * sin(lft_sl) :
+			       ((r[8] == "C" || r[8] == "c") && r[1] == "rridge") ? -top_sl_mm/2 : 0;
 			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
 				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]));
@@ -4732,7 +4732,7 @@ module adding_plastic_v2(additions, where) {
 		} else if (r[1] == "text") {
 			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
-			surface = (r[9] == "B") ? "b" : undef;
+			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
 			shape   = (surface == "b") ? "btext" : "ttext";
 			h_mm = px ? r[2] * mpp : r[2];
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
