@@ -195,4 +195,31 @@ ECHO: th = 184
 
 So the designer thinks that the height of the tablet is 184 millimeters.
 
+
+
+
+/************ CREATING YOUR OWN VARIABLES
+You may want to create your own variables and use them to place features of your keyguard.  For example, you may want to put a
+bump between each column of cells to aid in navigation by a visually impaired individual. The distance from the left edge of the grid
+to the middle of the rail between column 1 and column 2 is the width of the grid divided by the number of columns.  That looks like
+this: gw/nc.  The distance to the center of the rail between column 2 and column 3 is (gw/nc)*2, and so on.  You may want a variable
+that is shorter in length so that your instruction lines don't get too long.  Just create your own variables:
+c1 = gw/nc;
+c2 = (gw/nc)*2;
+c3 = (gw/nc)*3;
+c4 = (gw/nc)*4;
+c5 = (gw/nc)*5;
+...
+
+Put these lines at the top of the openings_and_additions.txt file then use the variables in the "x" column.
+
+Note: if you create a variable that is already being used in the keyguard designer, you will see a Warning message like this:
+
+   "WARNING: c1 was assigned on line 1101 of "keyguard.scad" but was overwritten in file openings_and_additions.txt, line 1"
+
+with a yellow background. It's telling you that you are trying to define "c1" but the keyguard designer is also trying to define it.
+
+You will need to change the name of your variable until it doesn't collide with the keyguard designer program.
+
+
 ************************************************************************************************************************************/

@@ -1,1 +1,218 @@
-{"event":"env","session":"2026-04-15_12-14-08","os":"Msys","openscad":"openscad","openscad_version":"OpenSCAD version 2021.01","python":"python","python_version":"Python 3.13.0","sca2d":"sca2d","sca2d_version":"usage: sca2d [-h] [--output-tree] [--colour] [--docs] [--project PROJECT]","admesh":"admesh","admesh_version":"ADMesh - version 0.98.3","imagemagick":"compare","imagemagick_version":"Version: ImageMagick 7.1.2-18 Q16-HDRI x64 d4e4b2b:20260322 https://imagemagick.org","timeout_cmd":"timeout","render_timeout_s":300,"ts":"2026-04-15 12:14:10 PM MDT"}
+{"event":"env","session":"2026-04-19_12-08-35","os":"Msys","openscad":"/c/Program Files/OpenSCAD/openscad.com","openscad_version":"OpenSCAD version 2021.01","python":"python","python_version":"Python 3.13.0","sca2d":"sca2d","sca2d_version":"usage: sca2d [-h] [--output-tree] [--colour] [--docs] [--project PROJECT]","admesh":"admesh","admesh_version":"ADMesh - version 0.98.3","imagemagick":"magick","imagemagick_version":"Version: ImageMagick 7.1.2-18 Q16-HDRI x64 d4e4b2b:20260322 https://imagemagick.org","timeout_cmd":"timeout","render_timeout_s":300,"ts":"2026-04-19 12:08:36 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 0","step":1,"step_count":1,"label":"console content","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:08:42 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 0","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:08:43 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 1","step":1,"step_count":1,"label":"starting view","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:08:48 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 1","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":5,"ts":"2026-04-19 12:08:48 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 2","step":1,"step_count":2,"label":"starting view","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:08:53 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 2","step":2,"step_count":2,"label":"change keyguard thickness to 4, large bump drops to stay even with the keyguard edge","status":"pass","rmse":0.000377074,"duration_s":2,"ts":"2026-04-19 12:08:56 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 2","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:08:56 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 3","step":1,"step_count":1,"label":"starting view","status":"pass","rmse":7.39079e-05,"duration_s":2,"ts":"2026-04-19 12:09:00 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 3","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":5,"ts":"2026-04-19 12:09:01 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 4","step":1,"step_count":2,"label":"starting view","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:06 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 4","step":2,"step_count":2,"label":"change keyguard thickness to 5","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:09 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 4","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:09:10 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 5","step":1,"step_count":4,"label":"front view - upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:15 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 5","step":2,"step_count":4,"label":"front view - lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:18 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 5","step":3,"step_count":4,"label":"back view - lower left","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:09:22 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 5","step":4,"step_count":4,"label":"back view - upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:25 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 5","steps":4,"passed":4,"failed":0,"captured":0,"duration_s":15,"ts":"2026-04-19 12:09:25 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 6","step":1,"step_count":5,"label":"trim to rectangle","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:30 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 6","step":2,"step_count":5,"label":"top bottom compensation","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:09:33 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 6","step":3,"step_count":5,"label":"left right compensation","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:09:36 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 6","step":4,"step_count":5,"label":"wide top bottom compensation","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:40 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 6","step":5,"step_count":5,"label":"wide left right compensation","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:43 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 6","steps":5,"passed":5,"failed":0,"captured":0,"duration_s":17,"ts":"2026-04-19 12:09:43 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 7","step":1,"step_count":5,"label":"trim to rectangle","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:09:48 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 7","step":2,"step_count":5,"label":"top bottom compensation","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:51 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 7","step":3,"step_count":5,"label":"left right compensation","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:09:54 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 7","step":4,"step_count":5,"label":"wide top bottom compensation","status":"pass","rmse":0.000448512,"duration_s":2,"ts":"2026-04-19 12:09:57 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 7","step":5,"step_count":5,"label":"wide left right compensation","status":"pass","rmse":0.000489398,"duration_s":3,"ts":"2026-04-19 12:10:00 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 7","steps":5,"passed":5,"failed":0,"captured":0,"duration_s":17,"ts":"2026-04-19 12:10:01 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 8","step":1,"step_count":6,"label":"first half","status":"pass","rmse":0,"duration_s":4,"ts":"2026-04-19 12:10:07 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 8","step":2,"step_count":6,"label":"second half","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:10:10 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 8","step":3,"step_count":6,"label":"change width","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:13 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 8","step":4,"step_count":6,"label":"change tightness","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:17 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 8","step":5,"step_count":6,"label":"change location","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:20 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 8","step":6,"step_count":6,"label":"change columns","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:23 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 8","steps":6,"passed":6,"failed":0,"captured":0,"duration_s":22,"ts":"2026-04-19 12:10:23 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 9","step":1,"step_count":6,"label":"first half","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:10:28 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 9","step":2,"step_count":6,"label":"second half","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:31 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 9","step":3,"step_count":6,"label":"change width","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:34 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 9","step":4,"step_count":6,"label":"change tightness","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:38 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 9","step":5,"step_count":6,"label":"change location","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:41 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 9","step":6,"step_count":6,"label":"change rows","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:44 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 9","steps":6,"passed":6,"failed":0,"captured":0,"duration_s":22,"ts":"2026-04-19 12:10:45 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 10","step":1,"step_count":4,"label":"full view","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:49 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 10","step":2,"step_count":4,"label":"laser-cut version","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:10:52 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 10","step":3,"step_count":4,"label":"generate for SVG","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:10:54 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 10","step":4,"step_count":4,"label":"rendered SVG view","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:10:57 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 10","steps":4,"passed":4,"failed":0,"captured":0,"duration_s":12,"ts":"2026-04-19 12:10:57 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 11","step":1,"step_count":1,"label":"full view","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:11:01 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 11","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":5,"ts":"2026-04-19 12:11:02 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 12","step":1,"step_count":5,"label":"full view","status":"pass","rmse":4.22614e-05,"duration_s":2,"ts":"2026-04-19 12:11:07 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 12","step":2,"step_count":5,"label":"increase the keyguard thickness","status":"pass","rmse":0.000504004,"duration_s":2,"ts":"2026-04-19 12:11:11 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 12","step":3,"step_count":5,"label":"increase the ridge height","status":"pass","rmse":0.000504004,"duration_s":3,"ts":"2026-04-19 12:11:14 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 12","step":4,"step_count":5,"label":"increase the ridge thickness","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:11:19 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 12","step":5,"step_count":5,"label":"change to laser-cut","status":"pass","rmse":1.51044e-05,"duration_s":2,"ts":"2026-04-19 12:11:22 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 12","steps":5,"passed":5,"failed":0,"captured":0,"duration_s":20,"ts":"2026-04-19 12:11:22 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 13","step":1,"step_count":3,"label":"laser-cut view","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:11:26 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 13","step":2,"step_count":3,"label":"3D-printed view","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:11:29 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 13","step":3,"step_count":3,"label":"3D-printed view","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:11:31 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 13","steps":3,"passed":3,"failed":0,"captured":0,"duration_s":9,"ts":"2026-04-19 12:11:31 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 14","step":1,"step_count":1,"label":"full view","status":"pass","rmse":0.017157,"duration_s":1,"ts":"2026-04-19 12:11:35 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 14","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:11:35 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 15","step":1,"step_count":3,"label":"full view","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:11:40 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 15","step":2,"step_count":3,"label":"split graphic","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:11:44 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 15","step":3,"step_count":3,"label":"remove raised elements for laser-cut type","status":"pass","rmse":0.000523299,"duration_s":2,"ts":"2026-04-19 12:11:47 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 15","steps":3,"passed":3,"failed":0,"captured":0,"duration_s":12,"ts":"2026-04-19 12:11:47 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 16","step":1,"step_count":1,"label":"full view","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:11:52 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 16","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":5,"ts":"2026-04-19 12:11:53 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17 portrait","step":1,"step_count":5,"label":"clip-on straps","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:11:57 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17 portrait","step":2,"step_count":5,"label":"raised tabs","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:11:59 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17 portrait","step":3,"step_count":5,"label":"clip-on straps, unequal left side of case opening - 25","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:12:02 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17 portrait","step":4,"step_count":5,"label":"keyguard v/h tightness of fit - -1","status":"pass","rmse":3.87197e-05,"duration_s":3,"ts":"2026-04-19 12:12:05 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17 portrait","step":5,"step_count":5,"label":"keyguard v/h tightness of fit - 1","status":"pass","rmse":3.87197e-05,"duration_s":2,"ts":"2026-04-19 12:12:08 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 17 portrait","steps":5,"passed":5,"failed":0,"captured":0,"duration_s":16,"ts":"2026-04-19 12:12:09 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":1,"step_count":12,"label":"shelf","status":"pass","rmse":0.0179708,"duration_s":1,"ts":"2026-04-19 12:12:13 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":2,"step_count":12,"label":"vary shelf thickness, depth, and corner radius","status":"pass","rmse":0.0179708,"duration_s":2,"ts":"2026-04-19 12:12:15 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":3,"step_count":12,"label":"vary keyguard and frame thickness","status":"pass","rmse":0.0183134,"duration_s":2,"ts":"2026-04-19 12:12:18 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":4,"step_count":12,"label":"raised tabs","status":"pass","rmse":0.0183134,"duration_s":1,"ts":"2026-04-19 12:12:21 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":5,"step_count":12,"label":"clip-on straps, unequal left side of case opening - 20","status":"pass","rmse":0.0167847,"duration_s":1,"ts":"2026-04-19 12:12:24 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":6,"step_count":12,"label":"generate keyguard,snap-in tab on bottom edge of keyguard - no","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:12:27 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":7,"step_count":12,"label":"keyguard v/h tightness of fit - -1","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:12:31 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":8,"step_count":12,"label":"keyguard v/h tightness of fit - 1","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:12:34 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":9,"step_count":12,"label":"vertical raised tabs only","status":"pass","rmse":0.0183134,"duration_s":2,"ts":"2026-04-19 12:12:37 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":10,"step_count":12,"label":"horizontal and vertical raised tabs","status":"pass","rmse":0.0183134,"duration_s":1,"ts":"2026-04-19 12:12:39 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":11,"step_count":12,"label":"vertical raised tabs only - plain keyguard","status":"pass","rmse":0.0168319,"duration_s":2,"ts":"2026-04-19 12:12:41 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 17","step":12,"step_count":12,"label":"horizontal and vertical raised tabs - plain keyguard","status":"pass","rmse":0.0168319,"duration_s":1,"ts":"2026-04-19 12:12:44 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 17","steps":12,"passed":12,"failed":0,"captured":0,"duration_s":35,"ts":"2026-04-19 12:12:44 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 18","step":1,"step_count":5,"label":"No Mount","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:12:48 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 18","step":2,"step_count":5,"label":"suction cups","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:12:50 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 18","step":3,"step_count":5,"label":"screw-on straps","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:12:52 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 18","step":4,"step_count":5,"label":"Clip-on Straps","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:12:56 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 18","step":5,"step_count":5,"label":"Velcro","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:12:59 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 18","steps":5,"passed":5,"failed":0,"captured":0,"duration_s":15,"ts":"2026-04-19 12:12:59 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 19","step":1,"step_count":3,"label":"Cell corner radius - 0","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:13:03 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 19","step":2,"step_count":3,"label":"lCell corner radius - 10","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:13:07 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 19","step":3,"step_count":3,"label":"Cell corner radius - 30, cell width 38","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:13:10 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 19","steps":3,"passed":3,"failed":0,"captured":0,"duration_s":11,"ts":"2026-04-19 12:13:10 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 20","step":1,"step_count":3,"label":"bar corner radius 2","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:13:15 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 20","step":2,"step_count":3,"label":"bar corner radius 0","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:17 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 20","step":3,"step_count":3,"label":"bar corner radius 5","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:13:20 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 20","steps":3,"passed":3,"failed":0,"captured":0,"duration_s":11,"ts":"2026-04-19 12:13:21 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 21","step":1,"step_count":3,"label":"base view","status":"pass","rmse":0.000601228,"duration_s":2,"ts":"2026-04-19 12:13:26 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 21","step":2,"step_count":3,"label":"set cell height to 25","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:13:29 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 21","step":3,"step_count":3,"label":"The cell height has been adjusted to 15 mm (or 193 px) in order to fit properly.","status":"pass","rmse":0.000945973,"duration_s":2,"ts":"2026-04-19 12:13:32 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 21","steps":3,"passed":3,"failed":0,"captured":0,"duration_s":12,"ts":"2026-04-19 12:13:33 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":1,"step_count":12,"label":"above","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:37 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":2,"step_count":12,"label":"below","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:40 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":3,"step_count":12,"label":"above and below","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:42 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":4,"step_count":12,"label":"left","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:44 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":5,"step_count":12,"label":"right","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:13:46 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":6,"step_count":12,"label":"left and right","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:49 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":7,"step_count":12,"label":"diameter - 18","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:51 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":8,"step_count":12,"label":"distance - 0","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:53 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":9,"step_count":12,"label":"BSM 20","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:55 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":10,"step_count":12,"label":"engraved text - what","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:13:57 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":11,"step_count":12,"label":"tightness of fit - -10","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:14:00 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 22","step":12,"step_count":12,"label":"tightness of fit - 10","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:14:02 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 22","steps":12,"passed":12,"failed":0,"captured":0,"duration_s":29,"ts":"2026-04-19 12:14:02 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 23","step":1,"step_count":4,"label":"base model","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:07 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 23","step":2,"step_count":4,"label":"cell corner radius - 5","status":"pass","rmse":0.000682849,"duration_s":3,"ts":"2026-04-19 12:14:11 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 23","step":3,"step_count":4,"label":"cell corner radius - 8","status":"pass","rmse":4.19518e-05,"duration_s":2,"ts":"2026-04-19 12:14:14 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 23","step":4,"step_count":4,"label":"cell shape - circular","status":"pass","rmse":0.000662633,"duration_s":2,"ts":"2026-04-19 12:14:18 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 23","steps":4,"passed":4,"failed":0,"captured":0,"duration_s":16,"ts":"2026-04-19 12:14:18 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 24","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:22 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 24","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:25 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 24","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":7,"ts":"2026-04-19 12:14:26 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 25","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:14:30 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 25","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:33 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 25","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":7,"ts":"2026-04-19 12:14:33 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 26","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:14:38 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 26","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:42 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 26","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:14:42 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 27","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:47 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 27","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:51 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 27","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:14:51 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 28","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:56 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 28","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:14:59 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 28","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:14:59 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 29","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:15:04 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 29","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:08 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 29","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":9,"ts":"2026-04-19 12:15:08 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 30","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:15:13 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 30","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:16 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 30","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:15:16 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 31","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:21 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 31","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:25 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 31","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":9,"ts":"2026-04-19 12:15:25 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 32","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:29 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 32","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:33 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 32","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:15:33 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 33","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:15:38 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 33","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:42 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 33","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":9,"ts":"2026-04-19 12:15:42 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 34","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:47 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 34","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:15:50 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 34","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":9,"ts":"2026-04-19 12:15:51 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 35","step":1,"step_count":2,"label":"upper left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:55 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 35","step":2,"step_count":2,"label":"lower left","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:15:59 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 35","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:15:59 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 36","step":1,"step_count":1,"label":"base model","status":"pass","rmse":0.000313305,"duration_s":6,"ts":"2026-04-19 12:16:07 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 36","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":9,"ts":"2026-04-19 12:16:08 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 37","step":1,"step_count":5,"label":"base design","status":"pass","rmse":0,"duration_s":5,"ts":"2026-04-19 12:16:16 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 37","step":2,"step_count":5,"label":"post location","status":"pass","rmse":0,"duration_s":8,"ts":"2026-04-19 12:16:25 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 37","step":3,"step_count":5,"label":"length of posts","status":"pass","rmse":0,"duration_s":5,"ts":"2026-04-19 12:16:31 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 37","step":4,"step_count":5,"label":"diameter of posts","status":"pass","rmse":0,"duration_s":5,"ts":"2026-04-19 12:16:37 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 37","step":5,"step_count":5,"label":"size of mini tabs","status":"pass","rmse":0,"duration_s":5,"ts":"2026-04-19 12:16:43 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 37","steps":5,"passed":5,"failed":0,"captured":0,"duration_s":36,"ts":"2026-04-19 12:16:44 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 38","step":1,"step_count":1,"label":"base modell","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:16:48 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 38","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:16:48 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 39","step":1,"step_count":1,"label":"upper left","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:16:53 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 39","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:16:53 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 40","step":1,"step_count":2,"label":"keyguard","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:16:58 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 40","step":2,"step_count":2,"label":"frame","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:17:01 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 40","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:17:02 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 41","step":1,"step_count":1,"label":"keyguard and frame","status":"pass","rmse":0.000739832,"duration_s":5,"ts":"2026-04-19 12:17:10 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 41","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:17:10 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 42","step":1,"step_count":1,"label":"base model","status":"pass","rmse":0,"duration_s":5,"ts":"2026-04-19 12:17:18 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 42","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:17:19 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 43","step":1,"step_count":2,"label":"base model","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:17:23 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 43","step":2,"step_count":2,"label":"change values for ridge thickness and height","status":"pass","rmse":0,"duration_s":3,"ts":"2026-04-19 12:17:26 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 43","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":8,"ts":"2026-04-19 12:17:27 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 44-1","step":1,"step_count":1,"label":"base model","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:17:30 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 44-1","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:17:31 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 44-2","step":1,"step_count":1,"label":"base model","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:17:35 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 44-2","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":5,"ts":"2026-04-19 12:17:36 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 44-3","step":1,"step_count":1,"label":"base model","status":"pass","rmse":1.53186e-05,"duration_s":1,"ts":"2026-04-19 12:17:40 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 44-3","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:17:40 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 45","step":1,"step_count":1,"label":"base view","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:17:44 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 45","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:17:44 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 46","step":1,"step_count":4,"label":"base view","status":"pass","rmse":0.0115047,"duration_s":2,"ts":"2026-04-19 12:17:50 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 46","step":2,"step_count":4,"label":"rotate 180 degrees=no","status":"pass","rmse":0.0177049,"duration_s":2,"ts":"2026-04-19 12:17:53 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 46","step":3,"step_count":4,"label":"laser-cut","status":"pass","rmse":0.0137395,"duration_s":2,"ts":"2026-04-19 12:17:56 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 46","step":4,"step_count":4,"label":"generate=svg","status":"pass","rmse":0.0122034,"duration_s":1,"ts":"2026-04-19 12:17:58 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 46","steps":4,"passed":4,"failed":0,"captured":0,"duration_s":14,"ts":"2026-04-19 12:17:59 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 47","step":1,"step_count":4,"label":"base model","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:18:03 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 47","step":2,"step_count":4,"label":"change text depth to +2","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:18:06 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 47","step":3,"step_count":4,"label":"change text depth to -3","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:18:09 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 47","step":4,"step_count":4,"label":"render","status":"pass","rmse":0,"duration_s":51,"ts":"2026-04-19 12:19:02 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 47","steps":4,"passed":4,"failed":0,"captured":0,"duration_s":63,"ts":"2026-04-19 12:19:02 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 48","step":1,"step_count":3,"label":"base model","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:19:07 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 48","step":2,"step_count":3,"label":"change text depth to -5","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:19:10 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 48","step":3,"step_count":3,"label":"render","status":"pass","rmse":0,"duration_s":51,"ts":"2026-04-19 12:20:03 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 48","steps":3,"passed":3,"failed":0,"captured":0,"duration_s":61,"ts":"2026-04-19 12:20:03 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 49","step":1,"step_count":1,"label":"base model","status":"pass","rmse":3.14768e-05,"duration_s":1,"ts":"2026-04-19 12:20:08 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 49","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":5,"ts":"2026-04-19 12:20:09 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 50","step":1,"step_count":3,"label":"base model","status":"pass","rmse":1.53186e-05,"duration_s":2,"ts":"2026-04-19 12:20:14 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 50","step":2,"step_count":3,"label":"sloped edge","status":"pass","rmse":3.11646e-05,"duration_s":2,"ts":"2026-04-19 12:20:17 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 50","step":3,"step_count":3,"label":"set extend lip to edge of case to yes","status":"pass","rmse":3.11646e-05,"duration_s":2,"ts":"2026-04-19 12:20:21 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 50","steps":3,"passed":3,"failed":0,"captured":0,"duration_s":12,"ts":"2026-04-19 12:20:22 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 51","step":1,"step_count":1,"label":"magnet pockets in raised tabs","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:20:26 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 51","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:20:26 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 52","step":1,"step_count":2,"label":"full view","status":"pass","rmse":0,"duration_s":1,"ts":"2026-04-19 12:20:31 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 52","step":2,"step_count":2,"label":"close-up on centre opening chamfer","status":"pass","rmse":0,"duration_s":2,"ts":"2026-04-19 12:20:34 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 52","steps":2,"passed":2,"failed":0,"captured":0,"duration_s":7,"ts":"2026-04-19 12:20:34 PM MDT"}
+{"event":"step","run":"2026-04-19_12-08-38","case":"Test Case 53","step":1,"step_count":1,"label":"centre-anchored hridge, vridge, and angled ridge","status":"pass","rmse":4.64497e-05,"duration_s":2,"ts":"2026-04-19 12:20:38 PM MDT"}
+{"event":"case","run":"2026-04-19_12-08-38","case":"Test Case 53","steps":1,"passed":1,"failed":0,"captured":0,"duration_s":4,"ts":"2026-04-19 12:20:38 PM MDT"}
+{"event":"run","run":"2026-04-19_12-08-38","mode":"visual","cases_run":57,"cases_passed":57,"cases_failed":0,"duration_s":721,"ts":"2026-04-19 12:20:39 PM MDT"}
