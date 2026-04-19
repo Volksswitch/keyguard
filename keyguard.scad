@@ -4199,6 +4199,8 @@ function v2_v_align_code(s) =
 //   "r"    + anchor  "c"  → "cr"      "rr"   + anchor "c" → "crr"
 //   "hd"   + anchor  "L" (default)  → "lhd" (L-anchored half-disc)
 //   "hd"   + anchor  "c"            → "hd"  (C-anchored, unchanged)
+//   "c"    + anchor  "L" (default)  → "lc"  (L-anchored circle)
+//   "c"    + anchor  "c"            → "c"   (C-anchored, unchanged)
 //   all other shapes pass through unchanged.
 function v2_shape_code(shape_raw, anchor, surface) =
 	(shape_raw == "text" && surface == "b") ? "btext" :
@@ -4206,6 +4208,7 @@ function v2_shape_code(shape_raw, anchor, surface) =
 	(shape_raw == "r"  && anchor == "c")    ? "cr"    :
 	(shape_raw == "rr" && anchor == "c")    ? "crr"   :
 	(shape_raw == "hd" && anchor != "c")    ? "lhd"   :
+	(shape_raw == "c"  && anchor != "c")    ? "lc"    :
 	shape_raw;
 
 // ---------------------------------------------------------------------------
@@ -4222,7 +4225,7 @@ function v2_shape_code(shape_raw, anchor, surface) =
 //   x          — x position (all shapes use [5])
 //   y          — y position (all shapes use [6])
 //   cut | build— cb value; ridge_height for "vridge"/"hridge"
-//   anchor     — "L" (left, default) or "C" (centre); supported for "r", "rr", "hd"; ignored for "c", "cridge", "oa1-4"
+//   anchor     — "L" (left, default) or "C" (centre); supported for "r", "rr", "hd", "c"; ignored for "cridge", "oa1-4"
 //   surface    — "T" (top, default) or "B" (bottom)
 //   length     — ridge length for "vridge","hridge" and other ridges; 0 otherwise
 //   thickness  — ridge base thickness for "vridge","hridge" and other ridges; 0 otherwise
@@ -5145,7 +5148,7 @@ module cut_hole(tx, ty, tz, w, h, ts, bs, ls, rs, cr, dep, flip, edge_chamfer=ce
 
 // Dispatches to the correct 3D cutting geometry for a single opening based on its
 // shape code, slope parameters, and depth offset. Handles all built-in shape types
-// (r, cr, c, hd, lhd, rr, crr, oa1-4, svg, ttext/btext, ridges, etc.).
+// (r, cr, c, lc, hd, lhd, rr, crr, oa1-4, svg, ttext/btext, ridges, etc.).
 // @param cut_width     Opening width in mm
 // @param cut_height    Opening height in mm
 // @param shape         Shape code string (e.g. "r", "c", "rr", "oa1", "svg")
@@ -5201,6 +5204,19 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 			else{
 				//need to accomodate ALS sensors and other circular openings if slope is non-90 degrees
 				aoa = sat_incl_acrylic/tan(top_slope);
+				hole_cutter(cut_height+aoa*2,cut_height+aoa*2,90,90,90,90,(cut_height+aoa*2)/2,dep);
+			}
+		}
+	}
+	else if (shape=="lc"){
+		if (cut_height > 0){
+			if (is_3d_printed){
+				trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
+				cut_hole(cut_height/2, cut_height/2, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip, region_chamfer);
+			}
+			else{
+				aoa = sat_incl_acrylic/tan(top_slope);
+				translate([cut_height/2, cut_height/2, 0])
 				hole_cutter(cut_height+aoa*2,cut_height+aoa*2,90,90,90,90,(cut_height+aoa*2)/2,dep);
 			}
 		}
@@ -5337,7 +5353,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 // shape code. Used for laser-cut keyguard outlines.
 // @param cut_width     Opening width in mm
 // @param cut_height    Opening height in mm
-// @param shape         Shape code string (e.g. "r", "c", "rr", "lhd", "oa1")
+// @param shape         Shape code string (e.g. "r", "c", "lc", "rr", "lhd", "oa1")
 // @param top_slope     Top-edge slope angle in degrees (default 0)
 // @param corner_radius Corner radius in mm (default 0)
 module cut_opening_2d(cut_width, cut_height, shape, top_slope=0, corner_radius=0){
@@ -5357,6 +5373,13 @@ module cut_opening_2d(cut_width, cut_height, shape, top_slope=0, corner_radius=0
 	else if (shape=="c"){
 		if (cut_height > 0){
 			aoa = sat_incl_acrylic/tan(top_slope);
+			hole_cutter_2d(cut_height+aoa*2,cut_height+aoa*2,(cut_height+aoa*2)/2);
+		}
+	}
+	else if (shape=="lc"){
+		if (cut_height > 0){
+			aoa = sat_incl_acrylic/tan(top_slope);
+			translate([cut_height/2,cut_height/2])
 			hole_cutter_2d(cut_height+aoa*2,cut_height+aoa*2,(cut_height+aoa*2)/2);
 		}
 	}
