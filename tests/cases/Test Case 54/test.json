@@ -1,0 +1,22 @@
+{
+  "description": "rotating, and building shapes with varied slopes",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "top view",
+      "params": "Test Case 54",
+      "vpt": [11.4863, -76.7636, 15.146],
+      "vpr": [6.7, 0, 277.9],
+      "vpd": 150,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "bottom view",
+      "params": "Test Case 54",
+      "vpt": [0, 0, 0],
+      "vpr": [55, 0, 25],
+      "vpd": 200,
+      "expected": "step2_expected.png"
+    }
+  ]
+}
