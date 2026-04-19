@@ -4224,7 +4224,7 @@ function v2_shape_code(shape_raw, anchor, surface) =
 //   corner     — corner radius (0 = none); z_pos for "text"; rotation for "svg"; 0 for bump/vh/c/hd
 //   x          — x position (all shapes use [5])
 //   y          — y position (all shapes use [6])
-//   cut | build— cb value; ridge_height for "vridge"/"hridge"
+//   cut | build— cb value; negative = cut to depth |cb|; positive = build/extrude solid of height cb; 0 = full depth cut; ridge_height for "vridge"/"hridge"
 //   anchor     — "L"/"l" (left, default) or "C"/"c" (centre); supported for "r", "rr", "hd", "c"; ignored for "cridge", "oa1-4"
 //   surface    — "T"/"t" (top, default) or "B"/"b" (bottom)
 //   length     — ridge length for "vridge","hridge" and other ridges; 0 otherwise
@@ -4409,17 +4409,17 @@ module cut_screen_openings_v2(s_o, depth) {
 				         "' has negative dimensions (w=", w_mm, "mm h=", h_mm, "mm) — skipping."));
 			}
 			if (!has_invalid_dims) {
-				if (depth > 0) {
+				if (depth > 0 && r[7] <= 0) {
 					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
 					       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
 					       ((using_px) ? y_raw * mpp : y_raw);
 					translate([sx0+x_mm, sy0+y_mm, 0])
 					if (opening_ID != "#") {
-						cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : r[7]), depth, "screen");
+						cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "screen");
 					} else {
-						#cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : r[7]), depth, "screen");
+						#cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "screen");
 					}
-				} else {
+				} else if (depth <= 0) {
 					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
 					       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
 					       ((using_px) ? y_raw * mpp : y_raw);
@@ -4430,6 +4430,7 @@ module cut_screen_openings_v2(s_o, depth) {
 						#cut_opening_2d(w_mm, h_mm, shape, top_sl, c_r_mm);
 					}
 				}
+				// r[7] > 0: build — handled by adding_plastic_v2
 			} // end if (!has_invalid_dims)
 		}
 	}
@@ -4528,19 +4529,20 @@ module cut_case_openings_v2(c_o, depth) {
 			}
 			if (!has_invalid_dims) {
 				translate([cox0+r[5], coy0+r[6], 0])
-				if (depth > 0) {
+				if (depth > 0 && r[7] <= 0) {
 					if (opening_ID != "#") {
-						cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : r[7]), depth, "keyguard");
+						cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "keyguard");
 					} else {
-						#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : r[7]), depth, "keyguard");
+						#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "keyguard");
 					}
-				} else {
+				} else if (depth <= 0) {
 					if (opening_ID != "#") {
 						cut_opening_2d(w, h, shape, top_sl, c_r);
 					} else {
 						#cut_opening_2d(w, h, shape, top_sl, c_r);
 					}
 				}
+				// r[7] > 0: build — handled by adding_plastic_v2
 			} // end if (!has_invalid_dims)
 		}
 	}
@@ -4635,12 +4637,15 @@ module cut_tablet_openings_v2(t_o, depth) {
 			}
 			if (!has_invalid_dims) {
 				trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
-				translate(trans)
-				if (opening_ID != "#") {
-					cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : r[7]), depth, "tablet");
-				} else {
-					#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : r[7]), depth, "tablet");
+				if (r[7] <= 0) {
+					translate(trans)
+					if (opening_ID != "#") {
+						cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "tablet");
+					} else {
+						#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "tablet");
+					}
 				}
+				// r[7] > 0: build — handled by adding_plastic_v2 (if tablet openings are used as additions source)
 			} // end if (!has_invalid_dims)
 		}
 	}
@@ -4768,8 +4773,56 @@ module adding_plastic_v2(additions, where) {
 			} else {
 				#place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, (px ? r[4]*mpp : r[4]), other);
 			}
+		} else if (r[7] > 0) {
+			// Standard opening shape with positive cb — extrude solid upward from surface
+			es = r[12];
+			anchor   = ((r[8] == "C" || r[8] == "c")) ? "c" : undef;
+			shape_base = v2_shape_code(r[1], anchor, undef);
+			shape_b  = (shape_base == "r"  && r[4] > 0) ? "rr"  :
+			           (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
+			h_mm_b   = px ? r[2] * mpp : r[2];
+			w_mm_b   = px ? (r[1] == "c" ? 0 : r[3]) * mpp : (r[1] == "c" ? 0 : r[3]);
+			dep_b    = px ? r[7] * mpp : r[7];
+			c_r_b    = (w_mm_b > 0 && h_mm_b > 0) ? min(r[4], min(w_mm_b, h_mm_b)/2) : r[4];
+			top_sl_b = is_laser_cut ? 90 : v2_slope(es, 0, shape_b);
+			bot_sl_b = is_laser_cut ? 90 : v2_slope(es, 1, shape_b);
+			lft_sl_b = is_laser_cut ? 90 : v2_slope(es, 2, shape_b);
+			rgt_sl_b = is_laser_cut ? 90 : v2_slope(es, 3, shape_b);
+			region_chamfer_b = (where == "screen") ? cec : kec;
+			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
+			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? y_raw * mpp : y_raw);
+			build_z = trans + dep_b/2;  // center hole_cutter so its top face = trans + dep_b
+			if (is_3d_printed && h_mm_b > 0) {
+				if (shape_b == "r" || shape_b == "rr") {
+					if (w_mm_b > 0)
+						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, build_z])
+						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, c_r_b, dep_b, region_chamfer_b);
+				} else if (shape_b == "cr" || shape_b == "crr") {
+					if (w_mm_b > 0)
+						translate([x0+x_mm, y0+y_mm, build_z])
+						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, c_r_b, dep_b, region_chamfer_b);
+				} else if (shape_b == "lc") {
+					translate([x0+x_mm+h_mm_b/2, y0+y_mm+h_mm_b/2, build_z])
+					hole_cutter(h_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, dep_b, region_chamfer_b);
+				} else if (shape_b == "c") {
+					translate([x0+x_mm, y0+y_mm, build_z])
+					hole_cutter(h_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, dep_b, region_chamfer_b);
+				} else if (shape_b == "lhd") {
+					if (w_mm_b > 0) {
+						m_b = min(w_mm_b, h_mm_b);
+						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, build_z])
+						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, m_b/2, dep_b, region_chamfer_b);
+					}
+				} else if (shape_b == "hd") {
+					if (w_mm_b > 0) {
+						m_b = min(w_mm_b, h_mm_b);
+						translate([x0+x_mm, y0+y_mm, build_z])
+						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, m_b/2, dep_b, region_chamfer_b);
+					}
+				}
+			}
 		}
-		// Standard rectangular shapes are cuts, not additions — no else block needed here
 	}
 }
 
@@ -5132,13 +5185,13 @@ module cut_als_openings(a_o,depth){
 // @param rs           Right-edge slope angle in degrees
 // @param cr           Corner radius in mm
 // @param dep          Cut depth in mm
-// @param flip         true = use hole_cutter_3 with 180° flip; false = use hole_cutter
+// @param flip         true = rotate 180° and cut from bottom surface (chamfer lands at cut face); false = cut from top
 // @param edge_chamfer Chamfer depth forwarded to hole_cutter (defaults to cec)
 module cut_hole(tx, ty, tz, w, h, ts, bs, ls, rs, cr, dep, flip, edge_chamfer=cec){
 	translate([tx, ty, tz]){
 		if (flip){
 			rotate([0,180,0])
-			hole_cutter_3(w, h, ts, bs, ls, rs, cr, dep);
+			hole_cutter(w, h, ts, bs, ls, rs, cr, dep, edge_chamfer);
 		}
 		else{
 			hole_cutter(w, h, ts, bs, ls, rs, cr, dep, edge_chamfer);
