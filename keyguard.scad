@@ -4806,11 +4806,15 @@ module adding_plastic_v2(additions, where) {
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			if (is_3d_printed && h_mm_b > 0) {
+				// rotate([180,0,0]) flips the build body so the narrow face (= specified w×h)
+				// is at the top (apex) and the wide face is at the keyguard surface — a mountain
+				// shape. The flip inverts y, so top_sl and bot_sl are swapped in the call so
+				// that top_sl still widens the +y edge and bot_sl widens the -y edge at the base.
 				if (shape_b == "r" || shape_b == "rr") {
 					if (w_mm_b > 0) {
 						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
-						rotate([0,0,rot_b])
-						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
+						rotate([0,0,rot_b]) rotate([180,0,0])
+						hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
 						if (has_ch_b)
 							translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
 							rotate([0,0,rot_b]) rotate([180,0,0])
@@ -4819,8 +4823,8 @@ module adding_plastic_v2(additions, where) {
 				} else if (shape_b == "cr" || shape_b == "crr") {
 					if (w_mm_b > 0) {
 						translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
-						rotate([0,0,rot_b])
-						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
+						rotate([0,0,rot_b]) rotate([180,0,0])
+						hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
 						if (has_ch_b)
 							translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
 							rotate([0,0,rot_b]) rotate([180,0,0])
@@ -4828,16 +4832,16 @@ module adding_plastic_v2(additions, where) {
 					}
 				} else if (shape_b == "lc") {
 					translate([x0+x_mm+h_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
-					rotate([0,0,rot_b])
-					hole_cutter(h_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
+					rotate([0,0,rot_b]) rotate([180,0,0])
+					hole_cutter(h_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
 					if (has_ch_b)
 						translate([x0+x_mm+h_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
 						rotate([0,0,rot_b]) rotate([180,0,0])
 						cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
 				} else if (shape_b == "c") {
 					translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
-					rotate([0,0,rot_b])
-					hole_cutter(h_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
+					rotate([0,0,rot_b]) rotate([180,0,0])
+					hole_cutter(h_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
 					if (has_ch_b)
 						translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
 						rotate([0,0,rot_b]) rotate([180,0,0])
@@ -4846,8 +4850,8 @@ module adding_plastic_v2(additions, where) {
 					if (w_mm_b > 0) {
 						m_b = min(w_mm_b, h_mm_b);
 						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
-						rotate([0,0,rot_b])
-						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
+						rotate([0,0,rot_b]) rotate([180,0,0])
+						hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
 						if (has_ch_b)
 							translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
 							rotate([0,0,rot_b]) rotate([180,0,0])
@@ -4857,8 +4861,8 @@ module adding_plastic_v2(additions, where) {
 					if (w_mm_b > 0) {
 						m_b = min(w_mm_b, h_mm_b);
 						translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
-						rotate([0,0,rot_b])
-						hole_cutter(w_mm_b, h_mm_b, top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
+						rotate([0,0,rot_b]) rotate([180,0,0])
+						hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
 						if (has_ch_b)
 							translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
 							rotate([0,0,rot_b]) rotate([180,0,0])
