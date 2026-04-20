@@ -41,9 +41,9 @@ def _render_comment_table(title: str, rows: list[list[str]]) -> str:
 def build_standard_footer() -> str:
     region_rows = [
         ["Shape", "height", "width", "corner", "cut | build", "anchor", "surface", "length", "thickness", "[edge slopes]", "[special params]"],
-        ["r", "x", "x", "x", "x", "x", "x", "", "", "x", ""],
-        ["c", "x", "", "", "x", "", "x", "", "", "x", ""],
-        ["hd", "x", "x", "", "x", "x", "x", "", "", "x", ""],
+        ["r", "x", "x", "x", "x", "x", "x", "", "", "x", "x"],
+        ["c", "x", "", "", "x", "", "x", "", "", "x", "x"],
+        ["hd", "x", "x", "", "x", "x", "x", "", "", "x", "x"],
         ["oa1–4", "", "", "x", "x", "", "", "", "", "", ""],
         ["text", "x", "", "", "x", "", "x", "", "", "", "x"],
         ["svg", "x", "x", "", "x", "", "", "", "", "", "x"],
