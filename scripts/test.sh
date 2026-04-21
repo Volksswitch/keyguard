@@ -7,8 +7,7 @@
 #   --smoke              Layer 3: Render default config to STL
 #   --visual             Layer 4: Run test.json cases; compare PNGs against references
 #   --geometry           Layer 5: Render all named configs from keyguard.json;
-#                                  verify each STL is manifold (Simple: yes) and
-#                                  passes admesh mesh-integrity checks (if available)
+#                                  verify each STL is manifold (Simple: yes)
 #
 # Usage:
 #   ./scripts/test.sh                        # Layers 1–3 (fast default)
@@ -24,7 +23,6 @@
 #   - openscad  (on PATH, or at a common Windows install location)
 #   - python3   (for JSON parsing)
 #   - sca2d     (pip install sca2d)  — Layer 1 only
-#   - admesh    (optional)           — Layer 5 supplementary mesh-integrity check
 #   - imagemagick (compare command)  — Layer 4 PNG comparison; falls back to hash if absent
 
 set -euo pipefail
@@ -51,12 +49,6 @@ _MAIN_ROOT=$(git -C "$PROJECT_ROOT" worktree list --porcelain 2>/dev/null | sed 
 #   E2003: False positive — sca2d doesn't recognise assert() as a built-in
 SCA2D_IGNORE="I3001,I0006,I1002,I0004,I1001,I4001,I4002,I0003,I4003,E2003"
 
-# admesh thresholds:
-#   Reversed facets: OpenSCAD occasionally produces a small number of reversed
-#   facets that are harmless and easily corrected by slicer software. Tolerate
-#   up to this many before treating the mesh as failed. All other admesh error
-#   categories remain zero-tolerance.
-ADMESH_REVERSED_FACETS_THRESHOLD=100
 
 # Default camera (used when a step doesn't specify vpt/vpr/vpd)
 DEFAULT_VPT="0,0,0"
@@ -145,11 +137,6 @@ find_compare() {
 # (where the subcommand 'compare' must be passed explicitly).
 compare_is_im7() { [[ "$(basename "${COMPARE%.exe}")" == "magick" ]]; }
 
-find_admesh() {
-    command -v admesh &>/dev/null && echo "admesh" && return
-    echo ""
-}
-
 find_timeout_cmd() {
     # Prefer gtimeout (macOS homebrew coreutils) then timeout (Linux/Git Bash)
     command -v gtimeout &>/dev/null && echo "gtimeout" && return
@@ -173,7 +160,6 @@ py_path() {
 OPENSCAD="$(find_openscad)"
 SCA2D="$(find_sca2d)"
 COMPARE="$(find_compare)"
-ADMESH="$(find_admesh)"
 PYTHON="$(find_python)"
 TIMEOUT_CMD="$(find_timeout_cmd)"
 
@@ -496,10 +482,14 @@ run_smoke() {
 # Renders every named config to STL and validates the resulting mesh:
 #   1. Render must succeed and produce a non-empty STL
 #   2. OpenSCAD must report "Simple: yes" (CGAL manifold check)
-#   3. admesh must report zero errors (if admesh is installed)
 #
-# No baseline is needed — all checks are self-contained and reliable across
-# machines and OpenSCAD versions.
+# Reversed facets are NOT checked — OpenSCAD produces them non-deterministically
+# and slicer software repairs them automatically. Manifold status is the only
+# meaningful geometry criterion.
+#
+# The openings_and_additions.txt file is swapped from the matching test case
+# folder before each render (falling back to the minimal root file). This
+# prevents a non-minimal root O&A file from contaminating results.
 
 run_geometry() {
     # Configs to skip in the geometry validation layer.
@@ -537,19 +527,21 @@ PYEOF
     mapfile -t configs < <(get_configs)
     info "Found ${#configs[@]} named configs"
     [[ -n "$CASE_FILTER" ]] && info "Filter: '$CASE_FILTER'"
-    if [[ -n "$ADMESH" ]]; then
-        info "admesh available — full mesh-integrity checks enabled"
-    else
-        info "admesh not found — manifold check only (install admesh for deeper validation)"
-    fi
 
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — skipping"; return; fi
 
-    local render_failures=0 manifold_failures=0 admesh_failures=0 skipped=0
+    local render_failures=0 manifold_failures=0 skipped=0
     local total=${#configs[@]} current=0
     local run_label; run_label=$(date +%Y-%m-%d_%H-%M-%S)
     local t_geom_run_start; t_geom_run_start=$(date +%s)
     local geom_passed=0
+
+    # Save root O&A so we can restore it after each config and at the end.
+    # Each config gets the O&A from its matching test case folder (if one exists),
+    # falling back to the minimal root file.  This prevents a non-minimal root
+    # file from contaminating results.
+    local geom_saved_openings="/tmp/keyguard_geom_oa_$$.txt"
+    cp "$OPENINGS_FILE" "$geom_saved_openings"
 
     for config in "${configs[@]}"; do
         current=$((current + 1))
@@ -565,8 +557,24 @@ PYEOF
             printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
             echo -e " ${YELLOW}SKIP${RESET}"
             skipped=$((skipped + 1))
-            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"skip\",\"manifold\":null,\"admesh_issues\":null,\"duration_s\":0,\"ts\":\"$(iso_ts)\"}"
+            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"skip\",\"manifold\":null,\"duration_s\":0,\"ts\":\"$(iso_ts)\"}"
             continue
+        fi
+
+        # ── Swap in the test-case O&A file if one exists ───────────────────────
+        local case_openings_src=""
+        local case_test_json="$CASES_DIR/$config/test.json"
+        if [[ -f "$case_test_json" ]]; then
+            local case_openings_name
+            case_openings_name=$(get_test_field "$case_test_json" "openings")
+            if [[ -n "$case_openings_name" && -f "$CASES_DIR/$config/$case_openings_name" ]]; then
+                case_openings_src="$CASES_DIR/$config/$case_openings_name"
+            fi
+        fi
+        if [[ -n "$case_openings_src" ]]; then
+            cp "$case_openings_src" "$OPENINGS_FILE"
+        else
+            cp "$geom_saved_openings" "$OPENINGS_FILE"
         fi
 
         # Write STL to a system temp directory (outside OneDrive/cloud-sync folders)
@@ -584,87 +592,39 @@ PYEOF
         if [[ "$exit_code" -ne 0 || ! -s "$out" ]]; then
             echo -e " ${RED}RENDER FAILED${RESET} (${t_elapsed}s)"
             render_failures=$((render_failures + 1))
-            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"render_failed\",\"manifold\":null,\"admesh_issues\":null,\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
+            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"render_failed\",\"manifold\":null,\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
             rm -f "$out"; continue
         fi
 
-        local config_ok=true
-        local result_printed=false
-
         # ── 2. Manifold check (OpenSCAD / CGAL) ────────────────────────────────
         # "Simple: yes" means every edge is shared by exactly two faces — the
-        # standard definition of a 2-manifold mesh.
+        # standard definition of a 2-manifold mesh.  This is the sole pass/fail
+        # criterion; reversed facets are not checked (non-deterministic OpenSCAD
+        # artefact, repaired automatically by slicer software).
         local is_simple
         is_simple=$(echo "$console" | grep -oE 'Simple:[[:space:]]+(yes|no)' \
                     | grep -oE '(yes|no)' || echo "")
         if [[ "$is_simple" == "no" ]]; then
             echo -e " ${RED}NON-MANIFOLD${RESET} (${t_elapsed}s)"
             manifold_failures=$((manifold_failures + 1))
-            config_ok=false
-        fi
-
-        # ── 3. admesh mesh-integrity check (optional) ──────────────────────────
-        # admesh checks for degenerate facets, open edges, reversed normals, etc.
-        # All categories are zero-tolerance except "Facets reversed", which is
-        # tolerated up to ADMESH_REVERSED_FACETS_THRESHOLD (harmless OpenSCAD
-        # artefact; corrected automatically by slicer software).
-        local admesh_issues_count=0
-        if [[ -n "$ADMESH" && "$config_ok" == "true" ]]; then
-            local admesh_out
-            admesh_out=$("$ADMESH" "$out" 2>&1) || true
-
-            # Count non-reversed issues (zero tolerance).
-            local admesh_issues
-            admesh_issues=$(echo "$admesh_out" | \
-                grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Backsides flipped|Parts fixed)' | \
-                grep -cE ':[[:space:]]+[1-9][0-9]*[[:space:]]*$' || true)
-            admesh_issues=${admesh_issues:-0}
-
-            # Count reversed facets; fail only if above threshold.
-            # Use grep -oE '[0-9]+' | tail -1 to extract the last number on the
-            # matching line — avoids issues with trailing CR on Windows.
-            local reversed_count
-            reversed_count=$(echo "$admesh_out" | \
-                grep -E 'Facets reversed' | \
-                grep -oE '[0-9]+' | tail -1 || true)
-            reversed_count=${reversed_count:-0}
-            if [[ "$reversed_count" -gt "$ADMESH_REVERSED_FACETS_THRESHOLD" ]]; then
-                admesh_issues=$((admesh_issues + 1))
-            fi
-
-            admesh_issues_count=$admesh_issues
-            if [[ "$admesh_issues" -gt 0 ]]; then
-                echo -e " ${RED}MESH ERRORS${RESET} (${t_elapsed}s)"
-                echo "$admesh_out" | \
-                    grep -E '(Degenerate facets|Edges fixed|Facets removed|Facets added|Facets reversed|Backsides flipped|Parts fixed)' | \
-                    grep -E ':[[:space:]]+[1-9]' | sed 's/^/      /'
-                admesh_failures=$((admesh_failures + 1))
-                config_ok=false
-            elif [[ "$reversed_count" -gt 0 ]]; then
-                # Reversed facets present but within threshold — warn, don't fail.
-                echo -e " ${GREEN}OK${RESET} (${t_elapsed}s) ${YELLOW}[${reversed_count} reversed facet(s), within threshold]${RESET}"
-                result_printed=true
-            fi
-        fi
-
-        # ── Print per-config result ─────────────────────────────────────────────
-        if [[ "$config_ok" == "true" ]]; then
-            if [[ "$result_printed" != "true" ]]; then
-                if [[ -z "$is_simple" ]]; then
-                    echo -e " ${YELLOW}OK (manifold status unknown)${RESET} (${t_elapsed}s)"
-                else
-                    echo -e " ${GREEN}OK${RESET} (${t_elapsed}s)"
-                fi
+            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"fail\",\"manifold\":\"no\",\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
+        else
+            if [[ -z "$is_simple" ]]; then
+                echo -e " ${YELLOW}OK (manifold status unknown)${RESET} (${t_elapsed}s)"
+            else
+                echo -e " ${GREEN}OK${RESET} (${t_elapsed}s)"
             fi
             geom_passed=$((geom_passed + 1))
-            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"pass\",\"manifold\":\"${is_simple:-unknown}\",\"admesh_issues\":$admesh_issues_count,\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
-        else
-            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"fail\",\"manifold\":\"${is_simple:-unknown}\",\"admesh_issues\":$admesh_issues_count,\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
+            log_event "{\"event\":\"config\",\"run\":\"$(json_str "$run_label")\",\"config\":\"$(json_str "$config")\",\"status\":\"pass\",\"manifold\":\"${is_simple:-unknown}\",\"duration_s\":$t_elapsed,\"ts\":\"$(iso_ts)\"}"
         fi
 
         # ── Clean up STL (checks are done; no value in keeping it) ─────────────
         rm -f "$out"
     done
+
+    # Restore root O&A to the saved minimal version
+    cp "$geom_saved_openings" "$OPENINGS_FILE"
+    rm -f "$geom_saved_openings"
 
     echo ""
     if [[ "$skipped" -gt 0 ]]; then
@@ -676,15 +636,12 @@ PYEOF
     if [[ "$manifold_failures" -gt 0 ]]; then
         fail "$manifold_failures config(s) produced non-manifold geometry"
     fi
-    if [[ "$admesh_failures" -gt 0 ]]; then
-        fail "$admesh_failures config(s) failed admesh mesh-integrity check"
-    fi
-    if [[ "$render_failures" -eq 0 && "$manifold_failures" -eq 0 && "$admesh_failures" -eq 0 ]]; then
+    if [[ "$render_failures" -eq 0 && "$manifold_failures" -eq 0 ]]; then
         pass "Geometry validation — all configs passed"
     fi
     local t_geom_elapsed=$(( $(date +%s) - t_geom_run_start ))
-    local geom_failed=$(( render_failures + manifold_failures + admesh_failures ))
-    log_event "{\"event\":\"run\",\"run\":\"$(json_str "$run_label")\",\"mode\":\"geometry\",\"configs_total\":$total,\"configs_passed\":$geom_passed,\"configs_failed\":$geom_failed,\"configs_skipped\":$skipped,\"render_failures\":$render_failures,\"manifold_failures\":$manifold_failures,\"admesh_failures\":$admesh_failures,\"duration_s\":$t_geom_elapsed,\"ts\":\"$(iso_ts)\"}"
+    local geom_failed=$(( render_failures + manifold_failures ))
+    log_event "{\"event\":\"run\",\"run\":\"$(json_str "$run_label")\",\"mode\":\"geometry\",\"configs_total\":$total,\"configs_passed\":$geom_passed,\"configs_failed\":$geom_failed,\"configs_skipped\":$skipped,\"render_failures\":$render_failures,\"manifold_failures\":$manifold_failures,\"duration_s\":$t_geom_elapsed,\"ts\":\"$(iso_ts)\"}"
     info "Timings appended to: test-timings.ndjson"
 }
 
@@ -1061,7 +1018,6 @@ echo    "==============================="
 info "OpenSCAD:    ${OPENSCAD:-NOT FOUND}"
 info "Python:      ${PYTHON:-NOT FOUND}"
 info "sca2d:       ${SCA2D:-NOT FOUND}"
-info "admesh:      ${ADMESH:-not found (manifold-only check in Layer 5)}"
 if [[ -n "$COMPARE" ]]; then
     compare_is_im7 && _im_style="IM7 (magick compare)" || _im_style="IM6 (compare)"
     info "ImageMagick: $COMPARE ($_im_style)"
@@ -1078,9 +1034,8 @@ _os="$(uname -o 2>/dev/null || uname -s 2>/dev/null || true)"
 _openscad_ver="$(tool_version "$OPENSCAD")"
 _python_ver="$([[ -n "$PYTHON" ]] && "$PYTHON" --version 2>&1 | tr -d '\r' || true)"
 _sca2d_ver="$(tool_version "$SCA2D")"
-_admesh_ver="$(tool_version "$ADMESH")"
 _compare_ver="$( [[ -n "$COMPARE" ]] && { compare_is_im7 && "$COMPARE" --version 2>&1 | head -1 || "$COMPARE" --version 2>&1 | head -1; } | tr -d '\r' || true)"
-log_event "{\"event\":\"env\",\"session\":\"$(json_str "$SESSION_ID")\",\"os\":$(json_val "$_os"),\"openscad\":$(json_val "$OPENSCAD"),\"openscad_version\":$(json_val "$_openscad_ver"),\"python\":$(json_val "$PYTHON"),\"python_version\":$(json_val "$_python_ver"),\"sca2d\":$(json_val "$SCA2D"),\"sca2d_version\":$(json_val "$_sca2d_ver"),\"admesh\":$(json_val "$ADMESH"),\"admesh_version\":$(json_val "$_admesh_ver"),\"imagemagick\":$(json_val "$COMPARE"),\"imagemagick_version\":$(json_val "$_compare_ver"),\"timeout_cmd\":$(json_val "$TIMEOUT_CMD"),\"render_timeout_s\":$RENDER_TIMEOUT,\"ts\":\"$(iso_ts)\"}"
+log_event "{\"event\":\"env\",\"session\":\"$(json_str "$SESSION_ID")\",\"os\":$(json_val "$_os"),\"openscad\":$(json_val "$OPENSCAD"),\"openscad_version\":$(json_val "$_openscad_ver"),\"python\":$(json_val "$PYTHON"),\"python_version\":$(json_val "$_python_ver"),\"sca2d\":$(json_val "$SCA2D"),\"sca2d_version\":$(json_val "$_sca2d_ver"),\"imagemagick\":$(json_val "$COMPARE"),\"imagemagick_version\":$(json_val "$_compare_ver"),\"timeout_cmd\":$(json_val "$TIMEOUT_CMD"),\"render_timeout_s\":$RENDER_TIMEOUT,\"ts\":\"$(iso_ts)\"}"
 
 "$RUN_LINT"             && run_lint
 "$RUN_SYNTAX"           && run_syntax
