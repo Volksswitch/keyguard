@@ -39,6 +39,7 @@ OUTPUT_DIR="$PROJECT_ROOT/output/test"
 TEST_RESULTS_DIR="$PROJECT_ROOT/test results"
 CASES_DIR="$PROJECT_ROOT/tests/cases"
 TIMINGS_FILE="$PROJECT_ROOT/test-timings.ndjson"
+LOCK_FILE="$PROJECT_ROOT/.test-lock"
 # When running from a git worktree, also mirror timings to the main project folder
 _MAIN_ROOT=$(git -C "$PROJECT_ROOT" worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | head -1)
 [[ -n "$_MAIN_ROOT" && "$_MAIN_ROOT" != "$PROJECT_ROOT" ]] \
@@ -399,6 +400,27 @@ with open('$_p', encoding='utf-8') as f:
 for a in test.get('assets', []):
     print(a)
 " | tr -d '\r'
+}
+
+# ── Lock: prevent concurrent visual/geometry runs ─────────────────────────────
+#
+# Visual and geometry tests swap or write shared project files (openings_and_
+# additions.txt, default.svg). Running two such tests concurrently produces race
+# conditions: wrong geometry, blank PNGs, and false failures that waste debugging
+# time. This lock enforces single-instance execution for those layers.
+
+acquire_test_lock() {
+    if [[ -f "$LOCK_FILE" ]]; then
+        local other_pid; other_pid=$(cat "$LOCK_FILE" 2>/dev/null || echo "")
+        if [[ -n "$other_pid" ]] && kill -0 "$other_pid" 2>/dev/null; then
+            echo -e "${RED}${BOLD}Error:${RESET} A visual/geometry test run is already in progress (PID $other_pid)."
+            echo "       Wait for it to finish, or stop it first:  kill $other_pid"
+            exit 1
+        fi
+        rm -f "$LOCK_FILE"   # stale lock from a previously crashed run
+    fi
+    echo "$$" > "$LOCK_FILE"
+    trap 'rm -f "$LOCK_FILE"' EXIT
 }
 
 # ── Layer 1: sca2d lint ────────────────────────────────────────────────────────
@@ -1063,6 +1085,7 @@ log_event "{\"event\":\"env\",\"session\":\"$(json_str "$SESSION_ID")\",\"os\":$
 "$RUN_LINT"             && run_lint
 "$RUN_SYNTAX"           && run_syntax
 "$RUN_SMOKE"            && run_smoke
+{ "$RUN_VISUAL" || "$RUN_GEOMETRY"; } && acquire_test_lock
 "$RUN_VISUAL"           && run_visual
 "$RUN_GEOMETRY"         && run_geometry
 
