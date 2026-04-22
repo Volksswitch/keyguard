@@ -4321,11 +4321,11 @@ module cut_screen_openings_v2(s_o, depth) {
 			}
 
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
-		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
+		           r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
-			// r[2]=ridge_height, r[10]=length (ridge/cridge/aridge), r[3]=width r[4]=corner (rridge/crridge), r[11]=thickness, r[13]=sp
+			// r[2]=ridge_height, r[10]=length (ridge/cridge/aridge), r[3]=width r[4]=corner (rridge), r[11]=thickness, r[13]=sp
 			sp = r[13];
-			rr = (r[1] == "rridge" || r[1] == "crridge");
+			rr = (r[1] == "rridge");
 			ridge_h = r[2]; w_mm = (using_px) ? (rr ? r[3] : r[10]) * mpp : (rr ? r[3] : r[10]);
 			top_sl = ridge_h; bot_sl = r[11];
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
@@ -4465,10 +4465,10 @@ module cut_case_openings_v2(c_o, depth) {
 			}
 
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
-		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
+		           r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
 			sp = r[13];
-			rr = (r[1] == "rridge" || r[1] == "crridge");
+			rr = (r[1] == "rridge");
 			top_sl = r[2]; bot_sl = r[11];
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			if (depth > 0) {
@@ -4579,10 +4579,10 @@ module cut_tablet_openings_v2(t_o, depth) {
 			}
 
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
-		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
+		           r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
 			sp = r[13];
-			rr = (r[1] == "rridge" || r[1] == "crridge");
+			rr = (r[1] == "rridge");
 			top_sl = r[2]; bot_sl = r[11];
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
@@ -4721,11 +4721,11 @@ module adding_plastic_v2(additions, where) {
 			}
 
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
-		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
+		           r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
-			// All shapes: r[7]=ridge_height (cb), r[11]=thickness. ridge/cridge/aridge: r[10]=length. rridge/crridge: r[2]=rect_height, r[3]=width, r[4]=corner. cridge: r[2]=circle_size. aridge1-4: r[4]=corner.
+			// All shapes: r[7]=ridge_height (cb), r[11]=thickness. ridge/cridge/aridge: r[10]=length. rridge: r[2]=rect_height, r[3]=width, r[4]=corner. cridge: r[2]=circle_size. aridge1-4: r[4]=corner.
 			sp = r[13];
-			rr = (r[1] == "rridge" || r[1] == "crridge");
+			rr = (r[1] == "rridge");
 			ar = (r[1] == "aridge1" || r[1] == "aridge2" || r[1] == "aridge3" || r[1] == "aridge4");
 			w_src = rr ? r[3] : r[10];
 			w_mm = px ? w_src * mpp : w_src;
