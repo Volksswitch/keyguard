@@ -44,7 +44,7 @@ def build_standard_footer() -> str:
         ["r", "x", "x", "x", "x", "x", "x", "", "", "x", "x"],
         ["c", "x", "", "", "x", "", "x", "", "", "x", "x"],
         ["hd", "x", "x", "", "x", "x", "x", "", "", "x", "x"],
-        ["oa1–4", "", "", "x", "x", "", "", "", "", "", ""],
+        ["oa1-4", "", "", "x", "x", "", "", "", "", "", ""],
         ["text", "x", "", "", "x", "", "x", "", "", "", "x"],
         ["svg", "x", "x", "", "x", "", "", "", "", "", "x"],
         ["bump", "x", "", "", "", "", "", "", "", "", ""],
@@ -53,20 +53,20 @@ def build_standard_footer() -> str:
         ["vridge", "", "", "", "x", "x", "", "x", "x", "", ""],
         ["cridge", "x", "", "", "x", "", "", "", "x", "", ""],
         ["rridge", "x", "x", "x", "x", "x", "", "", "x", "", ""],
-        ["aridge1–4", "", "", "", "x", "", "", "", "x", "", ""],
+        ["aridge1-4", "", "", "", "x", "", "", "", "x", "", ""],
     ]
 
     case_addition_rows = [
         ["Shape", "height", "width", "corner", "cut | build", "[trim]"],
         ["r", "x", "x", "x", "x", "x"],
         ["c", "x", "", "", "x", "x"],
-        ["r1–4", "x", "x", "x", "x", "x"],
-        ["tab1–4", "x", "x", "x", "x", "x"],
-        ["cm1–4", "x", "x", "", "x", "x"],
-        ["t1–4", "x", "x", "", "x", "x"],
-        ["f1–4", "x", "x", "x", "x", "x"],
-        ["oa1–4", "", "", "x", "", ""],
-        ["ped1–4", "", "", "", "", ""],
+        ["r1-4", "x", "x", "x", "x", "x"],
+        ["tab1-4", "x", "x", "x", "x", "x"],
+        ["cm1-4", "x", "x", "", "x", "x"],
+        ["t1-4", "x", "x", "", "x", "x"],
+        ["f1-4", "x", "x", "x", "x", "x"],
+        ["oa1-4", "", "", "x", "", ""],
+        ["ped1-4", "", "", "", "", ""],
     ]
 
     parts = [
@@ -76,6 +76,7 @@ def build_standard_footer() -> str:
         _render_comment_table("** Screen, Case, Tablet Openings", region_rows),
         "",
         "  [special params]  Contents",
+        '  r, c, hd          [direction]',
         '  text              ["text value", direction, font style, h-align, v-align]',
         '  svg               ["filename", direction]',
         "  ridge             [direction]",
