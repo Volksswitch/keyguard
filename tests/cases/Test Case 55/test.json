@@ -1,0 +1,14 @@
+{
+  "description": "almost all ridges",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "a few ridges",
+      "params": "Test Case 55",
+      "vpt": [12.2519, -0.926348, -8.59379],
+      "vpr": [55, 0, 25],
+      "vpd": 600,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
