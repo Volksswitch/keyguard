@@ -4323,12 +4323,13 @@ module cut_screen_openings_v2(s_o, depth) {
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
 		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
-			// r[2]=ridge_height, r[10]=length, r[11]=thickness, r[13]=sp
+			// r[2]=ridge_height, r[10]=length (ridge/cridge/aridge), r[3]=width r[4]=corner (rridge/crridge), r[11]=thickness, r[13]=sp
 			sp = r[13];
-			ridge_h = r[2]; w_mm = (using_px) ? r[10] * mpp : r[10];
+			rr = (r[1] == "rridge" || r[1] == "crridge");
+			ridge_h = r[2]; w_mm = (using_px) ? (rr ? r[3] : r[10]) * mpp : (rr ? r[3] : r[10]);
 			top_sl = ridge_h; bot_sl = r[11];
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
-			c_r = r[11]; // thickness repurposed as corner slot for cut_opening
+			c_r = rr ? r[4] : r[11];
 			if (depth > 0) {
 				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
 				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
@@ -4467,14 +4468,15 @@ module cut_case_openings_v2(c_o, depth) {
 		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
 			sp = r[13];
+			rr = (r[1] == "rridge" || r[1] == "crridge");
 			top_sl = r[2]; bot_sl = r[11];
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			if (depth > 0) {
 				translate([cox0+r[5], coy0+r[6], 0])
 				if (opening_ID != "#") {
-					cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]), depth, "keyguard");
+					cut_opening(rr ? r[3] : r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, rr ? r[4] : r[11], (r[7]==0 ? undef : r[7]), depth, "keyguard");
 				} else {
-					#cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]), depth, "keyguard");
+					#cut_opening(rr ? r[3] : r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, rr ? r[4] : r[11], (r[7]==0 ? undef : r[7]), depth, "keyguard");
 				}
 			}
 
@@ -4580,14 +4582,15 @@ module cut_tablet_openings_v2(t_o, depth) {
 		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
 			sp = r[13];
+			rr = (r[1] == "rridge" || r[1] == "crridge");
 			top_sl = r[2]; bot_sl = r[11];
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
 			translate(trans)
 			if (opening_ID != "#") {
-				cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]), depth, "tablet");
+				cut_opening(rr ? r[3] : r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, rr ? r[4] : r[11], (r[7]==0 ? undef : r[7]), depth, "tablet");
 			} else {
-				#cut_opening(r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]), depth, "tablet");
+				#cut_opening(rr ? r[3] : r[10], r[2], r[1], top_sl, bot_sl, lft_sl, 0, rr ? r[4] : r[11], (r[7]==0 ? undef : r[7]), depth, "tablet");
 			}
 
 		} else if (r[1] == "text") {
@@ -4720,24 +4723,26 @@ module adding_plastic_v2(additions, where) {
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
 		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
-			// r[2]=ridge_height, r[10]=length, r[11]=thickness, r[13]=sp
+			// r[2]=ridge_height, r[10]=length (ridge/cridge/aridge), r[3]=width r[4]=corner (rridge/crridge), r[11]=thickness, r[13]=sp
 			sp = r[13];
-			w_mm = px ? r[10] * mpp : r[10];
+			rr = (r[1] == "rridge" || r[1] == "crridge");
+			w_src = rr ? r[3] : r[10];
+			w_mm = px ? w_src * mpp : w_src;
 			top_sl = r[2]; top_sl_mm = px ? top_sl * mpp : top_sl;
 			bot_sl = r[11]; bot_sl_mm = px ? bot_sl * mpp : bot_sl;
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
-			c_ax = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge")  ? -w_mm/2 * cos(lft_sl) :
-			       ((r[8] == "C" || r[8] == "c") && r[1] == "rridge") ? -w_mm/2 : 0;
-			c_ay = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge")  ? -w_mm/2 * sin(lft_sl) :
-			       ((r[8] == "C" || r[8] == "c") && r[1] == "rridge") ? -top_sl_mm/2 : 0;
+			c_ax = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge") ? -w_mm/2 * cos(lft_sl) :
+			       ((r[8] == "C" || r[8] == "c") && rr)               ? -w_mm/2 : 0;
+			c_ay = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge") ? -w_mm/2 * sin(lft_sl) :
+			       ((r[8] == "C" || r[8] == "c") && rr)               ? -top_sl_mm/2 : 0;
 			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]));
+				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, rr ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
 			} else {
-				#place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, r[11], (r[7]==0 ? undef : r[7]));
+				#place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, rr ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
 			}
 
 		} else if (r[1] == "text") {
