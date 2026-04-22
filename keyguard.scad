@@ -4723,12 +4723,13 @@ module adding_plastic_v2(additions, where) {
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
 		           r[1] == "crridge" || r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
-			// r[2]=rect_height (rridge/crridge) or ridge_height (others), r[7]=ridge_height (rridge/crridge), r[10]=length (ridge/cridge/aridge), r[3]=width r[4]=corner (rridge/crridge), r[11]=thickness, r[13]=sp
+			// All shapes: r[7]=ridge_height (cb), r[11]=thickness. ridge/cridge/aridge: r[10]=length. rridge/crridge: r[2]=rect_height, r[3]=width, r[4]=corner. cridge: r[2]=circle_size. aridge1-4: r[4]=corner.
 			sp = r[13];
 			rr = (r[1] == "rridge" || r[1] == "crridge");
+			ar = (r[1] == "aridge1" || r[1] == "aridge2" || r[1] == "aridge3" || r[1] == "aridge4");
 			w_src = rr ? r[3] : r[10];
 			w_mm = px ? w_src * mpp : w_src;
-			top_sl = rr ? r[7] : r[2]; top_sl_mm = px ? top_sl * mpp : top_sl;
+			top_sl = r[7]; top_sl_mm = px ? top_sl * mpp : top_sl;
 			bot_sl = r[11]; bot_sl_mm = px ? bot_sl * mpp : bot_sl;
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
@@ -4740,9 +4741,9 @@ module adding_plastic_v2(additions, where) {
 			       ((r[8] == "C" || r[8] == "c") && rr)               ? -(px ? r[2]*mpp : r[2])/2 : 0;
 			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, rr ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
+				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, (rr || ar) ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
 			} else {
-				#place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, rr ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
+				#place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, (rr || ar) ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
 			}
 
 		} else if (r[1] == "text") {
