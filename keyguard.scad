@@ -7275,47 +7275,47 @@ module engrave_emboss_instruction(){
 		 
 	t_height = text_height;
 	shape = (keyguard_location == "top surface") ? "ttext" : "btext";
-	top_slope = (text_angle=="vertical downward") ? -90 :
+	direction = (text_angle=="vertical downward") ? -90 :
 	              (text_angle=="horizontal") ? 0 :
 	              (text_angle=="vertical upward") ? 90 :
 	              180;
 	font_s  = font_style;                  // V2 string: "normal", "bold", "italic", "bold italic"
 	h_align = text_horizontal_alignment;   // V2 string: "left", "center", "right"
 	v_align = text_vertical_alignment;     // V2 string: "bottom", "baseline", "center", "top"
-	corner_radius = (is_laser_cut) ? -0.1 : text_depth;
-	other = text;
+	cb = (is_laser_cut) ? -0.1 : text_depth;
+	text_string = text;
 	depth = sat;
 
 	if(generate=="keyguard" || generate=="first half of keyguard" || generate=="second half of keyguard"){
 		if (keyguard_region=="screen region"){
-			if (corner_radius > 0){
+			if (cb > 0){
 				translate([x0+x,sy0+y,sat-kt/2-ff])
-				#place_addition_v2(10, t_height, shape, top_slope, top_slope, font_s, 0, h_align, v_align, corner_radius, other);
+				#place_addition_v2(10, t_height, shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
 			}
 			else{
 				translate([x0+x,sy0+y,ff])
-				#cut_opening(0, t_height, shape, top_slope, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), corner_radius, other, depth*2,"screen");
+				#cut_opening(0, t_height, shape, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth*2,"screen");
 			}
 		}
 		else{
-			if (corner_radius > 0){
+			if (cb > 0){
 				translate([x0+x,coy0+y,kt/2-ff])
-				#place_addition_v2(0, t_height, shape, top_slope, top_slope, font_s, 0, h_align, v_align, corner_radius, other);
+				#place_addition_v2(0, t_height, shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
 			}
 			else{
 				translate([x0+x,coy0+y,-ff])
-				#cut_opening(0, t_height, shape, top_slope, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), corner_radius, other, depth+ff*2,"case");
+				#cut_opening(0, t_height, shape, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth+ff*2,"case");
 			}
 		}
 	}
 	else{ // first layer for SVG/DXF file
 		if (keyguard_region=="screen region"){
 			translate([x0+x,sy0+y,ff])
-			#cut_opening_2d(0, t_height, shape, top_slope, corner_radius);
+			#cut_opening_2d(0, t_height, shape, direction, cb);
 		}
 		else{
 			translate([x0+x,coy0+y,-ff])
-			#cut_opening_2d(0, t_height, shape, top_slope, corner_radius);
+			#cut_opening_2d(0, t_height, shape, direction, cb);
 		}
 	}
 }
