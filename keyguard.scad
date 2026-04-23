@@ -111,7 +111,8 @@
 // CASE ADDITIONS
 //   adding_plastic()                    5392  Add plastic to case (dispatch, V1 format)
 //   adding_plastic_v2()                 4636  Add plastic to case (dispatch, V2 format)
-//   place_addition()                    5468  Place a single addition shape
+//   place_addition()                    5468  Place a single addition shape (V1 format)
+//   place_addition_v2()                 5758  Place a single addition shape (V2 format)
 //   add_case_full_height_shapes()       6084  Full-height case addition shapes (V1 format)
 //   add_case_full_height_shapes_v2()    4805  Full-height case addition shapes (V2 format)
 //   apply_flex_height_shapes()          6459  Add or subtract flexible-height shapes (V1 format)
@@ -4694,9 +4695,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, (r[7]==0 ? undef : r[7]));
+				place_addition_v2(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, (r[7]==0 ? undef : r[7]));
 			} else {
-				#place_addition(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, (r[7]==0 ? undef : r[7]));
+				#place_addition_v2(diam_mm, diam_mm, "bump", top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, 0, (r[7]==0 ? undef : r[7]));
 			}
 
 		} else if (r[1] == "vridge" || r[1] == "hridge") {
@@ -4715,9 +4716,9 @@ module adding_plastic_v2(additions, where) {
 			c_ay = ((r[8] == "C" || r[8] == "c") && r[1] == "vridge") ? -h_mm/2 : 0;
 			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
+				place_addition_v2(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
 			} else {
-				#place_addition(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
+				#place_addition_v2(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
 			}
 
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
@@ -4741,9 +4742,9 @@ module adding_plastic_v2(additions, where) {
 			       ((r[8] == "C" || r[8] == "c") && rr)               ? -(px ? r[2]*mpp : r[2])/2 : 0;
 			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, (rr || ar) ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
+				place_addition_v2(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, (rr || ar) ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
 			} else {
-				#place_addition(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, (rr || ar) ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
+				#place_addition_v2(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, (rr || ar) ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
 			}
 
 		} else if (r[1] == "text") {
@@ -4754,19 +4755,18 @@ module adding_plastic_v2(additions, where) {
 			h_mm = px ? r[2] * mpp : r[2];
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
 			top_sl_mm = px ? top_sl * mpp : top_sl;
-			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
-			bot_sl_mm = px ? bot_sl * mpp : bot_sl;
-			lft_sl = v2_h_align_code((len(sp) >= 4) ? sp[3] : "");
-			rgt_sl = v2_v_align_code((len(sp) >= 5) ? sp[4] : "");
+			bot_sl = (len(sp) >= 3) ? sp[2] : "";   // font style string: "bold", "italic", "bold italic", or ""
+			lft_sl = (len(sp) >= 4) ? sp[3] : "";   // halign string: "left", "center", "right"
+			rgt_sl = (len(sp) >= 5) ? sp[4] : "";   // valign string: "bottom", "baseline", "center", "top"
 			other  = (len(sp) >= 1) ? sp[0] : undef;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other);
+				place_addition_v2(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, 0, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other);
 			} else {
-				#place_addition(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other);
+				#place_addition_v2(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, 0, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other);
 			}
 
 		} else if (r[1] == "svg") {
@@ -4781,9 +4781,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, (px ? r[4]*mpp : r[4]), other);
+				place_addition_v2(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, (px ? r[4]*mpp : r[4]), other);
 			} else {
-				#place_addition(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, (px ? r[4]*mpp : r[4]), other);
+				#place_addition_v2(w_mm, h_mm, "svg", top_sl, top_sl_mm, 0, 0, 0, 0, (px ? r[4]*mpp : r[4]), other);
 			}
 		} else if (r[7] > 0) {
 			// Standard opening shape with positive cb — extrude solid upward from surface.
@@ -5727,33 +5727,172 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 		}
 	}	
 	else if (shape=="ttext"){
-		f_s = 
+		f_s =
 			(bottom_slope==1)? "Liberation Sans:style=Bold"
 		  : (bottom_slope==2)? "Liberation Sans:style=Italic"
 		  : (bottom_slope==3)? "Liberation Sans:style=Bold Italic"
 		  : "Liberation Sans";
-		  
+
 		// "left", "center" and "right"
-		horiz = 
+		horiz =
 			(left_slope==1)? "left"
 		  : (left_slope==2)? "center"
 		  : (left_slope==3)? "right"
 		  : "left";
-		  
+
 		// "top", "center", "baseline" and "bottom"
-		vert = 
+		vert =
 			(right_slope==1)? "bottom"
 		  : (right_slope==2)? "baseline"
 		  : (right_slope==3)? "center"
 		  : (right_slope==4)? "top"
 		  : "bottom";
-		  
+
 		if(addition_height>0 && corner_radius>0){
 			rotate([0,0,top_slope])
 			linear_extrude(height=corner_radius)
 			text(str(other),font = f_s, size=addition_height,valign=vert,halign=horiz);
 		}
-	}	
+	}
+}
+
+// V2-independent variant of place_addition(). All parameters identical except for
+// the ttext shape, where bottom_slope, left_slope, and right_slope accept V2 schema
+// strings directly instead of V1 integer codes:
+//   bottom_slope  font style: "bold", "italic", "bold italic", or "" (normal)
+//   left_slope    halign:     "left", "center", "right"
+//   right_slope   valign:     "bottom", "baseline", "center", "top"
+// @param addition_width    Width of the addition in mm
+// @param addition_height   Height of the addition in mm
+// @param shape             Shape code string (e.g. "bump", "hridge", "svg", "ttext")
+// @param top_slope         Slope angle for the addition top in degrees
+// @param top_slope_mm      Ridge height in mm (used by ridge-type shapes)
+// @param bottom_slope      Ridge base thickness in mm, or font-style string for text
+// @param bottom_slope_mm   Ridge base thickness in mm (used by ridge-type shapes)
+// @param left_slope        Left-slope / rotation angle in degrees, or halign string for text
+// @param right_slope       Right-slope angle in degrees, or valign string for text
+// @param corner_radius     Corner radius or arc radius in mm, or text depth in mm
+// @param other             Text string or secondary numeric value (shape-dependent)
+module place_addition_v2(addition_width, addition_height, shape, top_slope, top_slope_mm, bottom_slope, bottom_slope_mm, left_slope, right_slope, corner_radius, other){
+	if (shape=="bump"){
+		if(addition_width>0){
+			difference(){
+				sphere(d=addition_width,$fn=40);
+				translate([0,0,-addition_width])
+				cube([addition_width*2, addition_width*2,addition_width*2],center=true);
+			}
+		}
+	}
+	else if (shape=="hridge"){
+		if(addition_width>=1 && bottom_slope_mm>=.1 && top_slope_mm>=.1){
+			ridge(addition_width, bottom_slope_mm, top_slope_mm,0);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="vridge"){
+		if(addition_height>=1 && bottom_slope_mm>=.1 && top_slope_mm>=.1){
+			ridge(addition_height, bottom_slope_mm, top_slope_mm,90);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="ridge"){
+		if(addition_width>=1 && bottom_slope_mm>=.1 && top_slope_mm>=.1){
+			ridge(addition_width, bottom_slope_mm, top_slope_mm,left_slope);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="aridge1"){
+		if(corner_radius>=1 && bottom_slope>=.1 && top_slope>=.1){
+			adj = corner_radius;
+			translate([-adj,-adj,0])
+			rotate([0,0,0])
+			aridge(corner_radius, bottom_slope, top_slope);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="aridge2"){
+		if(corner_radius>=1 && bottom_slope>=.1 && top_slope>=.1){
+			adj = corner_radius;
+			translate([-adj,adj,0])
+			rotate([0,0,-90])
+			aridge(corner_radius, bottom_slope, top_slope);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="aridge3"){
+		if(corner_radius>=1 && bottom_slope>=.1 && top_slope>=.1){
+			adj = corner_radius;
+			translate([adj,adj,0])
+			rotate([0,0,180])
+			aridge(corner_radius, bottom_slope, top_slope);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="aridge4"){
+		if(corner_radius>=1 && bottom_slope>=.1 && top_slope>=.1){
+			adj = corner_radius;
+			translate([adj,-adj,0])
+			rotate([0,0,90])
+			aridge(corner_radius, bottom_slope, top_slope);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="cridge"){
+		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			translate([0,0,-sata])
+			circular_wall(addition_height,bottom_slope_mm,top_slope_mm+sata);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="rridge"){
+		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			translate([addition_width/2,addition_height/2,-sata])
+			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="crridge"){
+		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			translate([0,0,-sata])
+			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="svg"){
+		if(addition_height>0 && addition_width>0 && corner_radius>0){
+			rotate([0,0,-top_slope])
+			resize([addition_width,addition_height,corner_radius])
+			linear_extrude(height=corner_radius)
+			offset(delta = .005)
+			import(file = other,center=true);
+		}
+	}
+	else if (shape=="ttext"){
+		f_s =
+			(bottom_slope=="bold")        ? "Liberation Sans:style=Bold"
+		  : (bottom_slope=="italic")      ? "Liberation Sans:style=Italic"
+		  : (bottom_slope=="bold italic") ? "Liberation Sans:style=Bold Italic"
+		  : "Liberation Sans";
+
+		horiz =
+			(left_slope=="left")   ? "left"
+		  : (left_slope=="center") ? "center"
+		  : (left_slope=="right")  ? "right"
+		  : "left";
+
+		vert =
+			(right_slope=="bottom")   ? "bottom"
+		  : (right_slope=="baseline") ? "baseline"
+		  : (right_slope=="center")   ? "center"
+		  : (right_slope=="top")      ? "top"
+		  : "bottom";
+
+		if(addition_height>0 && corner_radius>0){
+			rotate([0,0,top_slope])
+			linear_extrude(height=corner_radius)
+			text(str(other),font = f_s, size=addition_height,valign=vert,halign=horiz);
+		}
+	}
 }
 
 // Creates a horizontal raised ridge with a trapezoidal cross-section and chamfered
@@ -7136,44 +7275,36 @@ module engrave_emboss_instruction(){
 		 
 	t_height = text_height;
 	shape = (keyguard_location == "top surface") ? "ttext" : "btext";
-	top_slope = (text_angle=="vertical downward") ? -90 : 
+	top_slope = (text_angle=="vertical downward") ? -90 :
 	              (text_angle=="horizontal") ? 0 :
 	              (text_angle=="vertical upward") ? 90 :
-				  180;
-	bottom_slope = (font_style=="normal") ? 0 :
-	               (font_style=="bold") ? 1 :
-				   (font_style=="italic") ? 2 :
-				   3;
-	left_slope = (text_horizontal_alignment=="left") ? 1 : 
-	             (text_horizontal_alignment=="center") ? 2 :
-				 3;
-	right_slope = (text_vertical_alignment=="bottom") ? 1 : 
-	              (text_vertical_alignment=="baseline") ? 2 :
-	              (text_vertical_alignment=="center") ? 3 :
-				  4;
+	              180;
+	font_s  = font_style;                  // V2 string: "normal", "bold", "italic", "bold italic"
+	h_align = text_horizontal_alignment;   // V2 string: "left", "center", "right"
+	v_align = text_vertical_alignment;     // V2 string: "bottom", "baseline", "center", "top"
 	corner_radius = (is_laser_cut) ? -0.1 : text_depth;
 	other = text;
 	depth = sat;
-	
+
 	if(generate=="keyguard" || generate=="first half of keyguard" || generate=="second half of keyguard"){
 		if (keyguard_region=="screen region"){
 			if (corner_radius > 0){
 				translate([x0+x,sy0+y,sat-kt/2-ff])
-				#place_addition(10, t_height, shape, top_slope, top_slope, bottom_slope, bottom_slope, left_slope, right_slope, corner_radius, other);
+				#place_addition_v2(10, t_height, shape, top_slope, top_slope, font_s, 0, h_align, v_align, corner_radius, other);
 			}
 			else{
 				translate([x0+x,sy0+y,ff])
-				#cut_opening(0, t_height, shape, top_slope, bottom_slope, left_slope, right_slope, corner_radius, other, depth*2,"screen");
+				#cut_opening(0, t_height, shape, top_slope, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), corner_radius, other, depth*2,"screen");
 			}
 		}
 		else{
 			if (corner_radius > 0){
 				translate([x0+x,coy0+y,kt/2-ff])
-				#place_addition(0, t_height, shape, top_slope, top_slope, bottom_slope, bottom_slope, left_slope, right_slope, corner_radius, other);
+				#place_addition_v2(0, t_height, shape, top_slope, top_slope, font_s, 0, h_align, v_align, corner_radius, other);
 			}
 			else{
 				translate([x0+x,coy0+y,-ff])
-				#cut_opening(0, t_height, shape, top_slope, bottom_slope, left_slope, right_slope, corner_radius, other, depth+ff*2,"case");
+				#cut_opening(0, t_height, shape, top_slope, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), corner_radius, other, depth+ff*2,"case");
 			}
 		}
 	}
