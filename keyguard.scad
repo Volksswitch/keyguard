@@ -5408,7 +5408,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 		  : "bottom";
 		  
 		if (cut_height > 0 && corner_radius < 0){
-			trans = (type=="screen") ? corner_radius-kt/2+sat-.005 : kt/2+corner_radius+ff;
+			trans = (type=="screen") ? corner_radius-kt/2+sat-.005 : kt/2+corner_radius;
 			translate([0,0,trans])
 			rotate([0,0,top_slope])
 			linear_extrude(height = -corner_radius+.01)
@@ -5437,7 +5437,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 		  : (right_slope==4)? "top"
 		  : "bottom";
 		if (cut_height > 0 && corner_radius < 0){
-			trans = (type=="screen") ? -corner_radius-kt/2-ff : -corner_radius-kt/2+ff;
+			trans = (type=="screen") ? -corner_radius-kt/2-ff : -corner_radius-kt/2;
 			translate([0,0,trans])
 			rotate([0,180,0])
 			rotate([0,0,top_slope])
@@ -7286,7 +7286,7 @@ module engrave_emboss_instruction(){
 	     (keyguard_region=="screen region" && keyguard_location == "bottom surface") ? -sx0 :
 		 (keyguard_region=="case region" && keyguard_location == "top surface") ? cox0 :
 		 (keyguard_region=="case region" && keyguard_location == "bottom surface") ? -cox0 :
-		 tx0;
+		 (keyguard_location == "top surface") ? tx0 : -tx0;
 		 
 	t_height = text_height;
 	shape = (keyguard_location == "top surface") ? "ttext" : "btext";
@@ -7319,8 +7319,8 @@ module engrave_emboss_instruction(){
 				#place_addition_v2(0, t_height, shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
 			}
 			else{
-				translate([x0+x,yb+y,-ff])
-				#cut_opening(0, t_height, shape, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth+ff*2,"case");
+				translate([x0+x,yb+y,0])
+				#cut_opening(0, t_height, shape, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth,"case");
 			}
 		}
 	}
