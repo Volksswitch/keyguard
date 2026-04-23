@@ -4822,15 +4822,15 @@ module adding_plastic_v2(additions, where) {
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			// cridge: circular_wall is centered at origin so x,y is always the centre unless we
-			// apply an offset. For "L" anchor shift by outer_radius so x,y becomes the lower-left
-			// corner of the bounding box. For "C" anchor no offset is needed (current behaviour).
-			outer_r_cr = cr ? (px ? r[2]*mpp : r[2])/2 + bot_sl_mm : 0;
+			// apply an offset. For "L" anchor shift by inner_radius so x,y becomes the lower-left
+			// corner of the inner bounding box, aligning with a "c" circle of the same diameter.
+			inner_r_cr = cr ? (px ? r[2]*mpp : r[2])/2 : 0;
 			c_ax = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge") ? -w_mm/2 * cos(lft_sl) :
 			       ((r[8] == "C" || r[8] == "c") && (rr || hdr))      ? -w_mm/2 :
-			       (!(r[8] == "C" || r[8] == "c") && cr)               ? outer_r_cr : 0;
+			       (!(r[8] == "C" || r[8] == "c") && cr)               ? inner_r_cr : 0;
 			c_ay = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge") ? -w_mm/2 * sin(lft_sl) :
 			       ((r[8] == "C" || r[8] == "c") && (rr || hdr))      ? -(px ? r[2]*mpp : r[2])/2 :
-			       (!(r[8] == "C" || r[8] == "c") && cr)               ? outer_r_cr : 0;
+			       (!(r[8] == "C" || r[8] == "c") && cr)               ? inner_r_cr : 0;
 			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
 				place_addition_v2(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, (rr || ar) ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
