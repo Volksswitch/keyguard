@@ -1,10 +1,13 @@
 {
-  "description": "C-anchor ridges in screen_openings",
+  "description": "hd ridge and rotated ridges",
   "openings": "openings_and_additions.txt",
   "steps": [
     {
-      "label": "centre-anchored hridge, vridge, and angled ridge",
-      "params": "Test Case 12",
+      "label": "top view",
+      "params": "Test Case 53",
+      "vpt": [[-6.37589, 6.766, -26.4954],
+      "vpr": [43.8, 0, 11.7],
+      "vpd": 600,
       "expected": "step1_expected.png"
     }
   ]
