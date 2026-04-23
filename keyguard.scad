@@ -4661,6 +4661,89 @@ module cut_tablet_openings_v2(t_o, depth) {
 	}
 }
 
+// Geometry-only helper for the positive-cb (emboss) branch of adding_plastic_v2.
+// All translate/rotate/hole_cutter calls are inside this module so that the
+// caller can apply the # debug modifier by writing #place_emboss_v2(...).
+// @param shape_b   Resolved shape code (r, rr, cr, crr, lc, c, lhd, hd)
+// @param xb, yb    Base XY position (x0+x_mm, y0+y_mm) from the caller
+// @param trans     Base Z translation from adding_plastic_v2
+// @param rot_b     Z-axis rotation in degrees
+// @param w_mm_b, h_mm_b  Shape width and height in mm
+// @param dep_b     Full emboss depth in mm
+// @param main_dep_b  Depth of the main body (dep_b minus chamfer if any)
+// @param top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b  Edge slopes
+// @param c_r_b     Corner radius in mm
+// @param has_ch_b  1 if a top chamfer cap should be added, 0 otherwise
+// @param ec_b      Edge chamfer size in mm
+module place_emboss_v2(shape_b, xb, yb, trans, rot_b,
+                       w_mm_b, h_mm_b, dep_b, main_dep_b,
+                       top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b,
+                       c_r_b, has_ch_b, ec_b) {
+	// rotate([180,0,0]) flips the build body so the narrow face (= specified w×h)
+	// is at the top (apex) and the wide face is at the keyguard surface — a mountain
+	// shape. The flip inverts y, so top_sl and bot_sl are swapped in the call so
+	// that top_sl still widens the +y edge and bot_sl widens the -y edge at the base.
+	if (shape_b == "r" || shape_b == "rr") {
+		if (w_mm_b > 0) {
+			translate([xb+w_mm_b/2, yb+h_mm_b/2, trans + main_dep_b/2])
+			rotate([0,0,rot_b]) rotate([180,0,0])
+			hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
+			if (has_ch_b)
+				translate([xb+w_mm_b/2, yb+h_mm_b/2, trans + dep_b - ec_b/2])
+				rotate([0,0,rot_b]) rotate([180,0,0])
+				cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, c_r_b-ec_b), ec_b);
+		}
+	} else if (shape_b == "cr" || shape_b == "crr") {
+		if (w_mm_b > 0) {
+			translate([xb, yb, trans + main_dep_b/2])
+			rotate([0,0,rot_b]) rotate([180,0,0])
+			hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
+			if (has_ch_b)
+				translate([xb, yb, trans + dep_b - ec_b/2])
+				rotate([0,0,rot_b]) rotate([180,0,0])
+				cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, c_r_b-ec_b), ec_b);
+		}
+	} else if (shape_b == "lc") {
+		translate([xb+h_mm_b/2, yb+h_mm_b/2, trans + main_dep_b/2])
+		rotate([0,0,rot_b]) rotate([180,0,0])
+		hole_cutter(h_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
+		if (has_ch_b)
+			translate([xb+h_mm_b/2, yb+h_mm_b/2, trans + dep_b - ec_b/2])
+			rotate([0,0,rot_b]) rotate([180,0,0])
+			cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
+	} else if (shape_b == "c") {
+		translate([xb, yb, trans + main_dep_b/2])
+		rotate([0,0,rot_b]) rotate([180,0,0])
+		hole_cutter(h_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
+		if (has_ch_b)
+			translate([xb, yb, trans + dep_b - ec_b/2])
+			rotate([0,0,rot_b]) rotate([180,0,0])
+			cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
+	} else if (shape_b == "lhd") {
+		if (w_mm_b > 0) {
+			m_b = min(w_mm_b, h_mm_b);
+			translate([xb+w_mm_b/2, yb+h_mm_b/2, trans + main_dep_b/2])
+			rotate([0,0,rot_b]) rotate([180,0,0])
+			hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
+			if (has_ch_b)
+				translate([xb+w_mm_b/2, yb+h_mm_b/2, trans + dep_b - ec_b/2])
+				rotate([0,0,rot_b]) rotate([180,0,0])
+				cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, m_b/2-ec_b), ec_b);
+		}
+	} else if (shape_b == "hd") {
+		if (w_mm_b > 0) {
+			m_b = min(w_mm_b, h_mm_b);
+			translate([xb, yb, trans + main_dep_b/2])
+			rotate([0,0,rot_b]) rotate([180,0,0])
+			hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
+			if (has_ch_b)
+				translate([xb, yb, trans + dep_b - ec_b/2])
+				rotate([0,0,rot_b]) rotate([180,0,0])
+				cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, m_b/2-ec_b), ec_b);
+		}
+	}
+}
+
 // V2 version of adding_plastic.
 // Iterates over screen or case openings and builds solid additions (bumps,
 // ridges, text, SVG imports) at the correct coordinate-system origin.
@@ -4813,68 +4896,16 @@ module adding_plastic_v2(additions, where) {
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			if (is_3d_printed && h_mm_b > 0) {
-				// rotate([180,0,0]) flips the build body so the narrow face (= specified w×h)
-				// is at the top (apex) and the wide face is at the keyguard surface — a mountain
-				// shape. The flip inverts y, so top_sl and bot_sl are swapped in the call so
-				// that top_sl still widens the +y edge and bot_sl widens the -y edge at the base.
-				if (shape_b == "r" || shape_b == "rr") {
-					if (w_mm_b > 0) {
-						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
-						rotate([0,0,rot_b]) rotate([180,0,0])
-						hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
-						if (has_ch_b)
-							translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
-							rotate([0,0,rot_b]) rotate([180,0,0])
-							cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, c_r_b-ec_b), ec_b);
-					}
-				} else if (shape_b == "cr" || shape_b == "crr") {
-					if (w_mm_b > 0) {
-						translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
-						rotate([0,0,rot_b]) rotate([180,0,0])
-						hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
-						if (has_ch_b)
-							translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
-							rotate([0,0,rot_b]) rotate([180,0,0])
-							cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, c_r_b-ec_b), ec_b);
-					}
-				} else if (shape_b == "lc") {
-					translate([x0+x_mm+h_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
-					rotate([0,0,rot_b]) rotate([180,0,0])
-					hole_cutter(h_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
-					if (has_ch_b)
-						translate([x0+x_mm+h_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
-						rotate([0,0,rot_b]) rotate([180,0,0])
-						cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
-				} else if (shape_b == "c") {
-					translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
-					rotate([0,0,rot_b]) rotate([180,0,0])
-					hole_cutter(h_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
-					if (has_ch_b)
-						translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
-						rotate([0,0,rot_b]) rotate([180,0,0])
-						cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
-				} else if (shape_b == "lhd") {
-					if (w_mm_b > 0) {
-						m_b = min(w_mm_b, h_mm_b);
-						translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + main_dep_b/2])
-						rotate([0,0,rot_b]) rotate([180,0,0])
-						hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
-						if (has_ch_b)
-							translate([x0+x_mm+w_mm_b/2, y0+y_mm+h_mm_b/2, trans + dep_b - ec_b/2])
-							rotate([0,0,rot_b]) rotate([180,0,0])
-							cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, m_b/2-ec_b), ec_b);
-					}
-				} else if (shape_b == "hd") {
-					if (w_mm_b > 0) {
-						m_b = min(w_mm_b, h_mm_b);
-						translate([x0+x_mm, y0+y_mm, trans + main_dep_b/2])
-						rotate([0,0,rot_b]) rotate([180,0,0])
-						hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
-						if (has_ch_b)
-							translate([x0+x_mm, y0+y_mm, trans + dep_b - ec_b/2])
-							rotate([0,0,rot_b]) rotate([180,0,0])
-							cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, m_b/2-ec_b), ec_b);
-					}
+				if (addition_ID != "#") {
+					place_emboss_v2(shape_b, x0+x_mm, y0+y_mm, trans, rot_b,
+					                w_mm_b, h_mm_b, dep_b, main_dep_b,
+					                top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b,
+					                c_r_b, has_ch_b, ec_b);
+				} else {
+					#place_emboss_v2(shape_b, x0+x_mm, y0+y_mm, trans, rot_b,
+					                 w_mm_b, h_mm_b, dep_b, main_dep_b,
+					                 top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b,
+					                 c_r_b, has_ch_b, ec_b);
 				}
 			}
 		}
