@@ -5407,7 +5407,7 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 		  : "bottom";
 		  
 		if (cut_height > 0 && corner_radius < 0){
-			trans = (type=="screen") ? corner_radius-kt/2+sat-.005 : kt/2+corner_radius-ff;
+			trans = (type=="screen") ? corner_radius-kt/2+sat-.005 : kt/2+corner_radius+ff;
 			translate([0,0,trans])
 			rotate([0,0,top_slope])
 			linear_extrude(height = -corner_radius+.01)
@@ -7263,9 +7263,9 @@ module engrave_emboss_instruction(){
 	          (keyguard_region=="case region") ? slide_horizontally/100 * cow :
 			  slide_horizontally/100 * tw;
 	x = (keyguard_location == "top surface") ? x_start : -x_start;
-	y = (keyguard_region=="screen region") ? slide_vertically/100 * shm : 
+	y = (keyguard_region=="screen region") ? slide_vertically/100 * shm :
 		(keyguard_region=="case region") ? slide_vertically/100 * coh :
-		ty0+slide_vertically/100 * th;
+		slide_vertically/100 * th;
 	
 	x0 = (keyguard_region=="screen region" && keyguard_location == "top surface") ? sx0 :
 	     (keyguard_region=="screen region" && keyguard_location == "bottom surface") ? -sx0 :
@@ -7298,12 +7298,13 @@ module engrave_emboss_instruction(){
 			}
 		}
 		else{
+			yb = (keyguard_region=="case region") ? coy0 : ty0;
 			if (cb > 0){
-				translate([x0+x,coy0+y,kt/2-ff])
+				translate([x0+x,yb+y,kt/2-ff])
 				#place_addition_v2(0, t_height, shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
 			}
 			else{
-				translate([x0+x,coy0+y,-ff])
+				translate([x0+x,yb+y,-ff])
 				#cut_opening(0, t_height, shape, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth+ff*2,"case");
 			}
 		}
@@ -7314,7 +7315,8 @@ module engrave_emboss_instruction(){
 			#cut_opening_2d(0, t_height, shape, direction, cb);
 		}
 		else{
-			translate([x0+x,coy0+y,-ff])
+			yb = (keyguard_region=="case region") ? coy0 : ty0;
+			translate([x0+x,yb+y,-ff])
 			#cut_opening_2d(0, t_height, shape, direction, cb);
 		}
 	}
