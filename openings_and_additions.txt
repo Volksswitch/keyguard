@@ -25,10 +25,10 @@ tablet_openings=[
 
 ** Screen, Case, Tablet Openings
   Shape      height  width  corner  cut | build  anchor  surface  length  thickness  [edge slopes]  [special params]
-  r            x       x      x          x         x        x                              x               x
-  c            x                         x                  x                              x               x
-  hd           x       x                 x         x        x                              x               x
-  oa1–4                       x          x                                                 x
+  r            x       x      x          x         x        x                              x
+  c            x                         x                  x                              x
+  hd           x       x                 x         x        x                              x
+  oa1–4                       x          x
   text         x                         x                  x                                              x
   svg          x       x                 x                                                                 x
   bump         x
@@ -40,7 +40,6 @@ tablet_openings=[
   aridge1–4                              x                                    x
 
   [special params]  Contents
-  r, c, hd          [direction]
   text              ["text value", direction, font style, h-align, v-align]
   svg               ["filename", direction]
   ridge             [direction]
