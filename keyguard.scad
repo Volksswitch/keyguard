@@ -5699,32 +5699,32 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 	}
 	else if (shape=="cridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
-			rotate([0,0,left_slope])
 			translate([0,0,-sata])
+			rotate([0,0,left_slope])
 			circular_wall(addition_height,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="rridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
-			rotate([0,0,left_slope])
 			translate([addition_width/2,addition_height/2,-sata])
+			rotate([0,0,left_slope])
 			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="crridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
-			rotate([0,0,left_slope])
 			translate([0,0,-sata])
+			rotate([0,0,left_slope])
 			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="hdridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,left_slope])
-			translate([0,0,-sata])
 			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
@@ -5851,32 +5851,24 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 	}
 	else if (shape=="cridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
-			rotate([0,0,left_slope])
 			translate([0,0,-sata])
+			rotate([0,0,left_slope])
 			circular_wall(addition_height,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="rridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
-			rotate([0,0,left_slope])
 			translate([addition_width/2,addition_height/2,-sata])
-			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
-		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
-	}
-	else if (shape=="crridge"){
-		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			rotate([0,0,left_slope])
-			translate([0,0,-sata])
 			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="hdridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,left_slope])
-			translate([0,0,-sata])
 			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
