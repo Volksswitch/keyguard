@@ -4165,8 +4165,8 @@ function v2_slope(slopes, idx, shape) =
 		      (idx < n)  ? slopes[idx] : slopes[0],
 		is_special = (shape == "svg"    || shape == "ridge"   || shape == "hridge"  ||
 		              shape == "vridge" || shape == "cridge"  || shape == "rridge"  ||
-		              shape == "crridge"|| shape == "aridge1" || shape == "aridge2" ||
-		              shape == "aridge3"|| shape == "aridge4" ||
+		              shape == "crridge"|| shape == "hdridge" || shape == "aridge1" ||
+		              shape == "aridge2"|| shape == "aridge3" || shape == "aridge4" ||
 		              shape == "ttext"  || shape == "btext"   || shape == "bump")
 	)
 	(raw == 0 && !is_special) ? 90 : raw;
@@ -4721,14 +4721,15 @@ module adding_plastic_v2(additions, where) {
 				#place_addition_v2(w_mm, h_mm, r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, 0, (r[7]==0 ? undef : r[7]));
 			}
 
-		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
+		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" || r[1] == "hdridge" ||
 		           r[1] == "aridge1" || r[1] == "aridge2" ||
 		           r[1] == "aridge3" || r[1] == "aridge4") {
-			// All shapes: r[7]=ridge_height (cb), r[11]=thickness. ridge/cridge/aridge: r[10]=length. rridge: r[2]=rect_height, r[3]=width, r[4]=corner. cridge: r[2]=circle_size. aridge1-4: r[4]=corner.
+			// All shapes: r[7]=ridge_height (cb), r[11]=thickness. ridge/cridge/aridge: r[10]=length. rridge/hdridge: r[2]=rect_height, r[3]=width, r[4]=corner (rridge only). cridge: r[2]=circle_size. aridge1-4: r[4]=corner.
 			sp = r[13];
 			rr = (r[1] == "rridge");
+			hdr = (r[1] == "hdridge");
 			ar = (r[1] == "aridge1" || r[1] == "aridge2" || r[1] == "aridge3" || r[1] == "aridge4");
-			w_src = rr ? r[3] : r[10];
+			w_src = (rr || hdr) ? r[3] : r[10];
 			w_mm = px ? w_src * mpp : w_src;
 			top_sl = r[7]; top_sl_mm = px ? top_sl * mpp : top_sl;
 			bot_sl = r[11]; bot_sl_mm = px ? bot_sl * mpp : bot_sl;
@@ -4737,9 +4738,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			c_ax = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge") ? -w_mm/2 * cos(lft_sl) :
-			       ((r[8] == "C" || r[8] == "c") && rr)               ? -w_mm/2 : 0;
+			       ((r[8] == "C" || r[8] == "c") && (rr || hdr))      ? -w_mm/2 : 0;
 			c_ay = ((r[8] == "C" || r[8] == "c") && r[1] == "ridge") ? -w_mm/2 * sin(lft_sl) :
-			       ((r[8] == "C" || r[8] == "c") && rr)               ? -(px ? r[2]*mpp : r[2])/2 : 0;
+			       ((r[8] == "C" || r[8] == "c") && (rr || hdr))      ? -(px ? r[2]*mpp : r[2])/2 : 0;
 			translate([x0+x_mm+c_ax, y0+y_mm+c_ay, trans-ff])
 			if (addition_ID != "#") {
 				place_addition_v2(w_mm, r[2], r[1], top_sl, top_sl_mm, bot_sl, bot_sl_mm, lft_sl, 0, (rr || ar) ? r[4] : r[11], (r[7]==0 ? undef : r[7]));
@@ -5580,7 +5581,7 @@ module adding_plastic(additions,where){
 		        (where=="case" && generate=="keyguard") ? kt/2 :
 				keyguard_frame_thickness/2;
 		
-		if (addition_shape == "bump" || addition_shape == "hridge" || addition_shape == "vridge" || addition_shape == "cridge" || addition_shape == "rridge" || addition_shape == "crridge" || addition_shape == "ridge" || addition_shape == "aridge1" || addition_shape == "aridge2" || addition_shape == "aridge3" || addition_shape == "aridge4" || addition_shape == "svg" || addition_shape == "ttext") {
+		if (addition_shape == "bump" || addition_shape == "hridge" || addition_shape == "vridge" || addition_shape == "cridge" || addition_shape == "rridge" || addition_shape == "crridge" || addition_shape == "hdridge" || addition_shape == "ridge" || addition_shape == "aridge1" || addition_shape == "aridge2" || addition_shape == "aridge3" || addition_shape == "aridge4" || addition_shape == "svg" || addition_shape == "ttext") {
 	
 			addition_width_mm = (using_px && where=="screen") ? addition_width * mpp : addition_width;
 			addition_height_mm = (using_px && where=="screen") ? addition_height * mpp : addition_height;
@@ -5698,6 +5699,7 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 	}
 	else if (shape=="cridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			rotate([0,0,left_slope])
 			translate([0,0,-sata])
 			circular_wall(addition_height,bottom_slope_mm,top_slope_mm+sata);
 		}
@@ -5705,6 +5707,7 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 	}
 	else if (shape=="rridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			rotate([0,0,left_slope])
 			translate([addition_width/2,addition_height/2,-sata])
 			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
 		}
@@ -5712,8 +5715,17 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 	}
 	else if (shape=="crridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			rotate([0,0,left_slope])
 			translate([0,0,-sata])
 			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="hdridge"){
+		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			rotate([0,0,left_slope])
+			translate([0,0,-sata])
+			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
@@ -5725,7 +5737,7 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 			offset(delta = .005)
 			import(file = other,center=true);
 		}
-	}	
+	}
 	else if (shape=="ttext"){
 		f_s =
 			(bottom_slope==1)? "Liberation Sans:style=Bold"
@@ -5839,6 +5851,7 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 	}
 	else if (shape=="cridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			rotate([0,0,left_slope])
 			translate([0,0,-sata])
 			circular_wall(addition_height,bottom_slope_mm,top_slope_mm+sata);
 		}
@@ -5846,6 +5859,7 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 	}
 	else if (shape=="rridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			rotate([0,0,left_slope])
 			translate([addition_width/2,addition_height/2,-sata])
 			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
 		}
@@ -5853,8 +5867,17 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 	}
 	else if (shape=="crridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			rotate([0,0,left_slope])
 			translate([0,0,-sata])
 			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
+		}
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+	}
+	else if (shape=="hdridge"){
+		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
+			rotate([0,0,left_slope])
+			translate([0,0,-sata])
+			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
