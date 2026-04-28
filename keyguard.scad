@@ -6343,10 +6343,20 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 			translate([0,0,case_to_screen_depth-fudge])
 			difference(){
 				case_opening_blank(widt+fudge,heig+fudge,radi,case_to_slope_depth,cheat);
-			
+
 				translate([0,0,-fudge])
 				case_opening_blank((cow + hsew*2),(coh + vsew*2),[cocr+sew,cocr+sew,cocr+sew,cocr+sew],case_to_slope_depth+2*fudge,cheat);
-				
+
+			}
+		}
+
+		if(case_to_slope_depth<0){
+			difference(){
+				translate([0,0,-fudge])
+				case_opening_blank(widt+fudge,heig+fudge,radi,abs(case_to_slope_depth)+fudge,cheat);
+
+				translate([0,0,-fudge])
+				case_opening_blank((cow + hsew*2),(coh + vsew*2),[cocr+sew,cocr+sew,cocr+sew,cocr+sew],abs(case_to_slope_depth)+2*fudge,cheat);
 			}
 		}
 				
