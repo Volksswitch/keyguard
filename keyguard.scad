@@ -164,7 +164,7 @@ generate = "keyguard"; //[keyguard,first half of keyguard,second half of keyguar
 
 
 /*[Tablet]*/
-type_of_tablet = "iPad 9th generation"; //[iPad, iPad2, iPad 3rd generation, iPad 4th generation, iPad 5th generation,iPad 6th generation, iPad 7th generation, iPad 8th generation, iPad 9th generation, iPad 10th generation, iPad 11th generation A16, iPad Pro 9.7-inch, iPad Pro 10.5-inch, iPad Pro 11-inch 1st Generation, iPad Pro 11-inch 2nd Generation, iPad Pro 11-inch 3rd Generation, iPad Pro 11-inch 4th Generation, iPad Pro 11-inch M4, iPad Pro 12.9-inch 1st Generation, iPad Pro 12.9-inch 2nd Generation, iPad Pro 12.9-inch 3rd Generation, iPad Pro 12.9-inch 4th Generation, iPad Pro 12.9-inch 5th Generation, iPad Pro 12.9-inch 6th Generation, iPad Pro 13-inch M4, iPad mini, iPad mini 2, iPad mini 3, iPad mini 4, iPad mini 5, iPad mini 6, iPad mini 7 A17 Pro, iPad Air, iPad Air 2, iPad Air 3, iPad Air 4, iPad Air 5, iPad Air 11-inch M2, iPad Air 13-inch M2, iPad Air 11-inch M3, iPad Air 13-inch M3, Dynavox I-12+, Dynavox Indi, Tobii-Dynavox I-110, Tobii-Dynavox T-15+, Tobii-Dynavox I-13, Tobii-Dynavox I-16, NovaChat 5, NovaChat 5.3, NovaChat 5.4, NovaChat 8.5, NovaChat 12, Chat Fusion 10, Surface 2, Surface 3, Surface Pro 3, Surface Pro 4, Surface Pro 5, Surface Pro 6, Surface Pro 7, Surface Pro 8, Surface Pro 9, Surface Pro X, Surface Go, Surface Go 3, Accent 800-30, Accent 800-40, Accent 1000-20, Accent 1000-30, Accent 1000-40, Accent 1400-20, Accent 1400-30a, Accent 1400-30b, Via Nano, Via Mini, Via Pro, GridPad 10s, GridPad 11, GridPad 12, GridPad 13, GridPad 15, Samsung Galaxy Tab A 8.4, Samsung Galaxy Tab A7 10.4, Samsung Galaxy Tab A7 Lite, Samsung Galaxy Tab A8, Samsung Galaxy Tab A9, Samsung Galaxy Tab A9+, Samsung Galaxy Tab Active 2, Samsung Galaxy Tab Active 3, Samsung Galaxy Tab Active 5, Samsung Galaxy Tab Active 4 Pro, Samsung Galaxy Tab S3, Samsung Galaxy Tab S6, Samsung Galaxy Tab S6 Lite, Samsung Galaxy Tab S7, Samsung Galaxy Tab S7 FE, Samsung Galaxy Tab S7+, Samsung Galaxy Tab S8, Samsung Galaxy Tab S8 Ultra, Samsung Galaxy Tab S8+, Samsung Galaxy Tab S9, Samsung Galaxy Tab S9 FE, Samsung Galaxy Tab S9 FE+, Samsung Galaxy Tab S9 Ultra, Samsung Galaxy Tab S9+, Amazon Fire HD 7, Amazon Fire HD 8, Amazon Fire HD 8 Plus, Amazon Fire HD 10, Amazon Fire HD 10 Plus, Amazon Fire Max 11, blank, other tablet]
+type_of_tablet = "iPad 9th generation"; //[iPad, iPad2, iPad 3rd generation, iPad 4th generation, iPad 5th generation,iPad 6th generation, iPad 7th generation, iPad 8th generation, iPad 9th generation, iPad 10th generation, iPad 11th generation A16, iPad Pro 9.7-inch, iPad Pro 10.5-inch, iPad Pro 11-inch 1st Generation, iPad Pro 11-inch 2nd Generation, iPad Pro 11-inch 3rd Generation, iPad Pro 11-inch 4th Generation, iPad Pro 11-inch M4, iPad Pro 11-inch M5, iPad Pro 12.9-inch 1st Generation, iPad Pro 12.9-inch 2nd Generation, iPad Pro 12.9-inch 3rd Generation, iPad Pro 12.9-inch 4th Generation, iPad Pro 12.9-inch 5th Generation, iPad Pro 12.9-inch 6th Generation, iPad Pro 13-inch M4, iPad Pro 13-inch M5, iPad mini, iPad mini 2, iPad mini 3, iPad mini 4, iPad mini 5, iPad mini 6, iPad mini 7 A17 Pro, iPad Air, iPad Air 2, iPad Air 3, iPad Air 4, iPad Air 5, iPad Air 11-inch M2, iPad Air 11-inch M3, iPad Air 11-inch M4, iPad Air 13-inch M2, iPad Air 13-inch M3, iPad Air 13-inch M4, Dynavox I-12+, Dynavox Indi, Tobii-Dynavox I-110, Tobii-Dynavox T-15+, Tobii-Dynavox I-13, Tobii-Dynavox I-16, NovaChat 5, NovaChat 5.3, NovaChat 5.4, NovaChat 8.5, NovaChat 12, Chat Fusion 10, Surface 2, Surface 3, Surface Pro 3, Surface Pro 4, Surface Pro 5, Surface Pro 6, Surface Pro 7, Surface Pro 8, Surface Pro 9, Surface Pro X, Surface Go, Surface Go 3, Accent 800-30, Accent 800-40, Accent 1000-20, Accent 1000-30, Accent 1000-40, Accent 1400-20, Accent 1400-30a, Accent 1400-30b, Via Nano, Via Mini, Via Pro, GridPad 10s, GridPad 11, GridPad 12, GridPad 13, GridPad 15, Samsung Galaxy Tab A 8.4, Samsung Galaxy Tab A7 10.4, Samsung Galaxy Tab A7 Lite, Samsung Galaxy Tab A8, Samsung Galaxy Tab A9, Samsung Galaxy Tab A9+, Samsung Galaxy Tab Active 2, Samsung Galaxy Tab Active 3, Samsung Galaxy Tab Active 5, Samsung Galaxy Tab Active 4 Pro, Samsung Galaxy Tab S3, Samsung Galaxy Tab S6, Samsung Galaxy Tab S6 Lite, Samsung Galaxy Tab S7, Samsung Galaxy Tab S7 FE, Samsung Galaxy Tab S7+, Samsung Galaxy Tab S8, Samsung Galaxy Tab S8 Ultra, Samsung Galaxy Tab S8+, Samsung Galaxy Tab S9, Samsung Galaxy Tab S9 FE, Samsung Galaxy Tab S9 FE+, Samsung Galaxy Tab S9 Ultra, Samsung Galaxy Tab S9+, Amazon Fire HD 7, Amazon Fire HD 8, Amazon Fire HD 8 Plus, Amazon Fire HD 10, Amazon Fire HD 10 Plus, Amazon Fire Max 11, blank, other tablet]
 orientation = "landscape"; //[portrait,landscape]
 expose_home_button = "yes"; //[yes,no]
 home_button_edge_slope = 30;
@@ -458,7 +458,7 @@ screenshot_file = "default.svg";
 //   tablet selection → screen/case geometry → grid geometry → bar geometry →
 //   cell geometry → opening/addition helpers → mounting geometry → text/SVG helpers
 
-keyguard_designer_version = 76; //*****************************
+keyguard_designer_version = 78; //*****************************
 
 // if this is the "MW" version for Maker World set this statement to true and comment the include statement before start of Main
 MW_version = false;
@@ -526,6 +526,7 @@ iPadPro11inch2ndGeneration_data=iPadPro11inch1stGeneration_data;
 iPadPro11inch3rdGeneration_data=iPadPro11inch1stGeneration_data;
 iPadPro11inch4thGeneration_data=iPadPro11inch1stGeneration_data;
 iPadPro11inch_M4_data=[249.7,177.51,5.3,232.804,160.4616,8.4333,8.4333,8.5141,8.5141,0,0.0,0.0,2,3.8041,3.5,42.5,1,[1668,2420,0.0962],10,10,10,10];
+iPadPro11inch_M5_data=iPadPro11inch_M4_data;
 iPadPro129inch1stGeneration_data=[305.69,220.58,6.9,262.8184,197.0176,21.419,21.419,11.769,11.769,11.319,14.6,14.6,2,10.319,4.5,4.5,4,[2048,2732,0.0962],10,10,10,10];
 iPadPro129inch2ndGeneration_data=iPadPro129inch1stGeneration_data;
 iPadPro129inch3rdGeneration_data=[280.66,214.99,5.908,262.8184,197.0176,9.2,9.2,9.18,9.18,0,0,0,0,4.534,33,4.5,4,[2048,2732,0.0962],10,10,10,10];
@@ -533,6 +534,7 @@ iPadPro129inch4thGeneration_data=iPadPro129inch3rdGeneration_data;
 iPadPro129inch5thGeneration_data=[280.66,214.99,6.44,262.8184,197.0176,9.2,9.2,9.18,9.18,0,0,0,0,4.534,33,4.5,4,[2048,2732,0.0962],10,10,10,10];
 iPadPro129inch6thGeneration_data=iPadPro129inch5thGeneration_data;
 iPadPro13inch_M4_data=[281.58,215.53,5.3,264.7424,198.5568,8.4021,8.4021,8.4741,8.4741,0,0,0,0,3.7641,3.5,42,1,[2064,2752,0.0962],10,10,10,10];
+iPadPro13inch_M5_data=iPadPro13inch_M4_data;
 iPadmini_data=[200.1,134.7,7.2,159.5392,119.6544,20.266,20.266,7.512,7.512,11,10.0,10.0,2,10,12.5,4.5,4,[768,1024,0.1558],10,10,10,10];
 iPadmini2_data=[200.1,134.7,7.5,159.5392,119.6544,20.266,20.266,7.512,7.512,11,10.0,10.0,2,10,4.5,4.5,4,[1536,2048,0.0779],10,10,10,10];
 iPadmini3_data=iPadmini2_data;
@@ -546,9 +548,11 @@ iPadAir3_data=[250.59,174.08,6.1,213.9488,160.4616,18.307,18.307,6.799,6.799,9.3
 iPadAir4_data=[247.64,178.51,6.123,227.032,157.768,10.2697,10.2697,10.3561,10.3561,0,0,0,0,5.03,4.5,4.5,4,[1640,2360,0.0962],12,12,12,12];
 iPadAir5_data=iPadAir4_data;
 iPadAir11inch_M2_data=[247.64,178.52,6.123,227.032,157.768,10.2897,10.2897,10.3661,10.3661,0,0,0,0,5.8761,4.5,34,1,[1640,2360,0.0962],12,12,12,12];
-iPadAir13inch_M2_data=[280.66,215.0,6.1,262.8184,197.0176,8.9042,8.9042,8.9788,8.9788,0,0,0,0,4.7588,3.5,35,1,[2048,2732,0.0962],12,12,12,12];
 iPadAir11inch_M3_data=iPadAir11inch_M2_data;
+iPadAir11inch_M4_data=iPadAir11inch_M2_data;
+iPadAir13inch_M2_data=[280.66,215.0,6.1,262.8184,197.0176,8.9042,8.9042,8.9788,8.9788,0,0,0,0,4.7588,3.5,35,1,[2048,2732,0.0962],12,12,12,12];
 iPadAir13inch_M3_data=iPadAir13inch_M2_data;
+iPadAir13inch_M4_data=iPadAir13inch_M2_data;
 surface_2_data=[275.0,173,8.9,234.432,131.868,20.269,20.269,20.558,20.558,0,0.0,0.0,0,6.24,5.0,50.0,1,[1080,1920,0.1221],5,5,5,5];
 surface_3_data=[267.0,187,8.6,227.904,151.936,19.556,19.556,17.537,17.537,0,0.0,0.0,6.24,0,5.0,50.0,1,[1280,1920,0.1187],5,5,5,5];
 surface_pro_3_data=[290.0,201,9.1,254.016,169.344,18,18,15.833,15.833,0,0.0,0.0,0,6.24,5.0,50.0,1,[1440,2160,0.1176],5,5,5,5];
@@ -644,6 +648,7 @@ tablet_params =
   : (type_of_tablet=="iPad Pro 11-inch 3rd Generation")? iPadPro11inch3rdGeneration_data
   : (type_of_tablet=="iPad Pro 11-inch 4th Generation")? iPadPro11inch4thGeneration_data
   : (type_of_tablet=="iPad Pro 11-inch M4")? iPadPro11inch_M4_data
+  : (type_of_tablet=="iPad Pro 11-inch M5")? iPadPro11inch_M5_data
   : (type_of_tablet=="iPad Pro 12.9-inch 1st Generation")? iPadPro129inch1stGeneration_data
   : (type_of_tablet=="iPad Pro 12.9-inch 2nd Generation")? iPadPro129inch2ndGeneration_data
   : (type_of_tablet=="iPad Pro 12.9-inch 3rd Generation")? iPadPro129inch3rdGeneration_data
@@ -651,6 +656,7 @@ tablet_params =
   : (type_of_tablet=="iPad Pro 12.9-inch 5th Generation")? iPadPro129inch5thGeneration_data
   : (type_of_tablet=="iPad Pro 12.9-inch 6th Generation")? iPadPro129inch6thGeneration_data
   : (type_of_tablet=="iPad Pro 13-inch M4")? iPadPro13inch_M4_data
+  : (type_of_tablet=="iPad Pro 13-inch M5")? iPadPro13inch_M5_data
   : (type_of_tablet=="iPad mini")? iPadmini_data
   : (type_of_tablet=="iPad mini 2")? iPadmini2_data
   : (type_of_tablet=="iPad mini 3")? iPadmini3_data
@@ -664,9 +670,11 @@ tablet_params =
   : (type_of_tablet=="iPad Air 4")? iPadAir4_data
   : (type_of_tablet=="iPad Air 5")? iPadAir5_data
   : (type_of_tablet=="iPad Air 11-inch M2")? iPadAir11inch_M2_data
-  : (type_of_tablet=="iPad Air 13-inch M2")? iPadAir13inch_M2_data
   : (type_of_tablet=="iPad Air 11-inch M3")? iPadAir11inch_M3_data
+  : (type_of_tablet=="iPad Air 11-inch M4")? iPadAir11inch_M4_data
+  : (type_of_tablet=="iPad Air 13-inch M2")? iPadAir13inch_M2_data
   : (type_of_tablet=="iPad Air 13-inch M3")? iPadAir13inch_M3_data
+  : (type_of_tablet=="iPad Air 13-inch M4")? iPadAir13inch_M4_data
   : (type_of_tablet=="NovaChat 5")? novachat_5_data
   : (type_of_tablet=="NovaChat 5.3")? novachat_5_3_data
   : (type_of_tablet=="NovaChat 5.4")? novachat_5_4_data
@@ -1173,7 +1181,7 @@ cell_h = (cell_height_in_mm==0) ? cell_height_in_px*mpp : cell_height_in_mm;
 cw = (cell_w*number_of_columns>gwm) ? floor(gwm/number_of_columns)-1 : cell_w;
 ch = (cell_h*number_of_rows>ghm) ? floor(ghm/number_of_rows)-1 : cell_h;
 
-if((cw!=cell_w) || (ch!=cell_h) && (column_count!=0 && row_count!=0)){
+if(((cw!=cell_w) || (ch!=cell_h)) && (column_count!=0 && row_count!=0 && cell_shape!="circular")){
 	echo();
 	if(ch!=cell_h) echo(str("The cell height has been adjusted to ", ch, " mm (or ", round(ch*ppm), " px) in order to fit properly."));
 	if(cw!=cell_w) echo(str("The cell width has been adjusted to ", cw, " mm (or ", round(cw*ppm), " px) in order to fit properly."));
@@ -1442,20 +1450,20 @@ als_openings=[
 	[  "Air-45ALS2",    "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytbs+syo*51.40,   0,   "",   "",   0,   0,   [60],   [] ],
 	[  "Air-45ALS3",    "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytts-syo*26.47,   0,   "",   "",   0,   0,   [60],   [] ]],
 
-	/* iPad Pro 11-inch M4 */
+	/* iPad Pro 11-inch M4 & M5*/
 	[[ "Pro-11M4ALS1",  "c",   3.0,   0,   0,   xtls+sxo*4.71,            ytbs+syo*88.76,   0,   "",   "",   0,   0,   [60],   [] ],
 	[  "Pro-11M4ALS2",  "c",   3.0,   0,   0,   xtls+sxo*124.85,          ytts-syo*4.71,    0,   "",   "",   0,   0,   [60],   [] ]],
 
-	/* iPad Pro 13-inch M4 */
+	/* iPad Pro 13-inch M4 *& M5/
 	[[ "Pro-13M4ALS1",  "c",   3.0,   0,   0,   xtls+sxo*4.71,            ytbs+syo*107.76,  0,   "",   "",   0,   0,   [60],   [] ],
 	[  "Pro-13M4ALS2",  "c",   3.0,   0,   0,   xtls+sxo*140.79,          ytts-syo*4.71,    0,   "",   "",   0,   0,   [60],   [] ]],
 
-	/* iPad Air 11-inch M2 & M3 */
+	/* iPad Air 11-inch M2 & M3 & M4*/
 	[[ "Air-11M23ALS1", "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytbs+syo*22.13,   0,   "",   "",   0,   0,   [60],   [] ],
 	[  "Air-11M23ALS2", "c",   3.0,   0,   0,   xtls+sxo*4.62,            ytbs+syo*51.40,   0,   "",   "",   0,   0,   [60],   [] ],
 	[  "Air-11M23ALS3", "c",   3.7,   0,   0,   xtls+sxo*138.92,          ytts-syo*4.49,    0,   "",   "",   0,   0,   [60],   [] ]],
 
-	/* iPad Air 13-inch M2 & M3 */
+	/* iPad Air 13-inch M2 & M3 & M4*/
 	[[ "Air-13M23ALS1", "c",   3.0,   0,   0,   xtls+tw/2-sxo*94.66,      ytts-syo*4.22,    0,   "",   "",   0,   0,   [60],   [] ],
 	[  "Air-13M23ALS2", "c",   3.0,   0,   0,   xtls+tw/2+sxo*15.56,      ytts-syo*4.22,    0,   "",   "",   0,   0,   [60],   [] ]],
 
@@ -1503,11 +1511,15 @@ ttao =
   : (type_of_tablet=="iPad Air 4")? als_openings[23]
   : (type_of_tablet=="iPad Air 5")? als_openings[23] 
   : (type_of_tablet=="iPad Pro 11-inch M4")? als_openings[24] 
+  : (type_of_tablet=="iPad Pro 11-inch M5")? als_openings[24] 
   : (type_of_tablet=="iPad Pro 13-inch M4")? als_openings[25] 
+  : (type_of_tablet=="iPad Pro 13-inch M5")? als_openings[25] 
   : (type_of_tablet=="iPad Air 11-inch M2")? als_openings[26] 
-  : (type_of_tablet=="iPad Air 13-inch M2")? als_openings[27] 
   : (type_of_tablet=="iPad Air 11-inch M3")? als_openings[26] 
+  : (type_of_tablet=="iPad Air 11-inch M4")? als_openings[26] 
+  : (type_of_tablet=="iPad Air 13-inch M2")? als_openings[27] 
   : (type_of_tablet=="iPad Air 13-inch M3")? als_openings[27] 
+  : (type_of_tablet=="iPad Air 13-inch M4")? als_openings[27] 
   : (type_of_tablet=="Via Mini")? als_openings[19]  
   : (type_of_tablet=="Via Pro")? als_openings[8]
   : (type_of_tablet=="TobiiDynavox I-16")? als_openings[28] 
