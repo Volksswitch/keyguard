@@ -234,7 +234,9 @@ These special variables can be used to locate openings and place additions relat
 	c_w	case width
 	c_cr	case corner_radius
 	ctsd	case to screen_depth
-	sew	sloped edge width
+	sew	sloped edge width (min of horizontal and vertical; preserved for backward compatibility)
+	hsew	horizontal sloped edge width
+	vsew	vertical sloped edge width
 
 
 

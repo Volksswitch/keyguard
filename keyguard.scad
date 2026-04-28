@@ -349,7 +349,8 @@ tightness_of_dovetail_joint = 0; // [-.5:.1:.5]
 //can only be applied to 3D-printed, rounded-rectangular keyguards
 add_sloped_keyguard_edge = "no"; //[yes,no]
 sloped_edge_starting_height = 1.0; //.1
-sloped_edge_width = 10.0; //.1
+horizontal_sloped_edge_width = 10.0; //.1
+vertical_sloped_edge_width = 10.0; //.1
 case_to_slope_depth = 0.0; //.1
 extend_lip_to_edge_of_case = "no"; //[yes,no]
 
@@ -1251,7 +1252,9 @@ velcro_diameter =
 strap_cut_to_depth = 9.25 - 3.1 - 3.5; // length of bolt - thickness of acrylic mount - height of nut
 
 //sloped keyguard edge variables
-sew = sloped_edge_width;
+hsew = horizontal_sloped_edge_width;
+vsew = vertical_sloped_edge_width;
+sew = min(hsew, vsew); // backward-compatible alias used in openings_and_additions.txt
 
 
 // general case mount veriables
@@ -1293,11 +1296,11 @@ vertical_offset = (!has_frame) ? kt/2 + pedestal_height-groove_depth+ff : // bot
 												  keyguard_frame_thickness/2 + pedestal_height-groove_depth+ff;
 h_clip_reach = (!has_case)? 6 :
 			 (add_sloped_keyguard_edge=="no")? (case_width-kw)/2+5 :
-			 (extend_lip_to_edge_of_case=="no")? (case_width-cow)/2-sew+6 :
+			 (extend_lip_to_edge_of_case=="no")? (case_width-cow)/2-hsew+6 :
 			 7;
 v_clip_reach = (!has_case)? 6 :
 			 (add_sloped_keyguard_edge=="no")? (case_height-kh)/2+5 :
-			 (extend_lip_to_edge_of_case=="no")? (case_height-coh)/2-sew+6 :
+			 (extend_lip_to_edge_of_case=="no")? (case_height-coh)/2-vsew+6 :
 			 7;
 no_clips = (add_sloped_keyguard_edge=="yes" && keyguard_thickness<case_to_screen_depth); //the keyguard has to reach to the top of the case edge if using sloped edges
 
@@ -3353,9 +3356,9 @@ module screw_on_straps(){
 // clips hook into, for horizontal and/or vertical clip locations.
 module clip_on_straps_groove(){
 	xloc = (add_sloped_keyguard_edge=="no") ? cow :
-	       (extend_lip_to_edge_of_case=="no") ? cow + sew*2-2 : case_width-2;
+	       (extend_lip_to_edge_of_case=="no") ? cow + hsew*2-2 : case_width-2;
 	yloc = (add_sloped_keyguard_edge=="no") ? coh :
-	       (extend_lip_to_edge_of_case=="no") ? coh + sew*2-2 : case_height-2;
+	       (extend_lip_to_edge_of_case=="no") ? coh + vsew*2-2 : case_height-2;
 	
 	w1 = (!has_case) ? tablet_width :xloc;
 	h1 = (!has_case) ? tablet_height : yloc;
@@ -6282,9 +6285,9 @@ module create_mini_clip2(clip_reach,clip_width){
 module base_keyguard(wid,hei,crad,thickness,cheat){
 	//consider moving this logic to global scope
 	widt = (add_sloped_keyguard_edge=="no") ? wid :
-			(extend_lip_to_edge_of_case=="no") ? cow + sew*2: case_width;
+			(extend_lip_to_edge_of_case=="no") ? cow + hsew*2: case_width;
 	heig = (add_sloped_keyguard_edge=="no") ? hei :
-			(extend_lip_to_edge_of_case=="no") ? coh + sew*2: case_height;
+			(extend_lip_to_edge_of_case=="no") ? coh + vsew*2: case_height;
 	radi = (add_sloped_keyguard_edge=="no") ? crad :
 			(extend_lip_to_edge_of_case=="no") ? [cocr+sew,cocr+sew,cocr+sew,cocr+sew] : 
 											  [case_corner_radius,case_corner_radius,case_corner_radius,case_corner_radius];
@@ -6303,7 +6306,7 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 						translate([0,0,case_to_screen_depth+fudge])
 						linear_extrude(height=ff)
 						offset(r=cocr+sew)
-						square([(cow + sew*2)-(cocr+sew)*2,(coh + sew*2)-(cocr+sew)*2],true);
+						square([cow-cocr*2 + 2*(hsew-sew), coh-cocr*2 + 2*(vsew-sew)],true);
 
 						translate([0,0,sloped_edge_starting_height])
 						linear_extrude(height=ff)
@@ -6327,7 +6330,7 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 				case_opening_blank(widt+fudge,heig+fudge,radi,case_to_slope_depth,cheat);
 			
 				translate([0,0,-fudge])
-				case_opening_blank((cow + sew*2),(coh + sew*2),[cocr+sew,cocr+sew,cocr+sew,cocr+sew],case_to_slope_depth+2*fudge,cheat);
+				case_opening_blank((cow + hsew*2),(coh + vsew*2),[cocr+sew,cocr+sew,cocr+sew,cocr+sew],case_to_slope_depth+2*fudge,cheat);
 				
 			}
 		}
@@ -7580,7 +7583,8 @@ module echo_settings(){
 	echo("---- Sloped Keyguard Edge Info ----");
 		if (add_sloped_keyguard_edge != "no") echo(add_sloped_keyguard_edge = add_sloped_keyguard_edge);
 		if (sloped_edge_starting_height != 1) echo(sloped_edge_starting_height = sloped_edge_starting_height);
-		if (sloped_edge_width != 10) echo(sloped_edge_width = sloped_edge_width);
+		if (horizontal_sloped_edge_width != 10) echo(horizontal_sloped_edge_width = horizontal_sloped_edge_width);
+		if (vertical_sloped_edge_width != 10) echo(vertical_sloped_edge_width = vertical_sloped_edge_width);
 		if (case_to_slope_depth != 0) echo(case_to_slope_depth = case_to_slope_depth);
 		if (extend_lip_to_edge_of_case != "no") echo(extend_lip_to_edge_of_case = extend_lip_to_edge_of_case);
 		echo();
