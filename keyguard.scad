@@ -4281,7 +4281,12 @@ function v2_parse_addition(r) =
 		tr = (len(trim_raw) >= 3) ? trim_raw[2] : -999,
 		tl = (len(trim_raw) >= 4) ? trim_raw[3] : -999
 	)
-	[r[0], r[1], r[2], r[3], (r[4] == undef ? 0 : r[4]), r[5], r[6], thickness, ta, tb, tr, tl, is_sub];
+	let(
+		is_oa     = (r[1] == "oa1" || r[1] == "oa2" || r[1] == "oa3" || r[1] == "oa4"),
+		fin_thick = is_oa ? 0      : thickness,
+		fin_sub   = is_oa ? true   : is_sub
+	)
+	[r[0], r[1], r[2], r[3], (r[4] == undef ? 0 : r[4]), r[5], r[6], fin_thick, ta, tb, tr, tl, fin_sub];
 
 
 // ---------------------------------------------------------------------------
