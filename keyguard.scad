@@ -6816,32 +6816,32 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 			half_rounded_rectangle(addition_width,addition_height,addition_corner_radius);
 		}
 	}
-	else if (addition_shape=="-oa1"){
+	else if (addition_shape=="oa1" || addition_shape=="-oa1"){
 		translate([-ff,-ff])
 		if (addition_corner_radius > 0){
 			translate([-addition_corner_radius,-addition_corner_radius])
 			create_cutting_tool_2d(0, addition_corner_radius*2);
 		}
 	}
-	else if (addition_shape=="-oa2"){
+	else if (addition_shape=="oa2" || addition_shape=="-oa2"){
 		translate([-ff,ff])
 		if (addition_corner_radius > 0){
 			translate([-addition_corner_radius,addition_corner_radius])
-			create_cutting_tool_2d(-90, addition_corner_radius*2);	
+			create_cutting_tool_2d(-90, addition_corner_radius*2);
 		}
 	}
-	else if (addition_shape=="-oa3"){
+	else if (addition_shape=="oa3" || addition_shape=="-oa3"){
 		translate([ff,ff])
 		if (addition_corner_radius > 0){
 			translate([addition_corner_radius,addition_corner_radius])
 			create_cutting_tool_2d(180, addition_corner_radius*2);
 		}
 	}
-	else if (addition_shape=="-oa4"){
+	else if (addition_shape=="oa4" || addition_shape=="-oa4"){
 		translate([ff,-ff])
 		if (addition_corner_radius > 0){
 			translate([addition_corner_radius,-addition_corner_radius])
-			create_cutting_tool_2d(90, addition_corner_radius*2);	
+			create_cutting_tool_2d(90, addition_corner_radius*2);
 		}
 	}
 }
