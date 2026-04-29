@@ -6355,16 +6355,6 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 			}
 		}
 
-		if(case_to_slope_depth<0){
-			difference(){
-				translate([0,0,-fudge])
-				case_opening_blank(widt+fudge,heig+fudge,radi,abs(case_to_slope_depth)+fudge,cheat);
-
-				translate([0,0,-fudge])
-				case_opening_blank((cow + hsew*2),(coh + vsew*2),[cocr+sew,cocr+sew,cocr+sew,cocr+sew],abs(case_to_slope_depth)+2*fudge,cheat);
-			}
-		}
-				
 		if (is_3d_printed){  //add chamfer
 			for (i = [1:1:chamfer_slices]) { 
 				chamfer_slice(i,widt,heig,radi,thickness,cheat);
