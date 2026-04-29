@@ -1,0 +1,29 @@
+{
+  "description": "sloped edge keyguard lip variations",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "zero case to slope",
+      "params": "Test Case 4",
+      "vpt": [30.097, -6.07333, 22.2152],
+      "vpr": [81.6, 0, 91.1],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+      "label": "1 case to slope",
+      "params": "Test Case 4",
+      "vpt": [30.097, -6.07333, 22.2152],
+      "vpr": [81.6, 0, 91.1],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "-1 case to slope",
+      "params": "Test Case 4a",
+      "vpt": [30.097, -6.07333, 22.2152],
+      "vpr": [81.6, 0, 91.1],
+      "vpd": 500,
+      "expected": "step3_expected.png"
+    }
+  ]
+}
