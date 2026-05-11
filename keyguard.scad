@@ -3543,7 +3543,8 @@ module cells(depth){
 				  (i!=0 && i==row_count-1) ? chei - row_last_trim :
 				  (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
 				  chei;
-				  
+			mrr = (cell_shape=="rectangular") ? ocr : cell_diameter/2;
+
 			// ignore if this cell is covered
 			if (!search(current_cell,c_t_c)){
 				// if cell is merged horizontally and rectangular
@@ -3561,6 +3562,17 @@ module cells(depth){
 				if((search(current_cell,m_cell_h))&&(search(current_cell,m_c_v))&&(search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h))){
 					translate([c__x+grid_part_w/2, c__y+grid_part_h/2, 0])
 					hole_cutter(grid_part_w, grid_part_h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
+				}
+
+				// round the concave inner corner when the same cell starts both a horizontal
+				// and vertical merge (L-shape), but is not part of a 2x2 rectangle merge
+				if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
+					(search(current_cell,m_c_v))&&(i!=row_count-1)&&
+					!((search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h)))){
+					if (mrr > 0) {
+						translate([c__x+c__w/2, c__y+c__h/2, 0])
+						hole_cutter(mrr*2, mrr*2, cts, cbs, rs_inc_acrylic, rs_inc_acrylic, mrr, d);
+					}
 				}
 
 				//basic, no-merge cell cut these two statements will have no impact if cell has been merged, cell can be any shape
