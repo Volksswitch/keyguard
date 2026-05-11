@@ -3293,55 +3293,36 @@ module velcro(){
 
 // Cuts the slots and flange bores for Keyguard AT-style screw-on acrylic strap tabs
 // into the keyguard border, supporting both full-depth and partial-depth cuts.
+// Screw holes and rectangular slots route through cut_opening_v2; the triangular
+// flange bores ($fn=3 cylinders) stay as direct primitives — they accommodate
+// specific hardware geometry with no V2 shape equivalent.
+// Refactor side-effect: kec edge chamfer now applies to the screw holes and slots.
 module screw_on_straps(){
 	major_dim = max(tablet_width,tablet_height);
+	slot_dep = kt - strap_cut_to_depth; // partial-depth slot cut from top
 
-	//drill holes for screw-on straps and cut slots if needed for thick keyguards
-	if (strap_cut_to_depth<kt) {  //cuts slot and flanges (the cylinders) for Keyguard AT's acrylic tabs
-		translate([-major_dim/2-1,34.5,-kt/2+strap_cut_to_depth])
-		cube(size=[12,11,kt]);
-		translate([-major_dim/2-1,34.5,-kt/2+strap_cut_to_depth])
-		cylinder(h=kt,d=7,$fn=3);
-		translate([-major_dim/2-1,45.5,-kt/2+strap_cut_to_depth])
-		cylinder(h=kt,d=7,$fn=3);
-		
-		translate([-major_dim/2-1,-45.5,-kt/2+strap_cut_to_depth])
-		cube(size=[12,11,kt]);
-		translate([-major_dim/2-1,-45.5,-kt/2+strap_cut_to_depth])
-		cylinder(h=kt,d=7,$fn=3);
-		translate([-major_dim/2-1,-34.5,-kt/2+strap_cut_to_depth])
-		cylinder(h=kt,d=7,$fn=3);
+	if (strap_cut_to_depth<kt) {  // slot + flange bores for Keyguard AT's acrylic tabs
+		// Slot rectangle centres: x at (major_dim/2 - 5), y at ±40. Slot is 12 wide × 11 tall.
+		for (xp = [-major_dim/2 + 5, major_dim/2 - 5])
+			for (yp = [40, -40])
+				translate([xp, yp, 0])
+				cut_opening_v2(12, 11, "r", "c", "t", 90,90,90,90, 0, slot_dep, kt, "keyguard");
 
-		translate([major_dim/2-11,34.5,-kt/2+strap_cut_to_depth])
-		cube(size=[12,11,kt]);
-		translate([major_dim/2,34.5,-kt/2+strap_cut_to_depth])
-		rotate([0,0,180])
-		cylinder(h=kt,d=7,$fn=3);
-		translate([major_dim/2,45.5,-kt/2+strap_cut_to_depth])
-		rotate([0,0,180])
-		cylinder(h=kt,d=7,$fn=3);
-		
-		translate([major_dim/2-11,-45.5,-kt/2+strap_cut_to_depth])
-		cube(size=[12,11,kt]);
-		translate([major_dim/2,-45.5,-kt/2+strap_cut_to_depth])
-		rotate([0,0,180])
-		cylinder(h=kt,d=7,$fn=3);
-		translate([major_dim/2,-34.5,-kt/2+strap_cut_to_depth])
-		rotate([0,0,180])
-		cylinder(h=kt,d=7,$fn=3);
+		// Triangular flange bores ($fn=3) — kept as raw primitives. Inner-edge cylinders
+		// at x = -major_dim/2-1 (left) and x = major_dim/2 (right, rotated 180°);
+		// each pair sits 11 mm apart in y, straddling y = ±40.
+		for (yp = [34.5, 45.5]) {
+			translate([-major_dim/2-1, yp,    -kt/2+strap_cut_to_depth]) cylinder(h=kt, d=7, $fn=3);
+			translate([-major_dim/2-1,-yp,    -kt/2+strap_cut_to_depth]) cylinder(h=kt, d=7, $fn=3);
+			translate([ major_dim/2,   yp,    -kt/2+strap_cut_to_depth]) rotate([0,0,180]) cylinder(h=kt, d=7, $fn=3);
+			translate([ major_dim/2,  -yp,    -kt/2+strap_cut_to_depth]) rotate([0,0,180]) cylinder(h=kt, d=7, $fn=3);
+		}
 	}
-	//cut holes for screw
-	translate([-major_dim/2+5.5, 40, -kt/2])
-	cylinder(h=kt*3, d=6, center=true);
-	
-	translate([-major_dim/2+5.5, - 40, -kt/2])
-	cylinder(h=kt*3, d=6, center=true);
-	
-	translate([major_dim/2-5.5, 40, -kt/2])
-	cylinder(h=kt*3, d=6, center=true);
-	
-	translate([major_dim/2-5.5, -40, -kt/2])
-	cylinder(h=kt*3, d=6, center=true);
+	// Screw through-holes at the four corners of the border.
+	for (xp = [-major_dim/2 + 5.5, major_dim/2 - 5.5])
+		for (yp = [40, -40])
+			translate([xp, yp, 0])
+			cut_opening_v2(6, 6, "c", "c", "t", 90,90,90,90, 0, undef, kt, "keyguard");
 }
 
 // Cuts the wedge-shaped grooves on the edges of the keyguard that clip-on strap
