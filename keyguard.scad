@@ -2507,17 +2507,19 @@ module add_mounting_posts(){
 	}
 	
 	if(add_mini_tabs == "yes"){
+		// V2 case_additions row: [ID, shape, height, width, corner, x, y, cb, [trim]]
+		// "r3" is V2's rotated-rectangle shape (V1 "rr3" with the corner column carrying the radius).
 		tab = [
-			[1,cow/2,coh/2,  mini_tab_width,   mini_tab_length,  "rr3",  1, -999, -999, -999, -999, 1],
+			[1, "r3", mini_tab_length, mini_tab_width, 1, cow/2, coh/2, 1, [-999, -999, -999, -999]],
 		];
-		
+
 		translate([-cow/2+mini_tab_inset_distance+mini_tab_width/2,-coh/2,min(mini_tab_height,keyguard_thickness-2)])
 		rotate([0,0,-rotate_mini_tab])
-		apply_flex_height_shapes(tab, false);
-		
+		apply_flex_height_shapes_v2(tab, false);
+
 		translate([cow/2-mini_tab_inset_distance-mini_tab_width/2,-coh/2,min(mini_tab_height,keyguard_thickness-2)])
 		rotate([0,0,rotate_mini_tab])
-		apply_flex_height_shapes(tab, false);
+		apply_flex_height_shapes_v2(tab, false);
 	}
 }
 
