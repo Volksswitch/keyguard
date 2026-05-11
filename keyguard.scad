@@ -3173,49 +3173,37 @@ module create_cutting_tool_2d(rotation,diameter){
 // defined by the selected tablet's built-in dimension data.
 // @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
 module home_camera(depth){
-	//deal with home button
+	// Home button: square -> "c" (circle); rectangular -> "hd" (pill).
+	// Anchor "c" centres the shape at the translate origin. Locations 2 and 4 slope
+	// the top and bottom edges; locations 1 and 3 slope the left and right edges.
+	// type="tablet" selects keyguard_edge_chamfer (kec) at the cut face, matching
+	// cut_als_openings and the rest of the tablet-body cuts.
 	if (home_button_location!=0 && expose_home_button=="yes" && home_button_height > 0 && home_button_width > 0){
-		translate([home_x_loc,home_y_loc,0])
-		if (home_button_height==home_button_width){
-			if(home_button_location==2 || home_button_location==4){
-				hole_cutter(home_button_height,home_button_height,hbes,hbes,90,90,home_button_height/2,depth);
-			}
-			else{
-				hole_cutter(home_button_height,home_button_height,90,90,hbes,hbes,home_button_height/2,depth);
-			}
-		}
-		else{
-			m = min(home_button_width,home_button_height);
-			if(home_button_location==2 || home_button_location==4){
-				hole_cutter(home_button_width,home_button_height,hbes,hbes,90,90,m/2,depth);
-			}
-			else{
-				hole_cutter(home_button_width,home_button_height,90,90,hbes,hbes,m/2,depth);
-			}
-		}
+		hb_square = (home_button_height == home_button_width);
+		hb_tb = (home_button_location==2 || home_button_location==4) ? hbes : 90;
+		hb_lr = (home_button_location==2 || home_button_location==4) ? 90   : hbes;
+
+		translate([home_x_loc, home_y_loc, 0])
+		cut_opening_v2(home_button_width, home_button_height,
+			hb_square ? "c" : "hd", "c", "T",
+			hb_tb, hb_tb, hb_lr, hb_lr, 0, undef, depth, "tablet");
 	}
-	//deal with camera
-	coa = camera_offset_acrylic;
+	// Camera: square -> "c" (cut_opening's "c" laser-cut branch already inflates by
+	// sat_incl_acrylic/tan(top_slope), which equals camera_offset_acrylic when
+	// top_slope==camera_cut_angle). Rectangular -> "hd"; cut_opening's "hd" laser-cut
+	// branch does not inflate, so pre-inflate the dimensions here to preserve the
+	// original camera_offset_acrylic clearance for the camera lens cone of vision.
 	if (camera_location!=0 && expose_camera=="yes" && camera_height > 0 && camera_width > 0){
-		translate([cam_x_loc,cam_y_loc,0])
-		if (camera_height==camera_width){
-			if (is_3d_printed){
-				hole_cutter(camera_height,camera_height,camera_cut_angle,camera_cut_angle,camera_cut_angle,camera_cut_angle,camera_height/2,depth);
-			}
-			else{
-				hole_cutter(camera_height+coa*2,camera_height+coa*2,90,90,90,90,(camera_height+coa*2)/2,depth);
-			}
-		}
-		else{
-			if (is_3d_printed){
-				m = min(camera_width,camera_height);
-				hole_cutter(camera_width,camera_height,camera_cut_angle,camera_cut_angle,camera_cut_angle,camera_cut_angle,m/2,depth);
-			}
-			else{
-				m = min(camera_width,camera_height);
-				hole_cutter(camera_width+coa*2,camera_height+coa*2,90,90,90,90,(m+coa*2)/2,depth);
-			}
-		}
+		cm_square = (camera_height == camera_width);
+		coa = camera_offset_acrylic; // 0 in 3D mode; sat_incl_acrylic/tan(camera_cut_angle) for laser-cut
+		rect_laser = !is_3d_printed && !cm_square;
+		cw = rect_laser ? camera_width  + coa*2 : camera_width;
+		ch = rect_laser ? camera_height + coa*2 : camera_height;
+		sl = (is_3d_printed) ? camera_cut_angle : 90;
+
+		translate([cam_x_loc, cam_y_loc, 0])
+		cut_opening_v2(cw, ch, cm_square ? "c" : "hd", "c", "T",
+			camera_cut_angle, sl, sl, sl, 0, undef, depth, "tablet");
 	}
 }
 
@@ -5555,6 +5543,31 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 			import(file = other,center=true);
 		}
 	}
+}
+
+
+// V2-native entry point for cut_opening. Built-in features call this rather than
+// cut_opening directly so they never reference V1-only shape codes (rr, crr, lhd,
+// lc, cr). The shape/anchor/surface columns are mapped to the V1 shape code
+// internally via v2_shape_code. In a future release the V1 vocabulary will be
+// removed and this adapter will become the native implementation; V1 O&A row
+// dispatchers will adapt upward to it.
+// @param cut_width     Opening width in mm
+// @param cut_height    Opening height in mm
+// @param shape         V2 shape name: "r", "c", "hd", "oa1-4", "text", "svg", etc.
+// @param anchor        "L"/"l" (default, anchored at left) or "C"/"c" (centred)
+// @param surface       "T"/"t" (top, default) or "B"/"b" (bottom; relevant for "text")
+// @param top_slope     Top-edge slope angle in degrees
+// @param bottom_slope  Bottom-edge slope angle in degrees
+// @param left_slope    Left-edge slope angle in degrees
+// @param right_slope   Right-edge slope angle in degrees
+// @param corner        Corner radius in mm (also outer-arc radius for "oa1-4")
+// @param other         Special parameter (text string, SVG filename, depth offset…)
+// @param depth         Cut depth in mm; 0 selects laser-cut 2D output
+// @param type          Region: "screen", "case", "keyguard", or "tablet"
+// @param rotation      Z-rotation of the cut in degrees (default 0)
+module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation=0){
+	cut_opening(cut_width, cut_height, v2_shape_code(shape, anchor, surface), top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation);
 }
 
 
