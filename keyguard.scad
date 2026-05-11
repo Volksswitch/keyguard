@@ -5514,96 +5514,87 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 }
 
 
-// Dispatches to the correct 2D cutting profile for a single opening based on its
-// shape code. Used for laser-cut keyguard outlines.
+// V1-shape-code adapter for cut_opening_2d_v2. Translates a V1 shape string
+// into V2 form (shape + anchor + corner) and forwards to the V2-native
+// cut_opening_2d_v2 dispatcher. Called from V1 row dispatchers and legacy
+// engrave_emboss_instruction code paths.
+module cut_opening_2d(cut_width, cut_height, shape, top_slope=0, corner_radius=0, rotation=0){
+	anchor = (shape=="cr" || shape=="crr" || shape=="c" || shape=="hd") ? "c" : undef;
+	v2_shape =
+		(shape=="r" || shape=="rr" || shape=="cr" || shape=="crr") ? "r" :
+		(shape=="c" || shape=="lc")                                 ? "c" :
+		(shape=="hd" || shape=="lhd")                               ? "hd" :
+		shape; // oa1-4 pass through
+	cut_opening_2d_v2(cut_width, cut_height, v2_shape, anchor, top_slope, corner_radius, rotation);
+}
+
+
+// V2-native 2D opening cutter for laser-cut keyguard outlines. Dispatches on
+// V2 shape + anchor + corner. Counterpart to cut_opening_v2 — V1 cut_opening_2d
+// above is a thin adapter retained for V1 O&A row dispatchers.
 // @param cut_width     Opening width in mm
 // @param cut_height    Opening height in mm
-// @param shape         Shape code string (e.g. "r", "c", "lc", "rr", "lhd", "oa1")
-// @param top_slope     Top-edge slope angle in degrees (default 0)
-// @param corner_radius Corner radius in mm (default 0)
-module cut_opening_2d(cut_width, cut_height, shape, top_slope=0, corner_radius=0, rotation=0){
+// @param shape         V2 shape: "r", "c", "hd", or "oa1-4"
+// @param anchor        undef/"L"/"l" (L-anchored) or "C"/"c" (centred)
+// @param top_slope     Top-edge slope angle in degrees (controls acrylic inflation for "c")
+// @param corner        Corner radius in mm (also outer-arc radius for "oa1-4")
+// @param rotation      Z-rotation of the cut in degrees (default 0)
+module cut_opening_2d_v2(cut_width, cut_height, shape, anchor, top_slope=0, corner=0, rotation=0){
+	is_c = (anchor == "C" || anchor == "c");
 
-	if (shape=="r"){
+	if (shape == "r"){
 		if (cut_width > 0 && cut_height > 0){
-			translate([cut_width/2,cut_height/2])
+			tx = is_c ? 0 : cut_width/2;
+			ty = is_c ? 0 : cut_height/2;
+			translate([tx, ty])
 			rotate([0,0,rotation])
-			hole_cutter_2d(cut_width,cut_height,0);
+			hole_cutter_2d(cut_width, cut_height, corner);
 		}
 	}
-	else if (shape=="cr"){
-		if (cut_width > 0 && cut_height > 0){
-			translate([0,0])
-			rotate([0,0,rotation])
-			hole_cutter_2d(cut_width,cut_height,0);
-		}
-	}
-	else if (shape=="c"){
+	else if (shape == "c"){
 		if (cut_height > 0){
+			// Laser-cut circles inflate by sat_incl_acrylic/tan(top_slope) to clear
+			// the acrylic for sloped sensor wells.
 			aoa = sat_incl_acrylic/tan(top_slope);
+			tx = is_c ? 0 : cut_height/2;
+			ty = tx;
+			translate([tx, ty])
 			rotate([0,0,rotation])
-			hole_cutter_2d(cut_height+aoa*2,cut_height+aoa*2,(cut_height+aoa*2)/2);
+			hole_cutter_2d(cut_height+aoa*2, cut_height+aoa*2, (cut_height+aoa*2)/2);
 		}
 	}
-	else if (shape=="lc"){
-		if (cut_height > 0){
-			aoa = sat_incl_acrylic/tan(top_slope);
-			translate([cut_height/2,cut_height/2])
-			rotate([0,0,rotation])
-			hole_cutter_2d(cut_height+aoa*2,cut_height+aoa*2,(cut_height+aoa*2)/2);
-		}
-	}
-	else if (shape=="hd"){
+	else if (shape == "hd"){
 		if (cut_width > 0 && cut_height > 0){
-			m = min(cut_width,cut_height);
-			translate([0,0])
+			m  = min(cut_width, cut_height);
+			tx = is_c ? 0 : cut_width/2;
+			ty = is_c ? 0 : cut_height/2;
+			translate([tx, ty])
 			rotate([0,0,rotation])
-			hole_cutter_2d(cut_width,cut_height,m/2);
+			hole_cutter_2d(cut_width, cut_height, m/2);
 		}
 	}
-	else if (shape=="lhd"){
-		if (cut_width > 0 && cut_height > 0){
-			m = min(cut_width,cut_height);
-			translate([cut_width/2,cut_height/2])
-			rotate([0,0,rotation])
-			hole_cutter_2d(cut_width,cut_height,m/2);
+	else if (shape == "oa1"){
+		if (corner > 0){
+			translate([-corner, -corner])
+			create_cutting_tool_2d(0, corner*2);
 		}
 	}
-	else if (shape=="rr"){
-		if (cut_width > 0 && cut_height > 0){
-			translate([cut_width/2,cut_height/2])
-			rotate([0,0,rotation])
-			hole_cutter_2d(cut_width,cut_height,corner_radius);
+	else if (shape == "oa2"){
+		if (corner > 0){
+			translate([-corner, corner])
+			create_cutting_tool_2d(-90, corner*2);
 		}
 	}
-	else if (shape=="crr"){
-		if (cut_width > 0 && cut_height > 0){
-			translate([0,0])
-			rotate([0,0,rotation])
-			hole_cutter_2d(cut_width,cut_height,corner_radius);
+	else if (shape == "oa3"){
+		if (corner > 0){
+			translate([corner, corner])
+			create_cutting_tool_2d(180, corner*2);
 		}
 	}
-	else if (shape=="oa1"){
-		if (corner_radius > 0){
-			translate([-corner_radius,-corner_radius])
-			create_cutting_tool_2d(0, corner_radius*2);
-		}
-	}
-	else if (shape=="oa2"){
-		if (corner_radius > 0){
-			translate([-corner_radius,corner_radius])
-			create_cutting_tool_2d(-90, corner_radius*2);	
-		}
-	}
-	else if (shape=="oa3"){
-		if (corner_radius > 0){
-			translate([corner_radius,corner_radius])
-			create_cutting_tool_2d(180, corner_radius*2);
-		}
-	}
-	else if (shape=="oa4"){
-		if (corner_radius > 0){
-			translate([corner_radius,-corner_radius])
-			create_cutting_tool_2d(90, corner_radius*2);	
+	else if (shape == "oa4"){
+		if (corner > 0){
+			translate([corner, -corner])
+			create_cutting_tool_2d(90, corner*2);
 		}
 	}
 }
