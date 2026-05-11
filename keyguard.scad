@@ -3564,13 +3564,31 @@ module cells(depth){
 					hole_cutter(grid_part_w, grid_part_h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
 				}
 
-				// round the concave inner corner when the same cell starts both a horizontal
-				// and vertical merge (L-shape), but is not part of a 2x2 rectangle merge
+				// round concave inner corners produced by L-shaped merges
+				// Config 1: same cell starts H-right and V-up merges — inner corner at top-right
 				if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
 					(search(current_cell,m_c_v))&&(i!=row_count-1)&&
 					!((search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h)))){
 					if (mrr > 0) {
 						translate([c__x+c__w/2, c__y+c__h/2, 0])
+						hole_cutter(mrr*2, mrr*2, cts, cbs, rs_inc_acrylic, rs_inc_acrylic, mrr, d);
+					}
+				}
+				// Config 2: current cell starts H-right merge; cell below starts V-up merge to current cell — inner corner at bottom-right
+				if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
+					(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
+					!((search(current_cell-number_of_columns,m_cell_h))&&(search(current_cell+1-number_of_columns,m_c_v)))){
+					if (mrr > 0) {
+						translate([c__x+c__w/2, c__y-c__h/2, 0])
+						hole_cutter(mrr*2, mrr*2, cts, cbs, rs_inc_acrylic, rs_inc_acrylic, mrr, d);
+					}
+				}
+				// Config 3: left neighbor starts H-right merge to current cell; current cell starts V-up merge — inner corner at top-left
+				if((search(current_cell,m_c_v))&&(i!=row_count-1)&&
+					(j!=0)&&(search(current_cell-1,m_cell_h))&&
+					!((search(current_cell-1,m_c_v))&&(search(current_cell-1+number_of_columns,m_cell_h)))){
+					if (mrr > 0) {
+						translate([c__x-c__w/2, c__y+c__h/2, 0])
 						hole_cutter(mrr*2, mrr*2, cts, cbs, rs_inc_acrylic, rs_inc_acrylic, mrr, d);
 					}
 				}
