@@ -4381,7 +4381,6 @@ module cut_screen_openings_v2(s_o, depth) {
 			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[12]=es, r[13]=sp
 			sp = r[13];
 			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
-			shape   = (surface == "b") ? "btext" : "ttext";
 			h_mm = (using_px) ? r[2] * mpp : r[2];
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
 			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
@@ -4394,9 +4393,9 @@ module cut_screen_openings_v2(s_o, depth) {
 				       ((using_px) ? y_raw * mpp : y_raw);
 				translate([sx0+x_mm, sy0+y_mm, 0])
 				if (opening_ID != "#") {
-					cut_opening(0, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, "screen");
+					cut_opening_v2(0, h_mm, "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, "screen");
 				} else {
-					#cut_opening(0, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, "screen");
+					#cut_opening_v2(0, h_mm, "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, "screen");
 				}
 			}
 
@@ -4420,27 +4419,25 @@ module cut_screen_openings_v2(s_o, depth) {
 			}
 
 		} else {
-			// Standard shapes: r, c, hd, oa1-4, bump (+ r1-4 for case_openings/tablet_openings)
-			// r[2]=height, r[3]=width, r[4]=corner, r[7]=cb, r[8]=anchor, r[9]=surface, r[12]=es, r[13]=sp
+			// Standard shapes: r, c, hd, oa1-4, bump (+ r1-4 for case_openings/tablet_openings).
+			// Shape passes through to cut_opening_v2 directly — anchor/surface/corner
+			// are dispatched there; no V1 shape-code translation needed.
 			es = r[12];
 			sp = r[13];
 			rot = (len(sp) > 0 && is_num(sp[0])) ? sp[0] : 0;
 			anchor  = ((r[8] == "C" || r[8] == "c")) ? "c" : undef;
 			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
-			shape_base = v2_shape_code(r[1], anchor, surface);
-			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
-			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
-			h = (r[1] == "bump") ? r[2] : r[2];
+			h = r[2];
 			w = (r[1] == "bump") ? r[2] : (r[1] == "c" ? 0 : r[3]);
 			h_mm = (using_px) ? h * mpp : h;
 			w_mm = (using_px) ? w * mpp : w;
-			c_r  = (shape == "oa1" || shape == "oa2" || shape == "oa3" || shape == "oa4") ? r[4] :
+			c_r  = (r[1] == "oa1" || r[1] == "oa2" || r[1] == "oa3" || r[1] == "oa4") ? r[4] :
 			       min(r[4], min(w, h)/2);
 			c_r_mm = (using_px) ? c_r * mpp : c_r;
-			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, shape);
-			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, shape);
-			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, shape);
-			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, shape);
+			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, r[1]);
+			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, r[1]);
+			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, r[1]);
+			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, r[1]);
 			has_invalid_dims = (w_mm < 0 || h_mm < 0);
 			if (has_invalid_dims) {
 				echo(str("WARNING: screen_openings entry '", opening_ID,
@@ -4453,9 +4450,9 @@ module cut_screen_openings_v2(s_o, depth) {
 					       ((using_px) ? y_raw * mpp : y_raw);
 					translate([sx0+x_mm, sy0+y_mm, 0])
 					if (opening_ID != "#") {
-						cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "screen", rot);
+						cut_opening_v2(w_mm, h_mm, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "screen", rot);
 					} else {
-						#cut_opening(w_mm, h_mm, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "screen", rot);
+						#cut_opening_v2(w_mm, h_mm, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "screen", rot);
 					}
 				} else if (depth <= 0) {
 					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
@@ -4463,9 +4460,9 @@ module cut_screen_openings_v2(s_o, depth) {
 					       ((using_px) ? y_raw * mpp : y_raw);
 					translate([sx0+x_mm, sy0+y_mm, 0])
 					if (opening_ID != "#") {
-						cut_opening_2d(w_mm, h_mm, shape, top_sl, c_r_mm, rot);
+						cut_opening_2d_v2(w_mm, h_mm, r[1], anchor, top_sl, c_r_mm, rot);
 					} else {
-						#cut_opening_2d(w_mm, h_mm, shape, top_sl, c_r_mm, rot);
+						#cut_opening_2d_v2(w_mm, h_mm, r[1], anchor, top_sl, c_r_mm, rot);
 					}
 				}
 				// r[7] > 0: build — handled by adding_plastic_v2
@@ -4519,7 +4516,6 @@ module cut_case_openings_v2(c_o, depth) {
 			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
 			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
-			shape   = (surface == "b") ? "btext" : "ttext";
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
 			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
 			lft_sl = v2_h_align_code((len(sp) >= 4) ? sp[3] : "");
@@ -4528,9 +4524,9 @@ module cut_case_openings_v2(c_o, depth) {
 			if (depth > 0) {
 				translate([cox0+r[5], coy0+r[6], 0])
 				if (opening_ID != "#") {
-					cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "keyguard");
+					cut_opening_v2(0, r[2], "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "keyguard");
 				} else {
-					#cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "keyguard");
+					#cut_opening_v2(0, r[2], "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "keyguard");
 				}
 			}
 
@@ -4553,16 +4549,13 @@ module cut_case_openings_v2(c_o, depth) {
 			rot = (len(sp) > 0 && is_num(sp[0])) ? sp[0] : 0;
 			anchor  = ((r[8] == "C" || r[8] == "c")) ? "c" : undef;
 			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
-			shape_base = v2_shape_code(r[1], anchor, surface);
-			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
-			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
 			w = (r[1] == "bump") ? r[2] : (r[1] == "c" ? 0 : r[3]);
 			h = r[2];
 			c_r = (w > 0 && h > 0) ? min(r[4], min(w, h)/2) : r[4];
-			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, shape);
-			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, shape);
-			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, shape);
-			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, shape);
+			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, r[1]);
+			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, r[1]);
+			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, r[1]);
+			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, r[1]);
 			has_invalid_dims = (w < 0 || h < 0);
 			if (has_invalid_dims) {
 				echo(str("WARNING: case_openings entry '", opening_ID,
@@ -4572,15 +4565,15 @@ module cut_case_openings_v2(c_o, depth) {
 				translate([cox0+r[5], coy0+r[6], 0])
 				if (depth > 0 && r[7] <= 0) {
 					if (opening_ID != "#") {
-						cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "keyguard", rot);
+						cut_opening_v2(w, h, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "keyguard", rot);
 					} else {
-						#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "keyguard", rot);
+						#cut_opening_v2(w, h, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "keyguard", rot);
 					}
 				} else if (depth <= 0) {
 					if (opening_ID != "#") {
-						cut_opening_2d(w, h, shape, top_sl, c_r, rot);
+						cut_opening_2d_v2(w, h, r[1], anchor, top_sl, c_r, rot);
 					} else {
-						#cut_opening_2d(w, h, shape, top_sl, c_r, rot);
+						#cut_opening_2d_v2(w, h, r[1], anchor, top_sl, c_r, rot);
 					}
 				}
 				// r[7] > 0: build — handled by adding_plastic_v2
@@ -4632,7 +4625,6 @@ module cut_tablet_openings_v2(t_o, depth) {
 			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
 			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
-			shape   = (surface == "b") ? "btext" : "ttext";
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
 			bot_sl = v2_font_style_code((len(sp) >= 3) ? sp[2] : "");
 			lft_sl = v2_h_align_code((len(sp) >= 4) ? sp[3] : "");
@@ -4641,9 +4633,9 @@ module cut_tablet_openings_v2(t_o, depth) {
 			trans = (is_landscape) ? [tx0+r[5], ty0+r[6], 0] : [tx0+r[6], -ty0-r[5], 0];
 			translate(trans)
 			if (opening_ID != "#") {
-				cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "tablet");
+				cut_opening_v2(0, r[2], "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "tablet");
 			} else {
-				#cut_opening(0, r[2], shape, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "tablet");
+				#cut_opening_v2(0, r[2], "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, r[7], other, depth, "tablet");
 			}
 
 		} else if (r[1] == "svg") {
@@ -4664,16 +4656,13 @@ module cut_tablet_openings_v2(t_o, depth) {
 			rot = (len(sp) > 0 && is_num(sp[0])) ? sp[0] : 0;
 			anchor  = ((r[8] == "C" || r[8] == "c")) ? "c" : undef;
 			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
-			shape_base = v2_shape_code(r[1], anchor, surface);
-			shape = (shape_base == "r"  && r[4] > 0) ? "rr"  :
-			        (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
 			w = (r[1] == "bump") ? r[2] : (r[1] == "c" ? 0 : r[3]);
 			h = r[2];
 			c_r = (w > 0 && h > 0) ? min(r[4], min(w, h)/2) : r[4];
-			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, shape);
-			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, shape);
-			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, shape);
-			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, shape);
+			top_sl = is_laser_cut ? 90 : v2_slope(es, 0, r[1]);
+			bot_sl = is_laser_cut ? 90 : v2_slope(es, 1, r[1]);
+			lft_sl = is_laser_cut ? 90 : v2_slope(es, 2, r[1]);
+			rgt_sl = is_laser_cut ? 90 : v2_slope(es, 3, r[1]);
 			has_invalid_dims = (w < 0 || h < 0);
 			if (has_invalid_dims) {
 				echo(str("WARNING: tablet_openings entry '", opening_ID,
@@ -4684,9 +4673,9 @@ module cut_tablet_openings_v2(t_o, depth) {
 				if (r[7] <= 0) {
 					translate(trans)
 					if (opening_ID != "#") {
-						cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "tablet", rot);
+						cut_opening_v2(w, h, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "tablet", rot);
 					} else {
-						#cut_opening(w, h, shape, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "tablet", rot);
+						#cut_opening_v2(w, h, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "tablet", rot);
 					}
 				}
 				// r[7] > 0: build — handled by adding_plastic_v2 (if tablet openings are used as additions source)
