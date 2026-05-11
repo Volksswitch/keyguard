@@ -5342,206 +5342,39 @@ module cut_hole(tx, ty, tz, w, h, ts, bs, ls, rs, cr, dep, flip, edge_chamfer=ce
 // @param other         Numeric depth override or text string (shape-dependent)
 // @param depth         Full cut depth in mm
 // @param type          Coordinate context: "screen", "keyguard", or "tablet"
+// V1-shape-code adapter for cut_opening_v2. Translates a V1 shape string
+// (r/rr/cr/crr/c/lc/hd/lhd/oa1-4/ttext/btext/svg) into the V2 form
+// (shape + anchor + surface + corner) and forwards to the V2-native
+// cut_opening_v2 dispatcher. Called from V1 row dispatchers
+// (cut_screen_openings, cut_case_openings, cut_tablet_openings,
+// cut_als_openings) and by legacy code paths. When V1 O&A support is
+// dropped this adapter is one of the few modules that can be deleted
+// outright.
 module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_slope, right_slope, corner_radius, other, depth, type, rotation=0){
-
-	other_number = is_num(other);
-	other_pos = other_number && other>=0;
-	other_neg = other_number && other<0;
-
-	// Select chamfer depth based on region: screen area uses cell_edge_chamfer (cec),
-	// case/keyguard and tablet regions use keyguard_edge_chamfer (kec).
-	region_chamfer = (type=="screen") ? cec : kec;
-
-	offset = (is_3d_printed && other_number && other_pos && type=="screen") ? depth - other :
-			 (is_3d_printed && other_number && other_pos && type=="keyguard") ? (depth - other)/2 :
-			 (is_3d_printed && other_number && other_neg && type=="screen") ? -depth-other :
-			 (is_3d_printed && other_number && other_neg && type=="keyguard") ? -(depth+other)/2 :
-			 0;
-
-	dep = (is_3d_printed && other_number && other_pos) ? other :
-		  (is_3d_printed && other_number && other_neg) ? -other :
-	      depth;
-
-	flip = (other_number && other_neg) ? true: false;
-
-
-	if (shape=="r"){
-		if (cut_width > 0 && cut_height > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, 0, dep, flip, region_chamfer, rotation);
-		}
-	}
-	else if (shape=="cr"){
-		if (cut_width > 0 && cut_height > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, 0, dep, flip, region_chamfer, rotation);
-		}
-	}
-	else if (shape=="c"){
-		if (cut_height > 0){
-			if (is_3d_printed){
-				trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-				cut_hole(0, 0, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip, region_chamfer, rotation);
-			}
-			else{
-				//need to accomodate ALS sensors and other circular openings if slope is non-90 degrees
-				aoa = sat_incl_acrylic/tan(top_slope);
-				hole_cutter(cut_height+aoa*2,cut_height+aoa*2,90,90,90,90,(cut_height+aoa*2)/2,dep);
-			}
-		}
-	}
-	else if (shape=="lc"){
-		if (cut_height > 0){
-			if (is_3d_printed){
-				trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-				cut_hole(cut_height/2, cut_height/2, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip, region_chamfer, rotation);
-			}
-			else{
-				aoa = sat_incl_acrylic/tan(top_slope);
-				translate([cut_height/2, cut_height/2, 0])
-				hole_cutter(cut_height+aoa*2,cut_height+aoa*2,90,90,90,90,(cut_height+aoa*2)/2,dep);
-			}
-		}
-	}
-	else if (shape=="hd"){
-		if (cut_width > 0 && cut_height > 0){
-			m = min(cut_width,cut_height);
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip, region_chamfer, rotation);
-		}
-	}
-	else if (shape=="lhd"){
-		if (cut_width > 0 && cut_height > 0){
-			m = min(cut_width,cut_height);
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip, region_chamfer, rotation);
-		}
-	}
-	else if (shape=="rr"){
-		if (cut_width > 0 && cut_height > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(cut_width/2, cut_height/2, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner_radius, dep, flip, region_chamfer, rotation);
-		}
-	}
-	else if (shape=="crr"){
-		if (cut_width > 0 && cut_height > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			cut_hole(0, 0, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner_radius, dep, flip, region_chamfer, rotation);
-		}
-	}
-	else if (shape=="oa1"){
-		if (corner_radius > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			translate([-corner_radius,-corner_radius,trans])
-			create_cutting_tool(0, corner_radius*2, dep+0.05, top_slope, "oa", region_chamfer);
-		}
-	}
-	else if (shape=="oa2"){
-		if (corner_radius > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			translate([-corner_radius,corner_radius,trans])
-			create_cutting_tool(-90, corner_radius*2, dep+0.05, top_slope, "oa", region_chamfer);
-		}
-	}
-	else if (shape=="oa3"){
-		if (corner_radius > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			translate([corner_radius,corner_radius,trans])
-			create_cutting_tool(180, corner_radius*2, dep+0.05, top_slope, "oa", region_chamfer);
-		}
-	}
-	else if (shape=="oa4"){
-		if (corner_radius > 0){
-			trans = (type=="screen") ? -sat/2-kt/2+sat+offset/2 : offset;
-			translate([corner_radius,-corner_radius,trans])
-			create_cutting_tool(90, corner_radius*2, dep+0.05, top_slope, "oa", region_chamfer);
-		}
-	}
-	else if (shape=="ttext"){
-		f_s = 
-		    (bottom_slope==1)? "Liberation Sans:style=Bold"
-		  : (bottom_slope==2)? "Liberation Sans:style=Italic"
-		  : (bottom_slope==3)? "Liberation Sans:style=Bold Italic"
-		  : "Liberation Sans";
-		  
-		// "left", "center" and "right"
-		horiz = 
-			(left_slope==1)? "left"
-		  : (left_slope==2)? "center"
-		  : (left_slope==3)? "right"
-		  : "left";
-		  
-		// "top", "center", "baseline" and "bottom"
-		vert = 
-			(right_slope==1)? "bottom"
-		  : (right_slope==2)? "baseline"
-		  : (right_slope==3)? "center"
-		  : (right_slope==4)? "top"
-		  : "bottom";
-		  
-		if (cut_height > 0 && corner_radius < 0){
-			trans = (type=="screen") ? corner_radius-kt/2+sat-.005 : kt/2+corner_radius;
-			translate([0,0,trans])
-			rotate([0,0,top_slope])
-			linear_extrude(height = -corner_radius+.01)
-			text(str(other),font = f_s, size=cut_height,valign=vert,halign=horiz);
-		}
-	}
-	else if (shape=="btext" && is_3d_printed){
-		f_s = 
-			(bottom_slope==1)? "Liberation Sans:style=Bold"
-		  : (bottom_slope==2)? "Liberation Sans:style=Italic"
-		  : (bottom_slope==3)? "Liberation Sans:style=Bold Italic"
-		  : "Liberation Sans";
-		  
-		// "left", "center" and "right"
-		horiz = 
-			(left_slope==1)? "left"
-		  : (left_slope==2)? "center"
-		  : (left_slope==3)? "right"
-		  : "left";
-		  
-		// "top", "center", "baseline" and "bottom"
-		vert = 
-			(right_slope==1)? "bottom"
-		  : (right_slope==2)? "baseline"
-		  : (right_slope==3)? "center"
-		  : (right_slope==4)? "top"
-		  : "bottom";
-		if (cut_height > 0 && corner_radius < 0){
-			trans = (type=="screen") ? -corner_radius-kt/2-ff : -corner_radius-kt/2;
-			translate([0,0,trans])
-			rotate([0,180,0])
-			rotate([0,0,top_slope])
-			linear_extrude(height=-corner_radius+ff*2)
-			text(str(other),font = f_s, size=cut_height,valign=vert,halign=horiz);
-		}
-	}
-	else if (shape=="svg" && is_3d_printed){
-		if (cut_width > 0 && cut_height > 0 && corner_radius<0){
-			trans = (type=="screen") ? corner_radius-kt/2+sat-ff : kt/2+corner_radius;
-			translate([0,0,trans])
-			rotate([0,0,-top_slope])
-			resize([cut_width,cut_height,-corner_radius+ff*2])
-			linear_extrude(height=1)
-			offset(delta = .005)
-			import(file = other,center=true);
-		}
-	}
+	anchor  = (shape=="cr" || shape=="crr" || shape=="c" || shape=="hd") ? "c" : undef;
+	surface = (shape=="btext") ? "b" : undef;
+	v2_shape =
+		(shape=="r" || shape=="rr" || shape=="cr" || shape=="crr") ? "r" :
+		(shape=="c" || shape=="lc")                                 ? "c" :
+		(shape=="hd" || shape=="lhd")                               ? "hd" :
+		(shape=="ttext" || shape=="btext")                          ? "text" :
+		shape; // oa1-4, svg pass through
+	cut_opening_v2(cut_width, cut_height, v2_shape, anchor, surface, top_slope, bottom_slope, left_slope, right_slope, corner_radius, other, depth, type, rotation);
 }
 
 
-// V2-native entry point for cut_opening. Built-in features call this rather than
-// cut_opening directly so they never reference V1-only shape codes (rr, crr, lhd,
-// lc, cr). The shape/anchor/surface columns are mapped to the V1 shape code
-// internally via v2_shape_code. In a future release the V1 vocabulary will be
-// removed and this adapter will become the native implementation; V1 O&A row
-// dispatchers will adapt upward to it.
+// V2-native opening cutter. Dispatches on the V2 shape vocabulary plus anchor,
+// surface, and corner parameters carried as their own arguments rather than
+// encoded into the shape string. The single "r" branch covers V1 r/cr/rr/crr;
+// the "c" branch covers V1 c/lc; "hd" covers hd/lhd; "text" carries surface
+// to choose top-face vs bottom-face engraving. Every built-in feature that
+// has been migrated calls this module directly; the V1 cut_opening above is
+// a thin V1→V2 adapter retained for V1 O&A row dispatchers.
 // @param cut_width     Opening width in mm
 // @param cut_height    Opening height in mm
-// @param shape         V2 shape name: "r", "c", "hd", "oa1-4", "text", "svg", etc.
-// @param anchor        "L"/"l" (default, anchored at left) or "C"/"c" (centred)
-// @param surface       "T"/"t" (top, default) or "B"/"b" (bottom; relevant for "text")
+// @param shape         V2 shape name: "r", "c", "hd", "oa1-4", "text", "svg"
+// @param anchor        undef/"L"/"l" (anchored at left, default) or "C"/"c" (centred)
+// @param surface       "T"/"t" (top, default) or "B"/"b" (bottom; "text" only)
 // @param top_slope     Top-edge slope angle in degrees
 // @param bottom_slope  Bottom-edge slope angle in degrees
 // @param left_slope    Left-edge slope angle in degrees
@@ -5552,15 +5385,132 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 // @param type          Region: "screen", "case", "keyguard", or "tablet"
 // @param rotation      Z-rotation of the cut in degrees (default 0)
 module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation=0){
-	// Normalise anchor/surface to lowercase — v2_shape_code only matches "c"/"b".
-	anc = (anchor  == "C" || anchor  == "c") ? "c" : anchor;
-	srf = (surface == "B" || surface == "b") ? "b" : surface;
-	// V1 distinguishes sharp ("r"/"cr") from rounded ("rr"/"crr") rectangles. Promote
-	// when corner > 0 — matches the dispatcher logic in cut_screen_openings_v2.
-	v1_base = v2_shape_code(shape, anc, srf);
-	v1_shape = (v1_base == "r"  && corner > 0) ? "rr"  :
-	           (v1_base == "cr" && corner > 0) ? "crr" : v1_base;
-	cut_opening(cut_width, cut_height, v1_shape, top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation);
+
+	other_number = is_num(other);
+	other_pos = other_number && other>=0;
+	other_neg = other_number && other<0;
+
+	// Region chamfer: screen area uses cell_edge_chamfer (cec), case/keyguard
+	// and tablet regions use keyguard_edge_chamfer (kec).
+	region_chamfer = (type=="screen") ? cec : kec;
+
+	offset = (is_3d_printed && other_number && other_pos && type=="screen")   ? depth - other :
+	         (is_3d_printed && other_number && other_pos && type=="keyguard") ? (depth - other)/2 :
+	         (is_3d_printed && other_number && other_neg && type=="screen")   ? -depth-other :
+	         (is_3d_printed && other_number && other_neg && type=="keyguard") ? -(depth+other)/2 :
+	         0;
+	dep  = (is_3d_printed && other_number && other_pos) ? other :
+	       (is_3d_printed && other_number && other_neg) ? -other :
+	       depth;
+	flip = (other_number && other_neg) ? true : false;
+	trans = (type=="screen") ? -sat/2 - kt/2 + sat + offset/2 : offset;
+
+	// Centred-vs-L-anchor offset to feed to cut_hole. "C"/"c" anchors at the
+	// translate origin; anything else (undef/"L"/"l") anchors at the lower-left
+	// corner — the V1 rr/cr distinction is now just (anchor != "c").
+	is_c = (anchor == "C" || anchor == "c");
+
+	if (shape == "r"){
+		if (cut_width > 0 && cut_height > 0){
+			tx = is_c ? 0 : cut_width/2;
+			ty = is_c ? 0 : cut_height/2;
+			cut_hole(tx, ty, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner, dep, flip, region_chamfer, rotation);
+		}
+	}
+	else if (shape == "c"){
+		if (cut_height > 0){
+			tx = is_c ? 0 : cut_height/2;
+			ty = tx;
+			if (is_3d_printed){
+				cut_hole(tx, ty, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip, region_chamfer, rotation);
+			}
+			else{
+				// Laser-cut path: inflate diameter to clear acrylic for sloped sensor wells.
+				aoa = sat_incl_acrylic/tan(top_slope);
+				translate([tx, ty, 0])
+				hole_cutter(cut_height+aoa*2, cut_height+aoa*2, 90,90,90,90, (cut_height+aoa*2)/2, dep);
+			}
+		}
+	}
+	else if (shape == "hd"){
+		if (cut_width > 0 && cut_height > 0){
+			tx = is_c ? 0 : cut_width/2;
+			ty = is_c ? 0 : cut_height/2;
+			m  = min(cut_width, cut_height);
+			cut_hole(tx, ty, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip, region_chamfer, rotation);
+		}
+	}
+	else if (shape == "oa1"){
+		if (corner > 0){
+			translate([-corner, -corner, trans])
+			create_cutting_tool(0, corner*2, dep+0.05, top_slope, "oa", region_chamfer);
+		}
+	}
+	else if (shape == "oa2"){
+		if (corner > 0){
+			translate([-corner, corner, trans])
+			create_cutting_tool(-90, corner*2, dep+0.05, top_slope, "oa", region_chamfer);
+		}
+	}
+	else if (shape == "oa3"){
+		if (corner > 0){
+			translate([corner, corner, trans])
+			create_cutting_tool(180, corner*2, dep+0.05, top_slope, "oa", region_chamfer);
+		}
+	}
+	else if (shape == "oa4"){
+		if (corner > 0){
+			translate([corner, -corner, trans])
+			create_cutting_tool(90, corner*2, dep+0.05, top_slope, "oa", region_chamfer);
+		}
+	}
+	else if (shape == "text"){
+		// Font style, halign, valign carry as numeric codes in the slope columns —
+		// matches the existing cut_opening conventions. v2 surface "b" engraves
+		// the bottom face (flipped via rotate 180°); anything else engraves the top.
+		f_s   = (bottom_slope==1) ? "Liberation Sans:style=Bold" :
+		        (bottom_slope==2) ? "Liberation Sans:style=Italic" :
+		        (bottom_slope==3) ? "Liberation Sans:style=Bold Italic" :
+		                            "Liberation Sans";
+		horiz = (left_slope==1) ? "left" :
+		        (left_slope==2) ? "center" :
+		        (left_slope==3) ? "right" : "left";
+		vert  = (right_slope==1) ? "bottom" :
+		        (right_slope==2) ? "baseline" :
+		        (right_slope==3) ? "center" :
+		        (right_slope==4) ? "top" : "bottom";
+		is_btext = (surface == "B" || surface == "b");
+		if (cut_height > 0 && corner < 0){
+			if (is_btext){
+				if (is_3d_printed){
+					ttrans = (type=="screen") ? -corner-kt/2-ff : -corner-kt/2;
+					translate([0,0,ttrans])
+					rotate([0,180,0])
+					rotate([0,0,top_slope])
+					linear_extrude(height = -corner+ff*2)
+					text(str(other), font=f_s, size=cut_height, valign=vert, halign=horiz);
+				}
+			}
+			else{
+				ttrans = (type=="screen") ? corner-kt/2+sat-.005 : kt/2+corner;
+				translate([0,0,ttrans])
+				rotate([0,0,top_slope])
+				linear_extrude(height = -corner+.01)
+				text(str(other), font=f_s, size=cut_height, valign=vert, halign=horiz);
+			}
+		}
+	}
+	else if (shape == "svg" && is_3d_printed){
+		if (cut_width > 0 && cut_height > 0 && corner < 0){
+			strans = (type=="screen") ? corner-kt/2+sat-ff : kt/2+corner;
+			translate([0,0,strans])
+			rotate([0,0,-top_slope])
+			resize([cut_width, cut_height, -corner+ff*2])
+			linear_extrude(height=1)
+			offset(delta = .005)
+			import(file = other, center=true);
+		}
+	}
 }
 
 
