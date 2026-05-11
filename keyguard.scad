@@ -3273,38 +3273,21 @@ module suction_cups(){
 }
 
 // Cuts four shallow recesses on the bottom surface of the keyguard border to
-// accept round or square velcro pads for mounting.
+// accept round or square velcro pads for mounting. Routes through cut_opening_v2
+// with a negative "other" value (1.75 mm cut from the bottom face — matches the
+// original cube/cylinder geometry which extended 0.75 mm below the keyguard but
+// only 1.75 mm into the keyguard material).
+// Refactor side-effect: adds the kec edge chamfer at the cut face.
 module velcro(){
 	major_dim = max(tablet_width,tablet_height);
-
-	//create recessed shapes on the bottom of the surround to mount velcro
 	if (m_m=="Velcro"){
-		if (velcro_size<=3){ //round velcros
-			translate([-major_dim/2+velcro_diameter/2+2, 30, -kt/2+.5])
-			cylinder(h=2.5, d=velcro_diameter, center=true);
-			
-			translate([-major_dim/2+velcro_diameter/2+2, -30, -kt/2+.5])
-			cylinder(h=2.5, d=velcro_diameter, center=true);
-			
-			translate([major_dim/2-velcro_diameter/2-2, 30, -kt/2+.5])
-			cylinder(h=2.5, d=velcro_diameter, center=true);
-			
-			translate([major_dim/2-velcro_diameter/2-2, -30, -kt/2+.5])
-			cylinder(h=2.5, d=velcro_diameter, center=true);
-		}
-		else{ //square velcros
-			translate([-major_dim/2+velcro_diameter/2+2, 30, -kt/2+.5])
-			cube(size=[velcro_diameter,velcro_diameter,2.5],center=true);
-			
-			translate([-major_dim/2+velcro_diameter/2+2, -30, -kt/2+.5])
-			cube(size=[velcro_diameter,velcro_diameter,2.5],center=true);
-			
-			translate([major_dim/2-velcro_diameter/2-2, 30, -kt/2+.5])
-			cube(size=[velcro_diameter,velcro_diameter,2.5],center=true);
-			
-			translate([major_dim/2-velcro_diameter/2-2, -30, -kt/2+.5])
-			cube(size=[velcro_diameter,velcro_diameter,2.5],center=true);
-		}
+		shape = (velcro_size<=3) ? "c" : "r";
+		x_l = -major_dim/2 + velcro_diameter/2 + 2;
+		x_r =  major_dim/2 - velcro_diameter/2 - 2;
+		for (xp = [x_l, x_r])
+			for (yp = [30, -30])
+				translate([xp, yp, 0])
+				cut_opening_v2(velcro_diameter, velcro_diameter, shape, "c", "t", 90,90,90,90, 0, -1.75, kt, "keyguard");
 	}
 }
 
