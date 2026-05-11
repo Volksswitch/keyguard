@@ -325,6 +325,28 @@ Address these one at a time, running the test suite after each change.
   tests render every named config to STL and take a very long time. Always explain why
   they are needed and wait for approval before running them.
 
+#### Scope test runs to what you are validating
+
+The full visual suite takes ~25 minutes. When iterating on a **localized bug** —
+a regression flagged in one or two specific test cases while you are fixing a
+single feature — run **only** those test cases, not the full suite. Each tight
+debugging cycle should be measured in single-digit minutes, not in 25-minute
+suite runs.
+
+Use the full `--visual` suite for the **landing** step, when you believe a phase
+is complete and want to confirm nothing unrelated regressed. Use it for the
+**baseline** step, when you need to know whether a failing case was already
+failing before your change. **Do not** use it as your inner-loop validation
+tool while iterating on a known regression.
+
+Rule of thumb before launching any test run: *"Which test cases could possibly
+produce different output as a result of the change I just made?"* If the answer
+is a short, specific list, run only that list. If the answer is genuinely "any
+of them could," run the full suite.
+
+This applies equally to the geometry, smoke, and lint layers — match the test
+scope to the change being validated, not to habit.
+
 ---
 
 ## Code Style Preferences
