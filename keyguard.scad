@@ -3640,13 +3640,23 @@ module cell_ridges(){
 		
 			if (search(current_cell,a_r_a)){
 				slope_adjust = sat/tan(rs_inc_acrylic);
-
-				translate([c__x,c__y,-kt/2])
+				// Route through place_addition_v2 with rridge/cridge. The shape primitives
+				// (rounded_rectangle_wall / circular_wall) have their polygon at z=[0,hgt2]
+				// in local frame; place_addition_v2 adds an internal translate of [..., -sata]
+				// and uses hgt2 = top_slope_mm + sata. To preserve the original wall extent
+				// of z=[-kt/2, -kt/2+height_of_ridge+sat], the call-site translate is
+				// [..., -kt/2+sata] and top_slope_mm = height_of_ridge + sat - sata.
+				ridge_hgt = height_of_ridge + sat - sata;
 				if (cell_shape=="rectangular"){
-					rounded_rectangle_wall(c__w+slope_adjust*2-cell_edge_chamfer,c__h+slope_adjust*2-cell_edge_chamfer,ocr,thickness_of_ridge,height_of_ridge+sat);
+					rw = c__w + slope_adjust*2 - cell_edge_chamfer;
+					rh = c__h + slope_adjust*2 - cell_edge_chamfer;
+					translate([c__x - rw/2, c__y - rh/2, -kt/2 + sata])
+					place_addition_v2(rw, rh, "rridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, ocr, undef);
 				}
 				else{
-					circular_wall(cell_diameter+(slope_adjust)*2-cell_edge_chamfer,thickness_of_ridge,height_of_ridge+sat);
+					cd = cell_diameter + slope_adjust*2 - cell_edge_chamfer;
+					translate([c__x, c__y, -kt/2 + sata])
+					place_addition_v2(0, cd, "cridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, 0, undef);
 				}
 			}
 		}
