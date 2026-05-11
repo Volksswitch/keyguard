@@ -3521,143 +3521,96 @@ module cells(depth){
 	cwid = (cell_shape=="rectangular") ? cw : cell_diameter;
 	chei = (cell_shape=="rectangular") ? ch : cell_diameter;
 
-	difference(){
-		// positive: existing cell cuts (basic cells, merge bridges, 2x2 pyramid cleanup)
-		for (i = [0:row_count-1]){
-			for (j = [0:column_count-1]){
-				current_cell = j+1+i*column_count;
-				cell_x = grid_x0 + j*grid_part_w + grid_part_w/2;
-				cell_y = grid_y0 + i*grid_part_h + grid_part_h/2;
+	for (i = [0:row_count-1]){
+		for (j = [0:column_count-1]){
+			current_cell = j+1+i*column_count;
+			cell_x = grid_x0 + j*grid_part_w + grid_part_w/2;
+			cell_y = grid_y0 + i*grid_part_h + grid_part_h/2;
 
-				c__x = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
-					  (j==column_count-1 && column_count > 1) ? cell_x - col_last_trim/2 :
-					  (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
-					   cell_x;
-				c__y = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
-					  (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
-					  (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
-					   cell_y;
-				c__w = (j==0 && column_count>1) ? cwid - col_first_trim :
-					  (j==column_count-1 && column_count > 1) ? cwid - col_last_trim :
-					  (column_count==1) ? cwid - col_first_trim - col_last_trim :
-					  cwid;
-				c__h = (i==0 && i!=row_count-1) ? chei - row_first_trim :
-					  (i!=0 && i==row_count-1) ? chei - row_last_trim :
-					  (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
-					  chei;
+			c__x = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
+				  (j==column_count-1 && column_count > 1) ? cell_x - col_last_trim/2 :
+				  (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
+				   cell_x;
+			c__y = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
+				  (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
+				  (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
+				   cell_y;
+			c__w = (j==0 && column_count>1) ? cwid - col_first_trim :
+				  (j==column_count-1 && column_count > 1) ? cwid - col_last_trim :
+				  (column_count==1) ? cwid - col_first_trim - col_last_trim :
+				  cwid;
+			c__h = (i==0 && i!=row_count-1) ? chei - row_first_trim :
+				  (i!=0 && i==row_count-1) ? chei - row_last_trim :
+				  (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
+				  chei;
+			mrr = (cell_shape=="rectangular") ? ocr : cell_diameter/2;
 
-				// ignore if this cell is covered
-				if (!search(current_cell,c_t_c)){
-					// if cell is merged horizontally and rectangular
-					if ((search(current_cell,m_cell_h))&&(j!=column_count-1)){
-						translate([c__x+grid_part_w/2,c__y,0])
-						hole_cutter(grid_part_w, c__h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
-					}
-					// if cell is merged vertically and rectangular
-					if((search(current_cell,m_c_v))&&(i!=row_count-1)){
-						translate([c__x, c__y+grid_part_h/2, 0])
-						hole_cutter(c__w, grid_part_h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
-					}
-
-					//clean up center pyramid if a cell is in both horizontal and vertical merge and next cell is also in the vertical merge and the cell above is in the horizontal merge
-					if((search(current_cell,m_cell_h))&&(search(current_cell,m_c_v))&&(search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h))){
-						translate([c__x+grid_part_w/2, c__y+grid_part_h/2, 0])
-						hole_cutter(grid_part_w, grid_part_h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
-					}
-
-					//basic, no-merge cell cut these two statements will have no impact if cell has been merged, cell can be any shape
-					translate([c__x,c__y,0])
-					if (cell_shape=="rectangular"){
-						hole_cutter(c__w+ff,c__h+ff,cts,cbs,rs_inc_acrylic,rs_inc_acrylic,ocr,d);
-					}
-					else{
-						hole_cutter(cell_diameter,cell_diameter,cts,cbs,rs_inc_acrylic,rs_inc_acrylic,cell_diameter/2,d);
-					}
+			// ignore if this cell is covered
+			if (!search(current_cell,c_t_c)){
+				// if cell is merged horizontally and rectangular
+				if ((search(current_cell,m_cell_h))&&(j!=column_count-1)){
+					translate([c__x+grid_part_w/2,c__y,0])
+					hole_cutter(grid_part_w, c__h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
 				}
-			}
-		}
+				// if cell is merged vertically and rectangular
+				if((search(current_cell,m_c_v))&&(i!=row_count-1)){
+					translate([c__x, c__y+grid_part_h/2, 0])
+					hole_cutter(c__w, grid_part_h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
+				}
 
-		// negative: subtract corner fillets at the inner concave corners of L-shaped merges.
-		// Subtracting these quarter-disks from the cut shape leaves a wedge of keyguard
-		// material at each inner corner, producing a convex fillet (from the opening's view).
-		for (i = [0:row_count-1]){
-			for (j = [0:column_count-1]){
-				current_cell = j+1+i*column_count;
-				cell_x = grid_x0 + j*grid_part_w + grid_part_w/2;
-				cell_y = grid_y0 + i*grid_part_h + grid_part_h/2;
+				//clean up center pyramid if a cell is in both horizontal and vertical merge and next cell is also in the vertical merge and the cell above is in the horizontal merge
+				if((search(current_cell,m_cell_h))&&(search(current_cell,m_c_v))&&(search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h))){
+					translate([c__x+grid_part_w/2, c__y+grid_part_h/2, 0])
+					hole_cutter(grid_part_w, grid_part_h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
+				}
 
-				c__x = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
-					  (j==column_count-1 && column_count > 1) ? cell_x - col_last_trim/2 :
-					  (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
-					   cell_x;
-				c__y = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
-					  (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
-					  (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
-					   cell_y;
-				c__w = (j==0 && column_count>1) ? cwid - col_first_trim :
-					  (j==column_count-1 && column_count > 1) ? cwid - col_last_trim :
-					  (column_count==1) ? cwid - col_first_trim - col_last_trim :
-					  cwid;
-				c__h = (i==0 && i!=row_count-1) ? chei - row_first_trim :
-					  (i!=0 && i==row_count-1) ? chei - row_last_trim :
-					  (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
-					  chei;
-				mrr = (cell_shape=="rectangular") ? ocr : cell_diameter/2;
+				//basic, no-merge cell cut these two statements will have no impact if cell has been merged, cell can be any shape
+				translate([c__x,c__y,0])
+				if (cell_shape=="rectangular"){
+					hole_cutter(c__w+ff,c__h+ff,cts,cbs,rs_inc_acrylic,rs_inc_acrylic,ocr,d);
+				}
+				else{
+					hole_cutter(cell_diameter,cell_diameter,cts,cbs,rs_inc_acrylic,rs_inc_acrylic,cell_diameter/2,d);
+				}
 
-				if (!search(current_cell,c_t_c) && mrr > 0){
-					// Config 1: same cell starts H-right and V-up — corner at top-right, fillet in lower-left
+				// Outer-arc cuts at the inner concave corners produced by L-shaped merges.
+				// Uses the same oa1-4 cutting tool as screen_openings, so the chamfer
+				// matches cell_edge_chamfer automatically.  The (x,y) the tool expects is
+				// the tip of the corner; create_cutting_tool's own internal offset of
+				// (+/-r, +/-r) is applied per shape, exactly as the oa1-4 branches in
+				// cut_opening do.
+				if (mrr > 0){
+					// Config 1: same cell starts H-right and V-up — corner at top-right -> oa3
 					if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
 						(search(current_cell,m_c_v))&&(i!=row_count-1)&&
 						!((search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h)))){
-						translate([c__x+c__w/2, c__y+c__h/2, 0])
-						corner_fillet(mrr, "ll", d);
+						translate([c__x+c__w/2+mrr, c__y+c__h/2+mrr, 0])
+						create_cutting_tool(180, 2*mrr, d, cts, "oa", cec);
 					}
-					// Config 2: current starts H-right, cell below starts V-up — corner at bottom-right, fillet in upper-left
+					// Config 2: current starts H-right, cell below starts V-up — corner at bottom-right -> oa4
 					if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
 						(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
 						!((search(current_cell-number_of_columns,m_cell_h))&&(search(current_cell+1-number_of_columns,m_c_v)))){
-						translate([c__x+c__w/2, c__y-c__h/2, 0])
-						corner_fillet(mrr, "ul", d);
+						translate([c__x+c__w/2+mrr, c__y-c__h/2-mrr, 0])
+						create_cutting_tool(90, 2*mrr, d, cts, "oa", cec);
 					}
-					// Config 3: left neighbour starts H-right to current; current starts V-up — corner at top-left, fillet in lower-right
+					// Config 3: left neighbour starts H-right to current; current starts V-up — corner at top-left -> oa2
 					if((search(current_cell,m_c_v))&&(i!=row_count-1)&&
 						(j!=0)&&(search(current_cell-1,m_cell_h))&&
 						!((search(current_cell-1,m_c_v))&&(search(current_cell-1+number_of_columns,m_cell_h)))){
-						translate([c__x-c__w/2, c__y+c__h/2, 0])
-						corner_fillet(mrr, "lr", d);
+						translate([c__x-c__w/2-mrr, c__y+c__h/2+mrr, 0])
+						create_cutting_tool(-90, 2*mrr, d, cts, "oa", cec);
 					}
-					// Config 4: left neighbour starts H-right to current; cell below starts V-up to current — corner at bottom-left, fillet in upper-right
+					// Config 4: left neighbour starts H-right; cell below starts V-up — corner at bottom-left -> oa1
 					if((j!=0)&&(search(current_cell-1,m_cell_h))&&
 						(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
 						!((search(current_cell-1-number_of_columns,m_cell_h))&&(search(current_cell-1-number_of_columns,m_c_v)))){
-						translate([c__x-c__w/2, c__y-c__h/2, 0])
-						corner_fillet(mrr, "ur", d);
+						translate([c__x-c__w/2-mrr, c__y-c__h/2-mrr, 0])
+						create_cutting_tool(0, 2*mrr, d, cts, "oa", cec);
 					}
 				}
 			}
 		}
-	}
-}
-
-// Quarter-disk fillet used to round the concave inner corners of L-shaped
-// merged-cell openings.  Subtracted from the cells() cut so that a wedge of
-// keyguard material remains at the corner, producing a convex fillet (from
-// the opening's view).
-// @param r        Fillet radius in mm
-// @param quadrant "ur" / "ul" / "ll" / "lr" — quadrant in which the
-//                 quarter-disk sits relative to the placement origin
-// @param depth    Z-extent of the fillet in mm
-module corner_fillet(r, quadrant, depth){
-	rotation = (quadrant=="ur") ? 0 :
-			   (quadrant=="ul") ? 90 :
-			   (quadrant=="ll") ? 180 :
-			   270;  // "lr"
-	rotate([0, 0, rotation])
-	translate([0, 0, -depth])
-	linear_extrude(height = 2*depth)
-	intersection(){
-		square([r, r]);
-		circle(r=r);
 	}
 }
 
