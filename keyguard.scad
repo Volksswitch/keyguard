@@ -4876,7 +4876,6 @@ module adding_plastic_v2(additions, where) {
 			// r[2]=font_height, r[7]=z_pos, r[9]=surface, r[13]=sp
 			sp = r[13];
 			surface = (r[9] == "B" || r[9] == "b") ? "b" : undef;
-			shape   = (surface == "b") ? "btext" : "ttext";
 			h_mm = px ? r[2] * mpp : r[2];
 			top_sl = (len(sp) >= 2) ? sp[1] : 0;
 			top_sl_mm = px ? top_sl * mpp : top_sl;
@@ -4889,9 +4888,9 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			translate([x0+x_mm, y0+y_mm, trans-ff])
 			if (addition_ID != "#") {
-				place_addition_v2(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, 0, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other);
+				place_addition_v2(0, h_mm, "text", top_sl, top_sl_mm, bot_sl, 0, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other, surface);
 			} else {
-				#place_addition_v2(0, h_mm, shape, top_sl, top_sl_mm, bot_sl, 0, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other);
+				#place_addition_v2(0, h_mm, "text", top_sl, top_sl_mm, bot_sl, 0, lft_sl, rgt_sl, (px ? r[7]*mpp : r[7]), other, surface);
 			}
 
 		} else if (r[1] == "svg") {
@@ -5831,7 +5830,7 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 // @param right_slope       Right-slope angle in degrees, or valign string for text
 // @param corner_radius     Corner radius or arc radius in mm, or text depth in mm
 // @param other             Text string or secondary numeric value (shape-dependent)
-module place_addition_v2(addition_width, addition_height, shape, top_slope, top_slope_mm, bottom_slope, bottom_slope_mm, left_slope, right_slope, corner_radius, other){
+module place_addition_v2(addition_width, addition_height, shape, top_slope, top_slope_mm, bottom_slope, bottom_slope_mm, left_slope, right_slope, corner_radius, other, surface=undef){
 	if (shape=="bump"){
 		if(addition_width>0){
 			difference(){
@@ -5928,7 +5927,12 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 			import(file = other,center=true);
 		}
 	}
-	else if (shape=="ttext"){
+	else if (shape=="text"){
+		// V2 form: shape="text" + surface "t"/"b". Currently only top-face emboss
+		// (surface != "b") is implemented; bottom-face emboss falls through silently,
+		// matching the pre-V2-native behaviour where place_addition_v2 had no "btext"
+		// branch.
+		is_btext = (surface == "B" || surface == "b");
 		f_s =
 			(bottom_slope=="bold")        ? "Liberation Sans:style=Bold"
 		  : (bottom_slope=="italic")      ? "Liberation Sans:style=Italic"
@@ -5948,7 +5952,7 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 		  : (right_slope=="top")      ? "top"
 		  : "bottom";
 
-		if(addition_height>0 && corner_radius>0){
+		if(!is_btext && addition_height>0 && corner_radius>0){
 			rotate([0,0,top_slope])
 			linear_extrude(height=corner_radius)
 			text(str(other),font = f_s, size=addition_height,valign=vert,halign=horiz);
@@ -7354,7 +7358,7 @@ module engrave_emboss_instruction(){
 		if (keyguard_region=="screen region"){
 			if (cb > 0){
 				translate([x0+x,sy0+y,sat-kt/2-ff])
-				#place_addition_v2(10, t_height, v1_shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
+				#place_addition_v2(10, t_height, "text", direction, direction, font_s, 0, h_align, v_align, cb, text_string, surface);
 			}
 			else{
 				translate([x0+x,sy0+y,ff])
@@ -7365,7 +7369,7 @@ module engrave_emboss_instruction(){
 			yb = (keyguard_region=="case region") ? coy0 : ty0;
 			if (cb > 0){
 				translate([x0+x,yb+y,kt/2-ff])
-				#place_addition_v2(0, t_height, v1_shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
+				#place_addition_v2(0, t_height, "text", direction, direction, font_s, 0, h_align, v_align, cb, text_string, surface);
 			}
 			else{
 				translate([x0+x,yb+y,0])
