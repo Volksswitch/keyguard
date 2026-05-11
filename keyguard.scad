@@ -2008,7 +2008,6 @@ module keyguard(cheat){
 
 						//cut bars and grid cells - which don't move with unequal case opening
 						if (column_count>0 && row_count>0){
-							translate([0,0,sat/2 - kt/2])
 							bars(sat);
 						}
 						
@@ -3414,67 +3413,69 @@ module clip_on_straps_groove(){
 }
 
 // Cuts the status bar, message bar, and command bar openings (upper and lower) through
-// the keyguard at their configured heights and positions.
+// the keyguard at their configured heights and positions. Each bar is a centred
+// rounded rectangle ("r" + anchor "c") cut in the screen region; type="screen"
+// places the cut at the top of the keyguard (sat/2 - kt/2) and applies cell_edge_chamfer.
 // @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
 module bars(depth){
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && expose_upper_command_bar=="no" && sbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
-		hole_cutter(bar_width,sbh_adjust+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 	}
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="no" && sbh_adjust+umbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm+(max(sbh_adjust,0)+umbh_adjust)/2,0])
-		hole_cutter(bar_width,max(sbh_adjust,0)+umbh_adjust+ff,90,bar_edge_slope_inc_acrylic,90,90,bcr,depth);
+		cut_opening_v2(bar_width,max(sbh_adjust,0)+umbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,"screen");
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="yes" && umbh_adjust+ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(max(umbh_adjust,0)+ucbh_adjust)/2,0])
-		hole_cutter(bar_width,max(umbh_adjust+ff,0)+ucbh_adjust,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,max(umbh_adjust+ff,0)+ucbh_adjust,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 	}
-	
+
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="yes" && sbh_adjust+umbh_adjust+ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust)/2,0])
-		hole_cutter(bar_width,max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="no" && umbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm+(umbh_adjust)/2,0])
-		hole_cutter(bar_width,umbh_adjust+ff,90,bar_edge_slope_inc_acrylic,90,90,bcr,depth);
+		cut_opening_v2(bar_width,umbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,"screen");
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="no" && expose_upper_command_bar=="yes" && ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2,0])
-		hole_cutter(bar_width,ucbh_adjust+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 	}
 
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && umbhm>0 && expose_upper_command_bar=="yes" && sbh_adjust+ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
-		hole_cutter(bar_width,sbh_adjust+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2,0])
-		hole_cutter(bar_width,ucbh_adjust+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 	}
 
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && umbhm==0 && expose_upper_command_bar=="yes" && sbh_adjust+ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
-		hole_cutter(bar_width,sbh_adjust+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2+bcr,0])
-		hole_cutter(bar_width,ucbh_adjust+bcr*2+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,ucbh_adjust+bcr*2+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 	}
 
 	if (expose_lower_message_bar=="yes" && expose_lower_command_bar=="no" && lmbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,-shm/2+lmbh_adjust/2+max(lcbh_adjust,0)+adj_bec,0])
-		hole_cutter(bar_width,lmbh_adjust+ff,90,bar_edge_slope_inc_acrylic,90,90,bcr,depth);
+		cut_opening_v2(bar_width,lmbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,"screen");
 	}
 
 	if (expose_lower_message_bar=="no" && expose_lower_command_bar=="yes" && lcbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,-shm/2+lcbhm/2+adj_bec/2,0])
-		hole_cutter(bar_width,lcbh_adjust+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,lcbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 	}
 
 	if (expose_lower_message_bar=="yes" && expose_lower_command_bar=="yes" && (lmbh_adjust+max(lcbh_adjust,0))>0){
 		translate([adj_lec/2-adj_rec/2,-shm/2+(lmbh_adjust+max(lcbh_adjust,0))/2+adj_bec,0])
-		hole_cutter(bar_width,lmbh_adjust+max(lcbh_adjust,0)+ff,90,90,90,90,bcr,depth);
+		cut_opening_v2(bar_width,lmbh_adjust+max(lcbh_adjust,0)+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
 	}
 }
 
