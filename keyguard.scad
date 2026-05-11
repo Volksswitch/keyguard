@@ -2304,13 +2304,13 @@ module keyguard_frame(cheat){
 				   (has_frame && generate=="keyguard frame" && cheat=="no"))){
 					if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, false); else apply_flex_height_shapes(case_additions, false);
 
-					if(is_v2(case_additions)) add_manual_mount_pedestals_v2(case_additions); else add_manual_mount_pedestals(case_additions);
+					if(is_v2(case_additions)) add_manual_mount_pedestals_v2(case_additions, keyguard_frame_thickness); else add_manual_mount_pedestals(case_additions);
 				}
 				if(len(m_c_a)>0 && (!has_frame ||
 				   (has_frame && generate=="keyguard frame" && cheat=="no"))){
 					if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, false); else apply_flex_height_shapes(m_c_a, false);
 
-					if(is_v2(m_c_a)) add_manual_mount_pedestals_v2(m_c_a); else add_manual_mount_pedestals(m_c_a);
+					if(is_v2(m_c_a)) add_manual_mount_pedestals_v2(m_c_a, keyguard_frame_thickness); else add_manual_mount_pedestals(m_c_a);
 				}
 
 				//add engraved text
@@ -2891,20 +2891,17 @@ module create_2D_slide_in_tab(tab_length,tab_width){
 // than emitting these as real case_additions, so that cut_manual_mount_pedestal_slots_v2
 // — which would cut wedge grooves AT each pedestal — does not run on these rows;
 // the wedge grooves for the built-in straps are cut separately by clip_on_straps_groove().
-// @param depth  Keyguard thickness in mm; passed in for call-site symmetry — z is
-//               supplied internally by add_manual_mount_pedestals_v2 (kt/2)
+// @param depth  Surface-z thickness in mm — forwarded to add_manual_mount_pedestals_v2
+//               so pedestals sit on top of the slab at z = depth/2 (kt for the
+//               standard keyguard call site, keyguard_frame_thickness for the frame).
 module add_clip_on_strap_pedestals(depth){
 	// V2 row: [ID, shape, height, width, corner, x, y, cb, [trim]]
 	// addition x/y in rows are in CASE-OPENING-RELATIVE coords (0,0 = case bottom-left).
 	// The V2 dispatcher uses kx0/ky0 (keyguard origin) when generate_keyguard, but
 	// case_x0/case_y0 (case origin) when generating the frame; an outer translate
 	// compensates so the rows can be written case-relative regardless of mode.
-	// shift_z corrects the V2 dispatcher's hardcoded kt/2 pedestal base z to match
-	// the built-in convention of depth/2 — relevant when generating the keyguard
-	// frame, where depth == keyguard_frame_thickness != kt.
 	shift_x = generate_keyguard ? (kw - cow)/2 : 0;
 	shift_y = generate_keyguard ? (kh - coh)/2 : 0;
-	shift_z = (depth - kt)/2;
 	hy_lo = coh/2 - distance_between_horizontal_clips/2 - horizontal_pedestal_width/2 + pedestal_corner_inset + ulbs;
 	hy_hi = coh/2 + distance_between_horizontal_clips/2 + horizontal_pedestal_width/2 - pedestal_corner_inset + ulbs;
 	vx_lo = cow/2 - distance_between_vertical_clips/2 - vertical_pedestal_width/2 + pedestal_corner_inset + ulos;
@@ -2919,8 +2916,8 @@ module add_clip_on_strap_pedestals(depth){
 			[3, "ped2", 0, 0, 0, cow, hy_lo, 0, []],
 			[4, "ped2", 0, 0, 0, cow, hy_hi, 0, []],
 		];
-		translate([shift_x, shift_y, shift_z])
-		add_manual_mount_pedestals_v2(h_rows);
+		translate([shift_x, shift_y, 0])
+		add_manual_mount_pedestals_v2(h_rows, depth);
 	}
 	if(clip_locations=="vertical only" || clip_locations=="horizontal and vertical"){
 		// ped3 = bottom-edge vertical pedestals (anchor at case bottom, offset up);
@@ -2931,8 +2928,8 @@ module add_clip_on_strap_pedestals(depth){
 			[7, "ped1", 0, 0, 0, vx_lo, coh, 0, []],
 			[8, "ped1", 0, 0, 0, vx_hi, coh, 0, []],
 		];
-		translate([shift_x, shift_y, shift_z])
-		add_manual_mount_pedestals_v2(v_rows);
+		translate([shift_x, shift_y, 0])
+		add_manual_mount_pedestals_v2(v_rows, depth);
 	}
 }
 
@@ -5050,10 +5047,16 @@ module add_case_full_height_shapes_v2(c_a, type) {
 
 // V2 version of add_manual_mount_pedestals.
 // Iterates over the case_additions vector and places ped1-4 mount pedestals.
-// @param c_a  Case additions vector (V2 format)
-module add_manual_mount_pedestals_v2(c_a) {
+// @param c_a    Case additions vector (V2 format)
+// @param depth  Surface-z thickness in mm: pedestals sit on top of the slab at z = depth/2.
+//               Defaults to kt for the standard keyguard call site. When called from
+//               keyguard_frame(), pass keyguard_frame_thickness so pedestals sit on the
+//               frame surface rather than at kt/2 (which is below the frame top when
+//               kt != keyguard_frame_thickness).
+module add_manual_mount_pedestals_v2(c_a, depth=kt) {
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
+	pz = depth/2;
 
 	for(i = [0 : len(c_a)-1]) {
 		p = v2_parse_addition(c_a[i]);
@@ -5068,30 +5071,30 @@ module add_manual_mount_pedestals_v2(c_a) {
 		translate([addition_x, addition_y])
 		if (addition_ID != "#") {
 			if (shape == "ped1") {
-				translate([x0, y0-manual_pedestal_edge_inset, kt/2]) rotate([0,0,-90])
+				translate([x0, y0-manual_pedestal_edge_inset, pz]) rotate([0,0,-90])
 				linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, vertical_pedestal_width], center=true);
 			} else if (shape == "ped2") {
-				translate([x0-manual_pedestal_edge_inset, y0, kt/2]) rotate([0,0,0])
+				translate([x0-manual_pedestal_edge_inset, y0, pz]) rotate([0,0,0])
 				linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, horizontal_pedestal_width], center=true);
 			} else if (shape == "ped3") {
-				translate([x0, y0+manual_pedestal_edge_inset, kt/2]) rotate([0,0,-90])
+				translate([x0, y0+manual_pedestal_edge_inset, pz]) rotate([0,0,-90])
 				linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, vertical_pedestal_width], center=true);
 			} else if (shape == "ped4") {
-				translate([x0+manual_pedestal_edge_inset, y0, kt/2]) rotate([0,0,0])
+				translate([x0+manual_pedestal_edge_inset, y0, pz]) rotate([0,0,0])
 				linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, horizontal_pedestal_width], center=true);
 			}
 		} else {
 			if (shape == "ped1") {
-				translate([x0, y0-manual_pedestal_edge_inset, kt/2]) rotate([0,0,-90])
+				translate([x0, y0-manual_pedestal_edge_inset, pz]) rotate([0,0,-90])
 				#linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, vertical_pedestal_width], center=true);
 			} else if (shape == "ped2") {
-				translate([x0-manual_pedestal_edge_inset, y0, kt/2]) rotate([0,0,0])
+				translate([x0-manual_pedestal_edge_inset, y0, pz]) rotate([0,0,0])
 				#linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, horizontal_pedestal_width], center=true);
 			} else if (shape == "ped3") {
-				translate([x0, y0+manual_pedestal_edge_inset, kt/2]) rotate([0,0,-90])
+				translate([x0, y0+manual_pedestal_edge_inset, pz]) rotate([0,0,-90])
 				#linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, vertical_pedestal_width], center=true);
 			} else if (shape == "ped4") {
-				translate([x0+manual_pedestal_edge_inset, y0, kt/2]) rotate([0,0,0])
+				translate([x0+manual_pedestal_edge_inset, y0, pz]) rotate([0,0,0])
 				#linear_extrude(height=pedestal_height, scale=pedestal_taper) square([pedestal_base_size, horizontal_pedestal_width], center=true);
 			}
 		}
