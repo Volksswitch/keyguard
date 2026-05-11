@@ -1293,7 +1293,7 @@ pedestal_edge_inset = 4.3; // distance from case-opening edge to pedestal centre
 pedestal_corner_inset = 4; // inward offset from pedestal width boundary toward clip centre in mm
 
 // Manually placed strap pedestal geometry (ped1–ped4 in case_additions)
-manual_pedestal_edge_inset = 4.5;   // inset from keyguard-opening edge to pedestal centre in mm
+manual_pedestal_edge_inset = 4.3;   // inset from keyguard-opening edge to pedestal centre in mm (matches pedestal_edge_inset so add_clip_on_strap_pedestals can share the ped1-4 V2 placer)
 manual_pedestal_slot_inset = 1.25;  // offset from keyguard edge to groove-slot centre in mm
 
 // Clip viewport layout (positions paired clips side-by-side when rendered individually)
@@ -2884,45 +2884,55 @@ module create_2D_slide_in_tab(tab_length,tab_width){
 }
 
 // Places the four (or eight) tapered pedestals on the case-opening border that
-// clip-on straps snap onto to secure the keyguard.
-// @param depth  Keyguard thickness in mm; used to set the base height of the pedestals
+// clip-on straps snap onto to secure the keyguard. Routes through the V2
+// case_additions placer add_manual_mount_pedestals_v2 with synthetic ped1-4 rows,
+// so this built-in feature shares geometry with user-supplied manual mount
+// pedestals (their insets were unified). We call the V2 placer directly rather
+// than emitting these as real case_additions, so that cut_manual_mount_pedestal_slots_v2
+// — which would cut wedge grooves AT each pedestal — does not run on these rows;
+// the wedge grooves for the built-in straps are cut separately by clip_on_straps_groove().
+// @param depth  Keyguard thickness in mm; passed in for call-site symmetry — z is
+//               supplied internally by add_manual_mount_pedestals_v2 (kt/2)
 module add_clip_on_strap_pedestals(depth){
-	xloc = cow;
-	yloc = coh;
+	// V2 row: [ID, shape, height, width, corner, x, y, cb, [trim]]
+	// addition x/y in rows are in CASE-OPENING-RELATIVE coords (0,0 = case bottom-left).
+	// The V2 dispatcher uses kx0/ky0 (keyguard origin) when generate_keyguard, but
+	// case_x0/case_y0 (case origin) when generating the frame; an outer translate
+	// compensates so the rows can be written case-relative regardless of mode.
+	// shift_z corrects the V2 dispatcher's hardcoded kt/2 pedestal base z to match
+	// the built-in convention of depth/2 — relevant when generating the keyguard
+	// frame, where depth == keyguard_frame_thickness != kt.
+	shift_x = generate_keyguard ? (kw - cow)/2 : 0;
+	shift_y = generate_keyguard ? (kh - coh)/2 : 0;
+	shift_z = (depth - kt)/2;
+	hy_lo = coh/2 - distance_between_horizontal_clips/2 - horizontal_pedestal_width/2 + pedestal_corner_inset + ulbs;
+	hy_hi = coh/2 + distance_between_horizontal_clips/2 + horizontal_pedestal_width/2 - pedestal_corner_inset + ulbs;
+	vx_lo = cow/2 - distance_between_vertical_clips/2 - vertical_pedestal_width/2 + pedestal_corner_inset + ulos;
+	vx_hi = cow/2 + distance_between_vertical_clips/2 + vertical_pedestal_width/2 - pedestal_corner_inset + ulos;
 
 	if(clip_locations=="horizontal only" || clip_locations=="horizontal and vertical"){
-		translate([-xloc/2+pedestal_edge_inset, -distance_between_horizontal_clips/2-horizontal_pedestal_width/2+pedestal_corner_inset+ulbs, depth/2])
-		linear_extrude(height=pedestal_height,scale=pedestal_taper)
-		square([pedestal_base_size,horizontal_pedestal_width],center=true);
-
-		translate([-xloc/2+pedestal_edge_inset , distance_between_horizontal_clips/2+horizontal_pedestal_width/2-pedestal_corner_inset+ulbs, depth/2])
-		linear_extrude(height=pedestal_height,scale=pedestal_taper)
-		square([pedestal_base_size,horizontal_pedestal_width],center=true);
-
-		translate([xloc/2-pedestal_edge_inset, -distance_between_horizontal_clips/2-horizontal_pedestal_width/2+pedestal_corner_inset+ulbs, depth/2])
-		linear_extrude(height=pedestal_height,scale=pedestal_taper)
-		square([pedestal_base_size,horizontal_pedestal_width],center=true);
-
-		translate([xloc/2-pedestal_edge_inset, distance_between_horizontal_clips/2+horizontal_pedestal_width/2-pedestal_corner_inset+ulbs, depth/2])
-		linear_extrude(height=pedestal_height,scale=pedestal_taper)
-		square([pedestal_base_size,horizontal_pedestal_width],center=true);
+		// ped4 = left-edge horizontal pedestals (anchor at case left, offset right by inset);
+		// ped2 = right-edge pedestals (anchor at case right via addition_x=cow, offset left).
+		h_rows = [
+			[1, "ped4", 0, 0, 0, 0,   hy_lo, 0, []],
+			[2, "ped4", 0, 0, 0, 0,   hy_hi, 0, []],
+			[3, "ped2", 0, 0, 0, cow, hy_lo, 0, []],
+			[4, "ped2", 0, 0, 0, cow, hy_hi, 0, []],
+		];
+		translate([shift_x, shift_y, shift_z])
+		add_manual_mount_pedestals_v2(h_rows);
 	}
 	if(clip_locations=="vertical only" || clip_locations=="horizontal and vertical"){
-		translate([-distance_between_vertical_clips/2-vertical_pedestal_width/2+pedestal_corner_inset+ulos, -yloc/2+pedestal_edge_inset, depth/2])
-		linear_extrude(height=pedestal_height,scale=pedestal_taper)
-		square([vertical_pedestal_width,pedestal_base_size],center=true);
-
-		translate([distance_between_vertical_clips/2+vertical_pedestal_width/2-pedestal_corner_inset+ulos, -yloc/2+pedestal_edge_inset, depth/2])
-		linear_extrude(height=pedestal_height,scale=pedestal_taper)
-		square([vertical_pedestal_width,pedestal_base_size],center=true);
-
-		translate([-distance_between_vertical_clips/2-vertical_pedestal_width/2+pedestal_corner_inset+ulos, yloc/2-pedestal_edge_inset, depth/2])
-		linear_extrude(height=pedestal_height,scale=pedestal_taper)
-		square([vertical_pedestal_width,pedestal_base_size],center=true);
-
-		translate([distance_between_vertical_clips/2+vertical_pedestal_width/2-pedestal_corner_inset+ulos, yloc/2-pedestal_edge_inset , depth/2])
-		linear_extrude(height=pedestal_height,scale=pedestal_taper)
-		square([vertical_pedestal_width,pedestal_base_size],center=true);
+		// ped3 = bottom-edge vertical pedestals (anchor at case bottom, offset up);
+		// ped1 = top-edge pedestals (anchor at case top via addition_y=coh, offset down).
+		v_rows = [
+			[5, "ped3", 0, 0, 0, vx_lo, 0,   0, []],
+			[6, "ped3", 0, 0, 0, vx_hi, 0,   0, []],
+			[7, "ped1", 0, 0, 0, vx_lo, coh, 0, []],
+			[8, "ped1", 0, 0, 0, vx_hi, coh, 0, []],
+		];
+		translate([shift_x, shift_y, shift_z])
+		add_manual_mount_pedestals_v2(v_rows);
 	}
 }
 
