@@ -5568,7 +5568,10 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 // @param type          Region: "screen", "case", "keyguard", or "tablet"
 // @param rotation      Z-rotation of the cut in degrees (default 0)
 module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation=0){
-	cut_opening(cut_width, cut_height, v2_shape_code(shape, anchor, surface), top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation);
+	// Normalise anchor/surface to lowercase — v2_shape_code only matches "c"/"b".
+	anc = (anchor  == "C" || anchor  == "c") ? "c" : anchor;
+	srf = (surface == "B" || surface == "b") ? "b" : surface;
+	cut_opening(cut_width, cut_height, v2_shape_code(shape, anc, srf), top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation);
 }
 
 
@@ -7402,7 +7405,10 @@ module engrave_emboss_instruction(){
 		 (keyguard_location == "top surface") ? tx0 : -tx0;
 		 
 	t_height = text_height;
-	shape = (keyguard_location == "top surface") ? "ttext" : "btext";
+	// Use V2 form: shape="text" + surface "t"/"b"; v2_shape_code maps to V1 "ttext"/"btext"
+	// internally. Built-in code never references V1-only shape codes directly.
+	surface = (keyguard_location == "top surface") ? "t" : "b";
+	v1_shape = v2_shape_code("text", undef, surface);
 	direction = (text_angle=="vertical downward") ? -90 :
 	              (text_angle=="horizontal") ? 0 :
 	              (text_angle=="vertical upward") ? 90 :
@@ -7418,34 +7424,34 @@ module engrave_emboss_instruction(){
 		if (keyguard_region=="screen region"){
 			if (cb > 0){
 				translate([x0+x,sy0+y,sat-kt/2-ff])
-				#place_addition_v2(10, t_height, shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
+				#place_addition_v2(10, t_height, v1_shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
 			}
 			else{
 				translate([x0+x,sy0+y,ff])
-				#cut_opening(0, t_height, shape, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth*2,"screen");
+				#cut_opening_v2(0, t_height, "text", undef, surface, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth*2,"screen");
 			}
 		}
 		else{
 			yb = (keyguard_region=="case region") ? coy0 : ty0;
 			if (cb > 0){
 				translate([x0+x,yb+y,kt/2-ff])
-				#place_addition_v2(0, t_height, shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
+				#place_addition_v2(0, t_height, v1_shape, direction, direction, font_s, 0, h_align, v_align, cb, text_string);
 			}
 			else{
 				translate([x0+x,yb+y,0])
-				#cut_opening(0, t_height, shape, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth,"case");
+				#cut_opening_v2(0, t_height, "text", undef, surface, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth,"case");
 			}
 		}
 	}
 	else{ // first layer for SVG/DXF file
 		if (keyguard_region=="screen region"){
 			translate([x0+x,sy0+y,ff])
-			#cut_opening_2d(0, t_height, shape, direction, cb);
+			#cut_opening_2d(0, t_height, v1_shape, direction, cb);
 		}
 		else{
 			yb = (keyguard_region=="case region") ? coy0 : ty0;
 			translate([x0+x,yb+y,-ff])
-			#cut_opening_2d(0, t_height, shape, direction, cb);
+			#cut_opening_2d(0, t_height, v1_shape, direction, cb);
 		}
 	}
 }
