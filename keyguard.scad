@@ -3240,41 +3240,36 @@ module mounting_points(){
 }
 
 // Cuts four pairs of suction-cup mounting holes (outer recess and inner bore)
-// into the border region of the keyguard.
+// into the border region of the keyguard, plus four retainer-clip slots cut
+// partway into the top surface. Routes through cut_opening_v2 — circles are
+// shape "c" anchored at centre; the retainer slots are shape "r" anchored at
+// centre with the "other" parameter giving the cut depth from the top face.
+// Refactor side-effect: the kec edge chamfer (1mm default) now applies to
+// every cut here. Previously these were raw cylinder()/cube() with sharp edges.
 module suction_cups(){
 	major_dim = max(tablet_width,tablet_height);
+	x_l = -major_dim/2 + left_border_width/2;
+	x_r =  major_dim/2 - right_border_width/2;
+	slot_dep = kt - 2; // retainer slot cuts kt-2 mm from the top face, preserving a 2 mm floor
 
-	translate([-major_dim/2+left_border_width/2, 40, 0])
-	cylinder(h=kt*3, d=7.5, center=true);
-	translate([-major_dim/2+left_border_width/2, 40-5, 0])
-	cylinder(h=kt*3, d=4.5, center=true);
-	
-	translate([-major_dim/2+left_border_width/2, -40, 0])
-	cylinder(h=kt*3, d=7.5, center=true);
-	translate([-major_dim/2+left_border_width/2, -40+5, 0])
-	cylinder(h=kt*3, d=4.5, center=true);
-	
-	translate([major_dim/2-right_border_width/2, 40, 0])
-	cylinder(h=kt*3, d=7.5, center=true);
-	translate([major_dim/2-right_border_width/2, 40-5, 0])
-	cylinder(h=kt*3, d=4.5, center=true);
-	
-	translate([major_dim/2-right_border_width/2, -40, 0])
-	cylinder(h=kt*3, d=7.5, center=true);
-	translate([major_dim/2-right_border_width/2, -40+5, 0])
-	cylinder(h=kt*3, d=4.5, center=true);
-	
-	translate([-major_dim/2+left_border_width/2-5, 30.5,-kt/2+2])
-	cube(size=[10,15,kt]);
-	
-	translate([-major_dim/2+left_border_width/2-5, -45.5,-kt/2+2])
-	cube(size=[10,15,kt]);
+	for (xp = [x_l, x_r]) {
+		// Outer suction-cup recess + inner bore at each of the four border positions.
+		for (yc = [40, -40]) {
+			translate([xp, yc, 0])
+			cut_opening_v2(7.5, 7.5, "c", "c", "t", 90,90,90,90, 0, undef, kt, "keyguard");
 
-	translate([major_dim/2-right_border_width/2-5, 30.5,-kt/2+2])
-	cube(size=[10,15,kt]);
-	
-	translate([major_dim/2-right_border_width/2-5, -45.5,-kt/2+2])
-	cube(size=[10,15,kt]);
+			// Inner bore is offset toward the keyguard interior — +5 (toward 0) on the
+			// upper position, -5 (toward 0) on the lower one.
+			y_inner = (yc > 0) ? yc - 5 : yc + 5;
+			translate([xp, y_inner, 0])
+			cut_opening_v2(4.5, 4.5, "c", "c", "t", 90,90,90,90, 0, undef, kt, "keyguard");
+		}
+		// Retainer-clip slots: 10×15 partial-depth pockets straddling each border position.
+		// y centres at 38 (upper) and -38 (lower) match the original 30.5+15/2 / -45.5+15/2 math.
+		for (yc = [38, -38])
+			translate([xp, yc, 0])
+			cut_opening_v2(10, 15, "r", "c", "t", 90,90,90,90, 0, slot_dep, kt, "keyguard");
+	}
 }
 
 // Cuts four shallow recesses on the bottom surface of the keyguard border to
