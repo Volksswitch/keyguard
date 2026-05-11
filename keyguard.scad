@@ -2013,7 +2013,7 @@ module keyguard(cheat){
 						
 						//cut openings for cells
 						if (column_count>0 && row_count>0){
-							translate([0,0,-ff-(kt-sat)/2])
+							translate([0,0,-ff])
 							bounded_cells(sat);
 						}
 						
@@ -3480,20 +3480,24 @@ module bars(depth){
 }
 
 // Generates grid cell openings clipped to the adjusted grid boundary, trimming
-// any cells that extend outside the configured grid area.
+// any cells that extend outside the configured grid area. Cells now produce their
+// cuts at the screen-area z via cut_opening_v2(type="screen"); the clipping cube
+// is made deliberately tall (kt+100) so the clip is z-invariant, and the
+// grid-hole tool routes through cut_opening_v2(type="screen") to match the cell
+// frame.
 // @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
 module bounded_cells(depth){
 	adj_grid_width = grid_width-col_first_trim-col_last_trim;
 	adj_grid_height = grid_height-row_first_trim-row_last_trim;
-	
+
 	difference(){
 		cells(depth);
 		difference(){
-			translate([grid_x0-20,grid_y0-20,-depth/2])
-			cube([grid_width+40,grid_height+40,depth+2*ff]);
-			
-			translate([grid_x0+col_first_trim+adj_grid_width/2, grid_y0+row_first_trim+adj_grid_height/2,ff])
-			hole_cutter(adj_grid_width, adj_grid_height,90,90,90,90,ocr,depth+4*ff);
+			translate([grid_x0-20,grid_y0-20,-kt/2-50])
+			cube([grid_width+40,grid_height+40,kt+100]);
+
+			translate([grid_x0+col_first_trim+adj_grid_width/2, grid_y0+row_first_trim+adj_grid_height/2,0])
+			cut_opening_v2(adj_grid_width, adj_grid_height, "r", "c", "t", 90,90,90,90, ocr, undef, depth+4*ff, "screen");
 		}
 	}
 }
@@ -3539,63 +3543,62 @@ module cells(depth){
 				// if cell is merged horizontally and rectangular
 				if ((search(current_cell,m_cell_h))&&(j!=column_count-1)){
 					translate([c__x+grid_part_w/2,c__y,0])
-					hole_cutter(grid_part_w, c__h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
+					cut_opening_v2(grid_part_w, c__h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, "screen");
 				}
 				// if cell is merged vertically and rectangular
 				if((search(current_cell,m_c_v))&&(i!=row_count-1)){
 					translate([c__x, c__y+grid_part_h/2, 0])
-					hole_cutter(c__w, grid_part_h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
+					cut_opening_v2(c__w, grid_part_h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, "screen");
 				}
 
 				//clean up center pyramid if a cell is in both horizontal and vertical merge and next cell is also in the vertical merge and the cell above is in the horizontal merge
 				if((search(current_cell,m_cell_h))&&(search(current_cell,m_c_v))&&(search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h))){
 					translate([c__x+grid_part_w/2, c__y+grid_part_h/2, 0])
-					hole_cutter(grid_part_w, grid_part_h, cts,cbs,rs_inc_acrylic,rs_inc_acrylic,0,d);
+					cut_opening_v2(grid_part_w, grid_part_h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, "screen");
 				}
 
 				//basic, no-merge cell cut these two statements will have no impact if cell has been merged, cell can be any shape
 				translate([c__x,c__y,0])
 				if (cell_shape=="rectangular"){
-					hole_cutter(c__w+ff,c__h+ff,cts,cbs,rs_inc_acrylic,rs_inc_acrylic,ocr,d);
+					cut_opening_v2(c__w+ff,c__h+ff, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, ocr, undef, d, "screen");
 				}
 				else{
-					hole_cutter(cell_diameter,cell_diameter,cts,cbs,rs_inc_acrylic,rs_inc_acrylic,cell_diameter/2,d);
+					cut_opening_v2(cell_diameter,cell_diameter, "c","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, "screen");
 				}
 
 				// Outer-arc cuts at the inner concave corners produced by L-shaped merges.
-				// Uses the same oa1-4 cutting tool as screen_openings, so the chamfer
-				// matches cell_edge_chamfer automatically.  The (x,y) the tool expects is
-				// the tip of the corner; create_cutting_tool's own internal offset of
-				// (+/-r, +/-r) is applied per shape, exactly as the oa1-4 branches in
-				// cut_opening do.
+				// Routes through cut_opening_v2 so the chamfer matches cell_edge_chamfer
+				// automatically. cut_opening's oa1-4 branches apply their own (+/-r, +/-r)
+				// internal offset, so the (x,y) here is the cell's geometric corner
+				// (not corner + mrr as the previous direct create_cutting_tool calls used).
 				if (mrr > 0){
 					// Config 1: same cell starts H-right and V-up — corner at top-right -> oa3
 					if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
 						(search(current_cell,m_c_v))&&(i!=row_count-1)&&
 						!((search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h)))){
-						translate([c__x+c__w/2+mrr, c__y+c__h/2+mrr, 0])
-						create_cutting_tool(180, 2*mrr, d, cts, "oa", cec);
+						translate([c__x+c__w/2, c__y+c__h/2, 0])
+						cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, mrr, undef, d, "screen");
 					}
 					// Config 2: current starts H-right, cell below starts V-up — corner at bottom-right -> oa4
 					if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
 						(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
 						!((search(current_cell-number_of_columns,m_cell_h))&&(search(current_cell+1-number_of_columns,m_c_v)))){
-						translate([c__x+c__w/2+mrr, c__y-c__h/2-mrr, 0])
-						create_cutting_tool(90, 2*mrr, d, cts, "oa", cec);
+						translate([c__x+c__w/2, c__y-c__h/2, 0])
+						cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, mrr, undef, d, "screen");
 					}
 					// Config 3: left neighbour starts H-right to current; current starts V-up — corner at top-left -> oa2
 					if((search(current_cell,m_c_v))&&(i!=row_count-1)&&
 						(j!=0)&&(search(current_cell-1,m_cell_h))&&
 						!((search(current_cell-1,m_c_v))&&(search(current_cell-1+number_of_columns,m_cell_h)))){
-						translate([c__x-c__w/2-mrr, c__y+c__h/2+mrr, 0])
-						create_cutting_tool(-90, 2*mrr, d, cts, "oa", cec);
+						translate([c__x-c__w/2, c__y+c__h/2, 0])
+						cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, mrr, undef, d, "screen");
 					}
 					// Config 4: left neighbour starts H-right; cell below starts V-up — corner at bottom-left -> oa1
 					if((j!=0)&&(search(current_cell-1,m_cell_h))&&
 						(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
 						!((search(current_cell-1-number_of_columns,m_cell_h))&&(search(current_cell-1-number_of_columns,m_c_v)))){
-						translate([c__x-c__w/2-mrr, c__y-c__h/2-mrr, 0])
-						create_cutting_tool(0, 2*mrr, d, cts, "oa", cec);
+						translate([c__x-c__w/2, c__y-c__h/2, 0])
+						cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, mrr, undef, d, "screen");
 					}
 				}
 			}
@@ -5571,7 +5574,12 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	// Normalise anchor/surface to lowercase — v2_shape_code only matches "c"/"b".
 	anc = (anchor  == "C" || anchor  == "c") ? "c" : anchor;
 	srf = (surface == "B" || surface == "b") ? "b" : surface;
-	cut_opening(cut_width, cut_height, v2_shape_code(shape, anc, srf), top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation);
+	// V1 distinguishes sharp ("r"/"cr") from rounded ("rr"/"crr") rectangles. Promote
+	// when corner > 0 — matches the dispatcher logic in cut_screen_openings_v2.
+	v1_base = v2_shape_code(shape, anc, srf);
+	v1_shape = (v1_base == "r"  && corner > 0) ? "rr"  :
+	           (v1_base == "cr" && corner > 0) ? "crr" : v1_base;
+	cut_opening(cut_width, cut_height, v1_shape, top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation);
 }
 
 
