@@ -1904,7 +1904,7 @@ module keyguard(cheat){
 					
 									translate([0 ,0,-kt/2])
 									linear_extrude(height=shelf_t)
-									build_addition(shelf_width, shelf_height, "crr", scr);
+									build_addition(shelf_width, shelf_height, "r", scr);
 								}
 								
 								// adding manual slide-in tabs, other shapes not full keyguard height, and pedestals for clip-on straps
@@ -2285,7 +2285,7 @@ module keyguard_frame(cheat){
 	
 					translate([0 ,0,-keyguard_frame_thickness/2])
 					linear_extrude(height=shelf_t)
-					build_addition(shelf_width, shelf_height, "crr", scr);
+					build_addition(shelf_width, shelf_height, "r", scr);
 				}
 				base_keyguard(fw,fh,fcr,keyguard_frame_thickness,"no");
 
@@ -7332,10 +7332,10 @@ module engrave_emboss_instruction(){
 		 (keyguard_location == "top surface") ? tx0 : -tx0;
 		 
 	t_height = text_height;
-	// Use V2 form: shape="text" + surface "t"/"b"; v2_shape_code maps to V1 "ttext"/"btext"
-	// internally. Built-in code never references V1-only shape codes directly.
+	// V2 form: shape="text" + surface "t"/"b". cut_opening_v2, place_addition_v2,
+	// and cut_opening_2d_v2 dispatch on the V2 form natively — no V1 ttext/btext
+	// codes referenced here.
 	surface = (keyguard_location == "top surface") ? "t" : "b";
-	v1_shape = v2_shape_code("text", undef, surface);
 	direction = (text_angle=="vertical downward") ? -90 :
 	              (text_angle=="horizontal") ? 0 :
 	              (text_angle=="vertical upward") ? 90 :
@@ -7373,12 +7373,12 @@ module engrave_emboss_instruction(){
 	else{ // first layer for SVG/DXF file
 		if (keyguard_region=="screen region"){
 			translate([x0+x,sy0+y,ff])
-			#cut_opening_2d(0, t_height, v1_shape, direction, cb);
+			#cut_opening_2d_v2(0, t_height, "text", undef, direction, cb);
 		}
 		else{
 			yb = (keyguard_region=="case region") ? coy0 : ty0;
 			translate([x0+x,yb+y,-ff])
-			#cut_opening_2d(0, t_height, v1_shape, direction, cb);
+			#cut_opening_2d_v2(0, t_height, "text", undef, direction, cb);
 		}
 	}
 }
