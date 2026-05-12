@@ -4182,7 +4182,7 @@ module cut_screen_openings(s_o,depth){
 // matching the V1 normalisation rule (0 means "vertical / no slope").
 // @param slopes  The [edge_slopes] sub-array from a V2 row
 // @param idx     0 = top, 1 = bottom, 2 = left, 3 = right
-// @param shape   Resolved V1 shape name (suppresses 0→90 for special shapes)
+// @param shape   V2 shape name (suppresses 0→90 for special shapes)
 function v2_slope(slopes, idx, shape) =
 	let(
 		n   = (slopes == undef) ? 0 : len(slopes),
@@ -4191,9 +4191,9 @@ function v2_slope(slopes, idx, shape) =
 		      (idx < n)  ? slopes[idx] : slopes[0],
 		is_special = (shape == "svg"    || shape == "ridge"   || shape == "hridge"  ||
 		              shape == "vridge" || shape == "cridge"  || shape == "rridge"  ||
-		              shape == "crridge"|| shape == "hdridge" || shape == "aridge1" ||
-		              shape == "aridge2"|| shape == "aridge3" || shape == "aridge4" ||
-		              shape == "ttext"  || shape == "btext"   || shape == "bump")
+		              shape == "hdridge"|| shape == "aridge1" || shape == "aridge2" ||
+		              shape == "aridge3"|| shape == "aridge4" || shape == "text"    ||
+		              shape == "bump")
 	)
 	(raw == 0 && !is_special) ? 90 : raw;
 
@@ -4219,24 +4219,6 @@ function v2_v_align_code(s) =
 	(s == "baseline") ? 2 :
 	(s == "center")   ? 3 :
 	(s == "top")      ? 4 : 1;
-
-// Resolves the V1-compatible shape code from a V2 shape name plus the
-// optional anchor and surface fields:
-//   "text" + surface "b"  → "btext"   "text" + other  → "ttext"
-//   "r"    + anchor  "c"  → "cr"      "rr"   + anchor "c" → "crr"
-//   "hd"   + anchor  "L" (default)  → "lhd" (L-anchored half-disc)
-//   "hd"   + anchor  "c"            → "hd"  (C-anchored, unchanged)
-//   "c"    + anchor  "L" (default)  → "lc"  (L-anchored circle)
-//   "c"    + anchor  "c"            → "c"   (C-anchored, unchanged)
-//   all other shapes pass through unchanged.
-function v2_shape_code(shape_raw, anchor, surface) =
-	(shape_raw == "text" && surface == "b") ? "btext" :
-	(shape_raw == "text")                   ? "ttext" :
-	(shape_raw == "r"  && anchor == "c")    ? "cr"    :
-	(shape_raw == "rr" && anchor == "c")    ? "crr"   :
-	(shape_raw == "hd" && anchor != "c")    ? "lhd"   :
-	(shape_raw == "c"  && anchor != "c")    ? "lc"    :
-	shape_raw;
 
 // ---------------------------------------------------------------------------
 // V2 explicit opening row format — 14 fixed columns, all fields mandatory:
@@ -4684,7 +4666,9 @@ module cut_tablet_openings_v2(t_o, depth) {
 // Geometry-only helper for the positive-cb (emboss) branch of adding_plastic_v2.
 // All translate/rotate/hole_cutter calls are inside this module so that the
 // caller can apply the # debug modifier by writing #place_emboss_v2(...).
-// @param shape_b   Resolved shape code (r, rr, cr, crr, lc, c, lhd, hd)
+// V2-native: dispatches on shape + anchor + corner instead of V1 shape codes.
+// @param shape     V2 shape: "r", "c", "hd"
+// @param anchor    undef/"L"/"l" (L-anchored) or "C"/"c" (centred)
 // @param xb, yb    Base XY position (x0+x_mm, y0+y_mm) from the caller
 // @param trans     Base Z translation from adding_plastic_v2
 // @param rot_b     Z-axis rotation in degrees
@@ -4692,10 +4676,10 @@ module cut_tablet_openings_v2(t_o, depth) {
 // @param dep_b     Full emboss depth in mm
 // @param main_dep_b  Depth of the main body (dep_b minus chamfer if any)
 // @param top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b  Edge slopes
-// @param c_r_b     Corner radius in mm
+// @param c_r_b     Corner radius in mm (used as-is for "r"; computed from dims for "c"/"hd")
 // @param has_ch_b  1 if a top chamfer cap should be added, 0 otherwise
 // @param ec_b      Edge chamfer size in mm
-module place_emboss_v2(shape_b, xb, yb, trans, rot_b,
+module place_emboss_v2(shape, anchor, xb, yb, trans, rot_b,
                        w_mm_b, h_mm_b, dep_b, main_dep_b,
                        top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b,
                        c_r_b, has_ch_b, ec_b) {
@@ -4703,61 +4687,40 @@ module place_emboss_v2(shape_b, xb, yb, trans, rot_b,
 	// is at the top (apex) and the wide face is at the keyguard surface — a mountain
 	// shape. The flip inverts y, so top_sl and bot_sl are swapped in the call so
 	// that top_sl still widens the +y edge and bot_sl widens the -y edge at the base.
-	if (shape_b == "r" || shape_b == "rr") {
+	is_c = (anchor == "C" || anchor == "c");
+
+	if (shape == "r") {
 		if (w_mm_b > 0) {
-			translate([xb+w_mm_b/2, yb+h_mm_b/2, trans + main_dep_b/2])
+			cx = is_c ? xb : xb + w_mm_b/2;
+			cy = is_c ? yb : yb + h_mm_b/2;
+			translate([cx, cy, trans + main_dep_b/2])
 			rotate([0,0,rot_b]) rotate([180,0,0])
 			hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
 			if (has_ch_b)
-				translate([xb+w_mm_b/2, yb+h_mm_b/2, trans + dep_b - ec_b/2])
+				translate([cx, cy, trans + dep_b - ec_b/2])
 				rotate([0,0,rot_b]) rotate([180,0,0])
 				cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, c_r_b-ec_b), ec_b);
 		}
-	} else if (shape_b == "cr" || shape_b == "crr") {
-		if (w_mm_b > 0) {
-			translate([xb, yb, trans + main_dep_b/2])
-			rotate([0,0,rot_b]) rotate([180,0,0])
-			hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, c_r_b, main_dep_b, 0);
-			if (has_ch_b)
-				translate([xb, yb, trans + dep_b - ec_b/2])
-				rotate([0,0,rot_b]) rotate([180,0,0])
-				cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, c_r_b-ec_b), ec_b);
-		}
-	} else if (shape_b == "lc") {
-		translate([xb+h_mm_b/2, yb+h_mm_b/2, trans + main_dep_b/2])
+	} else if (shape == "c") {
+		cx = is_c ? xb : xb + h_mm_b/2;
+		cy = is_c ? yb : yb + h_mm_b/2;
+		translate([cx, cy, trans + main_dep_b/2])
 		rotate([0,0,rot_b]) rotate([180,0,0])
 		hole_cutter(h_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
 		if (has_ch_b)
-			translate([xb+h_mm_b/2, yb+h_mm_b/2, trans + dep_b - ec_b/2])
+			translate([cx, cy, trans + dep_b - ec_b/2])
 			rotate([0,0,rot_b]) rotate([180,0,0])
 			cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
-	} else if (shape_b == "c") {
-		translate([xb, yb, trans + main_dep_b/2])
-		rotate([0,0,rot_b]) rotate([180,0,0])
-		hole_cutter(h_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, h_mm_b/2, main_dep_b, 0);
-		if (has_ch_b)
-			translate([xb, yb, trans + dep_b - ec_b/2])
-			rotate([0,0,rot_b]) rotate([180,0,0])
-			cut(max(ff, h_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, h_mm_b/2-ec_b), ec_b);
-	} else if (shape_b == "lhd") {
+	} else if (shape == "hd") {
 		if (w_mm_b > 0) {
 			m_b = min(w_mm_b, h_mm_b);
-			translate([xb+w_mm_b/2, yb+h_mm_b/2, trans + main_dep_b/2])
+			cx = is_c ? xb : xb + w_mm_b/2;
+			cy = is_c ? yb : yb + h_mm_b/2;
+			translate([cx, cy, trans + main_dep_b/2])
 			rotate([0,0,rot_b]) rotate([180,0,0])
 			hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
 			if (has_ch_b)
-				translate([xb+w_mm_b/2, yb+h_mm_b/2, trans + dep_b - ec_b/2])
-				rotate([0,0,rot_b]) rotate([180,0,0])
-				cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, m_b/2-ec_b), ec_b);
-		}
-	} else if (shape_b == "hd") {
-		if (w_mm_b > 0) {
-			m_b = min(w_mm_b, h_mm_b);
-			translate([xb, yb, trans + main_dep_b/2])
-			rotate([0,0,rot_b]) rotate([180,0,0])
-			hole_cutter(w_mm_b, h_mm_b, bot_sl_b, top_sl_b, lft_sl_b, rgt_sl_b, m_b/2, main_dep_b, 0);
-			if (has_ch_b)
-				translate([xb, yb, trans + dep_b - ec_b/2])
+				translate([cx, cy, trans + dep_b - ec_b/2])
 				rotate([0,0,rot_b]) rotate([180,0,0])
 				cut(max(ff, w_mm_b-2*ec_b), max(ff, h_mm_b-2*ec_b), 45, 45, 45, 45, max(0, m_b/2-ec_b), ec_b);
 		}
@@ -4904,17 +4867,14 @@ module adding_plastic_v2(additions, where) {
 			sp_b = r[13];
 			rot_b = (len(sp_b) > 0 && is_num(sp_b[0])) ? sp_b[0] : 0;
 			anchor   = ((r[8] == "C" || r[8] == "c")) ? "c" : undef;
-			shape_base = v2_shape_code(r[1], anchor, undef);
-			shape_b  = (shape_base == "r"  && r[4] > 0) ? "rr"  :
-			           (shape_base == "cr" && r[4] > 0) ? "crr" : shape_base;
 			h_mm_b   = px ? r[2] * mpp : r[2];
 			w_mm_b   = px ? (r[1] == "c" ? 0 : r[3]) * mpp : (r[1] == "c" ? 0 : r[3]);
 			dep_b    = px ? r[7] * mpp : r[7];
 			c_r_b    = (w_mm_b > 0 && h_mm_b > 0) ? min(r[4], min(w_mm_b, h_mm_b)/2) : r[4];
-			top_sl_b = is_laser_cut ? 90 : v2_slope(es, 0, shape_b);
-			bot_sl_b = is_laser_cut ? 90 : v2_slope(es, 1, shape_b);
-			lft_sl_b = is_laser_cut ? 90 : v2_slope(es, 2, shape_b);
-			rgt_sl_b = is_laser_cut ? 90 : v2_slope(es, 3, shape_b);
+			top_sl_b = is_laser_cut ? 90 : v2_slope(es, 0, r[1]);
+			bot_sl_b = is_laser_cut ? 90 : v2_slope(es, 1, r[1]);
+			lft_sl_b = is_laser_cut ? 90 : v2_slope(es, 2, r[1]);
+			rgt_sl_b = is_laser_cut ? 90 : v2_slope(es, 3, r[1]);
 			ec_b     = (where == "screen") ? cec : kec;
 			has_ch_b = ec_b > 0 && dep_b > ec_b;
 			main_dep_b = has_ch_b ? dep_b - ec_b : dep_b;
@@ -4923,12 +4883,12 @@ module adding_plastic_v2(additions, where) {
 			       (px ? y_raw * mpp : y_raw);
 			if (is_3d_printed && h_mm_b > 0) {
 				if (addition_ID != "#") {
-					place_emboss_v2(shape_b, x0+x_mm, y0+y_mm, trans, rot_b,
+					place_emboss_v2(r[1], anchor, x0+x_mm, y0+y_mm, trans, rot_b,
 					                w_mm_b, h_mm_b, dep_b, main_dep_b,
 					                top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b,
 					                c_r_b, has_ch_b, ec_b);
 				} else {
-					#place_emboss_v2(shape_b, x0+x_mm, y0+y_mm, trans, rot_b,
+					#place_emboss_v2(r[1], anchor, x0+x_mm, y0+y_mm, trans, rot_b,
 					                 w_mm_b, h_mm_b, dep_b, main_dep_b,
 					                 top_sl_b, bot_sl_b, lft_sl_b, rgt_sl_b,
 					                 c_r_b, has_ch_b, ec_b);
