@@ -592,11 +592,13 @@ def convert_region_row(values: list[str], warnings: list[str], section_name: str
         edge_slopes = slope_vector_for_region('r', top, bottom, left, right)
     elif bare_shape == 'c':
         new_shape = 'c'
+        anchor = '"c"'
         new_width = atom(width) if normalize_atom(width) not in ('0', '') else '0'
         new_corner = ''
         edge_slopes = slope_vector_for_region('c', top, bottom, left, right)
     elif bare_shape == 'hd':
         new_shape = 'hd'
+        anchor = '"c"'
         new_corner = ''
         edge_slopes = slope_vector_for_region('hd', top, bottom, left, right)
     elif bare_shape in ('oa1', 'oa2', 'oa3', 'oa4'):
