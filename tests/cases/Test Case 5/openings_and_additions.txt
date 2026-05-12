@@ -6,8 +6,8 @@ screen_openings=[
 [   3,    "r",    100,   150,      0,  500,  100,          -3,    "L",     "T",      0,         0,             [],                                         [] ],
 [   4,    "r",    100,   150,     25,  700,  100,          -4,    "C",     "T",      0,         0,  [60,90,90,90],                                         [] ],
 [   5,    "r",    100,   150,     10,  900,  100,          -5,    "L",     "T",      0,         0,  [60,90,90,90],                                         [] ],
-[   6,    "c",    100,     0,      0,  100,  300,          -2,    "L",     "T",      0,         0,           [60],                                         [] ],
-[   7,   "hd",    100,   300,      0,  300,  400,          -3,    "L",     "T",      0,         0, [60,80,-45,30],                                         [] ],
+[   6,    "c",    100,     0,      0,  100,  300,          -2,    "C",     "T",      0,         0,           [60],                                         [] ],
+[   7,   "hd",    100,   300,      0,  300,  400,          -3,    "C",     "T",      0,         0, [60,80,-45,30],                                         [] ],
 [   8, "text",     50,     0,      0,   50,   10,         -10,    "L",     "B",      0,         0,             [],       ["test1",0,"normal","left","bottom"] ],
 [   9, "text",     50,     0,      0,   60,   40,          50,    "L",     "T",      0,         0,             [], ["test2",90,"bold/italic","left","bottom"] ],
 [  10,    "r",    100,   150,     20,  400,  600,           0,    "L",     "T",      0,         0, [60,80,-45,30],                                         [] ],
@@ -17,8 +17,8 @@ case_openings=[
 //  ID,  shape, height, width, corner,     x,    y, cut | build, anchor, surface, length, thickness,  [edge_slopes],                            [special parms]
 [  "#",    "r",     10,    15,      0, cow/2, -6.5,          -4,    "L",     "T",      0,         0, [-45,45,90,90],                                         [] ],
 [    2,    "r",     10,    15,    0.5,    60,   10,           0,    "C",     "T",      0,         0, [-50,90,90,90],                                         [] ],
-[    3,    "c",     10,     0,      0,   170,   30,           0,    "L",     "T",      0,         0,             [],                                         [] ],
-[    4,   "hd",     10,    30,      0,   180,   40,           0,    "L",     "T",      0,         0,             [],                                         [] ],
+[    3,    "c",     10,     0,      0,   170,   30,           0,    "C",     "T",      0,         0,             [],                                         [] ],
+[    4,   "hd",     10,    30,      0,   180,   40,           0,    "C",     "T",      0,         0,             [],                                         [] ],
 [    5,    "r",     10,    15,      2,   190,   60,           0,    "L",     "T",      0,         0,             [],                                         [] ],
 [    6, "text",     15,     0,      0,    50,   10,          -2,    "L",     "B",      0,         0,             [],       ["test3",0,"normal","left","bottom"] ],
 [    7, "text",     20,     0,      0,    30,   10,          -1,    "L",     "T",      0,         0,             [], ["test4",90,"bold/italic","left","bottom"] ],
@@ -42,10 +42,10 @@ tablet_openings=[
 
 ** Screen, Case, Tablet Openings
   Shape      height  width  corner  cut | build  anchor  surface  length  thickness  [edge slopes]  [special params]
-  r            x       x      x          x         x        x                              x
-  c            x                         x                  x                              x
-  hd           x       x                 x         x        x                              x
-  oa1–4                       x          x
+  r            x       x      x          x         x        x                              x               x
+  c            x                         x                  x                              x               x
+  hd           x       x                 x         x        x                              x               x
+  oa1-4                       x          x
   text         x                         x                  x                                              x
   svg          x       x                 x                                                                 x
   bump         x
@@ -54,9 +54,10 @@ tablet_openings=[
   vridge                                 x         x                x         x
   cridge       x                         x                                    x
   rridge       x       x      x          x         x                          x
-  aridge1–4                              x                                    x
+  aridge1-4                              x                                    x
 
   [special params]  Contents
+  r, c, hd          [direction]
   text              ["text value", direction, font style, h-align, v-align]
   svg               ["filename", direction]
   ridge             [direction]
@@ -65,13 +66,13 @@ tablet_openings=[
   Shape   height  width  corner  cut | build  [trim]
   r         x       x      x          x         x
   c         x                         x         x
-  r1–4      x       x      x          x         x
-  tab1–4    x       x      x          x         x
-  cm1–4     x       x                 x         x
-  t1–4      x       x                 x         x
-  f1–4      x       x      x          x         x
-  oa1–4                    x
-  ped1–4
+  r1-4      x       x      x          x         x
+  tab1-4    x       x      x          x         x
+  cm1-4     x       x                 x         x
+  t1-4      x       x                 x         x
+  f1-4      x       x      x          x         x
+  oa1-4                    x
+  ped1-4
 
 
 
@@ -145,9 +146,7 @@ These special variables can be used to locate openings and place additions relat
 	c_w	case width
 	c_cr	case corner_radius
 	ctsd	case to screen_depth
-	sew	sloped edge width (min of horizontal and vertical; preserved for backward compatibility)
-	hsew	horizontal sloped edge width
-	vsew	vertical sloped edge width
+	sew	sloped edge width
 
 
 

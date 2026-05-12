@@ -45,10 +45,10 @@ tablet_openings=[
 
 ** Screen, Case, Tablet Openings
   Shape      height  width  corner  cut | build  anchor  surface  length  thickness  [edge slopes]  [special params]
-  r            x       x      x          x         x        x                              x
-  c            x                         x                  x                              x
-  hd           x       x                 x         x        x                              x
-  oa1–4                       x          x
+  r            x       x      x          x         x        x                              x               x
+  c            x                         x                  x                              x               x
+  hd           x       x                 x         x        x                              x               x
+  oa1-4                       x          x
   text         x                         x                  x                                              x
   svg          x       x                 x                                                                 x
   bump         x
@@ -57,9 +57,10 @@ tablet_openings=[
   vridge                                 x         x                x         x
   cridge       x                         x                                    x
   rridge       x       x      x          x         x                          x
-  aridge1–4                              x                                    x
+  aridge1-4                              x                                    x
 
   [special params]  Contents
+  r, c, hd          [direction]
   text              ["text value", direction, font style, h-align, v-align]
   svg               ["filename", direction]
   ridge             [direction]
@@ -68,13 +69,13 @@ tablet_openings=[
   Shape   height  width  corner  cut | build  [trim]
   r         x       x      x          x         x
   c         x                         x         x
-  r1–4      x       x      x          x         x
-  tab1–4    x       x      x          x         x
-  cm1–4     x       x                 x         x
-  t1–4      x       x                 x         x
-  f1–4      x       x      x          x         x
-  oa1–4                    x
-  ped1–4
+  r1-4      x       x      x          x         x
+  tab1-4    x       x      x          x         x
+  cm1-4     x       x                 x         x
+  t1-4      x       x                 x         x
+  f1-4      x       x      x          x         x
+  oa1-4                    x
+  ped1-4
 
 
 
@@ -148,9 +149,7 @@ These special variables can be used to locate openings and place additions relat
 	c_w	case width
 	c_cr	case corner_radius
 	ctsd	case to screen_depth
-	sew	sloped edge width (min of horizontal and vertical; preserved for backward compatibility)
-	hsew	horizontal sloped edge width
-	vsew	vertical sloped edge width
+	sew	sloped edge width
 
 
 
