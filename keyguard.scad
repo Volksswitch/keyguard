@@ -6396,10 +6396,11 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 	difference(){
 		if (same_radii){
 			union(){
-				//core keyguard
-				offset(r=c_r[0])
-				square([shape_x-c_r[0]*2,shape_y-c_r[0]*2],center=true);
-				
+				// Core keyguard outline — built via the V2 case_additions per-shape
+				// dispatcher so the keyguard footprint is conceptually a "seed"
+				// case_addition that user-supplied case_additions union with below.
+				build_addition(shape_x, shape_y, "r", c_r[0]);
+
 				if(!is_undef(case_additions) && len(case_additions)>0 && add_symmetric_openings=="no" && !(generate=="keyguard" && has_frame) && has_case && cheat=="no"){
 					if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions,"add"); else add_case_full_height_shapes(case_additions,"add");
 				}
