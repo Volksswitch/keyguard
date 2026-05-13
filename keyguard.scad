@@ -399,7 +399,7 @@ starting_corner_for_screen_measurements = "upper-left"; //[upper-left, lower-lef
 /*[Special Actions and Settings]*/
 // set this option to "no" before rendering your design
 include_screenshot = "no"; //[yes,no]
-// set to "yes" to render translucent pink ghosts at every O&A row whose ID is "#"; set to "no" before exporting STL so the overlays don't print as solid plastic
+// force-show translucent pink ghosts at every O&A row whose ID is "#"; "no" (default) means show in F5 preview only and hide in F6 render/STL/3MF — flip to "yes" for the browser-spike workflow (which renders F6 to 3MF and still needs the overlays)
 show_oa_highlights = "no"; //[yes,no]
 keyguard_display_angle = 0; // [0,30,45,60,75,90]
 unequal_left_side_of_case_opening = 0.0; // .1
@@ -1607,10 +1607,12 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 
 	// O&A highlight overlays — sibling to keyguard(), NOT unioned with it,
 	// so the colour stays as a translucent ghost marking where each ID == "#"
-	// cut/addition sits rather than getting absorbed into the keyguard's
-	// solid colour. Gated by show_oa_highlights so STL exports stay clean;
-	// the browser spike forces it on via -D show_oa_highlights="yes".
-	if (show_oa_highlights == "yes") render_oa_highlights(kt, sat, "no");
+	// cut/addition rather than getting absorbed into the keyguard's solid
+	// colour. Gated by $preview so STL exports stay clean (overlays are real
+	// geometry — color() paints, it doesn't filter geometry out of the mesh).
+	// The browser spike renders F6 to 3MF where $preview is false, so it
+	// forces overlays on by passing -D 'show_oa_highlights="yes"'.
+	if ($preview || show_oa_highlights == "yes") render_oa_highlights(kt, sat, "no");
 
 	if (include_screenshot=="yes"){
 		if (MW_version){
@@ -1630,7 +1632,7 @@ else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" 
 	keyguard("no");
 
 	// O&A highlight overlays — see comment in 3D-printed branch above.
-	if (show_oa_highlights == "yes") render_oa_highlights(kt, sat, "no");
+	if ($preview || show_oa_highlights == "yes") render_oa_highlights(kt, sat, "no");
 
 	issues();
 
@@ -1650,7 +1652,7 @@ else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame 
 
 	// O&A highlight overlays — see comment in 3D-printed branch above. Laser-cut
 	// uses depth=0 for all cuts so the overlay shapes are flat 2D footprints.
-	if (show_oa_highlights == "yes") render_oa_highlights(0, 0, "no");
+	if ($preview || show_oa_highlights == "yes") render_oa_highlights(0, 0, "no");
 
 	issues();
 	key_settings();
