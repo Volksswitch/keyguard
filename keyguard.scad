@@ -399,6 +399,8 @@ starting_corner_for_screen_measurements = "upper-left"; //[upper-left, lower-lef
 /*[Special Actions and Settings]*/
 // set this option to "no" before rendering your design
 include_screenshot = "no"; //[yes,no]
+// set to "yes" to render translucent pink ghosts at every O&A row whose ID is "#"; set to "no" before exporting STL so the overlays don't print as solid plastic
+show_oa_highlights = "no"; //[yes,no]
 keyguard_display_angle = 0; // [0,30,45,60,75,90]
 unequal_left_side_of_case_opening = 0.0; // .1
 unequal_bottom_side_of_case_opening = 0.0; // .1
@@ -1606,9 +1608,9 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 	// O&A highlight overlays — sibling to keyguard(), NOT unioned with it,
 	// so the colour stays as a translucent ghost marking where each ID == "#"
 	// cut/addition sits rather than getting absorbed into the keyguard's
-	// solid colour. With lazy-union exports this also makes the overlays
-	// distinct objects in 3MF for the browser spike.
-	render_oa_highlights(kt, sat, "no");
+	// solid colour. Gated by show_oa_highlights so STL exports stay clean;
+	// the browser spike forces it on via -D show_oa_highlights="yes".
+	if (show_oa_highlights == "yes") render_oa_highlights(kt, sat, "no");
 
 	if (include_screenshot=="yes"){
 		if (MW_version){
@@ -1628,7 +1630,7 @@ else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" 
 	keyguard("no");
 
 	// O&A highlight overlays — see comment in 3D-printed branch above.
-	render_oa_highlights(kt, sat, "no");
+	if (show_oa_highlights == "yes") render_oa_highlights(kt, sat, "no");
 
 	issues();
 
@@ -1648,7 +1650,7 @@ else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame 
 
 	// O&A highlight overlays — see comment in 3D-printed branch above. Laser-cut
 	// uses depth=0 for all cuts so the overlay shapes are flat 2D footprints.
-	render_oa_highlights(0, 0, "no");
+	if (show_oa_highlights == "yes") render_oa_highlights(0, 0, "no");
 
 	issues();
 	key_settings();
