@@ -449,6 +449,20 @@ screenshot_file = "default.svg";
 // doesn't clutter the Customizer UI but is still -D-settable.
 show_oa_highlights = "no";
 
+// Two-render mode for the browser spike. When "yes", the keyguard itself is
+// SKIPPED and only the O&A highlight overlay geometry is emitted, so the
+// spike can render keyguard + highlights as two separate STLs and apply a
+// pink translucent material to the highlight mesh in Three.js (this wasm
+// build has no lib3mf, so the original 3MF-with-color() plan didn't pan out).
+only_oa_highlights = "no";
+
+// Echo the screen-area dimensions and overall thickness so the browser spike
+// can size and position the screenshot-under-keyguard plane in Three.js
+// without needing a second metadata render. OpenSCAD evaluates assignments at
+// parse time regardless of source order, so this echo can reference globals
+// that are defined later in the file.
+echo("__SPIKE_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt);
+
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
 // OpenSCAD variables are constants evaluated at parse time. In practice this means
@@ -1609,67 +1623,82 @@ else if (add_sloped_keyguard_edge=="yes" && is_laser_cut){
 	echo();
 }
 else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyguard" || generate=="second half of keyguard")){
-	color("Turquoise")
-	keyguard("no");
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
+		keyguard("no");
+	}
 
 	// O&A highlight overlays — sibling to keyguard(), NOT unioned with it,
 	// so the colour stays as a translucent ghost marking where each ID == "#"
 	// cut/addition rather than getting absorbed into the keyguard's solid
 	// colour. Gated by $preview so STL exports stay clean (overlays are real
 	// geometry — color() paints, it doesn't filter geometry out of the mesh).
-	// The browser spike renders F6 to 3MF where $preview is false, so it
-	// forces overlays on by passing -D 'show_oa_highlights="yes"'.
-	if ($preview || show_oa_highlights == "yes") render_oa_highlights(kt, sat, "no");
+	// The browser spike's two-render mode forces overlays on via
+	// -D 'only_oa_highlights="yes"' (and skips keyguard() above).
+	if ($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes")
+		render_oa_highlights(kt, sat, "no");
 
-	if (include_screenshot=="yes"){
-		if (MW_version){
-			show_screenshotMW(kt);
+	if (only_oa_highlights != "yes") {
+		if (include_screenshot=="yes"){
+			if (MW_version){
+				show_screenshotMW(kt);
+			}
+			else{
+				show_screenshot(kt);
+			}
 		}
-		else{
-			show_screenshot(kt);
+
+		if (show_split_line=="yes"){
+			show_line_split_location();
 		}
-	}
-	
-	if (show_split_line=="yes"){
-		show_line_split_location();
 	}
 }
 else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" || m_m=="Slide-in Tabs")){
-	color("Khaki")
-	keyguard("no");
+	if (only_oa_highlights != "yes") {
+		color("Khaki")
+		keyguard("no");
+	}
 
 	// O&A highlight overlays — see comment in 3D-printed branch above.
-	if ($preview || show_oa_highlights == "yes") render_oa_highlights(kt, sat, "no");
+	if ($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes")
+		render_oa_highlights(kt, sat, "no");
 
-	issues();
+	if (only_oa_highlights != "yes") {
+		issues();
 
-	if (include_screenshot=="yes"){
-		if (MW_version){
-			show_screenshotMW(acrylic_thickness);
-		}
-		else{
-			show_screenshot(acrylic_thickness);
+		if (include_screenshot=="yes"){
+			if (MW_version){
+				show_screenshotMW(acrylic_thickness);
+			}
+			else{
+				show_screenshot(acrylic_thickness);
+			}
 		}
 	}
 }
 else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame && (mounting_method=="No Mount" || mounting_method=="Slide-in Tabs")){
-	color("DarkSeaGreen")
-	render()
-	lc_keyguard();
+	if (only_oa_highlights != "yes") {
+		color("DarkSeaGreen")
+		render()
+		lc_keyguard();
+	}
 
 	// O&A highlight overlays — see comment in 3D-printed branch above. Laser-cut
 	// uses depth=0 for all cuts so the overlay shapes are flat 2D footprints.
-	if ($preview || show_oa_highlights == "yes") render_oa_highlights(0, 0, "no");
+	if ($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes")
+		render_oa_highlights(0, 0, "no");
 
-	issues();
-	key_settings();
+	if (only_oa_highlights != "yes") {
+		issues();
+		key_settings();
 
-	if (include_screenshot=="yes"){
-		if (MW_version){
-			show_screenshotMW(acrylic_thickness);
-		}
-		else{
-			show_screenshot(acrylic_thickness);
+		if (include_screenshot=="yes"){
+			if (MW_version){
+				show_screenshotMW(acrylic_thickness);
+			}
+			else{
+				show_screenshot(acrylic_thickness);
+			}
 		}
 	}
 }
@@ -6997,6 +7026,14 @@ module render_oa_highlights(depth, sat_d, cheat="no") {
 			else             cut_manual_mount_pedestal_slots   (m_c_a, hl=true);
 		}
 	}
+
+	// Customizer-driven embossed/engraved text. The original engrave_emboss_instruction
+	// uses the `#` preview-only debug modifier, which OpenSCAD silently drops in F6
+	// render and 3MF/STL export — so the wasm viewport never shows it. Highlighting
+	// is especially valuable for engraved text accidentally placed inside a cell,
+	// where the clinician otherwise has no visual cue.
+	if (text != "" && text_depth != 0)
+		color(oa_highlight_color) engrave_emboss_instruction_hl();
 }
 
 
@@ -7226,6 +7263,76 @@ module engrave_emboss_instruction(){
 			yb = (keyguard_region=="case region") ? coy0 : ty0;
 			translate([x0+x,yb+y,-ff])
 			#cut_opening_2d_v2(0, t_height, "text", undef, direction, cb);
+		}
+	}
+}
+
+// Highlight-only mirror of engrave_emboss_instruction(). Identical positioning
+// logic, but the `#` preview-only debug modifiers are stripped so the geometry
+// survives F6/STL/3MF. Called from render_oa_highlights() wrapped in
+// color(oa_highlight_color) to give the user a translucent ghost showing where
+// their Customizer-driven embossed/engraved text will land — particularly
+// useful for catching engraved text accidentally placed inside a cell.
+module engrave_emboss_instruction_hl(){
+	x_start = (keyguard_region=="screen region") ? slide_horizontally/100 * swm :
+	          (keyguard_region=="case region") ? slide_horizontally/100 * cow :
+			  slide_horizontally/100 * tw;
+	x = (keyguard_location == "top surface") ? x_start : -x_start;
+	y = (keyguard_region=="screen region") ? slide_vertically/100 * shm :
+		(keyguard_region=="case region") ? slide_vertically/100 * coh :
+		slide_vertically/100 * th;
+
+	x0 = (keyguard_region=="screen region" && keyguard_location == "top surface") ? sx0 :
+	     (keyguard_region=="screen region" && keyguard_location == "bottom surface") ? -sx0 :
+		 (keyguard_region=="case region" && keyguard_location == "top surface") ? cox0 :
+		 (keyguard_region=="case region" && keyguard_location == "bottom surface") ? -cox0 :
+		 (keyguard_location == "top surface") ? tx0 : -tx0;
+
+	t_height = text_height;
+	surface = (keyguard_location == "top surface") ? "t" : "b";
+	direction = (text_angle=="vertical downward") ? -90 :
+	              (text_angle=="horizontal") ? 0 :
+	              (text_angle=="vertical upward") ? 90 :
+	              180;
+	font_s  = font_style;
+	h_align = text_horizontal_alignment;
+	v_align = text_vertical_alignment;
+	cb = (is_laser_cut) ? -0.1 : text_depth;
+	text_string = text;
+	depth = sat;
+
+	if(generate=="keyguard" || generate=="first half of keyguard" || generate=="second half of keyguard"){
+		if (keyguard_region=="screen region"){
+			if (cb > 0){
+				translate([x0+x,sy0+y,sat-kt/2-ff])
+				place_addition_v2(10, t_height, "text", direction, direction, font_s, 0, h_align, v_align, cb, text_string, surface);
+			}
+			else{
+				translate([x0+x,sy0+y,ff])
+				cut_opening_v2(0, t_height, "text", undef, surface, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth*2,"screen");
+			}
+		}
+		else{
+			yb = (keyguard_region=="case region") ? coy0 : ty0;
+			if (cb > 0){
+				translate([x0+x,yb+y,kt/2-ff])
+				place_addition_v2(0, t_height, "text", direction, direction, font_s, 0, h_align, v_align, cb, text_string, surface);
+			}
+			else{
+				translate([x0+x,yb+y,0])
+				cut_opening_v2(0, t_height, "text", undef, surface, direction, v2_font_style_code(font_s), v2_h_align_code(h_align), v2_v_align_code(v_align), cb, text_string, depth,"case");
+			}
+		}
+	}
+	else{ // first layer for SVG/DXF file
+		if (keyguard_region=="screen region"){
+			translate([x0+x,sy0+y,ff])
+			cut_opening_2d_v2(0, t_height, "text", undef, direction, cb);
+		}
+		else{
+			yb = (keyguard_region=="case region") ? coy0 : ty0;
+			translate([x0+x,yb+y,-ff])
+			cut_opening_2d_v2(0, t_height, "text", undef, direction, cb);
 		}
 	}
 }
