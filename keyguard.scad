@@ -1602,7 +1602,14 @@ else if (add_sloped_keyguard_edge=="yes" && is_laser_cut){
 else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyguard" || generate=="second half of keyguard")){
 	color("Turquoise")
 	keyguard("no");
-	
+
+	// O&A highlight overlays — sibling to keyguard(), NOT unioned with it,
+	// so the colour stays as a translucent ghost marking where each ID == "#"
+	// cut/addition sits rather than getting absorbed into the keyguard's
+	// solid colour. With lazy-union exports this also makes the overlays
+	// distinct objects in 3MF for the browser spike.
+	render_oa_highlights(kt, sat, "no");
+
 	if (include_screenshot=="yes"){
 		if (MW_version){
 			show_screenshotMW(kt);
@@ -1619,6 +1626,10 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" || m_m=="Slide-in Tabs")){
 	color("Khaki")
 	keyguard("no");
+
+	// O&A highlight overlays — see comment in 3D-printed branch above.
+	render_oa_highlights(kt, sat, "no");
+
 	issues();
 
 	if (include_screenshot=="yes"){
@@ -1634,6 +1645,11 @@ else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame 
 	color("DarkSeaGreen")
 	render()
 	lc_keyguard();
+
+	// O&A highlight overlays — see comment in 3D-printed branch above. Laser-cut
+	// uses depth=0 for all cuts so the overlay shapes are flat 2D footprints.
+	render_oa_highlights(0, 0, "no");
+
 	issues();
 	key_settings();
 
@@ -1881,12 +1897,6 @@ module keyguard(cheat){
 	unequal_opening = (!has_frame) ? [-unequal_left_side_offset,-unequal_bottom_side_offset,0] : [0,0,0];
 	difference(){
 		union(){
-			// O&A highlight overlays: positive translucent solids for every row
-			// whose ID is "#". Rendered before the cuts so any nested unions
-			// don't subtract them; outside the inner difference so cut highlights
-			// appear as filled overlays rather than holes. Splits with the rest
-			// of the keyguard via the outermost difference.
-			render_oa_highlights(kt, sat, cheat);
 			difference(){
 				union(){
 					difference(){
@@ -2169,9 +2179,6 @@ module lc_keyguard(){
 	unequal_opening = [-unequal_left_side_offset,-unequal_bottom_side_offset,0];
 	difference(){
 		union(){
-			// O&A highlight overlays — see comment in keyguard(). Laser-cut uses
-			// depth=0 for all cuts.
-			render_oa_highlights(0, 0, "no");
 			difference(){
 				union(){
 					difference(){
