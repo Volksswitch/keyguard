@@ -399,8 +399,6 @@ starting_corner_for_screen_measurements = "upper-left"; //[upper-left, lower-lef
 /*[Special Actions and Settings]*/
 // set this option to "no" before rendering your design
 include_screenshot = "no"; //[yes,no]
-// force-show translucent pink ghosts at every O&A row whose ID is "#"; "no" (default) means show in F5 preview only and hide in F6 render/STL/3MF — flip to "yes" for the browser-spike workflow (which renders F6 to 3MF and still needs the overlays)
-show_oa_highlights = "no"; //[yes,no]
 keyguard_display_angle = 0; // [0,30,45,60,75,90]
 unequal_left_side_of_case_opening = 0.0; // .1
 unequal_bottom_side_of_case_opening = 0.0; // .1
@@ -441,6 +439,15 @@ screenshot_file = "default.svg";
 
 
 /*[Hidden]*/
+
+// Force-on switch for the translucent pink O&A highlight overlays. The
+// overlays auto-show in F5 preview via $preview; they're hidden in F6
+// render so STL/3MF exports stay clean. The browser spike renders in F6
+// to produce a 3MF for the viewport — there $preview is false, so the
+// spike passes `-D 'show_oa_highlights="yes"'` to override this default
+// and force the overlays into the export. Hidden-section variable so it
+// doesn't clutter the Customizer UI but is still -D-settable.
+show_oa_highlights = "no";
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
@@ -6955,10 +6962,16 @@ module render_oa_highlights(depth, sat_d, cheat="no") {
 		else                      apply_flex_height_shapes   (case_additions, false, hl=true);
 		if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, true,  hl=true);
 		else                      apply_flex_height_shapes   (case_additions, true,  hl=true);
-		if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions, "add", hl=true);
-		else                      add_case_full_height_shapes   (case_additions, "add", hl=true);
-		if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions, "sub", hl=true);
-		else                      add_case_full_height_shapes   (case_additions, "sub", hl=true);
+		// add_case_full_height_shapes emits 2D shapes (build_addition is 2D); they
+		// only become 3D inside case_opening_blank's linear_extrude. Wrap here so
+		// the overlay shapes are extruded to full keyguard thickness instead of
+		// triggering "Mixing 2D and 3D objects" warnings at the top level.
+		linear_extrude(height=kt, center=true) {
+			if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions, "add", hl=true);
+			else                      add_case_full_height_shapes   (case_additions, "add", hl=true);
+			if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions, "sub", hl=true);
+			else                      add_case_full_height_shapes   (case_additions, "sub", hl=true);
+		}
 		if(!is_laser_cut){
 			if(is_v2(case_additions)) add_manual_mount_pedestals_v2(case_additions, hl=true);
 			else                      add_manual_mount_pedestals   (case_additions, hl=true);
@@ -6971,10 +6984,12 @@ module render_oa_highlights(depth, sat_d, cheat="no") {
 		else             apply_flex_height_shapes   (m_c_a, false, hl=true);
 		if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, true,  hl=true);
 		else             apply_flex_height_shapes   (m_c_a, true,  hl=true);
-		if(is_v2(m_c_a)) add_case_full_height_shapes_v2(m_c_a, "add", hl=true);
-		else             add_case_full_height_shapes   (m_c_a, "add", hl=true);
-		if(is_v2(m_c_a)) add_case_full_height_shapes_v2(m_c_a, "sub", hl=true);
-		else             add_case_full_height_shapes   (m_c_a, "sub", hl=true);
+		linear_extrude(height=kt, center=true) {
+			if(is_v2(m_c_a)) add_case_full_height_shapes_v2(m_c_a, "add", hl=true);
+			else             add_case_full_height_shapes   (m_c_a, "add", hl=true);
+			if(is_v2(m_c_a)) add_case_full_height_shapes_v2(m_c_a, "sub", hl=true);
+			else             add_case_full_height_shapes   (m_c_a, "sub", hl=true);
+		}
 		if(!is_laser_cut){
 			if(is_v2(m_c_a)) add_manual_mount_pedestals_v2(m_c_a, hl=true);
 			else             add_manual_mount_pedestals   (m_c_a, hl=true);
