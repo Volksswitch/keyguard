@@ -3267,9 +3267,14 @@ module home_camera(depth){
 		ch = rect_laser ? camera_height + coa*2 : camera_height;
 		sl = (is_3d_printed) ? camera_cut_angle : 90;
 
+		// Top slope: the square "c" laser-cut branch consumes top_slope only as
+		// the tangent for its size inflation (then cuts vertically), so it must
+		// stay camera_cut_angle. The rectangular "hd" branch applies the slope
+		// literally, so it must follow sl (90 in laser-cut) like the other three
+		// faces — otherwise the laser-cut camera keeps a sloped top edge.
 		translate([cam_x_loc, cam_y_loc, 0])
 		cut_opening_v2(cw, ch, cm_square ? "c" : "hd", "c", "T",
-			camera_cut_angle, sl, sl, sl, 0, undef, depth, "tablet");
+			cm_square ? camera_cut_angle : sl, sl, sl, sl, 0, undef, depth, "tablet");
 	}
 }
 
