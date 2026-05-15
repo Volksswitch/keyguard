@@ -36,6 +36,11 @@ DEFAULT_SVG="$PROJECT_ROOT/default.svg"
 OUTPUT_DIR="$PROJECT_ROOT/output/test"
 TEST_RESULTS_DIR="$PROJECT_ROOT/test results"
 CASES_DIR="$PROJECT_ROOT/tests/cases"
+# Reference PNGs for the visual layer live alongside the cases but in a
+# sibling visual.snapshots/ subtree so case folders contain only
+# configuration (test.json, openings.txt, assets) and not large binary
+# baselines that mix poorly with case-definition diffs in PRs.
+SNAPSHOTS_DIR="$CASES_DIR/visual.snapshots"
 TIMINGS_FILE="$PROJECT_ROOT/test-timings.ndjson"
 LOCK_FILE="$PROJECT_ROOT/.test-lock"
 # When running from a git worktree, also mirror timings to the main project folder
@@ -821,7 +826,7 @@ run_visual() {
             local safe_label="${STEP_LABEL// /_}"; safe_label="${safe_label//\//_}"; safe_label="${safe_label//,/_}"; safe_label="${safe_label:0:50}"
             # Name rendered PNG with step number + label for easy browsing
             local rendered_png="$render_dir/step$((i+1))_${safe_label}.png"
-            local expected_png="$case_dir/$STEP_EXPECTED"
+            local expected_png="$SNAPSHOTS_DIR/$case_name/$STEP_EXPECTED"
             local diff_png="$render_dir/step$((i+1))_${safe_label}_diff.png"
 
             printf "    [step %d/%d] %-30s" "$((i+1))" "$step_count" "$STEP_LABEL"
@@ -873,6 +878,7 @@ run_visual() {
 
             # Capture mode: copy rendered PNG as the new reference
             if "$CAPTURE_REFERENCES"; then
+                mkdir -p "$(dirname "$expected_png")"
                 cp "$rendered_png" "$expected_png"
                 echo -e " ${GREEN}CAPTURED${RESET}"
                 case_step_captured=$((case_step_captured + 1))
