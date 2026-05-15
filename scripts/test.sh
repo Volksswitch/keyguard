@@ -834,7 +834,7 @@ run_visual() {
             local t_step_start; t_step_start=$(date +%s)
             local cmd=("$OPENSCAD"
                 --camera="$camera"
-                --imgsize=1024,768
+                --imgsize=2048,1536
                 --colorscheme=Tomorrow
                 -o "$rendered_png")
 
