@@ -5311,7 +5311,15 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	// re-testing on 2026-05-15 showed sloped+extender renders cleanly in
 	// current openscad-wasm, and the all-90 gate was excluding the bulk of
 	// real clinician designs (cell_edge_slope=60 is the dominant pattern).
-	want_extender = (type == "screen") && is_3d_printed && !other_number && !flip;
+	// Screen-region 3D cells were the original case. Tablet-region cuts
+	// (home button, camera, ALS) hit the same Manifold near-coincident-plane
+	// sliver — visible on the home/camera openings in the laser-cut 3D
+	// preview — so extend those too, in both 3D and laser-cut solid renders.
+	// Excluded for "first layer for SVG/DXF file": that output is pure 2D,
+	// and injecting a linear_extrude prism would corrupt the exported SVG.
+	want_extender = ((type == "screen" && is_3d_printed) ||
+	                 (type == "tablet" && generate != "first layer for SVG/DXF file"))
+	                && !other_number && !flip;
 
 	if (shape == "r"){
 		if (cut_width > 0 && cut_height > 0){
@@ -5341,6 +5349,10 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 				aoa = sat_incl_acrylic/tan(top_slope);
 				translate([tx, ty, 0])
 				hole_cutter(cut_height+aoa*2, cut_height+aoa*2, 90,90,90,90, (cut_height+aoa*2)/2, dep);
+				if (want_extender){
+					translate([tx, ty, 0])
+					screen_through_cut_extender(cut_height+aoa*2, cut_height+aoa*2, (cut_height+aoa*2)/2);
+				}
 			}
 		}
 	}
