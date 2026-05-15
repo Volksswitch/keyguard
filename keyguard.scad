@@ -434,6 +434,8 @@ my_case_additions = "";
 my_tablet_openings = "";
 //for use with Maker World's online customizer
 screenshot_file = "default.svg";
+// Extra mm the cell/bar through-cuts extend past the screen-area floor and below the keyguard bottom. Larger values help Manifold (browser) merge cleanly; CGAL (native) is unaffected. Bump up if Manifold leaves a thin floor or wedge.
+screen_through_cut_overlap = 2.0; // [0.5:0.1:5]
 
 
 
@@ -5247,6 +5249,28 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 // @param depth         Cut depth in mm; 0 selects laser-cut 2D output
 // @param type          Region: "screen", "case", "keyguard", or "tablet"
 // @param rotation      Z-rotation of the cut in degrees (default 0)
+// Through-bore extender added alongside the chamfered cutter for screen-region
+// 3D-printed through-cuts. Lives in the cut's BODY xy footprint (NOT the
+// chamfer-widened footprint), spans z = [-kt/2 - overshoot, kt/2 + overshoot]
+// so it pokes past both keyguard faces into empty space. Combined with the
+// original chamfered cutter (still cuts at the keyguard top edge), this
+// produces a clean rectangular through-bore in the body footprint with no
+// flat face coincident with the keyguard at z = ±kt/2. The chamfer's sloped
+// bevel in the ring outside the body footprint is preserved because the
+// extender doesn't reach there. CGAL: final boolean unchanged (extender's
+// removed volume in body xy is a superset of the original body cutter's
+// volume in that xy). Manifold: clean boundary faces well away from any
+// near-coincident plane.
+// @param w       Body width in mm
+// @param h       Body height in mm
+// @param radius  Corner radius in mm (matches body)
+module screen_through_cut_extender(w, h, radius){
+	if (w > 0 && h > 0){
+		linear_extrude(kt + 2*screen_through_cut_overlap, center=true)
+		rounded_rect(w, h, min(radius, min(w, h)/2));
+	}
+}
+
 module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, bottom_slope, left_slope, right_slope, corner, other, depth, type, rotation=0){
 
 	other_number = is_num(other);
@@ -5273,11 +5297,33 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	// corner — the V1 rr/cr distinction is now just (anchor != "c").
 	is_c = (anchor == "C" || anchor == "c");
 
+	// Screen-region through-cut extender. For canonical depth=sat downward
+	// through-cuts (3D-printed, no depth override, not flipped), add a
+	// straight prism in the body's xy footprint spanning past both keyguard
+	// faces. This eliminates the near-coincident plane at z = ±kt/2 (~2*ff
+	// overlap) that Manifold mishandles for small cutters. The chamfered
+	// cutter from cut_hole is kept intact so the chamfer continues to bevel
+	// the top edge in the ring outside the body footprint.
+	//
+	// Gated on all-90 base slopes: a sloped base edge makes cut() build a
+	// tapered hull(), and the WASM build of CGAL has a known assertion in
+	// convex_hull_3 that previously self-recovered but starts hard-crashing
+	// when an extra subtractor (this extender) raises the operation count.
+	// Sloped cuts fall back to the original behavior — they won't get the
+	// Manifold thin-floor fix, but they also won't crash the browser.
+	all_90 = (top_slope == 90) && (bottom_slope == 90) && (left_slope == 90) && (right_slope == 90);
+	want_extender = (type == "screen") && is_3d_printed && !other_number && !flip && all_90;
+
 	if (shape == "r"){
 		if (cut_width > 0 && cut_height > 0){
 			tx = is_c ? 0 : cut_width/2;
 			ty = is_c ? 0 : cut_height/2;
 			cut_hole(tx, ty, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, corner, dep, flip, region_chamfer, rotation);
+			if (want_extender){
+				translate([tx, ty, 0])
+				rotate([0, 0, rotation])
+				screen_through_cut_extender(cut_width, cut_height, corner);
+			}
 		}
 	}
 	else if (shape == "c"){
@@ -5286,6 +5332,10 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 			ty = tx;
 			if (is_3d_printed){
 				cut_hole(tx, ty, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip, region_chamfer, rotation);
+				if (want_extender){
+					translate([tx, ty, 0])
+					screen_through_cut_extender(cut_height, cut_height, cut_height/2);
+				}
 			}
 			else{
 				// Laser-cut path: inflate diameter to clear acrylic for sloped sensor wells.
@@ -5301,6 +5351,11 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 			ty = is_c ? 0 : cut_height/2;
 			m  = min(cut_width, cut_height);
 			cut_hole(tx, ty, trans, cut_width, cut_height, top_slope, bottom_slope, left_slope, right_slope, m/2, dep, flip, region_chamfer, rotation);
+			if (want_extender){
+				translate([tx, ty, 0])
+				rotate([0, 0, rotation])
+				screen_through_cut_extender(cut_width, cut_height, m/2);
+			}
 		}
 	}
 	else if (shape == "oa1"){
