@@ -5305,14 +5305,13 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	// cutter from cut_hole is kept intact so the chamfer continues to bevel
 	// the top edge in the ring outside the body footprint.
 	//
-	// Gated on all-90 base slopes: a sloped base edge makes cut() build a
-	// tapered hull(), and the WASM build of CGAL has a known assertion in
-	// convex_hull_3 that previously self-recovered but starts hard-crashing
-	// when an extra subtractor (this extender) raises the operation count.
-	// Sloped cuts fall back to the original behavior — they won't get the
-	// Manifold thin-floor fix, but they also won't crash the browser.
-	all_90 = (top_slope == 90) && (bottom_slope == 90) && (left_slope == 90) && (right_slope == 90);
-	want_extender = (type == "screen") && is_3d_printed && !other_number && !flip && all_90;
+	// Sloped base edges (cut_hole builds a tapered hull()) are included.
+	// An earlier all-90 gate excluded them on a hunch that the extender
+	// would tip a known WASM convex_hull_3 warning into a hard crash, but
+	// re-testing on 2026-05-15 showed sloped+extender renders cleanly in
+	// current openscad-wasm, and the all-90 gate was excluding the bulk of
+	// real clinician designs (cell_edge_slope=60 is the dominant pattern).
+	want_extender = (type == "screen") && is_3d_printed && !other_number && !flip;
 
 	if (shape == "r"){
 		if (cut_width > 0 && cut_height > 0){
