@@ -3874,19 +3874,62 @@ module hole_cutter2(hole_width,hole_height,top_slope,bottom_slope,left_slope,rig
 
 	d = depth-cec;
 	cec1 = (depth>cec) ? cec : depth;
-	
-	if(cec>0 && depth>0){
-		translate([(right-left)/2,(top-bottom)/2,-cec1/2])
-		cut(w1,h1,t_s,b_s,l_s,r_s,radius2,cec1);
+
+	straight = (top_slope==90 && bottom_slope==90 && left_slope==90 && right_slope==90);
+
+	if (straight){
+		// *** 2026-05-16 SINGLE-SOLID screen-recess refactor (chamfer kept) ***
+		// The OLD path was 3 stacked cut() solids: (1) a 45deg chamfer cap on
+		// the recess edge, (2) a straight body, (3) a 20mm straight trim
+		// cutter. Blocks 2 & 3 are STRAIGHT (all-90) cut()s — each a hull() of
+		// two ~ff-thin COPLANAR slabs, and their flat faces stacked within
+		// ~ff/cec of each other and the keyguard top — the near-coplanar point
+		// set that put CGAL convex_hull_3 into undefined behaviour
+		// (ghost / membrane / WASM crash, chaotic by geometry).
+		//
+		// Fix: keep block 1 (the chamfer) — it is a SLOPED cut() (hull of two
+		// DIFFERENT-size rects = genuinely non-coplanar = the safe hull case,
+		// it never tripped the assertion) so the bevelled recess edge is
+		// preserved. Replace ONLY the degenerate straight blocks 2 & 3 with
+		// ONE linear_extrude prism: no cut(), no hull, no near-coincident
+		// stack. It spans the recess floor (z = -depth-2ff, the same fudged
+		// floor the old stack produced, so cell/screen-opening alignment is
+		// unchanged) up through the keyguard top and +20mm above (the +20mm
+		// subsumes the trim cutter's job of clearing clip-on pedestals out of
+		// the screen area). Its only two faces (recess floor; prism top 20mm
+		// up in air) are well separated; the chamfer is the lone hull and it
+		// is the safe sloped kind.
+
+		// block 1: 45deg chamfered recess edge (sloped cut() — safe)
+		if(cec>0 && depth>0){
+			translate([(right-left)/2,(top-bottom)/2,-cec1/2])
+			cut(w1,h1,t_s,b_s,l_s,r_s,radius2,cec1);
+		}
+
+		// blocks 2+3 collapsed: one clean straight prism (recess body +
+		// pedestal/protrusion clearance), no cut()/hull/stack
+		dd = (depth > 0) ? depth : 0;          // no recess when kt<=sat
+		translate([0,0,-dd-2*ff])
+		linear_extrude(height = dd + 20 + 2*ff)
+		rounded_rect(hole_width, hole_height, radius2);
 	}
-	
-	if(d>0){
-		translate([0,0,-d/2-cec])
-		cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,d);
+	else{
+		// Sloped recess: hole_cutter2 has NO sloped caller today (its only
+		// use is the all-90 screen recess at line ~2064). Kept unchanged for
+		// module generality.
+		if(cec>0 && depth>0){
+			translate([(right-left)/2,(top-bottom)/2,-cec1/2])
+			cut(w1,h1,t_s,b_s,l_s,r_s,radius2,cec1);
+		}
+
+		if(d>0){
+			translate([0,0,-d/2-cec])
+			cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,d);
+		}
+
+		translate([0,0,10-ff])
+		cut(w1+cec1*tan(45)*2,h1+cec1*tan(45)*2,90,90,90,90,radius2,20);
 	}
-	
-	translate([0,0,10-ff])
-	cut(w1+cec1*tan(45)*2,h1+cec1*tan(45)*2,90,90,90,90,radius2,20);
 
 }
 
