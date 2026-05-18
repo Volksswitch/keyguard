@@ -1649,11 +1649,14 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 				show_screenshot(kt);
 			}
 		}
-
-		if (show_split_line=="yes"){
-			show_line_split_location();
-		}
 	}
+
+	// Split-line guide — treated like an O&A "#" highlight: emitted as a
+	// non-unioned sibling under the SAME gate as render_oa_highlights so it
+	// shows as a pink overlay (the browser spike paints the highlights pass
+	// pink) and is never baked into the solid keyguard or its STL export.
+	if (($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes") && show_split_line=="yes")
+		show_line_split_location();
 }
 else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" || m_m=="Slide-in Tabs")){
 	if (only_oa_highlights != "yes") {
