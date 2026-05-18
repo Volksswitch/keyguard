@@ -458,12 +458,18 @@ show_oa_highlights = "no";
 // build has no lib3mf, so the original 3MF-with-color() plan didn't pan out).
 only_oa_highlights = "no";
 
+// Off by default so native OpenSCAD users never see the dims echo. The web
+// app passes -D echo_dims="yes" to opt in (it parses the line to size the
+// screenshot-under-keyguard plane); native OpenSCAD leaves it "no" and the
+// echo is silent.
+echo_dims = "no";
+
 // Echo the screen-area dimensions and overall thickness so the web app
 // can size and position the screenshot-under-keyguard plane in Three.js
 // without needing a second metadata render. OpenSCAD evaluates assignments at
 // parse time regardless of source order, so this echo can reference globals
 // that are defined later in the file.
-echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt);
+if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
