@@ -317,6 +317,8 @@ Address these one at a time, running the test suite after each change.
    to ask.
 
 ### Testing
+- **Always read `scripts/test.sh` before running it.** Never assume flags, paths, or
+  behavior from memory or CLAUDE.md alone — the script is the authoritative source.
 - `test-timings.ndjson` is deleted automatically at the start of every `test.sh` run —
   no need to delete it manually.
 - Run `scripts/test.sh` (layers 1–3) after any change as a quick sanity check.
