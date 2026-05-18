@@ -444,26 +444,26 @@ screen_through_cut_overlap = 2.0; // [0.5:0.1:5]
 
 // Force-on switch for the translucent pink O&A highlight overlays. The
 // overlays auto-show in F5 preview via $preview; they're hidden in F6
-// render so STL/3MF exports stay clean. The browser spike renders in F6
-// to produce a 3MF for the viewport — there $preview is false, so the
-// spike passes `-D 'show_oa_highlights="yes"'` to override this default
+// render so STL/3MF exports stay clean. The web app renders in F6
+// to produce STLs for the viewport — there $preview is false, so the
+// web app passes `-D 'show_oa_highlights="yes"'` to override this default
 // and force the overlays into the export. Hidden-section variable so it
 // doesn't clutter the Customizer UI but is still -D-settable.
 show_oa_highlights = "no";
 
-// Two-render mode for the browser spike. When "yes", the keyguard itself is
+// Two-render mode for the web app. When "yes", the keyguard itself is
 // SKIPPED and only the O&A highlight overlay geometry is emitted, so the
-// spike can render keyguard + highlights as two separate STLs and apply a
+// web app can render keyguard + highlights as two separate STLs and apply a
 // pink translucent material to the highlight mesh in Three.js (this wasm
 // build has no lib3mf, so the original 3MF-with-color() plan didn't pan out).
 only_oa_highlights = "no";
 
-// Echo the screen-area dimensions and overall thickness so the browser spike
+// Echo the screen-area dimensions and overall thickness so the web app
 // can size and position the screenshot-under-keyguard plane in Three.js
 // without needing a second metadata render. OpenSCAD evaluates assignments at
 // parse time regardless of source order, so this echo can reference globals
 // that are defined later in the file.
-echo("__SPIKE_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt);
+echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
@@ -1635,7 +1635,7 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 	// cut/addition rather than getting absorbed into the keyguard's solid
 	// colour. Gated by $preview so STL exports stay clean (overlays are real
 	// geometry — color() paints, it doesn't filter geometry out of the mesh).
-	// The browser spike's two-render mode forces overlays on via
+	// The web app's two-render mode forces overlays on via
 	// -D 'only_oa_highlights="yes"' (and skips keyguard() above).
 	if ($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes")
 		render_oa_highlights(kt, sat, "no");
@@ -1653,7 +1653,7 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 
 	// Split-line guide — treated like an O&A "#" highlight: emitted as a
 	// non-unioned sibling under the SAME gate as render_oa_highlights so it
-	// shows as a pink overlay (the browser spike paints the highlights pass
+	// shows as a pink overlay (the web app paints the highlights pass
 	// pink) and is never baked into the solid keyguard or its STL export.
 	if (($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes") && show_split_line=="yes")
 		show_line_split_location();
@@ -1834,26 +1834,35 @@ else if (generate=="vertical micro clip"){
 	}
 }
 else if (generate=="keyguard frame" && has_frame && !is_laser_cut){
-	color("Turquoise")
-	keyguard_frame("no");
-	
-	if (show_keyguard_with_frame == "yes"){
+	// Solid frame — emitted only in the non-highlight pass so the web app's
+	// pink highlights render doesn't re-draw (and wash out) the whole frame.
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
+		keyguard_frame("no");
+	}
+
+	// The keyguard shown inside the frame is a preview aid (the .scad uses
+	// the # debug modifier for a translucent ghost). Treat it like an O&A
+	// "#" highlight: emit it under the same gate as render_oa_highlights so
+	// the web app paints it the same pink (matching native OpenSCAD's #),
+	// and it never gets baked into the solid frame or its STL export.
+	if (($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes") && show_keyguard_with_frame == "yes")
 		translate([0,0,-(keyguard_frame_thickness/2-kt/2)])
 		#keyguard("yes");
-	}
-	
-	if (include_screenshot=="yes"){
-		if (MW_version){
-			show_screenshotMW(keyguard_frame_thickness);
+
+	if (only_oa_highlights != "yes") {
+		if (include_screenshot=="yes"){
+			if (MW_version){
+				show_screenshotMW(keyguard_frame_thickness);
+			}
+			else{
+				show_screenshot(keyguard_frame_thickness);
+			}
 		}
-		else{
-			show_screenshot(keyguard_frame_thickness);
-		}
 	}
-	
-	if (show_split_line=="yes"){
+
+	if (($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes") && show_split_line=="yes")
 		show_line_split_location();
-	}
 }
 else if (generate=="keyguard frame" && !has_frame){
 	echo();
@@ -1863,28 +1872,26 @@ else if (generate=="keyguard frame" && !has_frame){
 	echo();
 }
 else if (generate=="first half of keyguard frame" && !is_laser_cut){
-	color("Turquoise")
-	{
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
 		difference(){
 			keyguard_frame("no");
 			split_keyguard_frame("first");
-		}	
+		}
 	}
-	if (show_split_line=="yes"){
+	if (($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes") && show_split_line=="yes")
 		show_line_split_location();
-	}
 }
 else if (generate=="second half of keyguard frame" && !is_laser_cut){
-	color("Turquoise")
-	{
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
 		difference(){
 			keyguard_frame("no");
 			split_keyguard_frame("second");
 		}
 	}
-	if (show_split_line=="yes"){
+	if (($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes") && show_split_line=="yes")
 		show_line_split_location();
-	}
 }
 else if ((generate=="first half of keyguard" || generate=="second half of keyguard") && is_laser_cut){
 	echo();
@@ -4297,7 +4304,7 @@ oa_highlight_color = [1, 0.3, 0.3, 0.45];
 //
 // Why: OpenSCAD's "#" preview-only debug modifier (used previously when an
 // O&A row's ID was "#") is dropped by F6 render and by 3MF export, so the
-// browser-based clinician spike couldn't show highlighted rows. This helper
+// browser-based clinician app couldn't show highlighted rows. This helper
 // lets the same O&A iteration module serve both passes: a normal "cut/add"
 // pass (children pass through unchanged), and a "highlight" pass that emits
 // only ID == "#" rows wrapped in a translucent colour(). The highlight pass
@@ -7037,8 +7044,8 @@ module cut_manual_mount_pedestal_slots(c_a,hl=false){
 // emitted, wrapped in oa_highlight_color via oa_geom(). Called from keyguard()
 // and lc_keyguard() outside the main difference() block so overlays appear as
 // positive solids (the previous "#" preview-only debug modifier did not
-// survive F6 render or 3MF export, hiding the highlights from the browser
-// spike). The depth parameter mirrors the corresponding cut depth so highlight
+// survive F6 render or 3MF export, hiding the highlights from the web
+// app). The depth parameter mirrors the corresponding cut depth so highlight
 // geometry matches the cut shape.
 // @param depth  Cut depth used by the main keyguard cuts (kt for 3D, 0 for laser-cut)
 // @param sat_d  Screen-area cut depth (sat for 3D, 0 for laser-cut)
