@@ -1,0 +1,14 @@
+{
+  "description": "membranes in STL",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "top-down view",
+      "params": "Test Case 57",
+      "vpt": [5.27339, -4.71329, -13.4133],
+      "vpr": [0, 0, 0],
+      "vpd": 550,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
