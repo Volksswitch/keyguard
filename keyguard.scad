@@ -466,10 +466,13 @@ echo_dims = "no";
 
 // Echo the screen-area dimensions and overall thickness so the web app
 // can size and position the screenshot-under-keyguard plane in Three.js
-// without needing a second metadata render. OpenSCAD evaluates assignments at
+// without needing a second metadata render. Also echo the resolved viewport
+// camera ($vpt/$vpr/$vpd) so the web app can match OpenSCAD's display angle
+// (keyguard_display_angle moves only the camera, not the geometry — there is
+// no tilt baked into the exported solid). OpenSCAD evaluates assignments at
 // parse time regardless of source order, so this echo can reference globals
-// that are defined later in the file.
-if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt);
+// and the $vp* special vars even though they are assigned later in the file.
+if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt, vpt=$vpt, vpr=$vpr, vpd=$vpd);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
