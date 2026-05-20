@@ -704,9 +704,16 @@ for name in sorted(skip):
 PYEOF
 )
 
+    # Progress log for `tail -f`. Truncated at start; one human-readable
+    # line per config completion (or render/stats failure). Lives in the
+    # project root for easy discovery; not committed to git.
+    local progress_log="$PROJECT_ROOT/golden-stl-stats-progress.log"
+    : > "$progress_log"
+
     header "Golden STL stats — regenerating manifest"
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — aborting"; return; fi
     if [[ ! -f "$stats_script" ]]; then fail "compute_stl_stats.py not found at $stats_script"; return; fi
+    info "Progress log: $(realpath --relative-to="$PROJECT_ROOT" "$progress_log" 2>/dev/null || echo "$progress_log") (tail -f)"
 
     local -a configs
     mapfile -t configs < <(get_configs)
@@ -802,6 +809,7 @@ print(json.dumps({sys.argv[2]: v})[1:-1])
 
         if [[ "$exit_code" -ne 0 || ! -s "$out" ]]; then
             echo -e " ${RED}RENDER FAILED${RESET} (${dt}s)"
+            printf "[%3d/%d] %-35s RENDER FAILED (%ds)\n" "$current" "$total" "$config" "$dt" >> "$progress_log"
             fail_count=$((fail_count + 1))
             rm -f "$out"
             continue
@@ -809,6 +817,7 @@ print(json.dumps({sys.argv[2]: v})[1:-1])
 
         local stats; stats=$("$PYTHON" "$stats_script" "$out" 2>/dev/null) || {
             echo -e " ${RED}STATS FAILED${RESET} (${dt}s)"
+            printf "[%3d/%d] %-35s STATS FAILED (%ds)\n" "$current" "$total" "$config" "$dt" >> "$progress_log"
             fail_count=$((fail_count + 1))
             rm -f "$out"; continue
         }
@@ -826,6 +835,15 @@ print(json.dumps({sys.argv[3]: stats})[1:-1])
         entries+="$entry,"$'\n'
         ok=$((ok + 1))
         echo -e " ${GREEN}OK${RESET} (${dt}s)"
+        # Per-config one-liner for tail -f: include key stats so progress is
+        # informative on its own (e.g. a divergent parts count or out-of-band
+        # facet count is visible without opening the manifest).
+        local stats_summary; stats_summary=$($PYTHON -c "
+import json, sys
+s = json.loads(sys.argv[1])
+print(f\"vol={s['volume_mm3']} area={s['surface_area_mm2']} parts={s['parts']} facets={s['facets']}\")
+" "$stats")
+        printf "[%3d/%d] %-35s OK (%4ds)  %s\n" "$current" "$total" "$config" "$dt" "$stats_summary" >> "$progress_log"
     done
 
     # Restore root O&A.
