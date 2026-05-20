@@ -36,6 +36,66 @@
       "facets": 11350,
       "oa_source": "case"
     },
+    "Test Case 2a": {
+      "volume_mm3": 52915.096,
+      "surface_area_mm2": 39771.5757,
+      "bbox": [
+        -90.0,
+        -110.0,
+        -2.0,
+        90.0,
+        110.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 5950,
+      "oa_source": "root"
+    },
+    "Test Case 3": {
+      "volume_mm3": 10979.9464,
+      "surface_area_mm2": 20323.1695,
+      "bbox": [
+        -100.0,
+        -75.0,
+        -1.5,
+        100.0,
+        75.0,
+        3.5
+      ],
+      "parts": 1,
+      "facets": 7308,
+      "oa_source": "case"
+    },
+    "Test Case 4": {
+      "volume_mm3": 30460.118,
+      "surface_area_mm2": 29760.1812,
+      "bbox": [
+        -77.5,
+        -102.5,
+        -2.0,
+        77.5,
+        102.5,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 5814,
+      "oa_source": "case"
+    },
+    "Test Case 4a": {
+      "volume_mm3": 33675.3916,
+      "surface_area_mm2": 30290.2375,
+      "bbox": [
+        -77.5,
+        -102.5,
+        -2.5,
+        77.5,
+        102.5,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 5732,
+      "oa_source": "root"
+    },
     "Test Case 6": {
       "volume_mm3": 10153.4222,
       "surface_area_mm2": 15622.3772,
@@ -49,6 +109,546 @@
       ],
       "parts": 1,
       "facets": 4308,
+      "oa_source": "case"
+    },
+    "Test Case 6a": {
+      "volume_mm3": 13266.5623,
+      "surface_area_mm2": 20601.916,
+      "bbox": [
+        -97.017,
+        -72.757,
+        -4.0,
+        97.017,
+        72.757,
+        0.95
+      ],
+      "parts": 3,
+      "facets": 4340,
+      "oa_source": "root"
+    },
+    "Test Case 6b": {
+      "volume_mm3": 15353.7256,
+      "surface_area_mm2": 22908.9711,
+      "bbox": [
+        -97.017,
+        -72.757,
+        -4.0,
+        97.017,
+        72.757,
+        0.95
+      ],
+      "parts": 1,
+      "facets": 5012,
+      "oa_source": "root"
+    },
+    "Test Case 6c": {
+      "volume_mm3": 117320.1452,
+      "surface_area_mm2": 45381.8611,
+      "bbox": [
+        -97.017,
+        -72.757,
+        -4.0,
+        97.017,
+        72.757,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 4992,
+      "oa_source": "root"
+    },
+    "Test Case 6d": {
+      "volume_mm3": 156238.1703,
+      "surface_area_mm2": 53183.7427,
+      "bbox": [
+        -97.017,
+        -72.757,
+        -4.0,
+        97.017,
+        72.757,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5472,
+      "oa_source": "root"
+    },
+    "Test Case 7": {
+      "volume_mm3": 8829.0917,
+      "surface_area_mm2": 15117.0792,
+      "bbox": [
+        -72.757,
+        -88.4838,
+        -4.0,
+        72.757,
+        78.4838,
+        0.7785
+      ],
+      "parts": 1,
+      "facets": 4248,
+      "oa_source": "case"
+    },
+    "Test Case 7a": {
+      "volume_mm3": 10098.216,
+      "surface_area_mm2": 18390.2236,
+      "bbox": [
+        -72.757,
+        -97.017,
+        -4.0,
+        72.757,
+        97.017,
+        0.892
+      ],
+      "parts": 3,
+      "facets": 4272,
+      "oa_source": "root"
+    },
+    "Test Case 7b": {
+      "volume_mm3": 14252.9445,
+      "surface_area_mm2": 23616.2172,
+      "bbox": [
+        -72.757,
+        -97.017,
+        -4.0,
+        72.757,
+        97.017,
+        3.207
+      ],
+      "parts": 1,
+      "facets": 5000,
+      "oa_source": "root"
+    },
+    "Test Case 7c": {
+      "volume_mm3": 89354.6036,
+      "surface_area_mm2": 39387.97,
+      "bbox": [
+        -72.757,
+        -97.017,
+        -4.0,
+        72.757,
+        97.017,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5954,
+      "oa_source": "root"
+    },
+    "Test Case 7d": {
+      "volume_mm3": 116756.6256,
+      "surface_area_mm2": 45382.8698,
+      "bbox": [
+        -72.757,
+        -97.017,
+        -4.0,
+        72.757,
+        97.017,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5928,
+      "oa_source": "root"
+    },
+    "Test Case 8": {
+      "volume_mm3": 36439.7756,
+      "surface_area_mm2": 22703.2148,
+      "bbox": [
+        -111.45,
+        -91.45,
+        -4.0,
+        0.95,
+        91.45,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5732,
+      "oa_source": "case"
+    },
+    "Test Case 8a": {
+      "volume_mm3": 36043.0238,
+      "surface_area_mm2": 22628.1101,
+      "bbox": [
+        -1.0,
+        -91.45,
+        -4.0,
+        111.45,
+        91.45,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5764,
+      "oa_source": "root"
+    },
+    "Test Case 8b": {
+      "volume_mm3": 36045.819,
+      "surface_area_mm2": 22461.612,
+      "bbox": [
+        -1.0,
+        -91.45,
+        -4.0,
+        111.45,
+        91.45,
+        4.0
+      ],
+      "parts": 2,
+      "facets": 5558,
+      "oa_source": "root"
+    },
+    "Test Case 8c": {
+      "volume_mm3": 36096.8344,
+      "surface_area_mm2": 22500.6732,
+      "bbox": [
+        -1.0,
+        -91.45,
+        -4.0,
+        111.45,
+        91.45,
+        4.0
+      ],
+      "parts": 2,
+      "facets": 5552,
+      "oa_source": "root"
+    },
+    "Test Case 8d": {
+      "volume_mm3": 36097.2776,
+      "surface_area_mm2": 22514.6435,
+      "bbox": [
+        -1.0,
+        -91.45,
+        -4.0,
+        111.45,
+        91.45,
+        4.0
+      ],
+      "parts": 2,
+      "facets": 5604,
+      "oa_source": "root"
+    },
+    "Test Case 8e": {
+      "volume_mm3": 38549.6526,
+      "surface_area_mm2": 21287.6568,
+      "bbox": [
+        31.8363,
+        -91.45,
+        -4.0,
+        111.45,
+        91.45,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 3836,
+      "oa_source": "root"
+    },
+    "Test Case 9": {
+      "volume_mm3": 43523.7285,
+      "surface_area_mm2": 27627.4469,
+      "bbox": [
+        -95.0,
+        -107.5,
+        -4.0,
+        95.0,
+        33.3363,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5962,
+      "oa_source": "case"
+    },
+    "Test Case 9a": {
+      "volume_mm3": 43523.7285,
+      "surface_area_mm2": 27627.4469,
+      "bbox": [
+        -95.0,
+        -107.5,
+        -4.0,
+        95.0,
+        33.3363,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5962,
+      "oa_source": "root"
+    },
+    "Test Case 9b": {
+      "volume_mm3": 43531.856,
+      "surface_area_mm2": 27558.0624,
+      "bbox": [
+        -95.0,
+        -107.5,
+        -4.0,
+        95.0,
+        33.3363,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5866,
+      "oa_source": "root"
+    },
+    "Test Case 9c": {
+      "volume_mm3": 43503.0288,
+      "surface_area_mm2": 27538.6517,
+      "bbox": [
+        -95.0,
+        -107.5,
+        -4.0,
+        95.0,
+        33.3363,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5854,
+      "oa_source": "root"
+    },
+    "Test Case 9d": {
+      "volume_mm3": 43502.3656,
+      "surface_area_mm2": 27538.429,
+      "bbox": [
+        -95.0,
+        -107.5,
+        -4.0,
+        95.0,
+        33.3363,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5864,
+      "oa_source": "root"
+    },
+    "Test Case 9e": {
+      "volume_mm3": 33560.9305,
+      "surface_area_mm2": 20288.2536,
+      "bbox": [
+        -95.0,
+        -107.5,
+        -4.0,
+        95.0,
+        0.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5038,
+      "oa_source": "root"
+    },
+    "Test Case 10": {
+      "volume_mm3": 172359.7996,
+      "surface_area_mm2": 88470.9684,
+      "bbox": [
+        -225.45,
+        -138.95,
+        -4.0,
+        205.45,
+        138.95,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 17570,
+      "oa_source": "case"
+    },
+    "Test Case 10a": {
+      "volume_mm3": 59549.6901,
+      "surface_area_mm2": 51672.8277,
+      "bbox": [
+        -160.5,
+        -94.0,
+        -1.5875,
+        160.5,
+        94.0,
+        1.5875
+      ],
+      "parts": 1,
+      "facets": 4956,
+      "oa_source": "root"
+    },
+    "Test Case 11": {
+      "volume_mm3": 113068.7729,
+      "surface_area_mm2": 83774.7095,
+      "bbox": [
+        -158.95,
+        -202.95,
+        -2.0,
+        138.95,
+        207.95,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 15948,
+      "oa_source": "case"
+    },
+    "Test Case 12": {
+      "volume_mm3": 80516.6694,
+      "surface_area_mm2": 63086.9678,
+      "bbox": [
+        -123.95,
+        -83.45,
+        -2.05,
+        123.95,
+        83.45,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 43782,
+      "oa_source": "case"
+    },
+    "Test Case 12a": {
+      "volume_mm3": 85507.1904,
+      "surface_area_mm2": 61781.2887,
+      "bbox": [
+        -119.5,
+        -79.5,
+        -2.0,
+        119.5,
+        79.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 41180,
+      "oa_source": "root"
+    },
+    "Test Case 12b": {
+      "volume_mm3": 86951.1585,
+      "surface_area_mm2": 63228.7048,
+      "bbox": [
+        -119.5,
+        -79.5,
+        -2.0,
+        119.5,
+        79.5,
+        6.0
+      ],
+      "parts": 1,
+      "facets": 41180,
+      "oa_source": "root"
+    },
+    "Test Case 12c": {
+      "volume_mm3": 88814.335,
+      "surface_area_mm2": 63501.1926,
+      "bbox": [
+        -119.5,
+        -79.5,
+        -2.0,
+        119.5,
+        79.5,
+        6.0
+      ],
+      "parts": 1,
+      "facets": 40732,
+      "oa_source": "root"
+    },
+    "Test Case 12d": {
+      "volume_mm3": 67466.8799,
+      "surface_area_mm2": 58034.8268,
+      "bbox": [
+        -119.5,
+        -79.5,
+        -1.5875,
+        119.5,
+        79.5,
+        1.5875
+      ],
+      "parts": 1,
+      "facets": 24328,
+      "oa_source": "root"
+    },
+    "Test Case 13": {
+      "volume_mm3": 109310.02,
+      "surface_area_mm2": 93354.102,
+      "bbox": [
+        -226.0,
+        -69.0,
+        -1.5875,
+        226.0,
+        69.0,
+        1.5875
+      ],
+      "parts": 1,
+      "facets": 29200,
+      "oa_source": "case"
+    },
+    "Test Case 13a": {
+      "volume_mm3": 202552.5798,
+      "surface_area_mm2": 106374.3851,
+      "bbox": [
+        -216.0,
+        -59.0,
+        -2.0,
+        216.0,
+        59.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 364,
+      "oa_source": "root"
+    },
+    "Test Case 14": {
+      "volume_mm3": 26655.053,
+      "surface_area_mm2": 23805.9535,
+      "bbox": [
+        -124.95,
+        -99.95,
+        -2.0,
+        109.95,
+        89.95,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 3012,
+      "oa_source": "case"
+    },
+    "Test Case 15": {
+      "volume_mm3": 39050.7332,
+      "surface_area_mm2": 30158.0415,
+      "bbox": [
+        -109.333,
+        -75.0,
+        -2.5,
+        109.333,
+        75.0,
+        5.1382
+      ],
+      "parts": 1,
+      "facets": 4420,
+      "oa_source": "case"
+    },
+    "Test Case 15a": {
+      "volume_mm3": 20311.3654,
+      "surface_area_mm2": 15852.5007,
+      "bbox": [
+        -109.333,
+        -75.0,
+        -2.5,
+        2.0,
+        75.0,
+        5.1382
+      ],
+      "parts": 1,
+      "facets": 2256,
+      "oa_source": "root"
+    },
+    "Test Case 15b": {
+      "volume_mm3": 32861.5756,
+      "surface_area_mm2": 28857.6627,
+      "bbox": [
+        -100.0,
+        -75.0,
+        -1.5875,
+        100.0,
+        75.0,
+        1.5375
+      ],
+      "parts": 1,
+      "facets": 3028,
+      "oa_source": "root"
+    },
+    "Test Case 16": {
+      "volume_mm3": 30238.3935,
+      "surface_area_mm2": 34357.2123,
+      "bbox": [
+        -143.0,
+        -99.5,
+        -2.0,
+        143.0,
+        99.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 10202,
       "oa_source": "case"
     },
     "Test Case 17": {
@@ -66,9 +666,1419 @@
       "facets": 6210,
       "oa_source": "case"
     },
+    "Test Case 17 portrait": {
+      "volume_mm3": 54551.6647,
+      "surface_area_mm2": 30247.1031,
+      "bbox": [
+        -75.0,
+        -105.0,
+        -2.5,
+        75.0,
+        107.95,
+        5.5
+      ],
+      "parts": 1,
+      "facets": 5412,
+      "oa_source": "case"
+    },
+    "Test Case 17a": {
+      "volume_mm3": 45774.6126,
+      "surface_area_mm2": 38363.5536,
+      "bbox": [
+        -136.402,
+        -96.2308,
+        -2.0,
+        145.598,
+        105.769,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 2780,
+      "oa_source": "root"
+    },
+    "Test Case 17a portrait": {
+      "volume_mm3": 53733.6486,
+      "surface_area_mm2": 29247.9252,
+      "bbox": [
+        -83.0,
+        -105.0,
+        -2.5,
+        83.0,
+        105.0,
+        3.9919
+      ],
+      "parts": 1,
+      "facets": 3988,
+      "oa_source": "root"
+    },
+    "Test Case 17b": {
+      "volume_mm3": 65918.2785,
+      "surface_area_mm2": 41715.4894,
+      "bbox": [
+        -136.402,
+        -96.2308,
+        -3.0,
+        145.598,
+        105.769,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 2896,
+      "oa_source": "root"
+    },
+    "Test Case 17b portrait": {
+      "volume_mm3": 53849.8415,
+      "surface_area_mm2": 29862.9674,
+      "bbox": [
+        -84.8272,
+        -105.0,
+        -2.5,
+        65.1728,
+        105.0,
+        5.5
+      ],
+      "parts": 1,
+      "facets": 3668,
+      "oa_source": "root"
+    },
+    "Test Case 17c": {
+      "volume_mm3": 61740.2895,
+      "surface_area_mm2": 31560.3842,
+      "bbox": [
+        -138.402,
+        -90.2308,
+        -3.0,
+        147.598,
+        99.7692,
+        3.4919
+      ],
+      "parts": 1,
+      "facets": 3218,
+      "oa_source": "root"
+    },
+    "Test Case 17c portrait": {
+      "volume_mm3": 19644.0081,
+      "surface_area_mm2": 20623.8147,
+      "bbox": [
+        -62.3,
+        -83.8,
+        -2.0,
+        62.3,
+        83.8,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 7408,
+      "oa_source": "root"
+    },
+    "Test Case 17d": {
+      "volume_mm3": 60163.5499,
+      "surface_area_mm2": 31736.2754,
+      "bbox": [
+        -136.402,
+        -90.2308,
+        -3.0,
+        133.598,
+        99.7692,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 2968,
+      "oa_source": "root"
+    },
+    "Test Case 17d portrait": {
+      "volume_mm3": 21969.6081,
+      "surface_area_mm2": 21819.8147,
+      "bbox": [
+        -63.3,
+        -84.8,
+        -2.0,
+        63.3,
+        84.8,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 7408,
+      "oa_source": "root"
+    },
+    "Test Case 17e": {
+      "volume_mm3": 30288.7666,
+      "surface_area_mm2": 27908.8614,
+      "bbox": [
+        -121.3,
+        -85.0,
+        -3.0,
+        121.3,
+        85.8,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 7644,
+      "oa_source": "root"
+    },
+    "Test Case 17f": {
+      "volume_mm3": 27992.572,
+      "surface_area_mm2": 27103.1325,
+      "bbox": [
+        -120.8,
+        -84.5,
+        -3.0,
+        120.8,
+        85.3,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 7528,
+      "oa_source": "root"
+    },
+    "Test Case 17g": {
+      "volume_mm3": 32598.0218,
+      "surface_area_mm2": 28721.0158,
+      "bbox": [
+        -121.8,
+        -85.5,
+        -3.0,
+        121.8,
+        86.3,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 7804,
+      "oa_source": "root"
+    },
+    "Test Case 17h": {
+      "volume_mm3": 61740.2864,
+      "surface_area_mm2": 31560.3894,
+      "bbox": [
+        -130.402,
+        -98.2308,
+        -3.0,
+        139.598,
+        107.769,
+        3.4919
+      ],
+      "parts": 1,
+      "facets": 3218,
+      "oa_source": "root"
+    },
+    "Test Case 17i": {
+      "volume_mm3": 63161.486,
+      "surface_area_mm2": 32643.0645,
+      "bbox": [
+        -138.402,
+        -98.2308,
+        -3.0,
+        147.598,
+        107.769,
+        3.4919
+      ],
+      "parts": 1,
+      "facets": 3810,
+      "oa_source": "root"
+    },
+    "Test Case 17j": {
+      "volume_mm3": 105385.4997,
+      "surface_area_mm2": 52135.4753,
+      "bbox": [
+        -130.402,
+        -98.2308,
+        -3.5,
+        139.598,
+        107.769,
+        3.5
+      ],
+      "parts": 1,
+      "facets": 8700,
+      "oa_source": "root"
+    },
+    "Test Case 17k": {
+      "volume_mm3": 106806.6992,
+      "surface_area_mm2": 53218.1504,
+      "bbox": [
+        -138.402,
+        -98.2308,
+        -3.5,
+        147.598,
+        107.769,
+        3.5
+      ],
+      "parts": 1,
+      "facets": 9292,
+      "oa_source": "root"
+    },
+    "Test Case 18": {
+      "volume_mm3": 129544.8936,
+      "surface_area_mm2": 55740.8859,
+      "bbox": [
+        -125.282,
+        -87.03,
+        -5.0,
+        125.308,
+        87.05,
+        5.0
+      ],
+      "parts": 1,
+      "facets": 10060,
+      "oa_source": "case"
+    },
+    "Test Case 18a": {
+      "volume_mm3": 124117.1913,
+      "surface_area_mm2": 57012.334,
+      "bbox": [
+        -125.282,
+        -87.03,
+        -5.0,
+        125.308,
+        87.05,
+        5.0
+      ],
+      "parts": 1,
+      "facets": 11868,
+      "oa_source": "root"
+    },
+    "Test Case 18b": {
+      "volume_mm3": 125455.8944,
+      "surface_area_mm2": 56213.7554,
+      "bbox": [
+        -125.282,
+        -87.03,
+        -5.0,
+        125.308,
+        87.05,
+        5.0
+      ],
+      "parts": 1,
+      "facets": 11420,
+      "oa_source": "root"
+    },
+    "Test Case 18c": {
+      "volume_mm3": 128766.0936,
+      "surface_area_mm2": 56358.9522,
+      "bbox": [
+        -125.282,
+        -87.03,
+        -5.0,
+        125.308,
+        87.05,
+        5.0
+      ],
+      "parts": 1,
+      "facets": 10124,
+      "oa_source": "root"
+    },
+    "Test Case 18d": {
+      "volume_mm3": 128883.1541,
+      "surface_area_mm2": 55898.6785,
+      "bbox": [
+        -125.282,
+        -87.03,
+        -5.0,
+        125.308,
+        87.05,
+        5.0
+      ],
+      "parts": 1,
+      "facets": 11596,
+      "oa_source": "root"
+    },
+    "Test Case 19": {
+      "volume_mm3": 79623.0685,
+      "surface_area_mm2": 49874.0951,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -3.0,
+        122.5,
+        87.5,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 5596,
+      "oa_source": "case"
+    },
+    "Test Case 19a": {
+      "volume_mm3": 82631.9479,
+      "surface_area_mm2": 50738.181,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -3.0,
+        122.5,
+        87.5,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 8908,
+      "oa_source": "root"
+    },
+    "Test Case 19b": {
+      "volume_mm3": 133593.2057,
+      "surface_area_mm2": 72312.4974,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -3.0,
+        122.5,
+        87.5,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 8956,
+      "oa_source": "root"
+    },
+    "Test Case 20": {
+      "volume_mm3": 118070.6565,
+      "surface_area_mm2": 58025.8864,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -4.0,
+        122.5,
+        87.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 6696,
+      "oa_source": "case"
+    },
+    "Test Case 20a": {
+      "volume_mm3": 118022.6712,
+      "surface_area_mm2": 58050.0257,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -4.0,
+        122.5,
+        87.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5760,
+      "oa_source": "root"
+    },
+    "Test Case 20b": {
+      "volume_mm3": 118310.3587,
+      "surface_area_mm2": 58040.0118,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -4.0,
+        122.5,
+        87.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 6688,
+      "oa_source": "root"
+    },
+    "Test Case 21": {
+      "volume_mm3": 40814.6113,
+      "surface_area_mm2": 35809.211,
+      "bbox": [
+        -92.5,
+        -65.0,
+        -2.0,
+        92.5,
+        65.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 20416,
+      "oa_source": "case"
+    },
+    "Test Case 21a": {
+      "volume_mm3": 29378.099,
+      "surface_area_mm2": 27860.6464,
+      "bbox": [
+        -92.5,
+        -65.0,
+        -2.0,
+        92.5,
+        65.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 17960,
+      "oa_source": "root"
+    },
+    "Test Case 22": {
+      "volume_mm3": 8446.861,
+      "surface_area_mm2": 5017.4921,
+      "bbox": [
+        -23.5,
+        -2.7408,
+        -23.5,
+        23.5,
+        2.0,
+        23.5
+      ],
+      "parts": 1,
+      "facets": 3664,
+      "oa_source": "case"
+    },
+    "Test Case 22a": {
+      "volume_mm3": 8446.861,
+      "surface_area_mm2": 5017.4921,
+      "bbox": [
+        -23.5,
+        -2.7408,
+        -23.5,
+        23.5,
+        2.0,
+        23.5
+      ],
+      "parts": 1,
+      "facets": 3664,
+      "oa_source": "root"
+    },
+    "Test Case 22b": {
+      "volume_mm3": 8456.0186,
+      "surface_area_mm2": 5035.9105,
+      "bbox": [
+        -23.5,
+        -2.7408,
+        -23.5,
+        23.5,
+        2.0,
+        23.5
+      ],
+      "parts": 1,
+      "facets": 6544,
+      "oa_source": "root"
+    },
+    "Test Case 22c": {
+      "volume_mm3": 8446.8612,
+      "surface_area_mm2": 5017.4923,
+      "bbox": [
+        -23.5,
+        -2.7408,
+        -23.5,
+        23.5,
+        2.0,
+        23.5
+      ],
+      "parts": 1,
+      "facets": 3664,
+      "oa_source": "root"
+    },
+    "Test Case 22d": {
+      "volume_mm3": 8446.8612,
+      "surface_area_mm2": 5017.4923,
+      "bbox": [
+        -23.5,
+        -2.7408,
+        -23.5,
+        23.5,
+        2.0,
+        23.5
+      ],
+      "parts": 1,
+      "facets": 3664,
+      "oa_source": "root"
+    },
+    "Test Case 22e": {
+      "volume_mm3": 8466.2828,
+      "surface_area_mm2": 5095.2737,
+      "bbox": [
+        -35.2908,
+        -2.7408,
+        -23.5,
+        35.2908,
+        2.0,
+        23.5
+      ],
+      "parts": 12,
+      "facets": 8272,
+      "oa_source": "root"
+    },
+    "Test Case 22f": {
+      "volume_mm3": 7633.0203,
+      "surface_area_mm2": 4722.8329,
+      "bbox": [
+        -23.5,
+        -2.7408,
+        -23.5,
+        23.5,
+        2.0,
+        23.5
+      ],
+      "parts": 1,
+      "facets": 3664,
+      "oa_source": "root"
+    },
+    "Test Case 22g": {
+      "volume_mm3": 7633.0201,
+      "surface_area_mm2": 4722.8329,
+      "bbox": [
+        -23.5,
+        -2.7408,
+        -23.5,
+        23.5,
+        2.0,
+        23.5
+      ],
+      "parts": 1,
+      "facets": 3664,
+      "oa_source": "root"
+    },
+    "Test Case 22h": {
+      "volume_mm3": 7706.8731,
+      "surface_area_mm2": 4788.7221,
+      "bbox": [
+        -23.5,
+        -3.4815,
+        -23.5,
+        23.5,
+        2.0,
+        23.5
+      ],
+      "parts": 1,
+      "facets": 3664,
+      "oa_source": "root"
+    },
+    "Test Case 22i": {
+      "volume_mm3": 7451.728,
+      "surface_area_mm2": 4966.577,
+      "bbox": [
+        -23.5,
+        -3.4815,
+        -23.5,
+        23.5,
+        2.0,
+        23.7315
+      ],
+      "parts": 1,
+      "facets": 5334,
+      "oa_source": "root"
+    },
+    "Test Case 22j": {
+      "volume_mm3": 7272.9916,
+      "surface_area_mm2": 4863.8554,
+      "bbox": [
+        -23.25,
+        -3.4815,
+        -23.25,
+        23.25,
+        2.0,
+        23.7315
+      ],
+      "parts": 1,
+      "facets": 5346,
+      "oa_source": "root"
+    },
+    "Test Case 22k": {
+      "volume_mm3": 7633.3653,
+      "surface_area_mm2": 5071.4196,
+      "bbox": [
+        -23.75,
+        -3.4815,
+        -23.75,
+        23.75,
+        2.0,
+        23.75
+      ],
+      "parts": 1,
+      "facets": 5250,
+      "oa_source": "root"
+    },
+    "Test Case 23": {
+      "volume_mm3": 73620.2749,
+      "surface_area_mm2": 63395.3619,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 8184,
+      "oa_source": "case"
+    },
+    "Test Case 23a": {
+      "volume_mm3": 81532.7785,
+      "surface_area_mm2": 64383.4807,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 44822,
+      "oa_source": "root"
+    },
+    "Test Case 23b": {
+      "volume_mm3": 87066.0095,
+      "surface_area_mm2": 66271.0602,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 44800,
+      "oa_source": "root"
+    },
+    "Test Case 23c": {
+      "volume_mm3": 113066.4597,
+      "surface_area_mm2": 75869.4529,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 54428,
+      "oa_source": "root"
+    },
+    "Test Case 24": {
+      "volume_mm3": 68476.8909,
+      "surface_area_mm2": 48707.9293,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        6.9346
+      ],
+      "parts": 9,
+      "facets": 17696,
+      "oa_source": "case"
+    },
+    "Test Case 24a": {
+      "volume_mm3": 69950.5856,
+      "surface_area_mm2": 48738.5083,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6720,
+      "oa_source": "root"
+    },
+    "Test Case 25": {
+      "volume_mm3": 130734.891,
+      "surface_area_mm2": 80153.5489,
+      "bbox": [
+        -122.5,
+        -122.5,
+        -2.0,
+        122.5,
+        122.5,
+        6.9346
+      ],
+      "parts": 9,
+      "facets": 17750,
+      "oa_source": "case"
+    },
+    "Test Case 25a": {
+      "volume_mm3": 132211.2211,
+      "surface_area_mm2": 80182.8401,
+      "bbox": [
+        -122.5,
+        -122.5,
+        -2.0,
+        122.5,
+        122.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6788,
+      "oa_source": "root"
+    },
+    "Test Case 26": {
+      "volume_mm3": 68466.5552,
+      "surface_area_mm2": 48698.0793,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        6.9346
+      ],
+      "parts": 9,
+      "facets": 17664,
+      "oa_source": "case"
+    },
+    "Test Case 26a": {
+      "volume_mm3": 69941.4038,
+      "surface_area_mm2": 48729.2267,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6724,
+      "oa_source": "root"
+    },
+    "Test Case 27": {
+      "volume_mm3": 68466.5552,
+      "surface_area_mm2": 48698.074,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        6.9346
+      ],
+      "parts": 9,
+      "facets": 17662,
+      "oa_source": "case"
+    },
+    "Test Case 27a": {
+      "volume_mm3": 69941.4038,
+      "surface_area_mm2": 48729.2267,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6724,
+      "oa_source": "root"
+    },
+    "Test Case 28": {
+      "volume_mm3": 62210.2491,
+      "surface_area_mm2": 45286.0461,
+      "bbox": [
+        -87.5,
+        -122.5,
+        -2.0,
+        87.5,
+        122.5,
+        6.9346
+      ],
+      "parts": 9,
+      "facets": 17718,
+      "oa_source": "case"
+    },
+    "Test Case 28a": {
+      "volume_mm3": 63687.7414,
+      "surface_area_mm2": 45315.8889,
+      "bbox": [
+        -87.5,
+        -122.5,
+        -2.0,
+        87.5,
+        122.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6786,
+      "oa_source": "root"
+    },
+    "Test Case 29": {
+      "volume_mm3": 62210.2491,
+      "surface_area_mm2": 45286.0461,
+      "bbox": [
+        -87.5,
+        -122.5,
+        -2.0,
+        87.5,
+        122.5,
+        6.9346
+      ],
+      "parts": 9,
+      "facets": 17718,
+      "oa_source": "case"
+    },
+    "Test Case 29a": {
+      "volume_mm3": 63687.7414,
+      "surface_area_mm2": 45315.8889,
+      "bbox": [
+        -87.5,
+        -122.5,
+        -2.0,
+        87.5,
+        122.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6786,
+      "oa_source": "root"
+    },
+    "Test Case 30": {
+      "volume_mm3": 68476.1857,
+      "surface_area_mm2": 48707.3427,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        6.937
+      ],
+      "parts": 9,
+      "facets": 17560,
+      "oa_source": "case"
+    },
+    "Test Case 30a": {
+      "volume_mm3": 69950.5856,
+      "surface_area_mm2": 48738.5137,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6722,
+      "oa_source": "root"
+    },
+    "Test Case 31": {
+      "volume_mm3": 130734.1744,
+      "surface_area_mm2": 80152.9626,
+      "bbox": [
+        -122.5,
+        -122.5,
+        -2.0,
+        122.5,
+        122.5,
+        6.937
+      ],
+      "parts": 9,
+      "facets": 17622,
+      "oa_source": "case"
+    },
+    "Test Case 31a": {
+      "volume_mm3": 132211.2211,
+      "surface_area_mm2": 80182.8347,
+      "bbox": [
+        -122.5,
+        -122.5,
+        -2.0,
+        122.5,
+        122.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6786,
+      "oa_source": "root"
+    },
+    "Test Case 32": {
+      "volume_mm3": 68465.8501,
+      "surface_area_mm2": 48697.4922,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        6.937
+      ],
+      "parts": 9,
+      "facets": 17560,
+      "oa_source": "case"
+    },
+    "Test Case 32a": {
+      "volume_mm3": 69941.4038,
+      "surface_area_mm2": 48729.2267,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6724,
+      "oa_source": "root"
+    },
+    "Test Case 33": {
+      "volume_mm3": 68465.8501,
+      "surface_area_mm2": 48697.4869,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        6.937
+      ],
+      "parts": 9,
+      "facets": 17558,
+      "oa_source": "case"
+    },
+    "Test Case 33a": {
+      "volume_mm3": 69941.4038,
+      "surface_area_mm2": 48729.2267,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.0,
+        122.5,
+        87.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6724,
+      "oa_source": "root"
+    },
+    "Test Case 34": {
+      "volume_mm3": 62209.5331,
+      "surface_area_mm2": 45285.4586,
+      "bbox": [
+        -87.5,
+        -122.5,
+        -2.0,
+        87.5,
+        122.5,
+        6.937
+      ],
+      "parts": 9,
+      "facets": 17622,
+      "oa_source": "case"
+    },
+    "Test Case 34a": {
+      "volume_mm3": 63687.7414,
+      "surface_area_mm2": 45315.8942,
+      "bbox": [
+        -87.5,
+        -122.5,
+        -2.0,
+        87.5,
+        122.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6788,
+      "oa_source": "root"
+    },
+    "Test Case 35": {
+      "volume_mm3": 62209.5331,
+      "surface_area_mm2": 45285.4586,
+      "bbox": [
+        -87.5,
+        -122.5,
+        -2.0,
+        87.5,
+        122.5,
+        6.937
+      ],
+      "parts": 9,
+      "facets": 17622,
+      "oa_source": "case"
+    },
+    "Test Case 35a": {
+      "volume_mm3": 63687.7414,
+      "surface_area_mm2": 45315.8835,
+      "bbox": [
+        -87.5,
+        -122.5,
+        -2.0,
+        87.5,
+        122.5,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 6784,
+      "oa_source": "root"
+    },
+    "Test Case 36": {
+      "volume_mm3": 55613.4049,
+      "surface_area_mm2": 27806.7581,
+      "bbox": [
+        -120.5,
+        -82.5,
+        -5.0,
+        120.5,
+        82.5,
+        5.0
+      ],
+      "parts": 1,
+      "facets": 5666,
+      "oa_source": "case"
+    },
+    "Test Case 37": {
+      "volume_mm3": 28961.6073,
+      "surface_area_mm2": 34469.4636,
+      "bbox": [
+        -114.0,
+        -80.95,
+        -2.5,
+        114.0,
+        76.0471,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 28964,
+      "oa_source": "case"
+    },
+    "Test Case 37a": {
+      "volume_mm3": 28772.9586,
+      "surface_area_mm2": 34283.3609,
+      "bbox": [
+        -114.0,
+        -80.95,
+        -2.5,
+        114.0,
+        71.0471,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 29016,
+      "oa_source": "root"
+    },
+    "Test Case 37b": {
+      "volume_mm3": 28772.9586,
+      "surface_area_mm2": 34283.3609,
+      "bbox": [
+        -114.0,
+        -80.95,
+        -2.5,
+        114.0,
+        71.0471,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 29016,
+      "oa_source": "root"
+    },
+    "Test Case 37c": {
+      "volume_mm3": 29480.6636,
+      "surface_area_mm2": 34796.7424,
+      "bbox": [
+        -118.0,
+        -80.95,
+        -2.5,
+        118.0,
+        72.2753,
+        5.5
+      ],
+      "parts": 1,
+      "facets": 29574,
+      "oa_source": "root"
+    },
+    "Test Case 37d": {
+      "volume_mm3": 29700.9495,
+      "surface_area_mm2": 35304.3845,
+      "bbox": [
+        -118.0,
+        -85.1827,
+        -2.5,
+        118.0,
+        72.2753,
+        5.5
+      ],
+      "parts": 1,
+      "facets": 29582,
+      "oa_source": "root"
+    },
+    "Test Case 38": {
+      "volume_mm3": 352320.3468,
+      "surface_area_mm2": 153511.0821,
+      "bbox": [
+        -222.95,
+        -138.95,
+        -4.0,
+        202.95,
+        108.95,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 7538,
+      "oa_source": "case"
+    },
+    "Test Case 39": {
+      "volume_mm3": 230297.9285,
+      "surface_area_mm2": 131962.115,
+      "bbox": [
+        -158.95,
+        -202.95,
+        -2.0,
+        138.95,
+        207.95,
+        2.0
+      ],
+      "parts": 15,
+      "facets": 12796,
+      "oa_source": "case"
+    },
+    "Test Case 40": {
+      "volume_mm3": 75579.8561,
+      "surface_area_mm2": 53154.9527,
+      "bbox": [
+        -80.8,
+        -80.8,
+        -3.0,
+        80.8,
+        80.8,
+        -0.05
+      ],
+      "parts": 1,
+      "facets": 412,
+      "oa_source": "case"
+    },
+    "Test Case 40a": {
+      "volume_mm3": 286672.9536,
+      "surface_area_mm2": 103908.5347,
+      "bbox": [
+        -158.95,
+        -202.95,
+        -4.0,
+        138.95,
+        207.95,
+        4.0
+      ],
+      "parts": 17,
+      "facets": 11860,
+      "oa_source": "root"
+    },
+    "Test Case 41": {
+      "volume_mm3": 45057.9087,
+      "surface_area_mm2": 24613.5317,
+      "bbox": [
+        -120.5,
+        -82.5,
+        -4.0,
+        120.5,
+        82.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 5826,
+      "oa_source": "case"
+    },
+    "Test Case 42": {
+      "volume_mm3": 39267.4792,
+      "surface_area_mm2": 40481.4329,
+      "bbox": [
+        -114.0,
+        -80.95,
+        -2.0,
+        114.0,
+        76.0471,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 28396,
+      "oa_source": "case"
+    },
+    "Test Case 43": {
+      "volume_mm3": 61307.1221,
+      "surface_area_mm2": 42596.9353,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.05,
+        122.5,
+        87.5,
+        4.0
+      ],
+      "parts": 1,
+      "facets": 9346,
+      "oa_source": "case"
+    },
+    "Test Case 43a": {
+      "volume_mm3": 66876.9485,
+      "surface_area_mm2": 45372.6056,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.05,
+        122.5,
+        87.5,
+        6.0
+      ],
+      "parts": 1,
+      "facets": 9124,
+      "oa_source": "root"
+    },
+    "Test Case 44-1": {
+      "volume_mm3": 109314.8697,
+      "surface_area_mm2": 93354.4406,
+      "bbox": [
+        -226.0,
+        -69.0,
+        -1.5875,
+        226.0,
+        69.0,
+        1.5875
+      ],
+      "parts": 1,
+      "facets": 29204,
+      "oa_source": "case"
+    },
+    "Test Case 44-2": {
+      "volume_mm3": 154824.1299,
+      "surface_area_mm2": 115648.583,
+      "bbox": [
+        -226.0,
+        -69.0,
+        -1.5875,
+        226.0,
+        69.0,
+        1.5875
+      ],
+      "parts": 1,
+      "facets": 29272,
+      "oa_source": "case"
+    },
+    "Test Case 44-3": {
+      "volume_mm3": 138526.8639,
+      "surface_area_mm2": 106799.809,
+      "bbox": [
+        -226.0,
+        -69.0,
+        -1.5875,
+        226.0,
+        69.0,
+        1.5875
+      ],
+      "parts": 1,
+      "facets": 27564,
+      "oa_source": "case"
+    },
+    "Test Case 45": {
+      "volume_mm3": 41551.2394,
+      "surface_area_mm2": 28443.0897,
+      "bbox": [
+        -134.95,
+        -104.95,
+        -2.5,
+        119.95,
+        94.95,
+        5.0
+      ],
+      "parts": 1,
+      "facets": 2492,
+      "oa_source": "case"
+    },
+    "Test Case 46b": {
+      "volume_mm3": 48278.3555,
+      "surface_area_mm2": 51575.0504,
+      "bbox": [
+        -119.896,
+        -85.625,
+        -1.5875,
+        121.104,
+        85.625,
+        1.5875
+      ],
+      "parts": 1,
+      "facets": 26088,
+      "oa_source": "root"
+    },
+    "Test Case 47": {
+      "volume_mm3": 70816.9536,
+      "surface_area_mm2": 49084.1848,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.5,
+        122.5,
+        87.5,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 17624,
+      "oa_source": "case"
+    },
+    "Test Case 47a": {
+      "volume_mm3": 71956.9234,
+      "surface_area_mm2": 49129.2441,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.5,
+        122.5,
+        87.5,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 17624,
+      "oa_source": "root"
+    },
+    "Test Case 47b": {
+      "volume_mm3": 70525.0279,
+      "surface_area_mm2": 49558.5024,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.5,
+        122.5,
+        87.5,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 17624,
+      "oa_source": "root"
+    },
+    "Test Case 48": {
+      "volume_mm3": 71123.0464,
+      "surface_area_mm2": 48709.2293,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.5,
+        122.5,
+        87.5,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 14580,
+      "oa_source": "case"
+    },
+    "Test Case 48a": {
+      "volume_mm3": 70748.0074,
+      "surface_area_mm2": 49252.1331,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.5,
+        122.5,
+        87.5,
+        2.5
+      ],
+      "parts": 4,
+      "facets": 14612,
+      "oa_source": "root"
+    },
+    "Test Case 49": {
+      "volume_mm3": 131430.1641,
+      "surface_area_mm2": 92417.6011,
+      "bbox": [
+        -166.456,
+        -126.944,
+        -2.0,
+        166.544,
+        101.056,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 26476,
+      "oa_source": "case"
+    },
     "Test Case 50": {
       "volume_mm3": 37575.2032,
-      "surface_area_mm2": 37753.1546,
+      "surface_area_mm2": 37753.025,
       "bbox": [
         -99.0,
         -69.0,
@@ -80,6 +2090,171 @@
       "parts": 1,
       "facets": 18612,
       "oa_source": "case"
+    },
+    "Test Case 50a": {
+      "volume_mm3": 43825.4364,
+      "surface_area_mm2": 44264.1291,
+      "bbox": [
+        -104.0,
+        -74.0,
+        -2.5,
+        104.0,
+        74.0,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 18902,
+      "oa_source": "root"
+    },
+    "Test Case 51": {
+      "volume_mm3": 39050.7332,
+      "surface_area_mm2": 30158.0415,
+      "bbox": [
+        -109.333,
+        -75.0,
+        -2.5,
+        109.333,
+        75.0,
+        5.1382
+      ],
+      "parts": 1,
+      "facets": 4420,
+      "oa_source": "case"
+    },
+    "Test Case 52": {
+      "volume_mm3": 149463.8919,
+      "surface_area_mm2": 79626.9644,
+      "bbox": [
+        -122.5,
+        -85.0,
+        -3.0,
+        122.5,
+        85.0,
+        3.0
+      ],
+      "parts": 1,
+      "facets": 12426,
+      "oa_source": "case"
+    },
+    "Test Case 53": {
+      "volume_mm3": 146705.5918,
+      "surface_area_mm2": 81361.1259,
+      "bbox": [
+        -110.0,
+        -85.0,
+        -2.05,
+        110.0,
+        85.0,
+        12.1
+      ],
+      "parts": 7,
+      "facets": 16916,
+      "oa_source": "case"
+    },
+    "Test Case 54": {
+      "volume_mm3": 280411.0778,
+      "surface_area_mm2": 92929.2096,
+      "bbox": [
+        -122.5,
+        -85.0,
+        -5.0,
+        122.5,
+        85.0,
+        10.1
+      ],
+      "parts": 1,
+      "facets": 19136,
+      "oa_source": "case"
+    },
+    "Test Case 55": {
+      "volume_mm3": 178011.4793,
+      "surface_area_mm2": 93148.798,
+      "bbox": [
+        -124.0,
+        -86.0,
+        -2.05,
+        122.5,
+        85.0,
+        7.95
+      ],
+      "parts": 1,
+      "facets": 6802,
+      "oa_source": "case"
+    },
+    "Test Case 56": {
+      "volume_mm3": 70931.3857,
+      "surface_area_mm2": 51859.6913,
+      "bbox": [
+        -122.5,
+        -85.0,
+        -2.0,
+        122.5,
+        85.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 18202,
+      "oa_source": "case"
+    },
+    "Test Case 56a": {
+      "volume_mm3": 83453.3816,
+      "surface_area_mm2": 56481.1876,
+      "bbox": [
+        -122.5,
+        -85.0,
+        -2.0,
+        122.5,
+        85.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 16140,
+      "oa_source": "root"
+    },
+    "Test Case 56b": {
+      "volume_mm3": 83453.3816,
+      "surface_area_mm2": 56481.1822,
+      "bbox": [
+        -122.5,
+        -85.0,
+        -2.0,
+        122.5,
+        85.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 16138,
+      "oa_source": "root"
+    },
+    "Test Case 56c": {
+      "volume_mm3": 57515.9941,
+      "surface_area_mm2": 40358.1607,
+      "bbox": [
+        -122.5,
+        -85.0,
+        -2.0,
+        58.4,
+        85.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 12050,
+      "oa_source": "root"
+    },
+    "Test Case 56d": {
+      "volume_mm3": 57513.8379,
+      "surface_area_mm2": 40979.7297,
+      "bbox": [
+        -122.5,
+        -85.0,
+        -2.0,
+        59.35,
+        85.0,
+        2.0
+      ],
+      "parts": 1,
+      "facets": 12498,
+      "oa_source": "root"
     },
     "Test Case 57": {
       "volume_mm3": 34034.2121,
