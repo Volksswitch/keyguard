@@ -176,6 +176,7 @@ RENDER_TIMEOUT=300
 RUN_LINT=false; RUN_SYNTAX=false; RUN_SMOKE=false
 RUN_GEOMETRY=false; RUN_VISUAL=false
 CAPTURE_REFERENCES=false
+UPDATE_GOLDEN=false
 CASE_FILTER=""
 
 if [[ $# -eq 0 ]]; then
@@ -191,6 +192,7 @@ else
             --all)                 RUN_LINT=true; RUN_SYNTAX=true; RUN_SMOKE=true
                                    RUN_GEOMETRY=true; RUN_VISUAL=true ;;
             --capture-references)  CAPTURE_REFERENCES=true; RUN_VISUAL=true ;;
+            --update-golden)       UPDATE_GOLDEN=true ;;
             --case)                shift; CASE_FILTER="$1" ;;
             --case=*)              CASE_FILTER="${1#--case=}" ;;
             *) echo "Unknown option: $1"; exit 1 ;;
@@ -650,6 +652,231 @@ PYEOF
     info "Timings appended to: test-timings.ndjson"
 }
 
+# ── Golden STL stats manifest generator ────────────────────────────────────────
+#
+# Renders every named config to STL using native OpenSCAD (CGAL — the
+# authoritative backend) and writes per-config geometric stats to
+# tests/cases/golden-stl-stats.json. The web app's geometry layer (run via
+# Playwright in keyguard-designer-web) loads this manifest and compares its
+# Manifold-backend STL output against the recorded numbers to detect cases
+# where Manifold silently produces broken geometry (e.g. TC57 membranes).
+#
+# Skip list and OA-swap logic mirror run_geometry, so every config that
+# appears in the geometry-validation pass-list contributes one manifest entry.
+#
+# This is opt-in only (--update-golden); the manifest is regenerated when
+# .scad-side geometry intentionally changes, and committed alongside the
+# code change.
+
+run_update_golden() {
+    local manifest="$CASES_DIR/golden-stl-stats.json"
+    local stats_script="$SCRIPT_DIR/compute_stl_stats.py"
+    # Native-OpenSCAD CGAL renders are slower than --geometry expects: TC57
+    # for example spends ~270s in CGAL. Use a longer per-config timeout so
+    # the manifest can capture the heavy cases. Honour an explicit override
+    # via env if the caller knows the corpus has gotten heavier.
+    local prev_render_timeout="$RENDER_TIMEOUT"
+    RENDER_TIMEOUT="${KEYGUARD_GOLDEN_TIMEOUT:-900}"
+    info "Per-config render timeout: ${RENDER_TIMEOUT}s"
+
+    # Build the geometry-skip list (steps with "geometry": false in test.json).
+    local -a GEOMETRY_SKIP=()
+    while IFS= read -r config_name; do
+        [[ -n "$config_name" ]] && GEOMETRY_SKIP+=("$config_name")
+    done < <($PYTHON - "$CASES_DIR" <<'PYEOF' | tr -d '\r'
+import json, os, sys
+cases_dir = sys.argv[1]
+skip = set()
+for root, _dirs, files in os.walk(cases_dir):
+    for fn in files:
+        if fn != "test.json":
+            continue
+        try:
+            with open(os.path.join(root, fn), encoding="utf-8") as fh:
+                test = json.load(fh)
+            for step in test.get("steps", []):
+                if step.get("geometry") is False and step.get("params"):
+                    skip.add(step["params"])
+        except Exception:
+            pass
+for name in sorted(skip):
+    print(name)
+PYEOF
+)
+
+    header "Golden STL stats — regenerating manifest"
+    if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — aborting"; return; fi
+    if [[ ! -f "$stats_script" ]]; then fail "compute_stl_stats.py not found at $stats_script"; return; fi
+
+    local -a configs
+    mapfile -t configs < <(get_configs)
+    info "Found ${#configs[@]} named configs"
+    info "Manifest: $(realpath --relative-to="$PROJECT_ROOT" "$manifest" 2>/dev/null || echo "$manifest")"
+    [[ -n "$CASE_FILTER" ]] && info "Filter: '$CASE_FILTER' (existing manifest entries outside the filter are preserved)"
+
+    # Preserve existing manifest entries that fall outside the filter.
+    local existing="{}"
+    if [[ -f "$manifest" ]]; then
+        existing=$($PYTHON -c "
+import json, sys
+try:
+    with open('$(py_path "$manifest")', encoding='utf-8') as f:
+        d = json.load(f).get('configs', {})
+    print(json.dumps(d))
+except Exception:
+    print('{}')
+")
+    fi
+
+    # Save root O&A so we can restore it after each config and at the end.
+    local saved_openings="/tmp/keyguard_golden_oa_$$.txt"
+    cp "$OPENINGS_FILE" "$saved_openings"
+
+    local total=${#configs[@]} current=0 ok=0 fail_count=0 skipped=0
+    local entries=""   # accumulated JSON entries, comma-separated
+    local t_start; t_start=$(date +%s)
+
+    for config in "${configs[@]}"; do
+        current=$((current + 1))
+
+        if ! case_matches_filter "$config"; then
+            # Outside filter — keep existing entry if present.
+            local kept; kept=$($PYTHON -c "
+import json, sys
+d = json.loads(sys.argv[1])
+v = d.get(sys.argv[2])
+if v is None: sys.exit(1)
+print(json.dumps({sys.argv[2]: v})[1:-1])
+" "$existing" "$config" 2>/dev/null) && entries+="$kept,"$'\n'
+            continue
+        fi
+
+        local skip=false
+        for s in "${GEOMETRY_SKIP[@]}"; do
+            [[ "$config" == "$s" ]] && skip=true && break
+        done
+        if "$skip"; then
+            printf "  [%2d/%d] %-35s ${YELLOW}SKIP${RESET}\n" "$current" "$total" "$config"
+            skipped=$((skipped + 1))
+            continue
+        fi
+
+        # Swap in test-case O&A if one exists.
+        local case_test_json="$CASES_DIR/$config/test.json"
+        local case_openings_src=""
+        if [[ -f "$case_test_json" ]]; then
+            local case_openings_name
+            case_openings_name=$(get_test_field "$case_test_json" "openings")
+            if [[ -n "$case_openings_name" && -f "$CASES_DIR/$config/$case_openings_name" ]]; then
+                case_openings_src="$CASES_DIR/$config/$case_openings_name"
+            fi
+        fi
+        if [[ -n "$case_openings_src" ]]; then
+            cp "$case_openings_src" "$OPENINGS_FILE"
+        else
+            cp "$saved_openings" "$OPENINGS_FILE"
+        fi
+
+        local safe; safe=$(echo "$config" | tr ' /' '__')
+        local out="/tmp/keyguard_golden_${safe}_$$.stl"
+        printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
+
+        local exit_code=0 t0 dt
+        t0=$(date +%s)
+        # Mirror the web app's export-path -D injection (see app.html
+        # renderExportBytes): fudge/ff = 0.05 is the Manifold cell-floor
+        # workaround that the web app always applies, and include_screenshot
+        # is forced off for exports. The manifest must capture the same
+        # geometry the web app's export produces, otherwise the comparison
+        # picks up render-parameter drift instead of actual Manifold-vs-CGAL
+        # divergence.
+        local rargs=(-p "$JSON_FILE" -P "$config"
+                     -D fudge=0.05 -D ff=0.05 -D include_screenshot="no"
+                     -o "$out" "$SCAD_FILE")
+        if [[ -n "$TIMEOUT_CMD" && "$RENDER_TIMEOUT" -gt 0 ]]; then
+            "$TIMEOUT_CMD" "$RENDER_TIMEOUT" "$OPENSCAD" "${rargs[@]}" &>/dev/null || exit_code=$?
+        else
+            "$OPENSCAD" "${rargs[@]}" &>/dev/null || exit_code=$?
+        fi
+        dt=$(( $(date +%s) - t0 ))
+
+        if [[ "$exit_code" -ne 0 || ! -s "$out" ]]; then
+            echo -e " ${RED}RENDER FAILED${RESET} (${dt}s)"
+            fail_count=$((fail_count + 1))
+            rm -f "$out"
+            continue
+        fi
+
+        local stats; stats=$("$PYTHON" "$stats_script" "$out" 2>/dev/null) || {
+            echo -e " ${RED}STATS FAILED${RESET} (${dt}s)"
+            fail_count=$((fail_count + 1))
+            rm -f "$out"; continue
+        }
+        rm -f "$out"
+
+        # Wrap into "<config>": { stats, oa_source: "case|root" }
+        local oa_kind="root"
+        [[ -n "$case_openings_src" ]] && oa_kind="case"
+        local entry; entry=$($PYTHON -c "
+import json, sys
+stats = json.loads(sys.argv[1])
+stats['oa_source'] = sys.argv[2]
+print(json.dumps({sys.argv[3]: stats})[1:-1])
+" "$stats" "$oa_kind" "$config")
+        entries+="$entry,"$'\n'
+        ok=$((ok + 1))
+        echo -e " ${GREEN}OK${RESET} (${dt}s)"
+    done
+
+    # Restore root O&A.
+    cp "$saved_openings" "$OPENINGS_FILE"
+    rm -f "$saved_openings"
+
+    # Strip trailing comma+newline if present, then wrap.
+    entries=$(echo -n "$entries" | sed '$ s/,$//')
+
+    local manifest_meta
+    manifest_meta=$($PYTHON -c "
+import json
+print(json.dumps({
+    'schema_version': 1,
+    'generator': 'test.sh --update-golden',
+    'openscad': '$(json_str "$(tool_version "$OPENSCAD")")',
+    'notes': 'Stats computed from CGAL-backend native OpenSCAD STL output. See scripts/compute_stl_stats.py for the formula. Used by keyguard-designer-web tests/geometry.spec.mjs as the authoritative reference for Manifold-backend STL validation.',
+}, indent=2))")
+
+    {
+        echo "{"
+        echo "  \"meta\": $manifest_meta,"
+        echo "  \"configs\": {"
+        # Indent the entries one extra step for readability.
+        echo "$entries" | sed 's/^/    /'
+        echo "  }"
+        echo "}"
+    } > "$manifest"
+
+    # Pretty-print + validate via Python (rewrites the file in canonical form,
+    # also catches any malformed entries from above).
+    $PYTHON -c "
+import json
+with open('$(py_path "$manifest")', encoding='utf-8') as f:
+    d = json.load(f)
+with open('$(py_path "$manifest")', 'w', encoding='utf-8', newline='\n') as f:
+    json.dump(d, f, indent=2, sort_keys=False)
+    f.write('\n')
+" || { fail "Failed to format manifest JSON"; return; }
+
+    local elapsed=$(( $(date +%s) - t_start ))
+    echo ""
+    info "Configs processed: $ok ok, $fail_count failed, $skipped skipped (of $total) in ${elapsed}s"
+    if [[ "$fail_count" -gt 0 ]]; then
+        fail "$fail_count config(s) failed to render or compute stats"
+    else
+        pass "Golden manifest written: $manifest"
+    fi
+    RENDER_TIMEOUT="$prev_render_timeout"
+}
+
 # ── Layer 4: Visual tests ─────────────────────────────────────────────────────
 
 # Compare two PNGs; return 0 if same/within threshold, 1 if different.
@@ -1046,9 +1273,10 @@ log_event "{\"event\":\"env\",\"session\":\"$(json_str "$SESSION_ID")\",\"os\":$
 "$RUN_LINT"             && run_lint
 "$RUN_SYNTAX"           && run_syntax
 "$RUN_SMOKE"            && run_smoke
-{ "$RUN_VISUAL" || "$RUN_GEOMETRY"; } && acquire_test_lock
+{ "$RUN_VISUAL" || "$RUN_GEOMETRY" || "$UPDATE_GOLDEN"; } && acquire_test_lock
 "$RUN_VISUAL"           && run_visual
 "$RUN_GEOMETRY"         && run_geometry
+"$UPDATE_GOLDEN"        && run_update_golden
 
 echo ""
 echo "==============================="

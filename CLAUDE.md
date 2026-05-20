@@ -96,7 +96,20 @@ Use `scripts/test.sh` to validate changes. It has five layers, selectable via fl
 ./scripts/test.sh --all                  # Full suite
 ./scripts/test.sh --geometry             # Geometry validation only
 ./scripts/test.sh --capture-references   # Re-render all visual tests and save new reference PNGs
+./scripts/test.sh --update-golden        # Regenerate tests/cases/golden-stl-stats.json
 ```
+
+**Golden STL stats manifest** (`tests/cases/golden-stl-stats.json`): records
+per-config CGAL geometry stats (volume, surface area, bbox, parts, facets) for
+every named config. The web app's geometry test layer
+(`keyguard-designer-web/tests/geometry.spec.mjs`) reads it as the authoritative
+reference for Manifold-backend STL validation — Manifold sometimes produces
+broken STLs (e.g. TC57 membranes) that pass admesh but diverge from CGAL in
+surface area / part count. Regenerate via `--update-golden` whenever .scad-side
+geometry intentionally changes, and commit the manifest alongside the code change.
+Same render rules as `--geometry`: skips steps marked `"geometry": false`, uses
+case-folder OA when one exists. Filter with `--case` to update a subset
+(entries outside the filter are preserved).
 
 **Geometry validation layer:** Renders every named config to STL and runs two checks:
 (1) OpenSCAD must report `Simple: yes` (CGAL 2-manifold check); (2) `admesh` must

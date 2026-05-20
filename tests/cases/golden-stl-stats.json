@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "generator": "test.sh --update-golden",
+    "openscad": "OpenSCAD version 2021.01",
+    "notes": "Stats computed from CGAL-backend native OpenSCAD STL output. See scripts/compute_stl_stats.py for the formula. Used by keyguard-designer-web tests/geometry.spec.mjs as the authoritative reference for Manifold-backend STL validation."
+  },
+  "configs": {
+    "Test Case 1": {
+      "volume_mm3": 76809.9064,
+      "surface_area_mm2": 43813.0904,
+      "bbox": [
+        -110.0,
+        -90.0,
+        -3.5,
+        110.0,
+        90.0,
+        8.4346
+      ],
+      "parts": 3,
+      "facets": 11372,
+      "oa_source": "case"
+    },
+    "Test Case 2": {
+      "volume_mm3": 85957.1855,
+      "surface_area_mm2": 45582.9734,
+      "bbox": [
+        -90.0,
+        -110.0,
+        -4.0,
+        90.0,
+        110.0,
+        8.7452
+      ],
+      "parts": 3,
+      "facets": 11350,
+      "oa_source": "case"
+    },
+    "Test Case 6": {
+      "volume_mm3": 10153.4222,
+      "surface_area_mm2": 15622.3772,
+      "bbox": [
+        -97.017,
+        -63.8566,
+        -4.0,
+        97.017,
+        53.8566,
+        0.95
+      ],
+      "parts": 1,
+      "facets": 4308,
+      "oa_source": "case"
+    },
+    "Test Case 17": {
+      "volume_mm3": 47688.2189,
+      "surface_area_mm2": 34791.2273,
+      "bbox": [
+        -138.352,
+        -94.2308,
+        -2.0,
+        143.598,
+        103.769,
+        4.4423
+      ],
+      "parts": 1,
+      "facets": 6210,
+      "oa_source": "case"
+    },
+    "Test Case 50": {
+      "volume_mm3": 37575.2032,
+      "surface_area_mm2": 37753.1546,
+      "bbox": [
+        -99.0,
+        -69.0,
+        -2.5,
+        99.0,
+        69.0,
+        2.5
+      ],
+      "parts": 1,
+      "facets": 18612,
+      "oa_source": "case"
+    },
+    "Test Case 57": {
+      "volume_mm3": 34034.2121,
+      "surface_area_mm2": 39796.3095,
+      "bbox": [
+        -118.5,
+        -84.5,
+        -2.0,
+        118.5,
+        84.5,
+        1.95
+      ],
+      "parts": 1,
+      "facets": 16872,
+      "oa_source": "case"
+    }
+  }
+}
