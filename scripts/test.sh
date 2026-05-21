@@ -177,6 +177,7 @@ RUN_LINT=false; RUN_SYNTAX=false; RUN_SMOKE=false
 RUN_GEOMETRY=false; RUN_VISUAL=false
 CAPTURE_REFERENCES=false
 UPDATE_GOLDEN=false
+KEEP_STLS=false
 CASE_FILTER=""
 
 if [[ $# -eq 0 ]]; then
@@ -193,6 +194,7 @@ else
                                    RUN_GEOMETRY=true; RUN_VISUAL=true ;;
             --capture-references)  CAPTURE_REFERENCES=true; RUN_VISUAL=true ;;
             --update-golden)       UPDATE_GOLDEN=true ;;
+            --keep-stls)           KEEP_STLS=true ;;
             --case)                shift; CASE_FILTER="$1" ;;
             --case=*)              CASE_FILTER="${1#--case=}" ;;
             *) echo "Unknown option: $1"; exit 1 ;;
@@ -685,10 +687,20 @@ run_update_golden() {
     local progress_log="$PROJECT_ROOT/golden-stl-stats-progress.log"
     : > "$progress_log"
 
+    # --keep-stls: retain each CGAL STL under output/golden-stl/ (gitignored)
+    # so a divergence flagged by the web gate can be opened in a slicer next
+    # to the Manifold output, without re-rendering. Default behaviour deletes
+    # the STL once stats are computed.
+    local keep_stl_dir="$PROJECT_ROOT/output/golden-stl"
+    if "$KEEP_STLS"; then
+        mkdir -p "$keep_stl_dir"
+    fi
+
     header "Golden STL stats — regenerating manifest"
     if [[ -z "$OPENSCAD" ]]; then fail "openscad not found — aborting"; return; fi
     if [[ ! -f "$stats_script" ]]; then fail "compute_stl_stats.py not found at $stats_script"; return; fi
     info "Progress log: $(realpath --relative-to="$PROJECT_ROOT" "$progress_log" 2>/dev/null || echo "$progress_log") (tail -f)"
+    "$KEEP_STLS" && info "Keeping CGAL STLs in: $(realpath --relative-to="$PROJECT_ROOT" "$keep_stl_dir" 2>/dev/null || echo "$keep_stl_dir")"
 
     # Discover (preset, case-folder, oa-file) tuples the SAME way the web
     # app's geometry.spec.mjs discoverCases() does: walk every test case's
@@ -830,6 +842,9 @@ print(json.dumps({sys.argv[2]: v})[1:-1])
             fail_count=$((fail_count + 1))
             rm -f "$out"; continue
         }
+        # Retain the CGAL STL (under output/golden-stl/) before deleting the
+        # temp copy, if --keep-stls was passed.
+        "$KEEP_STLS" && cp "$out" "$keep_stl_dir/${safe}.stl"
         rm -f "$out"
 
         # Wrap into "<config>": { stats, oa_source, oa_case }.

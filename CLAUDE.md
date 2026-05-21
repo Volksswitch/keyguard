@@ -109,7 +109,12 @@ surface area / part count. Regenerate via `--update-golden` whenever .scad-side
 geometry intentionally changes, and commit the manifest alongside the code change.
 Same render rules as `--geometry`: skips steps marked `"geometry": false`, uses
 case-folder OA when one exists. Filter with `--case` to update a subset
-(entries outside the filter are preserved).
+(entries outside the filter are preserved). Add `--keep-stls` to also retain
+each CGAL STL under `output/golden-stl/` (gitignored) for slicer comparison
+when a gate failure needs investigating. Per-config render timeout defaults to
+900s; override with `KEYGUARD_GOLDEN_TIMEOUT` for heavy cases (e.g. TC46).
+Progress streams one line per config to `golden-stl-stats-progress.log`
+(project root, gitignored, `tail -f`-friendly).
 
 **Geometry validation layer:** Renders every named config to STL and runs two checks:
 (1) OpenSCAD must report `Simple: yes` (CGAL 2-manifold check); (2) `admesh` must
