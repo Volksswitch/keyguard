@@ -679,31 +679,6 @@ run_update_golden() {
     RENDER_TIMEOUT="${KEYGUARD_GOLDEN_TIMEOUT:-900}"
     info "Per-config render timeout: ${RENDER_TIMEOUT}s"
 
-    # Build the geometry-skip list (steps with "geometry": false in test.json).
-    local -a GEOMETRY_SKIP=()
-    while IFS= read -r config_name; do
-        [[ -n "$config_name" ]] && GEOMETRY_SKIP+=("$config_name")
-    done < <($PYTHON - "$CASES_DIR" <<'PYEOF' | tr -d '\r'
-import json, os, sys
-cases_dir = sys.argv[1]
-skip = set()
-for root, _dirs, files in os.walk(cases_dir):
-    for fn in files:
-        if fn != "test.json":
-            continue
-        try:
-            with open(os.path.join(root, fn), encoding="utf-8") as fh:
-                test = json.load(fh)
-            for step in test.get("steps", []):
-                if step.get("geometry") is False and step.get("params"):
-                    skip.add(step["params"])
-        except Exception:
-            pass
-for name in sorted(skip):
-    print(name)
-PYEOF
-)
-
     # Progress log for `tail -f`. Truncated at start; one human-readable
     # line per config completion (or render/stats failure). Lives in the
     # project root for easy discovery; not committed to git.
@@ -715,11 +690,58 @@ PYEOF
     if [[ ! -f "$stats_script" ]]; then fail "compute_stl_stats.py not found at $stats_script"; return; fi
     info "Progress log: $(realpath --relative-to="$PROJECT_ROOT" "$progress_log" 2>/dev/null || echo "$progress_log") (tail -f)"
 
-    local -a configs
-    mapfile -t configs < <(get_configs)
-    info "Found ${#configs[@]} named configs"
+    # Discover (preset, case-folder, oa-file) tuples the SAME way the web
+    # app's geometry.spec.mjs discoverCases() does: walk every test case's
+    # test.json and, for each step that produces geometry, map its preset
+    # (step.params) to *that case's* OA file. This is critical — many
+    # presets (e.g. "Test Case 17d", "Test Case 10a") are steps *inside*
+    # another case's folder, not folders of their own. The web app always
+    # renders such a preset with its parent case's OA, so the manifest must
+    # capture the same pairing. (The earlier folder-name-matching approach
+    # gave those presets the root fallback OA and produced reference
+    # geometry that diverged from the web app by hundreds of percent.)
+    #
+    # Output: tab-separated  preset \t case-folder \t oa-filename.
+    # First occurrence of a preset wins (cases sorted naturally for
+    # determinism). Steps with geometry:false or no params are excluded
+    # here, so no separate skip list is needed below.
+    local -a specs
+    mapfile -t specs < <($PYTHON - "$CASES_DIR" <<'PYEOF' | tr -d '\r'
+import json, os, re, sys
+cases_dir = sys.argv[1]
+def nat(s):
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r'(\d+)', s)]
+seen = set()
+for name in sorted(os.listdir(cases_dir), key=nat):
+    if name == 'visual.snapshots':
+        continue
+    d = os.path.join(cases_dir, name)
+    tj = os.path.join(d, 'test.json')
+    if not os.path.isdir(d) or not os.path.isfile(tj):
+        continue
+    try:
+        with open(tj, encoding='utf-8') as f:
+            test = json.load(f)
+    except Exception:
+        continue
+    oa = test.get('openings') or 'openings_and_additions.txt'
+    if not os.path.isfile(os.path.join(d, oa)):
+        continue
+    for step in test.get('steps', []):
+        if not step or not step.get('params'):
+            continue
+        if step.get('geometry') is False:
+            continue
+        preset = step['params']
+        if preset in seen:
+            continue
+        seen.add(preset)
+        print(f"{preset}\t{name}\t{oa}")
+PYEOF
+)
+    info "Discovered ${#specs[@]} unique geometry presets across test cases"
     info "Manifest: $(realpath --relative-to="$PROJECT_ROOT" "$manifest" 2>/dev/null || echo "$manifest")"
-    [[ -n "$CASE_FILTER" ]] && info "Filter: '$CASE_FILTER' (existing manifest entries outside the filter are preserved)"
+    [[ -n "$CASE_FILTER" ]] && info "Filter: '$CASE_FILTER' (matches preset OR case name; existing entries outside the filter are preserved)"
 
     # Preserve existing manifest entries that fall outside the filter.
     local existing="{}"
@@ -739,14 +761,18 @@ except Exception:
     local saved_openings="/tmp/keyguard_golden_oa_$$.txt"
     cp "$OPENINGS_FILE" "$saved_openings"
 
-    local total=${#configs[@]} current=0 ok=0 fail_count=0 skipped=0
+    local total=${#specs[@]} current=0 ok=0 fail_count=0 skipped=0
     local entries=""   # accumulated JSON entries, comma-separated
     local t_start; t_start=$(date +%s)
 
-    for config in "${configs[@]}"; do
+    for spec in "${specs[@]}"; do
         current=$((current + 1))
+        local config case_name oa_name
+        IFS=$'\t' read -r config case_name oa_name <<< "$spec"
 
-        if ! case_matches_filter "$config"; then
+        # Filter matches either the preset name or its parent case name, so
+        # `--case "Test Case 17"` regenerates every 17* preset.
+        if ! case_matches_filter "$config" && ! case_matches_filter "$case_name"; then
             # Outside filter — keep existing entry if present.
             local kept; kept=$($PYTHON -c "
 import json, sys
@@ -758,35 +784,18 @@ print(json.dumps({sys.argv[2]: v})[1:-1])
             continue
         fi
 
-        local skip=false
-        for s in "${GEOMETRY_SKIP[@]}"; do
-            [[ "$config" == "$s" ]] && skip=true && break
-        done
-        if "$skip"; then
-            printf "  [%2d/%d] %-35s ${YELLOW}SKIP${RESET}\n" "$current" "$total" "$config"
-            skipped=$((skipped + 1))
-            continue
-        fi
-
-        # Swap in test-case O&A if one exists.
-        local case_test_json="$CASES_DIR/$config/test.json"
-        local case_openings_src=""
-        if [[ -f "$case_test_json" ]]; then
-            local case_openings_name
-            case_openings_name=$(get_test_field "$case_test_json" "openings")
-            if [[ -n "$case_openings_name" && -f "$CASES_DIR/$config/$case_openings_name" ]]; then
-                case_openings_src="$CASES_DIR/$config/$case_openings_name"
-            fi
-        fi
-        if [[ -n "$case_openings_src" ]]; then
-            cp "$case_openings_src" "$OPENINGS_FILE"
-        else
+        # OA is always the parent case's file (matching the web app).
+        local case_openings_src="$CASES_DIR/$case_name/$oa_name"
+        if [[ ! -f "$case_openings_src" ]]; then
             cp "$saved_openings" "$OPENINGS_FILE"
+            case_openings_src=""
+        else
+            cp "$case_openings_src" "$OPENINGS_FILE"
         fi
 
         local safe; safe=$(echo "$config" | tr ' /' '__')
         local out="/tmp/keyguard_golden_${safe}_$$.stl"
-        printf "  [%2d/%d] %-35s" "$current" "$total" "$config"
+        printf "  [%3d/%d] %-35s" "$current" "$total" "$config"
 
         local exit_code=0 t0 dt
         t0=$(date +%s)
@@ -823,15 +832,19 @@ print(json.dumps({sys.argv[2]: v})[1:-1])
         }
         rm -f "$out"
 
-        # Wrap into "<config>": { stats, oa_source: "case|root" }
+        # Wrap into "<config>": { stats, oa_source, oa_case }.
+        # oa_case records which test-case folder supplied the OA file (the
+        # web app renders this preset with that case's OA), so a future
+        # divergence can be reproduced without re-deriving the mapping.
         local oa_kind="root"
         [[ -n "$case_openings_src" ]] && oa_kind="case"
         local entry; entry=$($PYTHON -c "
 import json, sys
 stats = json.loads(sys.argv[1])
 stats['oa_source'] = sys.argv[2]
+stats['oa_case'] = sys.argv[4]
 print(json.dumps({sys.argv[3]: stats})[1:-1])
-" "$stats" "$oa_kind" "$config")
+" "$stats" "$oa_kind" "$config" "$case_name")
         entries+="$entry,"$'\n'
         ok=$((ok + 1))
         echo -e " ${GREEN}OK${RESET} (${dt}s)"
