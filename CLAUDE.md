@@ -116,11 +116,19 @@ when a gate failure needs investigating. Per-config render timeout defaults to
 Progress streams one line per config to `golden-stl-stats-progress.log`
 (project root, gitignored, `tail -f`-friendly).
 
-**Geometry validation layer:** Renders every named config to STL and runs two checks:
-(1) OpenSCAD must report `Simple: yes` (CGAL 2-manifold check); (2) `admesh` must
-report zero errors across all repair categories (degenerate facets, open edges,
-reversed normals, etc.) — if `admesh` is installed. No baseline file is needed;
-all checks are self-contained and reliable across machines and OpenSCAD versions.
+**Geometry validation layer (`--geometry`):** Renders every geometry-producing
+preset (discovered from the test cases' `test.json`) to STL with native
+OpenSCAD/CGAL — using the web app's export flags (`fudge=0.05 ff=0.05
+include_screenshot="no"`) — then for each:
+(1) checks `Simple: yes` (CGAL 2-manifold check) and flags `NON-MANIFOLD`;
+(2) computes geometry stats and **diffs them against the committed golden
+manifest** (`tests/cases/golden-stl-stats.json`) within a near-exact
+CGAL-vs-CGAL threshold (vol/area 0.1%, bbox 0.01 mm, parts exact), flagging
+`DRIFT`. This is the .scad self-regression gate: it catches a .scad change
+that unintentionally moved geometry, or an OpenSCAD version bump. On the first
+run (no manifest) it falls back to capturing one. See `docs/golden-stl-gate.md`.
+`--update-golden` is the capture counterpart (writes the manifest). Both share
+one render core; `--keep-stls` retains the CGAL STLs under `output/golden-stl/`.
 
 **Visual test cases:** `tests/cases/` contains one subfolder per test case. Each folder
 holds a `test.json` describing a sequence of render steps (parameters, camera position,
