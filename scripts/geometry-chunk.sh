@@ -12,6 +12,12 @@
 #   NOTHING to merge afterwards. Each machine only needs its own up-to-date
 #   checkout of `main`; results are per-machine.
 #
+# IMPORTANT — each machine needs its OWN working copy of this repo. A run swaps
+# the shared openings_and_additions.txt per case and writes a lock file, so two
+# machines pointed at the SAME folder (e.g. one OneDrive-synced checkout) will
+# clobber each other. Use an independent local `git clone` per machine (on a
+# non-synced path), not the same synced folder.
+#
 # Usage (on each machine):
 #   git pull                            # get the gate + this plan
 #   ./scripts/geometry-chunk.sh list    # show the plan
