@@ -1,3 +1,6 @@
+$vpt = [10.5516, -6.96336, -15.3815];
+$vpr = [55, 0, 25];
+$vpd = 500;
 
 screen_openings=[
 // ID, shape, height, width, corner,    x,    y, cut | build, anchor, surface, length, thickness, [edge_slopes], [special parms]
@@ -40,6 +43,7 @@ tablet_openings=[
   aridge1-4                              x                                    x
 
   [special params]  Contents
+  r, c, hd          [direction]
   text              ["text value", direction, font style, h-align, v-align]
   svg               ["filename", direction]
   ridge             [direction]
