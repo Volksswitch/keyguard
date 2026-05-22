@@ -464,6 +464,17 @@ only_oa_highlights = "no";
 // echo is silent.
 echo_dims = "no";
 
+// Manifold (web app) workaround. When "yes", every screen cell and tablet
+// opening gets an extra straight prism (screen_through_cut_extender) that
+// pushes the cut clean through the part, removing the near-coincident floor
+// sliver that Manifold renders as a membrane/ghost (the TC57 bug). Native
+// CGAL handles that sliver fine and does NOT need this; the extra per-opening
+// prisms roughly double the boolean cost (2-3x slower renders, no geometric
+// difference), so it is OFF by default and native/Customizer renders stay
+// fast. The web app passes -D extend_through_cuts="yes" alongside its
+// fudge=0.05 Manifold bump (the two are kept independent on purpose).
+extend_through_cuts = "no";
+
 // Echo the screen-area dimensions and overall thickness so the web app
 // can size and position the screenshot-under-keyguard plane in Three.js
 // without needing a second metadata render. Also echo the resolved viewport
@@ -5384,8 +5395,9 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	// preview — so extend those too, in both 3D and laser-cut solid renders.
 	// Excluded for "first layer for SVG/DXF file": that output is pure 2D,
 	// and injecting a linear_extrude prism would corrupt the exported SVG.
-	want_extender = ((type == "screen" && is_3d_printed) ||
-	                 (type == "tablet" && generate != "first layer for SVG/DXF file"))
+	want_extender = extend_through_cuts == "yes"
+	                && ((type == "screen" && is_3d_printed) ||
+	                    (type == "tablet" && generate != "first layer for SVG/DXF file"))
 	                && !other_number && !flip;
 
 	if (shape == "r"){
