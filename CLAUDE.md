@@ -377,6 +377,50 @@ scope to the change being validated, not to habit.
 
 ---
 
+## Multi-Machine Work & Trigger Phrases
+
+Work happens on **two machines** (a laptop and a faster desktop) that share **one
+OneDrive copy** of this project. Either machine may be used depending on CPU
+availability.
+
+**For that to work, every workflow and trigger phrase must be written HERE in
+`CLAUDE.md`** — not just established in a chat on one machine. `CLAUDE.md` syncs
+via OneDrive and is auto-loaded by Claude in this project, so it is the only
+shared "brain" across machines. (Claude's own memory lives under
+`C:\Users\<user>\.claude\` and is **per-machine — it does NOT sync**, so never
+rely on memory for anything the other machine needs to know.)
+
+A session loads `CLAUDE.md` at startup, so after this file changes, a session
+already running on the other machine must be **restarted/reloaded** (and OneDrive
+must have synced the file) to pick up the change.
+
+### Geometry validation chunks (this project)
+The golden geometry suite is split into 9 chunks, run via
+`scripts/geometry-chunk.sh`:
+- **"run chunk N"** (N = 1..9) → run `bash scripts/geometry-chunk.sh N` in the
+  background (a multi-minute CGAL render of that chunk's test cases).
+- **"chunk status"** → `bash scripts/geometry-chunk.sh status` — the pass/fail ledger.
+- **"list chunks"** → `bash scripts/geometry-chunk.sh list`.
+
+Each run writes `geometry-chunk-results/chunk-N.result` and `…progress.log` in
+this OneDrive folder, so **both machines and any Claude session can read the
+results**. A chunk PASSES when `status=PASS` (0 drift / non-manifold / failed).
+Report the result after each run.
+
+**One machine at a time:** a geometry run swaps the shared
+`openings_and_additions.txt`, takes a lock, and rewrites
+`golden-stl-stats-progress.log` (all in this OneDrive folder). **Never run a
+geometry chunk on both machines simultaneously** — run them sequentially (on
+either machine); the per-chunk result files accumulate cleanly.
+
+NOTE: the ready-to-print **Manifold-vs-CGAL** work ("run RTP chunk N", "merge the
+RTP golden", "run the membrane comparison") is a SEPARATE thing that lives in the
+**web app project** (`keyguard-designer-web`) and is documented in *its*
+`CLAUDE.md`. Don't confuse "run chunk N" (geometry, here) with "run RTP chunk N"
+(ready-to-print, web app).
+
+---
+
 ## Code Style Preferences
 
 - **Cryptic variable names are intentional** — `sxo`, `xtls`, `ytbs`, `ff`, `sat`, `cts`,
