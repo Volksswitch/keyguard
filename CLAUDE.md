@@ -294,6 +294,7 @@ It only needs to be present when this feature is in use.
 - [ ] Add support for case measurements and sloped edge measurements to `openings_and_additions.txt`
 - [ ] (Medium v75) Mini tabs on post mounting are not documented and are broken — rotating the tabs produces incorrect results (may be acceptable since tab rotation is only used when the keyguard edge is curved)
 - [ ] (Medium v76) Test Case 1 — changing to laser-cut and generating DXF/SVG shows "Customizer settings" in the console because the related `else` statement still sees raised tabs and doesn't execute, causing the final `else` (Customizer settings) to run
+- [ ] (Medium v77) Test Case 53 renders NON-MANIFOLD in CGAL (`Simple: no`; the solid splits into 7 disconnected parts — vol=146705.59, area=81361.13, parts=7). **Pre-existing**: the geometry is byte-identical to the committed golden manifest, so it predates the v77 through-cut-extender work (`f4a6501`) and is unrelated to the slope-aware extender fix (`c76cc93`). It is the **sole** failure in geometry chunk 8 (TC47–55); the rest of the corpus is clean (chunks 1–7, 9 PASS; TC54 drift fixed). Identified 2026-05-23 during the geometry chunk run — deferred for later investigation (find why TC53's config produces 7 separate solids / a non-2-manifold mesh).
 
 ---
 
