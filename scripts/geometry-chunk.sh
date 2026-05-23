@@ -1,39 +1,34 @@
 #!/usr/bin/env bash
-# geometry-chunk.sh — run one chunk of the golden geometry validation.
+# geometry-chunk.sh - run one chunk of the golden geometry validation and PERSIST
+# its pass/fail result so it is visible across machines (via the OneDrive folder).
 #
-# The full `test.sh --geometry` suite is 154 CGAL renders (~10 h of wall time).
-# This splits it into 9 balanced chunks so the work can run on several machines
-# AT THE SAME TIME.
+# The full `test.sh --geometry` suite is 154 CGAL renders. This splits it into 9
+# chunks. Each run records a result file under geometry-chunk-results/ so the
+# pass/fail of every chunk is retained (the live golden-stl-stats-progress.log is
+# truncated by every run, so on its own it only ever shows the LAST chunk).
 #
-# Why chunks are independent across machines:
-#   --geometry only READS the committed golden manifest
-#   (tests/cases/golden-stl-stats.json) and diffs each render against it. It
-#   never writes the manifest. So every chunk is self-contained — there is
-#   NOTHING to merge afterwards. Each machine only needs its own up-to-date
-#   checkout of `main`; results are per-machine.
+# Results (in <project>/geometry-chunk-results/, which is inside the OneDrive
+# folder, so both machines + any Claude session can read them):
+#   chunk-<N>.result        key=value summary: status, counts, host, timestamp
+#   chunk-<N>.progress.log  the per-config log for that chunk (preserved)
 #
-# IMPORTANT — each machine needs its OWN working copy of this repo. A run swaps
-# the shared openings_and_additions.txt per case and writes a lock file, so two
-# machines pointed at the SAME folder (e.g. one OneDrive-synced checkout) will
-# clobber each other. Use an independent local `git clone` per machine (on a
-# non-synced path), not the same synced folder.
+# Usage:
+#   ./scripts/geometry-chunk.sh list      show the chunk plan
+#   ./scripts/geometry-chunk.sh <n>       run chunk n and record its result
+#   ./scripts/geometry-chunk.sh status    print the recorded pass/fail ledger
 #
-# Usage (on each machine):
-#   git pull                            # get the gate + this plan
-#   ./scripts/geometry-chunk.sh list    # show the plan
-#   ./scripts/geometry-chunk.sh 3       # run chunk 3 on this machine
+# IMPORTANT - shared OneDrive folder: a geometry run swaps openings_and_additions.txt,
+# takes a lock, and rewrites golden-stl-stats-progress.log. Do NOT run two geometry
+# chunks at the same time against the SAME OneDrive copy (e.g. laptop AND desktop) -
+# they will collide. Run chunks sequentially on ONE machine, or give each machine an
+# independent local clone. The per-chunk result files are distinct, so sequential
+# runs (even alternating machines, one at a time) accumulate cleanly.
 #
-# Assign a different chunk number to each machine (or several chunks to a fast
-# one). A chunk PASSES if every config prints OK — i.e. no DRIFT, NON-MANIFOLD,
-# or RENDER FAILED. Per-config progress streams to golden-stl-stats-progress.log
-# (project root, tail -f friendly).
+# Chunk plan (ranges only match numeric "Test Case N"; variant folders listed
+# explicitly). Times below are pre-gate-off estimates; actual gate-off runs are
+# roughly 2.5x faster.
 #
-# Chunk plan — balanced by the May-2026 full-run render times. Every test-case
-# folder (0-57 plus the "17 portrait" and "44-1/2/3" variants) is covered
-# exactly once. Range filters only match numeric "Test Case N", so the
-# non-numeric variant folders are listed explicitly with the | alternation.
-#
-#   #  --case filter                                              ~min
+#   #  --case filter                                              ~min (gate-on est.)
 #   1  Test Case 0-8                                               70
 #   2  Test Case 9-12                                              90
 #   3  Test Case 13-18 | Test Case 17 portrait                     55
@@ -43,14 +38,13 @@
 #   7  Test Case 38-46 | Test Case 44-1 | 44-2 | 44-3              78
 #   8  Test Case 47-55                                             51
 #   9  Test Case 56-57                                             42
-#
-# Heavy single cases (TC12, TC23, TC37, TC46, TC56) dominate their chunks; the
-# per-config render timeout can be raised with KEYGUARD_GOLDEN_TIMEOUT if needed.
-set -euo pipefail
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+RESULTS="$ROOT/geometry-chunk-results"
+PROG="$ROOT/golden-stl-stats-progress.log"
 
-# chunk number -> --case filter (single source of truth)
 chunk_filter() {
   case "$1" in
     1) echo "Test Case 0-8" ;;
@@ -66,14 +60,67 @@ chunk_filter() {
   esac
 }
 
-if [[ "${1:-}" == "list" || "${1:-}" == "-h" || "${1:-}" == "--help" || -z "${1:-}" ]]; then
-  echo "Geometry validation chunks (run different chunks on different machines simultaneously):"
+cmd="${1:-list}"
+
+if [[ "$cmd" == "list" || "$cmd" == "-h" || "$cmd" == "--help" ]]; then
+  echo "Geometry validation chunks:"
   for i in 1 2 3 4 5 6 7 8 9; do printf "  %d  %s\n" "$i" "$(chunk_filter "$i")"; done
   echo
-  echo "  ./scripts/geometry-chunk.sh <n>   run chunk n (validates against the committed golden)"
+  echo "  ./scripts/geometry-chunk.sh <n>       run chunk n and record pass/fail"
+  echo "  ./scripts/geometry-chunk.sh status    show recorded results"
   exit 0
 fi
 
-filter="$(chunk_filter "$1")" || { echo "Unknown chunk '$1' — see: ./scripts/geometry-chunk.sh list" >&2; exit 1; }
-echo "Chunk $1 → test.sh --geometry --case \"$filter\""
-exec "$SCRIPT_DIR/test.sh" --geometry --case "$filter"
+if [[ "$cmd" == "status" ]]; then
+  echo "Geometry chunk results ($RESULTS):"
+  printf "  %-5s %-6s %-8s %-6s %-7s %-7s %-20s %s\n" chunk status configs drift nonman failed host when
+  any=0
+  get() { grep -E "^$2=" "$1" | head -1 | cut -d= -f2-; }
+  for n in 1 2 3 4 5 6 7 8 9; do
+    f="$RESULTS/chunk-$n.result"
+    [[ -f "$f" ]] || continue
+    any=1
+    printf "  %-5s %-6s %-8s %-6s %-7s %-7s %-20s %s\n" \
+      "$n" "$(get "$f" status)" "$(get "$f" configs)" "$(get "$f" drift)" \
+      "$(get "$f" nonmanifold)" "$(get "$f" failed)" "$(get "$f" host)" "$(get "$f" timestamp)"
+  done
+  if [[ "$any" == 0 ]]; then echo "  (no chunk results recorded yet)"; fi
+  exit 0
+fi
+
+# ---- run a chunk ----
+N="$cmd"
+filter="$(chunk_filter "$N")" || { echo "Unknown chunk '$N' - see: ./scripts/geometry-chunk.sh list" >&2; exit 1; }
+mkdir -p "$RESULTS"
+echo "Chunk $N -> test.sh --geometry --case \"$filter\""
+rc=0
+bash "$SCRIPT_DIR/test.sh" --geometry --case "$filter" || rc=$?
+
+configs=0; drift=0; nonman=0; failed=0
+if [[ -f "$PROG" ]]; then
+  cp "$PROG" "$RESULTS/chunk-$N.progress.log"
+  configs=$(wc -l < "$RESULTS/chunk-$N.progress.log" | tr -d ' ')
+  drift=$(grep -c 'DRIFT' "$RESULTS/chunk-$N.progress.log"); drift=${drift:-0}
+  nonman=$(grep -c 'NON-MANIFOLD' "$RESULTS/chunk-$N.progress.log"); nonman=${nonman:-0}
+  failed=$(grep -cE 'RENDER FAILED|STATS FAILED' "$RESULTS/chunk-$N.progress.log"); failed=${failed:-0}
+fi
+status=PASS
+if [[ "$rc" -ne 0 || "$drift" -ne 0 || "$nonman" -ne 0 || "$failed" -ne 0 ]]; then status=FAIL; fi
+
+{
+  echo "chunk=$N"
+  echo "filter=$filter"
+  echo "host=$(hostname)"
+  echo "timestamp=$(date '+%Y-%m-%d %H:%M:%S')"
+  echo "exit=$rc"
+  echo "status=$status"
+  echo "configs=$configs"
+  echo "drift=$drift"
+  echo "nonmanifold=$nonman"
+  echo "failed=$failed"
+} > "$RESULTS/chunk-$N.result"
+
+echo ""
+echo "Chunk $N: $status  (configs=$configs drift=$drift nonman=$nonman failed=$failed, exit=$rc)"
+echo "Recorded -> $RESULTS/chunk-$N.result   (run './scripts/geometry-chunk.sh status' to see all)"
+exit "$rc"

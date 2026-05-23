@@ -8,6 +8,7 @@ output/
 lint.txt
 test results/
 golden-stl-stats-progress.log
+geometry-chunk-results/
 *.stl
 *.amf
 *.3mf
