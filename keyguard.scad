@@ -5395,7 +5395,18 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	// preview — so extend those too, in both 3D and laser-cut solid renders.
 	// Excluded for "first layer for SVG/DXF file": that output is pure 2D,
 	// and injecting a linear_extrude prism would corrupt the exported SVG.
-	want_extender = extend_through_cuts == "yes"
+	//
+	// Native/CGAL gate (extend_through_cuts="no", the default): the extender is
+	// a strict CGAL no-op for FLAT (all-90) through-cuts — their vertical body
+	// cutter already spans the full thickness — so it is skipped to keep native
+	// renders fast (the speedup f4a6501 was after). A SLOPED through-cut's body
+	// is a tapered hull() that stops short of the far face; without the extender
+	// CGAL faithfully keeps the leftover floor, turning a cut=0 through-hole into
+	// a blind pocket (the TC54 regression). So sloped cuts (!all_90) keep the
+	// extender even natively. The web app still passes extend_through_cuts="yes"
+	// to also fix the Manifold thin-floor membrane on flat cuts.
+	all_90 = (top_slope == 90) && (bottom_slope == 90) && (left_slope == 90) && (right_slope == 90);
+	want_extender = (extend_through_cuts == "yes" || !all_90)
 	                && ((type == "screen" && is_3d_printed) ||
 	                    (type == "tablet" && generate != "first layer for SVG/DXF file"))
 	                && !other_number && !flip;
