@@ -394,6 +394,20 @@ A session loads `CLAUDE.md` at startup, so after this file changes, a session
 already running on the other machine must be **restarted/reloaded** (and OneDrive
 must have synced the file) to pick up the change.
 
+### Working by trigger phrase (no manual shell commands)
+Ken does not run PowerShell/Bash/Python commands by hand. For ANY repeatable
+operation:
+1. Create or reuse a script under `scripts/`.
+2. Give it a trigger phrase of the form **"run &lt;name&gt;"** and document that
+   phrase (and exactly what it runs) HERE in CLAUDE.md, in the same change.
+3. When Ken says the phrase, Claude runs the script for him — in the background if
+   it is long-running — and reports the result. Never hand Ken raw commands to type.
+
+Scripts must run unchanged on either machine: derive paths from `$env:OneDrive`
+(never hardcode `C:\Users\<name>`), and let Claude pick the interpreter
+(bash/PowerShell/Python) so the phrase is all Ken needs. A new phrase only works
+after OneDrive syncs this file AND the other machine's Claude session is restarted.
+
 ### Geometry validation chunks (this project)
 The golden geometry suite is split into 9 chunks, run via
 `scripts/geometry-chunk.sh`:
