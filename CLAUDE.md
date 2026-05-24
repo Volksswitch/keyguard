@@ -116,6 +116,19 @@ when a gate failure needs investigating. Per-config render timeout defaults to
 Progress streams one line per config to `golden-stl-stats-progress.log`
 (project root, gitignored, `tail -f`-friendly).
 
+**RTP (ready-to-print) fixtures** (`tests/rtp/`): a SECOND test corpus,
+separate from the TC `tests/cases/` corpus above. It holds the real clinician
+"ready-to-print" designs: `keyguard.json` (RTP presets — distinct from the
+root TC `keyguard.json`), the OA tree (`Cases and App Specifics/`, `Standard
+Openings and Additions/`), the preset→OA / preset→golden mapping CSVs, and
+`golden-stl/` (the keep-forever CGAL golden `golden-rtp-cgal-stats.json` plus
+the downloaded-website stats and `manifest.csv`). `keyguard.scad` is NOT
+duplicated here — RTP renders use the project-root `keyguard.scad`. The web
+app's `tests/ready-to-print.spec.mjs` consumes this via `KEYGUARD_RTP_ROOT`
+(default: `<this project>/tests/rtp`), and `compare-rtp-membranes.py` diffs the
+app's Manifold export stats against the CGAL golden. Relocated here from the
+former Desktop `Web-App-Test` folder on 2026-05-23.
+
 **Geometry validation layer (`--geometry`):** Renders every geometry-producing
 preset (discovered from the test cases' `test.json`) to STL with native
 OpenSCAD/CGAL — using the web app's export flags (`fudge=0.05 ff=0.05

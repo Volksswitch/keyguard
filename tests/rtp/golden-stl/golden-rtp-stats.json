@@ -1,0 +1,8406 @@
+{
+ "meta": {
+  "source": "ready-to-print website STLs",
+  "count": 494
+ },
+ "configs": {
+  "iPad-1011-AVAWO-CoughDrop-QC-112": {
+   "volume_mm3": 69716.593,
+   "surface_area_mm2": 64809.3656,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 65796,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-CoughDrop-QC-112.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-CoughDrop-QC-60": {
+   "volume_mm3": 76555.4724,
+   "surface_area_mm2": 61630.9612,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 36716,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-CoughDrop-QC-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-Grid-SC-30": {
+   "volume_mm3": 60282.4827,
+   "surface_area_mm2": 50852.4286,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 22468,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-Grid-SC-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-Grid-SC-50": {
+   "volume_mm3": 71289.6294,
+   "surface_area_mm2": 60109.1388,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 37100,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-Grid-SC-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-Grid-for-iPad-VocoChat": {
+   "volume_mm3": 57969.6897,
+   "surface_area_mm2": 46136.0223,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 13384,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-Grid-for-iPad-VocoChat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-LWFL-VI": {
+   "volume_mm3": 64116.9433,
+   "surface_area_mm2": 60000.3247,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.001,
+    124.0,
+    89.0,
+    4.999
+   ],
+   "parts": 1,
+   "facets": 52246,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-LWFL-VI.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-LWFL": {
+   "volume_mm3": 60863.3774,
+   "surface_area_mm2": 57249.1858,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 50174,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-LWFL.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-P2G-6x10-1": {
+   "volume_mm3": 64576.9297,
+   "surface_area_mm2": 54061.376,
+   "bbox": [
+    -120.0,
+    -88.999,
+    -3.0,
+    120.0,
+    88.999,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 37750,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-P2G-6x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-P2G-7x11-1": {
+   "volume_mm3": 76608.238,
+   "surface_area_mm2": 64045.3391,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 47928,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-P2G-7x11-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-TD-Snap-8x10-1": {
+   "volume_mm3": 60208.1743,
+   "surface_area_mm2": 60452.0295,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 55598,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-TD-Snap-8x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-TD-Snap-MP-30": {
+   "volume_mm3": 61892.9168,
+   "surface_area_mm2": 52161.4689,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 22342,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-TD-Snap-MP-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-TD-Snap-MP-66": {
+   "volume_mm3": 54275.1864,
+   "surface_area_mm2": 54736.2127,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 43410,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-TD-Snap-MP-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-TouchChat-WordPower-108": {
+   "volume_mm3": 77276.9563,
+   "surface_area_mm2": 67693.9474,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 63878,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-TouchChat-WordPower-108.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-TouchChat-WordPower-42": {
+   "volume_mm3": 71263.111,
+   "surface_area_mm2": 57040.8313,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 26656,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-TouchChat-WordPower-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-TouchChat-WordPower-60": {
+   "volume_mm3": 64856.6922,
+   "surface_area_mm2": 57051.7312,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 36740,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-TouchChat-WordPower-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-AVAWO-TouchChat-WordPower-80": {
+   "volume_mm3": 70447.43,
+   "surface_area_mm2": 62133.251,
+   "bbox": [
+    -124.0,
+    -89.0,
+    -3.0,
+    124.0,
+    89.0,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 47872,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-AVAWO-TouchChat-WordPower-80.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-CoughDrop-112": {
+   "volume_mm3": 41877.1077,
+   "surface_area_mm2": 53798.484,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 64068,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-CoughDrop-112.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-CoughDrop-60": {
+   "volume_mm3": 48819.6075,
+   "surface_area_mm2": 50648.0655,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 34922,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-CoughDrop-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-Grid-SC-30": {
+   "volume_mm3": 32090.7867,
+   "surface_area_mm2": 39852.5697,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 20514,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-Grid-SC-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-Grid-SC-50": {
+   "volume_mm3": 43086.2531,
+   "surface_area_mm2": 49123.9908,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35290,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-Grid-SC-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-Grid-for-iPad-VocoChat": {
+   "volume_mm3": 30936.7706,
+   "surface_area_mm2": 35296.6563,
+   "bbox": [
+    -118.749,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 13040,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-Grid-for-iPad-VocoChat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-LWFL-VI": {
+   "volume_mm3": 36372.5102,
+   "surface_area_mm2": 48992.0413,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.001,
+    118.5,
+    84.5,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 50752,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-LWFL-VI.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-LWFL": {
+   "volume_mm3": 33181.3402,
+   "surface_area_mm2": 46298.8109,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48926,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-LWFL.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-P2G-6x10-1": {
+   "volume_mm3": 43161.4655,
+   "surface_area_mm2": 48305.04,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36034,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-P2G-6x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-P2G-7x11-1": {
+   "volume_mm3": 49004.4534,
+   "surface_area_mm2": 53129.0474,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 46062,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-P2G-7x11-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-TD-Snap-8x10-1": {
+   "volume_mm3": 32507.3582,
+   "surface_area_mm2": 49384.0238,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 53998,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-TD-Snap-8x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-TD-Snap-MP-30": {
+   "volume_mm3": 34571.3618,
+   "surface_area_mm2": 41304.5519,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 20600,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-TD-Snap-MP-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-TD-Snap-MP-66": {
+   "volume_mm3": 26628.3506,
+   "surface_area_mm2": 43810.5724,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 41760,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-TD-Snap-MP-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-TouchChat-WordPower-108": {
+   "volume_mm3": 49485.0414,
+   "surface_area_mm2": 56697.2547,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62024,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-TouchChat-WordPower-108.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-TouchChat-WordPower-42": {
+   "volume_mm3": 43450.0051,
+   "surface_area_mm2": 46072.7914,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 24846,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-TouchChat-WordPower-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-TouchChat-WordPower-60": {
+   "volume_mm3": 37162.9877,
+   "surface_area_mm2": 46084.9067,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 34938,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-TouchChat-WordPower-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-Andnary-TouchChat-WordPower-80": {
+   "volume_mm3": 42757.7085,
+   "surface_area_mm2": 51167.7669,
+   "bbox": [
+    -118.5,
+    -84.5,
+    -2.0,
+    118.5,
+    84.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 46096,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-Andnary-TouchChat-WordPower-80.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-CoughDrop-QC-112": {
+   "volume_mm3": 54793.258,
+   "surface_area_mm2": 56618.0481,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 65104,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-CoughDrop-QC-112.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-CoughDrop-QC-60": {
+   "volume_mm3": 61649.8284,
+   "surface_area_mm2": 53421.2297,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35846,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-CoughDrop-QC-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-Grid-SC-30": {
+   "volume_mm3": 45026.0952,
+   "surface_area_mm2": 42658.085,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 21422,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-Grid-SC-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-Grid-SC-50": {
+   "volume_mm3": 56031.6108,
+   "surface_area_mm2": 51921.6529,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36086,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-Grid-SC-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-Grid-for-iPad-VocoChat": {
+   "volume_mm3": 43179.8464,
+   "surface_area_mm2": 37918.6587,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 12382,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-Grid-for-iPad-VocoChat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-LWFL-VI": {
+   "volume_mm3": 49142.6091,
+   "surface_area_mm2": 51733.0583,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.001,
+    119.5,
+    88.999,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 51246,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-LWFL-VI.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-LWFL": {
+   "volume_mm3": 45947.141,
+   "surface_area_mm2": 49046.2414,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 49302,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-LWFL.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-P2G-6x10-1": {
+   "volume_mm3": 55934.8254,
+   "surface_area_mm2": 51504.2345,
+   "bbox": [
+    -119.5,
+    -87.999,
+    -2.0,
+    119.5,
+    87.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37504,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-P2G-6x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-P2G-7x11-1": {
+   "volume_mm3": 61683.0519,
+   "surface_area_mm2": 55852.6715,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47120,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-P2G-7x11-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-TD-Snap-8x10-1": {
+   "volume_mm3": 44614.8528,
+   "surface_area_mm2": 51918.9574,
+   "bbox": [
+    -119.0,
+    -88.999,
+    -2.0,
+    119.0,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 54696,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-TD-Snap-8x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-TD-Snap-MP-30": {
+   "volume_mm3": 46417.8229,
+   "surface_area_mm2": 43280.2304,
+   "bbox": [
+    -119.0,
+    -88.999,
+    -2.0,
+    119.0,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 21354,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-TD-Snap-MP-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-TD-Snap-MP-66": {
+   "volume_mm3": 39362.3082,
+   "surface_area_mm2": 46551.5976,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 42516,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-TD-Snap-MP-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-TouchChat-WordPower-108": {
+   "volume_mm3": 62356.2945,
+   "surface_area_mm2": 59492.772,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62994,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-TouchChat-WordPower-108.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-TouchChat-WordPower-42": {
+   "volume_mm3": 56342.8008,
+   "surface_area_mm2": 48856.0137,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 25830,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-TouchChat-WordPower-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-TouchChat-WordPower-60": {
+   "volume_mm3": 49969.7181,
+   "surface_area_mm2": 48844.9017,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35892,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-TouchChat-WordPower-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-ProCase-TouchChat-WordPower-80": {
+   "volume_mm3": 55558.9678,
+   "surface_area_mm2": 53925.047,
+   "bbox": [
+    -119.5,
+    -88.999,
+    -2.0,
+    119.5,
+    88.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47024,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-ProCase-TouchChat-WordPower-80.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-CoughDrop-QC-112": {
+   "volume_mm3": 41831.9305,
+   "surface_area_mm2": 61065.531,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 64616,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-CoughDrop-QC-112.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-CoughDrop-QC-60": {
+   "volume_mm3": 48785.1903,
+   "surface_area_mm2": 57921.3133,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 35454,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-CoughDrop-QC-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-Grid-SC-30": {
+   "volume_mm3": 32996.3548,
+   "surface_area_mm2": 47587.7923,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 20930,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-Grid-SC-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-Grid-SC-50": {
+   "volume_mm3": 43988.6794,
+   "surface_area_mm2": 56831.6966,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35598,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-Grid-SC-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-Grid-for-iPad-VocoChat": {
+   "volume_mm3": 31440.7495,
+   "surface_area_mm2": 43009.4085,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 12160,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-Grid-for-iPad-VocoChat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-LWFL-VI": {
+   "volume_mm3": 36998.4162,
+   "surface_area_mm2": 56536.3364,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.001,
+    123.0,
+    89.0,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 51320,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-LWFL-VI.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-LWFL": {
+   "volume_mm3": 33811.897,
+   "surface_area_mm2": 53847.8128,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 49422,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-LWFL.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-P2G-6x10-1": {
+   "volume_mm3": 43559.6087,
+   "surface_area_mm2": 55789.2198,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36538,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-P2G-6x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-P2G-7x11-1": {
+   "volume_mm3": 49166.421,
+   "surface_area_mm2": 60497.0426,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 46558,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-P2G-7x11-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-TD-Snap-8x10-1": {
+   "volume_mm3": 35093.5881,
+   "surface_area_mm2": 57858.6849,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 54620,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-TD-Snap-8x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-TD-Snap-MP-30": {
+   "volume_mm3": 36401.0562,
+   "surface_area_mm2": 49494.1501,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 21334,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-TD-Snap-MP-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-TD-Snap-MP-66": {
+   "volume_mm3": 29369.2966,
+   "surface_area_mm2": 52365.1618,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 42622,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-TD-Snap-MP-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-TouchChat-WordPower-108": {
+   "volume_mm3": 49425.6469,
+   "surface_area_mm2": 63954.3114,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 62544,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-TouchChat-WordPower-108.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-TouchChat-WordPower-42": {
+   "volume_mm3": 43403.0955,
+   "surface_area_mm2": 53341.0864,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 25352,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-TouchChat-WordPower-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-TouchChat-WordPower-60": {
+   "volume_mm3": 37116.7429,
+   "surface_area_mm2": 53349.4166,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 35484,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-TouchChat-WordPower-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-1011-SUPCASE-TouchChat-WordPower-80": {
+   "volume_mm3": 42706.1886,
+   "surface_area_mm2": 58428.8071,
+   "bbox": [
+    -123.0,
+    -89.0,
+    -2.0,
+    123.0,
+    89.0,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 46616,
+   "tablet": "iPad 10,11",
+   "filename": "iPad-1011-SUPCASE-TouchChat-WordPower-80.stl",
+   "mounting": "(single method)"
+  },
+  "Fintie-NM-Cough-Drop-QC-112": {
+   "volume_mm3": 53596.2568,
+   "surface_area_mm2": 52769.9209,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 70548,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-Cough-Drop-QC-112.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-Cough-Drop-QC-60": {
+   "volume_mm3": 63198.8973,
+   "surface_area_mm2": 53492.2463,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 45908,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-Cough-Drop-QC-60.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 124133.8189,
+   "surface_area_mm2": 67726.7254,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.5,
+    123.499,
+    83.0,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 27896,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-Grid-Super-Core-30": {
+   "volume_mm3": 61052.3679,
+   "surface_area_mm2": 48913.4163,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 27890,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-Grid-Super-Core-30.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-Grid-Super-Core-50": {
+   "volume_mm3": 61368.7662,
+   "surface_area_mm2": 53432.503,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 46468,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-Grid-Super-Core-50.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-Grid-Voco-Chat": {
+   "volume_mm3": 60017.4402,
+   "surface_area_mm2": 44808.0084,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 15822,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-Grid-Voco-Chat.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-LWFL-VI": {
+   "volume_mm3": 97217.6002,
+   "surface_area_mm2": 69281.1941,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.001,
+    123.499,
+    83.0,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 61370,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-LWFL-VI.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-LWFL": {
+   "volume_mm3": 58521.4657,
+   "surface_area_mm2": 55627.6075,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 59226,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-LWFL.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-P2G-6-x-10": {
+   "volume_mm3": 61518.9703,
+   "surface_area_mm2": 54032.8441,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 42482,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-P2G-6-x-10.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-P2G-7-x-11": {
+   "volume_mm3": 55131.3173,
+   "surface_area_mm2": 53591.6397,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 57590,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-P2G-7-x-11.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-Proloquo": {
+   "volume_mm3": 64475.9327,
+   "surface_area_mm2": 54818.1866,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 65872,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-Proloquo.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-S4Y": {
+   "volume_mm3": 39595.6957,
+   "surface_area_mm2": 45273.4496,
+   "bbox": [
+    -120.0,
+    -82.0,
+    -2.0,
+    122.999,
+    82.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 67812,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-S4Y.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 52661.7381,
+   "surface_area_mm2": 52173.9631,
+   "bbox": [
+    -120.0,
+    -82.0,
+    -2.0,
+    122.999,
+    82.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61618,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 50203.6209,
+   "surface_area_mm2": 51424.632,
+   "bbox": [
+    -120.0,
+    -82.0,
+    -2.0,
+    122.999,
+    82.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60454,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-108-merged": {
+   "volume_mm3": 50520.0057,
+   "surface_area_mm2": 52186.1649,
+   "bbox": [
+    -120.0,
+    -82.0,
+    -2.0,
+    122.999,
+    82.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60434,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-108-merged.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-108": {
+   "volume_mm3": 50758.409,
+   "surface_area_mm2": 52521.772,
+   "bbox": [
+    -120.0,
+    -82.0,
+    -2.0,
+    122.999,
+    82.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61598,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-108.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 62645.7027,
+   "surface_area_mm2": 51170.1204,
+   "bbox": [
+    -119.5,
+    -81.5,
+    -2.0,
+    122.499,
+    81.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35498,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-42": {
+   "volume_mm3": 63162.5903,
+   "surface_area_mm2": 51851.8842,
+   "bbox": [
+    -119.5,
+    -81.5,
+    -2.0,
+    122.499,
+    81.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 33328,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-42.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 70939.1397,
+   "surface_area_mm2": 56272.1285,
+   "bbox": [
+    -120.0,
+    -82.0,
+    -2.0,
+    122.999,
+    82.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48556,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-60": {
+   "volume_mm3": 68622.1879,
+   "surface_area_mm2": 56506.7142,
+   "bbox": [
+    -119.5,
+    -81.5,
+    -2.0,
+    122.499,
+    81.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 45534,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-60.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 56493.3394,
+   "surface_area_mm2": 52827.331,
+   "bbox": [
+    -120.0,
+    -82.0,
+    -2.0,
+    122.999,
+    82.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 53090,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TC-WordPower-80": {
+   "volume_mm3": 56925.2451,
+   "surface_area_mm2": 53581.4619,
+   "bbox": [
+    -120.0,
+    -82.0,
+    -2.0,
+    122.999,
+    82.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 49020,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TC-WordPower-80.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 106776.3882,
+   "surface_area_mm2": 62774.1857,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.5,
+    123.499,
+    83.0,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 25244,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TD-Snap-5-x-5": {
+   "volume_mm3": 53224.2896,
+   "surface_area_mm2": 45705.486,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 25242,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TD-Snap-5-x-5.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TD-Snap-8-x-10": {
+   "volume_mm3": 54073.293,
+   "surface_area_mm2": 54798.5132,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 71390,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TD-Snap-8-x-10.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-NM-TD-Snap-MP-66": {
+   "volume_mm3": 63227.7418,
+   "surface_area_mm2": 54826.913,
+   "bbox": [
+    -120.5,
+    -83.0,
+    -2.0,
+    123.499,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 55972,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-NM-TD-Snap-MP-66.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Fintie-ST-Cough-Drop-QC-112": {
+   "volume_mm3": 53952.4846,
+   "surface_area_mm2": 53495.3978,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 71284,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-Cough-Drop-QC-112.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-Cough-Drop-QC-60": {
+   "volume_mm3": 63555.1251,
+   "surface_area_mm2": 54217.7185,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 46644,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-Cough-Drop-QC-60.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 61724.994,
+   "surface_area_mm2": 54157.9698,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47204,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-Grid-Super-Core-30": {
+   "volume_mm3": 61408.5957,
+   "surface_area_mm2": 49638.8863,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 28626,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-Grid-Super-Core-30.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-Grid-Super-Core-50": {
+   "volume_mm3": 61724.994,
+   "surface_area_mm2": 54157.9698,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47204,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-Grid-Super-Core-50.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-Grid-Voco-Chat": {
+   "volume_mm3": 60373.6681,
+   "surface_area_mm2": 45533.4761,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 16558,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-Grid-Voco-Chat.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-LWFL-VI": {
+   "volume_mm3": 97573.828,
+   "surface_area_mm2": 70006.7038,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.001,
+    123.499,
+    85.999,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 62106,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-LWFL-VI.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-LWFL": {
+   "volume_mm3": 58298.6688,
+   "surface_area_mm2": 55976.982,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 59862,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-LWFL.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-P2G-6-x-10": {
+   "volume_mm3": 61875.1983,
+   "surface_area_mm2": 54758.3075,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 43218,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-P2G-6-x-10.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-P2G-7-x-11": {
+   "volume_mm3": 55487.5451,
+   "surface_area_mm2": 54317.1074,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 58326,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-P2G-7-x-11.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-Proloquo": {
+   "volume_mm3": 64832.1606,
+   "surface_area_mm2": 55543.6497,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 66608,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-Proloquo.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-S4Y": {
+   "volume_mm3": 40071.9189,
+   "surface_area_mm2": 46246.2673,
+   "bbox": [
+    -120.0,
+    -85.999,
+    -2.0,
+    122.999,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 68484,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-S4Y.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 53137.9612,
+   "surface_area_mm2": 53146.7909,
+   "bbox": [
+    -120.0,
+    -85.999,
+    -2.0,
+    122.999,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62290,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 50679.844,
+   "surface_area_mm2": 52397.4497,
+   "bbox": [
+    -120.0,
+    -85.999,
+    -2.0,
+    122.999,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61126,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-108-merged": {
+   "volume_mm3": 50996.2288,
+   "surface_area_mm2": 53158.9826,
+   "bbox": [
+    -120.0,
+    -85.999,
+    -2.0,
+    122.999,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61106,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-108-merged.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-108": {
+   "volume_mm3": 51234.6321,
+   "surface_area_mm2": 53494.5895,
+   "bbox": [
+    -120.0,
+    -85.999,
+    -2.0,
+    122.999,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62270,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-108.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 63121.9258,
+   "surface_area_mm2": 52142.9381,
+   "bbox": [
+    -119.5,
+    -85.499,
+    -2.0,
+    122.499,
+    85.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36170,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-42": {
+   "volume_mm3": 63638.8134,
+   "surface_area_mm2": 52824.6986,
+   "bbox": [
+    -119.5,
+    -85.499,
+    -2.0,
+    122.499,
+    85.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 34000,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-42.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 71415.3628,
+   "surface_area_mm2": 57244.9462,
+   "bbox": [
+    -120.0,
+    -85.999,
+    -2.0,
+    122.999,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 49228,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-60": {
+   "volume_mm3": 69098.411,
+   "surface_area_mm2": 57479.5296,
+   "bbox": [
+    -119.5,
+    -85.499,
+    -2.0,
+    122.499,
+    85.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 46206,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-60.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 56969.5625,
+   "surface_area_mm2": 53800.1178,
+   "bbox": [
+    -120.0,
+    -85.999,
+    -2.0,
+    122.999,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 53762,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TC-WordPower-80": {
+   "volume_mm3": 57401.4683,
+   "surface_area_mm2": 54554.2797,
+   "bbox": [
+    -120.0,
+    -85.999,
+    -2.0,
+    122.999,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 49692,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TC-WordPower-80.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 107132.616,
+   "surface_area_mm2": 63499.6535,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.5,
+    123.499,
+    85.999,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 25980,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TD-Snap-5-x-5": {
+   "volume_mm3": 53580.5175,
+   "surface_area_mm2": 46430.9537,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 25978,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TD-Snap-5-x-5.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TD-Snap-8-x-10": {
+   "volume_mm3": 54429.5208,
+   "surface_area_mm2": 55523.981,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 72126,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TD-Snap-8-x-10.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Fintie-ST-TD-Snap-MP-66": {
+   "volume_mm3": 63583.9697,
+   "surface_area_mm2": 55552.1857,
+   "bbox": [
+    -120.5,
+    -85.999,
+    -2.0,
+    123.499,
+    85.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 56708,
+   "tablet": "iPad 7,8,9",
+   "filename": "Fintie-ST-TD-Snap-MP-66.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-KF-Cough-Drop-QC-112": {
+   "volume_mm3": 28146.7327,
+   "surface_area_mm2": 39502.0191,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 67008,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-Cough-Drop-QC-112.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-Cough-Drop-QC-60": {
+   "volume_mm3": 28817.4072,
+   "surface_area_mm2": 36648.9794,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 42440,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-Cough-Drop-QC-60.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 91058.3581,
+   "surface_area_mm2": 51652.6387,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.5,
+    106.65,
+    78.8964,
+    2.5
+   ],
+   "parts": 4,
+   "facets": 18248,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-Grid-Super-Core-30": {
+   "volume_mm3": 34554.319,
+   "surface_area_mm2": 33237.2638,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    78.8964,
+    2.0
+   ],
+   "parts": 4,
+   "facets": 18248,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-Grid-Super-Core-30.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-Grid-Super-Core-50": {
+   "volume_mm3": 36148.3521,
+   "surface_area_mm2": 38142.0347,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    78.8964,
+    2.0
+   ],
+   "parts": 4,
+   "facets": 34690,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-Grid-Super-Core-50.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-Grid-Voco-Chat": {
+   "volume_mm3": 34909.9824,
+   "surface_area_mm2": 31552.9603,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    78.9,
+    2.0
+   ],
+   "parts": 4,
+   "facets": 10520,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-Grid-Voco-Chat.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-LWFL-VI": {
+   "volume_mm3": 71845.5142,
+   "surface_area_mm2": 55794.7492,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    4.0
+   ],
+   "parts": 5,
+   "facets": 59910,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-LWFL-VI.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-LWFL": {
+   "volume_mm3": 34296.9658,
+   "surface_area_mm2": 42405.2766,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 44970,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-LWFL.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-NM": {
+   "volume_mm3": 29331.9275,
+   "surface_area_mm2": 20176.4561,
+   "bbox": [
+    -122.645,
+    -82.5,
+    -2.5,
+    121.104,
+    82.5,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 5032,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-NM.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-P2G-6-x-10": {
+   "volume_mm3": 35358.6468,
+   "surface_area_mm2": 36206.0831,
+   "bbox": [
+    -106.65,
+    -78.9,
+    -2.0,
+    106.65,
+    78.9,
+    2.0
+   ],
+   "parts": 3,
+   "facets": 31080,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-P2G-6-x-10.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-P2G-7-x-11": {
+   "volume_mm3": 29143.6979,
+   "surface_area_mm2": 35761.7762,
+   "bbox": [
+    -106.65,
+    -78.9,
+    -2.0,
+    106.65,
+    78.9,
+    2.0
+   ],
+   "parts": 3,
+   "facets": 44296,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-P2G-7-x-11.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-Proloquo": {
+   "volume_mm3": 39380.9742,
+   "surface_area_mm2": 41713.6177,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 62340,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-Proloquo.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-S4Y": {
+   "volume_mm3": 17192.0085,
+   "surface_area_mm2": 33071.0725,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 64148,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-S4Y.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-ST": {
+   "volume_mm3": 29688.1553,
+   "surface_area_mm2": 20901.9239,
+   "bbox": [
+    -122.645,
+    -85.499,
+    -2.5,
+    121.104,
+    85.499,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 5768,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-ST.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-Shelf": {
+   "volume_mm3": 30845.626,
+   "surface_area_mm2": 23211.3156,
+   "bbox": [
+    -122.645,
+    -84.5,
+    -2.5,
+    123.104,
+    84.5,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 5216,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-Shelf.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 28765.1453,
+   "surface_area_mm2": 39874.1712,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 58086,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 28520.9371,
+   "surface_area_mm2": 39566.2758,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 56922,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-108-merged": {
+   "volume_mm3": 28837.3219,
+   "surface_area_mm2": 40327.8087,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 56902,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-108-merged.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-108": {
+   "volume_mm3": 29099.0255,
+   "surface_area_mm2": 40664.3751,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 58066,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-108.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 42173.8465,
+   "surface_area_mm2": 40156.9691,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 31952,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-42": {
+   "volume_mm3": 42690.7341,
+   "surface_area_mm2": 40838.7132,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 29780,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-42.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 47388.3163,
+   "surface_area_mm2": 44364.0483,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 45000,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-60": {
+   "volume_mm3": 48336.8584,
+   "surface_area_mm2": 45468.3044,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    2.0
+   ],
+   "parts": 5,
+   "facets": 41986,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-60.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 33154.359,
+   "surface_area_mm2": 39967.9517,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    1.851
+   ],
+   "parts": 5,
+   "facets": 49322,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TC-WordPower-80": {
+   "volume_mm3": 33586.2648,
+   "surface_area_mm2": 40722.1423,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    79.7,
+    1.851
+   ],
+   "parts": 5,
+   "facets": 45244,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TC-WordPower-80.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 74510.549,
+   "surface_area_mm2": 46729.8189,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.5,
+    106.65,
+    68.3982,
+    2.5
+   ],
+   "parts": 4,
+   "facets": 20670,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TD-Snap-5-x-5": {
+   "volume_mm3": 27234.4246,
+   "surface_area_mm2": 30265.3475,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    68.3982,
+    2.0
+   ],
+   "parts": 4,
+   "facets": 16318,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TD-Snap-5-x-5.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TD-Snap-8-x-10": {
+   "volume_mm3": 29047.1498,
+   "surface_area_mm2": 39227.9974,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    68.3982,
+    2.0
+   ],
+   "parts": 4,
+   "facets": 55104,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TD-Snap-8-x-10.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-KF-TD-Snap-MP-66": {
+   "volume_mm3": 37237.8766,
+   "surface_area_mm2": 39386.3855,
+   "bbox": [
+    -106.65,
+    -79.7,
+    -2.0,
+    106.65,
+    68.3982,
+    2.0
+   ],
+   "parts": 4,
+   "facets": 51400,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-KF-TD-Snap-MP-66.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "LTROP-NM-Cough-Drop-QC-112": {
+   "volume_mm3": 52055.2296,
+   "surface_area_mm2": 51847.8365,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 70262,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-Cough-Drop-QC-112.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-Cough-Drop-QC-60": {
+   "volume_mm3": 52735.8068,
+   "surface_area_mm2": 48929.505,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 45684,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-Cough-Drop-QC-60.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 121772.5269,
+   "surface_area_mm2": 66571.5977,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.5,
+    120.954,
+    82.4,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 22070,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-Grid-Super-Core-30": {
+   "volume_mm3": 59219.9303,
+   "surface_area_mm2": 47619.5806,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 22058,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-Grid-Super-Core-30.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-Grid-Super-Core-50": {
+   "volume_mm3": 60813.9635,
+   "surface_area_mm2": 52524.3561,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 38500,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-Grid-Super-Core-50.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-Grid-Voco-Chat": {
+   "volume_mm3": 58840.8814,
+   "surface_area_mm2": 43983.9873,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 13792,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-Grid-Voco-Chat.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-LWFL-VI": {
+   "volume_mm3": 95746.943,
+   "surface_area_mm2": 68258.3435,
+   "bbox": [
+    -119.747,
+    -82.4,
+    -2.001,
+    120.954,
+    82.4,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 51218,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-LWFL-VI.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-LWFL": {
+   "volume_mm3": 57636.3407,
+   "surface_area_mm2": 54309.7254,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48114,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-LWFL.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-P2G-6-x-10": {
+   "volume_mm3": 60964.1677,
+   "surface_area_mm2": 53124.6933,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 34494,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-P2G-6-x-10.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-P2G-7-x-11": {
+   "volume_mm3": 54752.3232,
+   "surface_area_mm2": 52661.657,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47754,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-P2G-7-x-11.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-Proloquo": {
+   "volume_mm3": 63299.3738,
+   "surface_area_mm2": 53994.1621,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 65584,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-Proloquo.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-S4Y": {
+   "volume_mm3": 40999.797,
+   "surface_area_mm2": 45773.6609,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 67526,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-S4Y.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 52667.4412,
+   "surface_area_mm2": 52266.315,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61332,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 52423.2331,
+   "surface_area_mm2": 51958.4093,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60168,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-108-merged": {
+   "volume_mm3": 52739.6179,
+   "surface_area_mm2": 52719.9377,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60136,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-108-merged.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-108": {
+   "volume_mm3": 53001.3215,
+   "surface_area_mm2": 53056.5041,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61300,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-108.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 66092.2461,
+   "surface_area_mm2": 52437.4947,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35196,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-42": {
+   "volume_mm3": 66609.1337,
+   "surface_area_mm2": 53119.2689,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 33024,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-42.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 71306.716,
+   "surface_area_mm2": 56644.5876,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48244,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-60": {
+   "volume_mm3": 72255.258,
+   "surface_area_mm2": 57748.8574,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 45230,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-60.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 56861.5901,
+   "surface_area_mm2": 53025.3345,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 52824,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TC-WordPower-80": {
+   "volume_mm3": 57293.5011,
+   "surface_area_mm2": 53778.0633,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48748,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TC-WordPower-80.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 105411.7735,
+   "surface_area_mm2": 61922.8212,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.5,
+    120.954,
+    82.4,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 24966,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TD-Snap-5-x-5": {
+   "volume_mm3": 52047.7309,
+   "surface_area_mm2": 44881.4645,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 20602,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TD-Snap-5-x-5.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TD-Snap-8-x-10": {
+   "volume_mm3": 53860.4561,
+   "surface_area_mm2": 53844.1148,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 59388,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TD-Snap-8-x-10.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-NM-TD-Snap-MP-66": {
+   "volume_mm3": 62051.1829,
+   "surface_area_mm2": 54002.6976,
+   "bbox": [
+    -122.495,
+    -82.4,
+    -2.0,
+    120.954,
+    82.4,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 55684,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-NM-TD-Snap-MP-66.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "LTROP-ST-Cough-Drop-QC-112": {
+   "volume_mm3": 52411.4585,
+   "surface_area_mm2": 52573.3022,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 70998,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-Cough-Drop-QC-112.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-Cough-Drop-QC-60": {
+   "volume_mm3": 53092.0357,
+   "surface_area_mm2": 49654.9885,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 46420,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-Cough-Drop-QC-60.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 122128.7558,
+   "surface_area_mm2": 67297.0674,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.5,
+    120.954,
+    85.399,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 22806,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-Grid-Super-Core-30": {
+   "volume_mm3": 59576.1592,
+   "surface_area_mm2": 48345.0504,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 22794,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-Grid-Super-Core-30.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-Grid-Super-Core-50": {
+   "volume_mm3": 61170.1923,
+   "surface_area_mm2": 53249.8258,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 39236,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-Grid-Super-Core-50.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-Grid-Voco-Chat": {
+   "volume_mm3": 59197.1103,
+   "surface_area_mm2": 44709.4576,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 14528,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-Grid-Voco-Chat.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-LWFL-VI": {
+   "volume_mm3": 96103.1719,
+   "surface_area_mm2": 68983.8551,
+   "bbox": [
+    -119.747,
+    -85.399,
+    -2.001,
+    120.954,
+    85.399,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 51954,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-LWFL-VI.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-LWFL": {
+   "volume_mm3": 57992.5695,
+   "surface_area_mm2": 55035.19,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48850,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-LWFL.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-P2G-6-x-10": {
+   "volume_mm3": 61320.3965,
+   "surface_area_mm2": 53850.1628,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35230,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-P2G-6-x-10.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-P2G-7-x-11": {
+   "volume_mm3": 55108.5519,
+   "surface_area_mm2": 53387.13,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48490,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-P2G-7-x-11.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-Proloquo": {
+   "volume_mm3": 63655.6027,
+   "surface_area_mm2": 54719.6405,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 66320,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-Proloquo.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-S4Y": {
+   "volume_mm3": 41356.0259,
+   "surface_area_mm2": 46499.1306,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 68262,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-S4Y.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 53023.6701,
+   "surface_area_mm2": 52991.7847,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62068,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 52779.4619,
+   "surface_area_mm2": 52683.879,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60904,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-108-merged": {
+   "volume_mm3": 53095.8467,
+   "surface_area_mm2": 53445.4079,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60872,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-108-merged.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-108": {
+   "volume_mm3": 53357.5504,
+   "surface_area_mm2": 53781.9738,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62036,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-108.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 66448.475,
+   "surface_area_mm2": 53162.9781,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35932,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-42": {
+   "volume_mm3": 66965.3626,
+   "surface_area_mm2": 53844.7314,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 33760,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-42.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 71662.9448,
+   "surface_area_mm2": 57370.0665,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48980,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-60": {
+   "volume_mm3": 72611.4869,
+   "surface_area_mm2": 58474.3226,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 45966,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-60.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 57217.819,
+   "surface_area_mm2": 53750.8271,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 53560,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TC-WordPower-80": {
+   "volume_mm3": 57649.73,
+   "surface_area_mm2": 54503.533,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 49484,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TC-WordPower-80.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 105768.0023,
+   "surface_area_mm2": 62648.2909,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.5,
+    120.954,
+    85.399,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 25702,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TD-Snap-5-x-5": {
+   "volume_mm3": 52403.9598,
+   "surface_area_mm2": 45606.9342,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 21338,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TD-Snap-5-x-5.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TD-Snap-8-x-10": {
+   "volume_mm3": 54216.685,
+   "surface_area_mm2": 54569.5887,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60124,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TD-Snap-8-x-10.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "LTROP-ST-TD-Snap-MP-66": {
+   "volume_mm3": 62407.4117,
+   "surface_area_mm2": 54728.1678,
+   "bbox": [
+    -122.495,
+    -85.399,
+    -2.0,
+    120.954,
+    85.399,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 56420,
+   "tablet": "iPad 7,8,9",
+   "filename": "LTROP-ST-TD-Snap-MP-66.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-NM-Cough-Drop-QC-112": {
+   "volume_mm3": 52053.7697,
+   "surface_area_mm2": 52141.4796,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 71810,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-Cough-Drop-QC-112.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-Cough-Drop-QC-60": {
+   "volume_mm3": 62231.3329,
+   "surface_area_mm2": 52962.562,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47194,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-Cough-Drop-QC-60.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 122931.3651,
+   "surface_area_mm2": 67177.7851,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.5,
+    123.999,
+    83.0,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 28910,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-Grid-Super-Core-30": {
+   "volume_mm3": 60084.8035,
+   "surface_area_mm2": 48383.7378,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 29176,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-Grid-Super-Core-30.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-Grid-Super-Core-50": {
+   "volume_mm3": 60401.2018,
+   "surface_area_mm2": 52902.8233,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47754,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-Grid-Super-Core-50.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-Grid-Voco-Chat": {
+   "volume_mm3": 59049.8759,
+   "surface_area_mm2": 44278.3287,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 17108,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-Grid-Voco-Chat.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-LWFL-VI": {
+   "volume_mm3": 96250.0358,
+   "surface_area_mm2": 68751.5971,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.001,
+    123.999,
+    83.0,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 62656,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-LWFL-VI.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-LWFL": {
+   "volume_mm3": 56974.8766,
+   "surface_area_mm2": 54721.8323,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60412,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-LWFL.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-P2G-6-x-10": {
+   "volume_mm3": 60551.406,
+   "surface_area_mm2": 53503.1628,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 43768,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-P2G-6-x-10.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-P2G-7-x-11": {
+   "volume_mm3": 54163.7529,
+   "surface_area_mm2": 53061.9612,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 58876,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-P2G-7-x-11.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-Proloquo": {
+   "volume_mm3": 63508.3684,
+   "surface_area_mm2": 54288.5161,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 67158,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-Proloquo.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-S4Y": {
+   "volume_mm3": 41208.8079,
+   "surface_area_mm2": 46063.5388,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 69074,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-S4Y.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 52037.6409,
+   "surface_area_mm2": 52521.6673,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62880,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 51816.733,
+   "surface_area_mm2": 52214.7212,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61716,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-108-merged": {
+   "volume_mm3": 52133.1178,
+   "surface_area_mm2": 52976.2543,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61696,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-108-merged.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-108": {
+   "volume_mm3": 52371.5211,
+   "surface_area_mm2": 53311.8609,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62860,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-108.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 65866.0115,
+   "surface_area_mm2": 52790.7168,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36768,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-42": {
+   "volume_mm3": 66382.8991,
+   "surface_area_mm2": 53472.4796,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 34598,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-42.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 70893.9547,
+   "surface_area_mm2": 57023.0476,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 49818,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-60": {
+   "volume_mm3": 71842.4967,
+   "surface_area_mm2": 58127.3095,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 46804,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-60.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 66660.735,
+   "surface_area_mm2": 57917.8614,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 64046,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TC-WordPower-80": {
+   "volume_mm3": 56881.1651,
+   "surface_area_mm2": 54043.853,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 50298,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TC-WordPower-80.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 105573.9343,
+   "surface_area_mm2": 62225.3188,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.5,
+    123.999,
+    83.0,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 26258,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TD-Snap-5-x-5": {
+   "volume_mm3": 52256.7253,
+   "surface_area_mm2": 45175.8063,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 26528,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TD-Snap-5-x-5.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TD-Snap-8-x-10": {
+   "volume_mm3": 53105.7286,
+   "surface_area_mm2": 54268.8336,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 72676,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TD-Snap-8-x-10.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-NM-TD-Snap-MP-66": {
+   "volume_mm3": 62260.1775,
+   "surface_area_mm2": 54297.0383,
+   "bbox": [
+    -120.0,
+    -83.0,
+    -2.0,
+    123.999,
+    83.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 57258,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-NM-TD-Snap-MP-66.stl",
+   "mounting": "None (micro-suction)"
+  },
+  "Rug-Ed-ST-Cough-Drop-QC-112": {
+   "volume_mm3": 52529.9928,
+   "surface_area_mm2": 53114.2973,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 72482,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-Cough-Drop-QC-112.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-Cough-Drop-QC-60": {
+   "volume_mm3": 62707.5561,
+   "surface_area_mm2": 53935.3889,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47866,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-Cough-Drop-QC-60.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 123407.5882,
+   "surface_area_mm2": 68150.5891,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.5,
+    123.999,
+    86.999,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 29582,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-Grid-Super-Core-30": {
+   "volume_mm3": 60561.0267,
+   "surface_area_mm2": 49356.5544,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 29848,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-Grid-Super-Core-30.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-Grid-Super-Core-50": {
+   "volume_mm3": 60877.425,
+   "surface_area_mm2": 53875.6411,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48426,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-Grid-Super-Core-50.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-Grid-Voco-Chat": {
+   "volume_mm3": 59526.099,
+   "surface_area_mm2": 45251.1465,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 17780,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-Grid-Voco-Chat.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-LWFL-VI": {
+   "volume_mm3": 96726.259,
+   "surface_area_mm2": 69724.4975,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.001,
+    123.999,
+    86.999,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 63328,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-LWFL-VI.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-LWFL": {
+   "volume_mm3": 57451.0997,
+   "surface_area_mm2": 55694.6524,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 61084,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-LWFL.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-P2G-6-x-10": {
+   "volume_mm3": 61027.6292,
+   "surface_area_mm2": 54475.9775,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 44440,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-P2G-6-x-10.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-P2G-7-x-11": {
+   "volume_mm3": 54639.976,
+   "surface_area_mm2": 54034.7798,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 59548,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-P2G-7-x-11.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-Proloquo": {
+   "volume_mm3": 63984.5915,
+   "surface_area_mm2": 55261.3247,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 67830,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-Proloquo.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-S4Y": {
+   "volume_mm3": 41685.031,
+   "surface_area_mm2": 47036.3565,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 69746,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-S4Y.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 52513.864,
+   "surface_area_mm2": 53494.4748,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 63552,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 52292.9561,
+   "surface_area_mm2": 53187.5389,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62388,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-108-merged": {
+   "volume_mm3": 52609.3409,
+   "surface_area_mm2": 53949.0718,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62368,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-108-merged.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-108": {
+   "volume_mm3": 52847.7442,
+   "surface_area_mm2": 54284.6787,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 63532,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-108.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 66342.2347,
+   "surface_area_mm2": 53763.5346,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37440,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-42": {
+   "volume_mm3": 66859.1222,
+   "surface_area_mm2": 54445.297,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 35270,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-42.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 71370.1778,
+   "surface_area_mm2": 57995.8653,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 50490,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-60": {
+   "volume_mm3": 72318.7198,
+   "surface_area_mm2": 59100.1249,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47476,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-60.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 67136.9581,
+   "surface_area_mm2": 58890.6803,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 64718,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TC-WordPower-80": {
+   "volume_mm3": 57357.3883,
+   "surface_area_mm2": 55016.6708,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 50970,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TC-WordPower-80.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 106050.1574,
+   "surface_area_mm2": 63198.1366,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.5,
+    123.999,
+    86.999,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 26930,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TD-Snap-5-x-5": {
+   "volume_mm3": 52732.9484,
+   "surface_area_mm2": 46148.6241,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 27200,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TD-Snap-5-x-5.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TD-Snap-8-x-10": {
+   "volume_mm3": 53581.9518,
+   "surface_area_mm2": 55241.6513,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 73348,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TD-Snap-8-x-10.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "Rug-Ed-ST-TD-Snap-MP-66": {
+   "volume_mm3": 62736.4006,
+   "surface_area_mm2": 55269.6606,
+   "bbox": [
+    -120.0,
+    -86.999,
+    -2.0,
+    123.999,
+    86.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 57930,
+   "tablet": "iPad 7,8,9",
+   "filename": "Rug-Ed-ST-TD-Snap-MP-66.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-RT-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 96154.0692,
+   "surface_area_mm2": 58221.4774,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.5,
+    120.45,
+    79.0,
+    4.5
+   ],
+   "parts": 1,
+   "facets": 25212,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-Grid-Super-Core-30": {
+   "volume_mm3": 41949.4247,
+   "surface_area_mm2": 40085.4833,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 25210,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-Grid-Super-Core-30.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-Grid-Super-Core-50": {
+   "volume_mm3": 44504.918,
+   "surface_area_mm2": 45012.701,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 43794,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-Grid-Super-Core-50.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-Grid-Voco-Chat": {
+   "volume_mm3": 38895.2021,
+   "surface_area_mm2": 35661.965,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 13060,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-Grid-Voco-Chat.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-LWFL-VI": {
+   "volume_mm3": 75384.1552,
+   "surface_area_mm2": 59735.9096,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 70408,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-LWFL-VI.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-LWFL": {
+   "volume_mm3": 45570.3163,
+   "surface_area_mm2": 47785.4571,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 56710,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-LWFL.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-P2G-6-x-10": {
+   "volume_mm3": 46398.0242,
+   "surface_area_mm2": 45959.2207,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 40944,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-P2G-6-x-10.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-P2G-7-x-11": {
+   "volume_mm3": 41891.0038,
+   "surface_area_mm2": 45972.8726,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 57316,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-P2G-7-x-11.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-Proloquo": {
+   "volume_mm3": 41506.0658,
+   "surface_area_mm2": 44937.4556,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 62692,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-Proloquo.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-S4Y": {
+   "volume_mm3": 27372.549,
+   "surface_area_mm2": 40606.3849,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -1.5,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 84812,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-S4Y.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 44477.022,
+   "surface_area_mm2": 48562.8259,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 72180,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 43930.8088,
+   "surface_area_mm2": 48153.6389,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 70800,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-108-merged": {
+   "volume_mm3": 44015.807,
+   "surface_area_mm2": 48786.1741,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 70000,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-108-merged.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-108": {
+   "volume_mm3": 44585.6113,
+   "surface_area_mm2": 49230.1261,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 71344,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-108.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 44283.7713,
+   "surface_area_mm2": 41909.9941,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 32776,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-42": {
+   "volume_mm3": 44484.6898,
+   "surface_area_mm2": 42278.2908,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 29146,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-42.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 50804.4445,
+   "surface_area_mm2": 46414.665,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 45812,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-60": {
+   "volume_mm3": 48282.5301,
+   "surface_area_mm2": 43970.9007,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 43354,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-60.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 48651.1094,
+   "surface_area_mm2": 47762.4415,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 60020,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TC-WordPower-80": {
+   "volume_mm3": 48957.3545,
+   "surface_area_mm2": 48393.3845,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 58948,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TC-WordPower-80.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 79874.0769,
+   "surface_area_mm2": 53711.3756,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.5,
+    120.45,
+    79.0,
+    4.5
+   ],
+   "parts": 1,
+   "facets": 23136,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TD-Snap-5-x-5": {
+   "volume_mm3": 32246.3581,
+   "surface_area_mm2": 36817.7346,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 23136,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TD-Snap-5-x-5.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TD-Snap-8-x-10": {
+   "volume_mm3": 40807.8011,
+   "surface_area_mm2": 47318.3168,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 69218,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TD-Snap-8-x-10.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RT-TD-Snap-MP-66": {
+   "volume_mm3": 42249.8102,
+   "surface_area_mm2": 45938.9673,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 53866,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RT-TD-Snap-MP-66.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SEYMAC-RTM-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 95619.2424,
+   "surface_area_mm2": 60251.0469,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.5,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 25276,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-Grid-Super-Core-30": {
+   "volume_mm3": 41414.5979,
+   "surface_area_mm2": 42114.9804,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 25274,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-Grid-Super-Core-30.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-Grid-Super-Core-50": {
+   "volume_mm3": 43970.0913,
+   "surface_area_mm2": 47042.1973,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 43858,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-Grid-Super-Core-50.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-Grid-Voco-Chat": {
+   "volume_mm3": 38360.3753,
+   "surface_area_mm2": 37691.4614,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 13124,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-Grid-Voco-Chat.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-LWFL-VI": {
+   "volume_mm3": 74849.3285,
+   "surface_area_mm2": 61765.4057,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 70472,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-LWFL-VI.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-LWFL": {
+   "volume_mm3": 45035.4895,
+   "surface_area_mm2": 49814.9248,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 56774,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-LWFL.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-P2G-6-x-10": {
+   "volume_mm3": 45863.1974,
+   "surface_area_mm2": 47988.7171,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 41008,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-P2G-6-x-10.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-P2G-7-x-11": {
+   "volume_mm3": 41356.1771,
+   "surface_area_mm2": 48002.3403,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 57380,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-P2G-7-x-11.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-Proloquo": {
+   "volume_mm3": 40971.239,
+   "surface_area_mm2": 46966.9703,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 62756,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-Proloquo.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-S4Y": {
+   "volume_mm3": 26837.7221,
+   "surface_area_mm2": 42635.2321,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -1.5,
+    120.45,
+    79.0,
+    6.0
+   ],
+   "parts": 1,
+   "facets": 84876,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-S4Y.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 43942.1952,
+   "surface_area_mm2": 50592.3223,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 72244,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 43395.982,
+   "surface_area_mm2": 50183.1353,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 70864,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-108-merged": {
+   "volume_mm3": 43480.9802,
+   "surface_area_mm2": 50815.6704,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 70064,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-108-merged.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-108": {
+   "volume_mm3": 44050.7845,
+   "surface_area_mm2": 51259.6225,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 71408,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-108.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 43748.9446,
+   "surface_area_mm2": 43939.519,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 32840,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-42": {
+   "volume_mm3": 43949.8631,
+   "surface_area_mm2": 44307.7872,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 29210,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-42.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 50269.6178,
+   "surface_area_mm2": 48444.1326,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 45876,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-60": {
+   "volume_mm3": 50903.3104,
+   "surface_area_mm2": 49235.4348,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 43242,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-60.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 48116.2826,
+   "surface_area_mm2": 49792.0523,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 60084,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TC-WordPower-80": {
+   "volume_mm3": 48422.5278,
+   "surface_area_mm2": 50423.2642,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 59012,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TC-WordPower-80.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 79339.2502,
+   "surface_area_mm2": 55740.872,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.5,
+    120.45,
+    79.0,
+    5.0
+   ],
+   "parts": 1,
+   "facets": 23200,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TD-Snap-5-x-5": {
+   "volume_mm3": 31711.5313,
+   "surface_area_mm2": 38847.2355,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 23200,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TD-Snap-5-x-5.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TD-Snap-8-x-10": {
+   "volume_mm3": 40272.9744,
+   "surface_area_mm2": 49347.8086,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 69282,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TD-Snap-8-x-10.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-RTM-TD-Snap-MP-66": {
+   "volume_mm3": 41714.9835,
+   "surface_area_mm2": 47968.8538,
+   "bbox": [
+    -120.45,
+    -79.0,
+    -2.0,
+    120.45,
+    79.0,
+    5.5
+   ],
+   "parts": 1,
+   "facets": 53930,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-RTM-TD-Snap-MP-66.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SEYMAC-ST-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 92998.4622,
+   "surface_area_mm2": 54986.5415,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.5,
+    104.5,
+    83.999,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 25388,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-Grid-Super-Core-30": {
+   "volume_mm3": 38793.8177,
+   "surface_area_mm2": 36850.4743,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 25386,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-Grid-Super-Core-30.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-Grid-Super-Core-50": {
+   "volume_mm3": 41349.311,
+   "surface_area_mm2": 41777.6633,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 43970,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-Grid-Super-Core-50.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-Grid-Voco-Chat": {
+   "volume_mm3": 35739.5951,
+   "surface_area_mm2": 32426.9559,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 13236,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-Grid-Voco-Chat.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-LWFL-VI": {
+   "volume_mm3": 72228.5482,
+   "surface_area_mm2": 56500.8181,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 70584,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-LWFL-VI.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-LWFL": {
+   "volume_mm3": 42414.7093,
+   "surface_area_mm2": 44550.448,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 56886,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-LWFL.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-P2G-6-x-10": {
+   "volume_mm3": 43242.4172,
+   "surface_area_mm2": 42724.2116,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 41120,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-P2G-6-x-10.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-P2G-7-x-11": {
+   "volume_mm3": 38735.3968,
+   "surface_area_mm2": 42737.9207,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 57492,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-P2G-7-x-11.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-Proloquo": {
+   "volume_mm3": 38350.4588,
+   "surface_area_mm2": 41702.4465,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 62868,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-Proloquo.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-S4Y": {
+   "volume_mm3": 24196.7468,
+   "surface_area_mm2": 37293.466,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -1.5,
+    104.5,
+    83.999,
+    1.5
+   ],
+   "parts": 1,
+   "facets": 84908,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-S4Y.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 41321.415,
+   "surface_area_mm2": 45327.8168,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 72356,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 40775.2018,
+   "surface_area_mm2": 44918.6298,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 70976,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-108-merged": {
+   "volume_mm3": 40993.1061,
+   "surface_area_mm2": 45702.2038,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 70740,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-108-merged.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-108": {
+   "volume_mm3": 41562.9104,
+   "surface_area_mm2": 46146.1491,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 72084,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-108.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 41128.1644,
+   "surface_area_mm2": 38675.0422,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 32952,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-42": {
+   "volume_mm3": 41454.4312,
+   "surface_area_mm2": 39191.2952,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 30810,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-42.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 47648.8375,
+   "surface_area_mm2": 43179.6558,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 45988,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-60": {
+   "volume_mm3": 48406.7588,
+   "surface_area_mm2": 44118.431,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 43030,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-60.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 45495.5024,
+   "surface_area_mm2": 44527.4611,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 60196,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TC-WordPower-80": {
+   "volume_mm3": 45924.4538,
+   "surface_area_mm2": 45301.6345,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 55536,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TC-WordPower-80.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 76718.4699,
+   "surface_area_mm2": 50476.3711,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.5,
+    104.5,
+    83.999,
+    2.5
+   ],
+   "parts": 1,
+   "facets": 23312,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TD-Snap-5-x-5": {
+   "volume_mm3": 29090.7511,
+   "surface_area_mm2": 33582.7301,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 23312,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TD-Snap-5-x-5.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TD-Snap-8-x-10": {
+   "volume_mm3": 37652.1941,
+   "surface_area_mm2": 44083.3078,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 69394,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TD-Snap-8-x-10.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SEYMAC-ST-TD-Snap-MP-66": {
+   "volume_mm3": 39094.2033,
+   "surface_area_mm2": 42703.5712,
+   "bbox": [
+    -104.5,
+    -83.999,
+    -2.0,
+    104.5,
+    83.999,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 54042,
+   "tablet": "iPad 7,8,9",
+   "filename": "SEYMAC-ST-TD-Snap-MP-66.stl",
+   "mounting": "Slide-in Tabs"
+  },
+  "SUPCASE-RT-Cough-Drop-QC-112": {
+   "volume_mm3": 41928.4363,
+   "surface_area_mm2": 47545.3264,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 68458,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-Cough-Drop-QC-112.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-Cough-Drop-QC-60": {
+   "volume_mm3": 52106.0484,
+   "surface_area_mm2": 48352.6106,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 43798,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-Cough-Drop-QC-60.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 109261.2753,
+   "surface_area_mm2": 62291.4308,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.5,
+    124.104,
+    81.0,
+    4.4864
+   ],
+   "parts": 1,
+   "facets": 21684,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-Grid-Super-Core-30": {
+   "volume_mm3": 49959.5192,
+   "surface_area_mm2": 43773.7819,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 21560,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-Grid-Super-Core-30.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-Grid-Super-Core-50": {
+   "volume_mm3": 50275.9176,
+   "surface_area_mm2": 48292.8705,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 36678,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-Grid-Super-Core-50.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-Grid-Voco-Chat": {
+   "volume_mm3": 48925.8976,
+   "surface_area_mm2": 39668.621,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 11964,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-Grid-Voco-Chat.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-LWFL-VI": {
+   "volume_mm3": 86068.4499,
+   "surface_area_mm2": 64089.5536,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.001,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 49688,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-LWFL-VI.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-LWFL": {
+   "volume_mm3": 46690.8509,
+   "surface_area_mm2": 50047.5854,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 46432,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-LWFL.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-P2G-6-x-10": {
+   "volume_mm3": 51115.6922,
+   "surface_area_mm2": 49083.7123,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 32722,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-P2G-6-x-10.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-P2G-7-x-11": {
+   "volume_mm3": 44728.0391,
+   "surface_area_mm2": 48642.5038,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 45970,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-P2G-7-x-11.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-Proloquo": {
+   "volume_mm3": 53383.0839,
+   "surface_area_mm2": 49678.5463,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 63762,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-Proloquo.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-S4Y": {
+   "volume_mm3": 31083.3513,
+   "surface_area_mm2": 41502.516,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 65946,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-S4Y.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 41912.2617,
+   "surface_area_mm2": 47938.5917,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 59562,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 41691.3538,
+   "surface_area_mm2": 47631.6455,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 58398,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-108-merged": {
+   "volume_mm3": 42007.7636,
+   "surface_area_mm2": 48386.0345,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 58356,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-108-merged.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-108": {
+   "volume_mm3": 42246.167,
+   "surface_area_mm2": 48721.6414,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 59520,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-108.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 55740.727,
+   "surface_area_mm2": 48180.7654,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 33372,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-42": {
+   "volume_mm3": 56257.6146,
+   "surface_area_mm2": 48862.5255,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 31202,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-42.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 60768.6702,
+   "surface_area_mm2": 52413.0972,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 46422,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-60": {
+   "volume_mm3": 61717.2121,
+   "surface_area_mm2": 53517.3557,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 43408,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-60.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 46323.8818,
+   "surface_area_mm2": 48706.0774,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 51010,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TC-WordPower-80": {
+   "volume_mm3": 46755.8186,
+   "surface_area_mm2": 49451.4535,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 46942,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TC-WordPower-80.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 91903.8445,
+   "surface_area_mm2": 57338.7453,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.5,
+    124.104,
+    81.0,
+    4.4864
+   ],
+   "parts": 1,
+   "facets": 23268,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TD-Snap-5-x-5": {
+   "volume_mm3": 42131.441,
+   "surface_area_mm2": 40565.8538,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 18780,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TD-Snap-5-x-5.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TD-Snap-8-x-10": {
+   "volume_mm3": 42980.4445,
+   "surface_area_mm2": 49658.8805,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 57566,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TD-Snap-8-x-10.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RT-TD-Snap-MP-66": {
+   "volume_mm3": 52134.8929,
+   "surface_area_mm2": 49687.0869,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    4.9864
+   ],
+   "parts": 1,
+   "facets": 53862,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RT-TD-Snap-MP-66.stl",
+   "mounting": "Raised Tabs"
+  },
+  "SUPCASE-RTM-Cough-Drop-QC-112": {
+   "volume_mm3": 41049.319,
+   "surface_area_mm2": 49879.2895,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 68602,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-Cough-Drop-QC-112.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-Cough-Drop-QC-60": {
+   "volume_mm3": 51226.9312,
+   "surface_area_mm2": 50686.5828,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 43942,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-Cough-Drop-QC-60.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 108364.069,
+   "surface_area_mm2": 64584.0196,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.5,
+    124.104,
+    81.0,
+    4.9354
+   ],
+   "parts": 1,
+   "facets": 21860,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-Grid-Super-Core-30": {
+   "volume_mm3": 49080.402,
+   "surface_area_mm2": 46107.7552,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 21704,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-Grid-Super-Core-30.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-Grid-Super-Core-50": {
+   "volume_mm3": 49396.8003,
+   "surface_area_mm2": 50626.8427,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 36822,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-Grid-Super-Core-50.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-Grid-Voco-Chat": {
+   "volume_mm3": 48046.7803,
+   "surface_area_mm2": 42002.5932,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 12108,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-Grid-Voco-Chat.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-LWFL-VI": {
+   "volume_mm3": 85189.0296,
+   "surface_area_mm2": 66420.7159,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.001,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 49836,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-LWFL-VI.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-LWFL": {
+   "volume_mm3": 45811.7337,
+   "surface_area_mm2": 52381.5565,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 46576,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-LWFL.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-P2G-6-x-10": {
+   "volume_mm3": 50236.575,
+   "surface_area_mm2": 51417.6845,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 32866,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-P2G-6-x-10.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-P2G-7-x-11": {
+   "volume_mm3": 43848.9219,
+   "surface_area_mm2": 50976.4817,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 46114,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-P2G-7-x-11.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-Proloquo": {
+   "volume_mm3": 52503.9666,
+   "surface_area_mm2": 52012.5277,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 63906,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-Proloquo.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-S4Y": {
+   "volume_mm3": 30204.234,
+   "surface_area_mm2": 43836.4882,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 66090,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-S4Y.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 41033.1444,
+   "surface_area_mm2": 50272.5639,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 59706,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 40812.2366,
+   "surface_area_mm2": 49965.6177,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 58542,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-108-merged": {
+   "volume_mm3": 41128.6464,
+   "surface_area_mm2": 50720.0067,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 58500,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-108-merged.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-108": {
+   "volume_mm3": 41367.0497,
+   "surface_area_mm2": 51055.6136,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 59664,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-108.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 54861.6098,
+   "surface_area_mm2": 50514.7353,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 33516,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-42": {
+   "volume_mm3": 55378.4973,
+   "surface_area_mm2": 51196.4965,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 31346,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-42.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 59889.5529,
+   "surface_area_mm2": 54747.0694,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 46566,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-60": {
+   "volume_mm3": 60838.0949,
+   "surface_area_mm2": 55851.3268,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 43552,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-60.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 45444.7645,
+   "surface_area_mm2": 51040.0599,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 51154,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TC-WordPower-80": {
+   "volume_mm3": 45876.7013,
+   "surface_area_mm2": 51785.4257,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 47086,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TC-WordPower-80.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 91006.6382,
+   "surface_area_mm2": 59631.3341,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.5,
+    124.104,
+    81.0,
+    4.9354
+   ],
+   "parts": 1,
+   "facets": 23444,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TD-Snap-5-x-5": {
+   "volume_mm3": 41252.3237,
+   "surface_area_mm2": 42899.826,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 18924,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TD-Snap-5-x-5.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TD-Snap-8-x-10": {
+   "volume_mm3": 42101.3272,
+   "surface_area_mm2": 51992.8527,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 57710,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TD-Snap-8-x-10.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "SUPCASE-RTM-TD-Snap-MP-66": {
+   "volume_mm3": 51255.7757,
+   "surface_area_mm2": 52021.059,
+   "bbox": [
+    -121.896,
+    -81.0,
+    -2.0,
+    124.104,
+    81.0,
+    5.4354
+   ],
+   "parts": 1,
+   "facets": 54006,
+   "tablet": "iPad 7,8,9",
+   "filename": "SUPCASE-RTM-TD-Snap-MP-66.stl",
+   "mounting": "Raised Tabs w/ magnets"
+  },
+  "iPad-789-SP-LTROP-Cough-Drop-QC-112": {
+   "volume_mm3": 71861.4642,
+   "surface_area_mm2": 60384.9176,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 67538,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-Cough-Drop-QC-112.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-Cough-Drop-QC-60": {
+   "volume_mm3": 81902.1682,
+   "surface_area_mm2": 60921.1987,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 39730,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-Cough-Drop-QC-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 140084.156,
+   "surface_area_mm2": 75122.2488,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 24344,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-Grid-Super-Core-30": {
+   "volume_mm3": 83100.3879,
+   "surface_area_mm2": 57793.2063,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 24672,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-Grid-Super-Core-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-Grid-Super-Core-50": {
+   "volume_mm3": 79555.2727,
+   "surface_area_mm2": 60601.2826,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 39820,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-Grid-Super-Core-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-Grid-Voco-Chat": {
+   "volume_mm3": 81277.7406,
+   "surface_area_mm2": 53454.3869,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 15756,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-Grid-Voco-Chat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-KF-Cough-Drop-QC-112": {
+   "volume_mm3": 27436.8888,
+   "surface_area_mm2": 40437.8207,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.8244
+   ],
+   "parts": 1,
+   "facets": 62902,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-Cough-Drop-QC-112.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-Cough-Drop-QC-60": {
+   "volume_mm3": 37458.6271,
+   "surface_area_mm2": 40947.1352,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 35782,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-Cough-Drop-QC-60.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-Grid-Super-Core-30-max-rails": {
+   "volume_mm3": 95640.6154,
+   "surface_area_mm2": 55148.3274,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 20396,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-Grid-Super-Core-30-max-rails.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-Grid-Super-Core-30": {
+   "volume_mm3": 38656.8468,
+   "surface_area_mm2": 37819.1274,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 20724,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-Grid-Super-Core-30.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-Grid-Super-Core-50": {
+   "volume_mm3": 35111.7316,
+   "surface_area_mm2": 40627.2161,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 35872,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-Grid-Super-Core-50.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-Grid-Voco-Chat": {
+   "volume_mm3": 36834.1995,
+   "surface_area_mm2": 33480.3192,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 11808,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-Grid-Voco-Chat.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-LWFL": {
+   "volume_mm3": 34633.4813,
+   "surface_area_mm2": 43535.0299,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 47942,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-LWFL.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-Proloquo": {
+   "volume_mm3": 41235.2431,
+   "surface_area_mm2": 43262.763,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 52862,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-Proloquo.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-S4Y": {
+   "volume_mm3": 16059.8283,
+   "surface_area_mm2": 32008.3858,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 62224,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-S4Y.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 33060.5347,
+   "surface_area_mm2": 43240.0379,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 62282,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 30598.0242,
+   "surface_area_mm2": 42430.9885,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 60842,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-108-merged": {
+   "volume_mm3": 30957.3084,
+   "surface_area_mm2": 43200.3139,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 60786,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-108-merged.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-108": {
+   "volume_mm3": 31199.686,
+   "surface_area_mm2": 43532.0275,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 62246,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-108.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 44625.8089,
+   "surface_area_mm2": 42356.5027,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 25650,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-42": {
+   "volume_mm3": 42930.5925,
+   "surface_area_mm2": 42061.3121,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 25650,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-42.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 50981.0513,
+   "surface_area_mm2": 46423.8371,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 35786,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-60": {
+   "volume_mm3": 48167.5949,
+   "surface_area_mm2": 46587.702,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 35786,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-60.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 35042.837,
+   "surface_area_mm2": 42478.7252,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 46686,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TC-WordPower-80": {
+   "volume_mm3": 35987.9028,
+   "surface_area_mm2": 43501.3442,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 46654,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TC-WordPower-80.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 78025.992,
+   "surface_area_mm2": 50115.4471,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 20940,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TD-Snap-5-x-5": {
+   "volume_mm3": 30531.2384,
+   "surface_area_mm2": 34488.5431,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 21386,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TD-Snap-5-x-5.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TD-Snap-8-x-10": {
+   "volume_mm3": 30949.1356,
+   "surface_area_mm2": 43010.461,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 53720,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TD-Snap-8-x-10.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-KF-TD-Snap-MP-66": {
+   "volume_mm3": 38236.9836,
+   "surface_area_mm2": 42515.5041,
+   "bbox": [
+    -106.8,
+    -80.8,
+    -3.0,
+    106.8,
+    80.8,
+    2.6711
+   ],
+   "parts": 1,
+   "facets": 42272,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-KF-TD-Snap-MP-66.stl",
+   "mounting": "Keyguard Frame"
+  },
+  "iPad-789-SP-LTROP-LWFL-VI": {
+   "volume_mm3": 119284.2582,
+   "surface_area_mm2": 78022.6289,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.001,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 56518,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-LWFL-VI.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-LWFL": {
+   "volume_mm3": 79077.0224,
+   "surface_area_mm2": 63509.0998,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 51890,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-LWFL.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-P2G-6-x-10": {
+   "volume_mm3": 83715.6518,
+   "surface_area_mm2": 63800.0497,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 39568,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-P2G-6-x-10.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-P2G-7-x-11": {
+   "volume_mm3": 73086.9385,
+   "surface_area_mm2": 61262.1442,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 46798,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-P2G-7-x-11.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-Proloquo": {
+   "volume_mm3": 85874.8298,
+   "surface_area_mm2": 63393.3814,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 56810,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-Proloquo.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-S4Y": {
+   "volume_mm3": 60503.3694,
+   "surface_area_mm2": 51982.4626,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 66172,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-S4Y.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-108-lg-wnd": {
+   "volume_mm3": 77504.0758,
+   "surface_area_mm2": 63214.0952,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 66230,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-108-lg-wnd.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-108-merged-lg-wnd": {
+   "volume_mm3": 75041.5653,
+   "surface_area_mm2": 62405.055,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 64790,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-108-merged-lg-wnd.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-108-merged": {
+   "volume_mm3": 75400.8496,
+   "surface_area_mm2": 63174.3839,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 64734,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-108-merged.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-108": {
+   "volume_mm3": 75643.2272,
+   "surface_area_mm2": 63506.094,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 66194,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-108.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-42-lg-wnd": {
+   "volume_mm3": 89069.35,
+   "surface_area_mm2": 62330.5714,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 29598,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-42-lg-wnd.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-42": {
+   "volume_mm3": 87374.1336,
+   "surface_area_mm2": 62035.3786,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 29598,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-60-lg-wnd": {
+   "volume_mm3": 95424.5925,
+   "surface_area_mm2": 66397.915,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 39734,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-60-lg-wnd.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-60": {
+   "volume_mm3": 92611.136,
+   "surface_area_mm2": 66561.7697,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 39734,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-80-lg-wnd": {
+   "volume_mm3": 79486.3782,
+   "surface_area_mm2": 62452.7929,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 50634,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-80-lg-wnd.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TC-WordPower-80": {
+   "volume_mm3": 80431.444,
+   "surface_area_mm2": 63475.4118,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 50602,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TC-WordPower-80.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TD-Snap-5-x-5-max-rails": {
+   "volume_mm3": 122469.5325,
+   "surface_area_mm2": 70089.5151,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 24888,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TD-Snap-5-x-5-max-rails.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TD-Snap-5-x-5": {
+   "volume_mm3": 74974.7795,
+   "surface_area_mm2": 54462.6107,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 25334,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TD-Snap-5-x-5.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TD-Snap-8-x-10": {
+   "volume_mm3": 75392.6768,
+   "surface_area_mm2": 62984.5252,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 57668,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TD-Snap-8-x-10.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-789-SP-LTROP-TD-Snap-MP-66": {
+   "volume_mm3": 82680.5247,
+   "surface_area_mm2": 62489.5717,
+   "bbox": [
+    -124.5,
+    -87.5,
+    -3.0,
+    124.5,
+    87.5,
+    3.0
+   ],
+   "parts": 1,
+   "facets": 46220,
+   "tablet": "iPad 7,8,9",
+   "filename": "iPad-789-SP-LTROP-TD-Snap-MP-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-CoughDrop-QC-112": {
+   "volume_mm3": 38459.6324,
+   "surface_area_mm2": 45569.6745,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 66776,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-CoughDrop-QC-112.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-CoughDrop-QC-60": {
+   "volume_mm3": 42020.4799,
+   "surface_area_mm2": 42170.4581,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37844,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-CoughDrop-QC-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-Grid-SC-30": {
+   "volume_mm3": 35832.4629,
+   "surface_area_mm2": 36733.0819,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 22584,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-Grid-SC-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-Grid-SC-50": {
+   "volume_mm3": 35144.108,
+   "surface_area_mm2": 40121.5218,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37734,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-Grid-SC-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-Grid-VocoChat": {
+   "volume_mm3": 37804.3233,
+   "surface_area_mm2": 35041.4228,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 13862,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-Grid-VocoChat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-LWFL-VI": {
+   "volume_mm3": 43791.2939,
+   "surface_area_mm2": 44784.1258,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.001,
+    99.5,
+    69.5,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 53276,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-LWFL-VI.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-LWFL": {
+   "volume_mm3": 41776.9785,
+   "surface_area_mm2": 43040.8557,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 51130,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-LWFL.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-P2G-6x10-1": {
+   "volume_mm3": 38544.0564,
+   "surface_area_mm2": 41302.1899,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 38874,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-P2G-6x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-P2G-7x11-1": {
+   "volume_mm3": 42749.6868,
+   "surface_area_mm2": 44769.8321,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48716,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-P2G-7x11-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-Proloquo": {
+   "volume_mm3": 39731.7697,
+   "surface_area_mm2": 42123.9068,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 53814,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-Proloquo.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-S4Y": {
+   "volume_mm3": 39080.6615,
+   "surface_area_mm2": 45446.6258,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 71158,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-S4Y.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-TD-Snap-5x5-1": {
+   "volume_mm3": 42813.7757,
+   "surface_area_mm2": 39903.7158,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 23314,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-TD-Snap-5x5-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-TD-Snap-66": {
+   "volume_mm3": 37975.4655,
+   "surface_area_mm2": 42186.2191,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 44070,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-TD-Snap-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-TD-Snap-8x10-1": {
+   "volume_mm3": 38759.4278,
+   "surface_area_mm2": 44813.2994,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 56322,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-TD-Snap-8x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-TouchChat-WP-108": {
+   "volume_mm3": 40818.5634,
+   "surface_area_mm2": 46111.0824,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 64570,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-TouchChat-WP-108.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-TouchChat-WP-42": {
+   "volume_mm3": 43144.899,
+   "surface_area_mm2": 40875.8058,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 27652,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-TouchChat-WP-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-TouchChat-WP-60": {
+   "volume_mm3": 37403.5498,
+   "surface_area_mm2": 40320.2968,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37938,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-TouchChat-WP-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-AVAWO-TouchChat-WP-80": {
+   "volume_mm3": 43234.2066,
+   "surface_area_mm2": 44637.0296,
+   "bbox": [
+    -99.5,
+    -69.5,
+    -2.0,
+    99.5,
+    69.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48946,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-AVAWO-TouchChat-WP-80.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-CoughDrop-QC-112": {
+   "volume_mm3": 22337.231,
+   "surface_area_mm2": 41417.5913,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 65544,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-CoughDrop-QC-112.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-CoughDrop-QC-60": {
+   "volume_mm3": 26152.4231,
+   "surface_area_mm2": 38127.723,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36692,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-CoughDrop-QC-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-Grid-SC-30": {
+   "volume_mm3": 19565.3516,
+   "surface_area_mm2": 32291.0045,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 21482,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-Grid-SC-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-Grid-SC-50": {
+   "volume_mm3": 18847.0141,
+   "surface_area_mm2": 35709.124,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 36634,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-Grid-SC-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-Grid-VocoChat": {
+   "volume_mm3": 22883.7468,
+   "surface_area_mm2": 31198.9683,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 13018,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-Grid-VocoChat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-LWFL-VI": {
+   "volume_mm3": 27875.912,
+   "surface_area_mm2": 40670.3617,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.001,
+    96.5,
+    66.5,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 52320,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-LWFL-VI.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-LWFL": {
+   "volume_mm3": 25875.2429,
+   "surface_area_mm2": 38936.1585,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 50110,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-LWFL.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-P2G-6x10-1": {
+   "volume_mm3": 22324.0532,
+   "surface_area_mm2": 36855.6015,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 37782,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-P2G-6x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-P2G-7x11-1": {
+   "volume_mm3": 26419.034,
+   "surface_area_mm2": 40432.7416,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 47632,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-P2G-7x11-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-Proloquo": {
+   "volume_mm3": 23710.3754,
+   "surface_area_mm2": 38030.9961,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 52722,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-Proloquo.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-S4Y": {
+   "volume_mm3": 22725.9815,
+   "surface_area_mm2": 41133.9438,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 70058,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-S4Y.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-TD-Snap-5x5-1": {
+   "volume_mm3": 28445.8696,
+   "surface_area_mm2": 36544.8988,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 22444,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-TD-Snap-5x5-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-TD-Snap-66": {
+   "volume_mm3": 23678.3195,
+   "surface_area_mm2": 38607.9853,
+   "bbox": [
+    -96.0,
+    -66.5,
+    -2.0,
+    96.0,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 43166,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-TD-Snap-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-TD-Snap-8x10-1": {
+   "volume_mm3": 24530.5752,
+   "surface_area_mm2": 41327.6829,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 55536,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-TD-Snap-8x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-TouchChat-WP-108": {
+   "volume_mm3": 26262.9046,
+   "surface_area_mm2": 42455.7713,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 64248,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-TouchChat-WP-108.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-TouchChat-WP-42": {
+   "volume_mm3": 26859.6944,
+   "surface_area_mm2": 36499.4968,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    1.998
+   ],
+   "parts": 1,
+   "facets": 26572,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-TouchChat-WP-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-TouchChat-WP-60": {
+   "volume_mm3": 22212.9937,
+   "surface_area_mm2": 36533.1732,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37306,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-TouchChat-WP-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Andnary-TouchChat-WP-80": {
+   "volume_mm3": 28411.42,
+   "surface_area_mm2": 40929.6937,
+   "bbox": [
+    -96.5,
+    -66.5,
+    -2.0,
+    96.5,
+    66.5,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48498,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Andnary-TouchChat-WP-80.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-CoughDrop-QC-112-1": {
+   "volume_mm3": 30273.6336,
+   "surface_area_mm2": 37727.458,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 65884,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-CoughDrop-QC-112-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-CoughDrop-QC-60-1": {
+   "volume_mm3": 33874.4851,
+   "surface_area_mm2": 34340.2531,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36952,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-CoughDrop-QC-60-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-Grid-SC-30": {
+   "volume_mm3": 27408.5378,
+   "surface_area_mm2": 28687.9704,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    97.999,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 21996,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-Grid-SC-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-Grid-SC-50": {
+   "volume_mm3": 26770.1937,
+   "surface_area_mm2": 32150.0988,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    97.999,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37146,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-Grid-SC-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-Grid-VocoChat": {
+   "volume_mm3": 29270.3728,
+   "surface_area_mm2": 26835.3024,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    97.999,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 13282,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-Grid-VocoChat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-LWFL-1": {
+   "volume_mm3": 33775.1146,
+   "surface_area_mm2": 35230.3719,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 50358,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-LWFL-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-LWFL-VI-1": {
+   "volume_mm3": 35792.8235,
+   "surface_area_mm2": 36978.5424,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.001,
+    95.499,
+    66.499,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 52488,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-LWFL-VI-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-P2G-6x10-1": {
+   "volume_mm3": 29914.1544,
+   "surface_area_mm2": 32986.6244,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 38106,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-P2G-6x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-P2G-7x11-1": {
+   "volume_mm3": 34304.345,
+   "surface_area_mm2": 36726.191,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47956,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-P2G-7x11-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-Proloquo-1": {
+   "volume_mm3": 31585.7748,
+   "surface_area_mm2": 34293.6949,
+   "bbox": [
+    -95.499,
+    -66.499,
+    -2.0,
+    93.0,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 52924,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-Proloquo-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-S4Y": {
+   "volume_mm3": 30786.7645,
+   "surface_area_mm2": 37593.0986,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    97.999,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 70570,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-S4Y.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-TD-Snap-5x5-2": {
+   "volume_mm3": 34957.6796,
+   "surface_area_mm2": 32082.6906,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 22442,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-TD-Snap-5x5-2.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-TD-Snap-66": {
+   "volume_mm3": 29863.441,
+   "surface_area_mm2": 34412.8567,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    97.999,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 43514,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-TD-Snap-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-TD-Snap-8x10-1": {
+   "volume_mm3": 30425.5224,
+   "surface_area_mm2": 36900.8284,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    97.999,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 55754,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-TD-Snap-8x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-TouchChat-WP-108-1": {
+   "volume_mm3": 32652.5667,
+   "surface_area_mm2": 38274.8768,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 63678,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-TouchChat-WP-108-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-TouchChat-WP-42": {
+   "volume_mm3": 34730.9762,
+   "surface_area_mm2": 32845.4298,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    97.999,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 27084,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-TouchChat-WP-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-TouchChat-WP-60-1": {
+   "volume_mm3": 29267.556,
+   "surface_area_mm2": 32493.1018,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37046,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-TouchChat-WP-60-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-Fintie-TouchChat-WP-80-1": {
+   "volume_mm3": 35088.2119,
+   "surface_area_mm2": 36806.8192,
+   "bbox": [
+    -93.0,
+    -66.499,
+    -2.0,
+    95.499,
+    66.499,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48054,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-Fintie-TouchChat-WP-80-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-CoughDrop-QC-112": {
+   "volume_mm3": 23153.7699,
+   "surface_area_mm2": 40758.8688,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 65536,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-CoughDrop-QC-112.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-CoughDrop-QC-60": {
+   "volume_mm3": 26920.2743,
+   "surface_area_mm2": 37444.7876,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36568,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-CoughDrop-QC-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-Grid-SC-30": {
+   "volume_mm3": 21791.1666,
+   "surface_area_mm2": 32377.1626,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 21506,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-Grid-SC-30.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-Grid-SC-50": {
+   "volume_mm3": 21089.7682,
+   "surface_area_mm2": 35802.651,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 36576,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-Grid-SC-50.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-Grid-VocoChat": {
+   "volume_mm3": 22371.8097,
+   "surface_area_mm2": 29877.4304,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 13060,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-Grid-VocoChat.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-LWFL-VI": {
+   "volume_mm3": 28683.8838,
+   "surface_area_mm2": 40007.1736,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.001,
+    96.0,
+    66.0,
+    4.0
+   ],
+   "parts": 1,
+   "facets": 52148,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-LWFL-VI.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-LWFL": {
+   "volume_mm3": 26683.7227,
+   "surface_area_mm2": 38273.437,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 50002,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-LWFL.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-P2G-6x10-1": {
+   "volume_mm3": 23095.1514,
+   "surface_area_mm2": 36180.5025,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37750,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-P2G-6x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-P2G-7x11-1": {
+   "volume_mm3": 27227.0196,
+   "surface_area_mm2": 39776.1674,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 47600,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-P2G-7x11-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-Proloquo": {
+   "volume_mm3": 24521.7711,
+   "surface_area_mm2": 37362.3003,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 52598,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-Proloquo.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-S4Y": {
+   "volume_mm3": 23542.0167,
+   "surface_area_mm2": 40480.6189,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 70066,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-S4Y.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-TD-Snap-5x5-1": {
+   "volume_mm3": 28697.4863,
+   "surface_area_mm2": 35629.4286,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 22428,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-TD-Snap-5x5-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-TD-Snap-66": {
+   "volume_mm3": 23832.0894,
+   "surface_area_mm2": 37771.2778,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 43222,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-TD-Snap-66.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-TD-Snap-8x10-1": {
+   "volume_mm3": 24610.7545,
+   "surface_area_mm2": 40371.6982,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 55520,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-TD-Snap-8x10-1.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-TouchChat-WP-108": {
+   "volume_mm3": 26702.3045,
+   "surface_area_mm2": 41675.6529,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 64148,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-TouchChat-WP-108.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-TouchChat-WP-42": {
+   "volume_mm3": 27653.808,
+   "surface_area_mm2": 35830.4191,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 26556,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-TouchChat-WP-42.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-TouchChat-WP-60": {
+   "volume_mm3": 22635.5336,
+   "surface_area_mm2": 35721.7044,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 37182,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-TouchChat-WP-60.stl",
+   "mounting": "(single method)"
+  },
+  "iPad-mini-67-SUPCASE-TouchChat-WP-80": {
+   "volume_mm3": 28851.1567,
+   "surface_area_mm2": 40142.8985,
+   "bbox": [
+    -96.0,
+    -66.0,
+    -2.0,
+    96.0,
+    66.0,
+    2.0
+   ],
+   "parts": 1,
+   "facets": 48462,
+   "tablet": "iPad mini 6,7",
+   "filename": "iPad-mini-67-SUPCASE-TouchChat-WP-80.stl",
+   "mounting": "(single method)"
+  }
+ }
+}
