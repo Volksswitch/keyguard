@@ -3822,7 +3822,27 @@ module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,righ
 	if(depth>0 && edge_chamfer>0){
 		translate([0,0,z])
 		union(){
-			if(d>0) cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,rad1,d);
+			// Body cutter. For the flat (all-90) cell case the old cut() built the
+			// body as a hull() of two ~ff-thin coplanar slabs. Manifold's boolean
+			// snaps that near-degenerate slab pair at certain exact (round) cec/sat
+			// values and leaves a thin floor ("membrane") in scattered cells —
+			// razor-sharp and value-exact (cec=0.5/1.5, sat=3.5, … clean ±0.01).
+			// A single linear_extrude prism is the SAME solid (CGAL-identical)
+			// without the thin-slab hull, so Manifold renders it clean. Mirrors the
+			// 2026-05-16 single-solid fix already applied to the screen-recess
+			// cutter in hole_cutter2. Sloped bodies keep cut() (a hull of two
+			// DIFFERENT-size rects = the safe, non-degenerate hull case).
+			straight = (top_slope==90 && bottom_slope==90 && left_slope==90 && right_slope==90);
+			if(d>0){
+				if(straight){
+					translate([0,0,-d/2-2*ff])
+					linear_extrude(d+3*ff)
+					rounded_rect(hole_width, hole_height, (rad1==0)?0:rad1-ff);
+				}
+				else{
+					cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,rad1,d);
+				}
+			}
 
 			if (is_3d_printed){  // add edge chamfer to cutting tool
 				l_s = (left_slope>=chamfer_angle_stop || left_slope<0) ? 45 : left_slope;
