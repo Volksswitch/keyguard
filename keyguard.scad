@@ -434,8 +434,6 @@ my_case_additions = "";
 my_tablet_openings = "";
 //for use with Maker World's online customizer
 screenshot_file = "default.svg";
-// Extra mm the cell/bar through-cuts extend past the screen-area floor and below the keyguard bottom. Larger values help Manifold (browser) merge cleanly; CGAL (native) is unaffected. Bump up if Manifold leaves a thin floor or wedge.
-screen_through_cut_overlap = 2.0; // [0.5:0.1:5]
 
 
 
@@ -474,6 +472,15 @@ echo_dims = "no";
 // fast. The web app passes -D extend_through_cuts="yes" alongside its
 // fudge=0.05 Manifold bump (the two are kept independent on purpose).
 extend_through_cuts = "no";
+
+// Extra mm the cell/bar through-cuts extend past the screen-area floor and
+// below the keyguard bottom (used by screen_through_cut_extender). Larger
+// values help Manifold (browser) merge cleanly; CGAL (native) is unaffected.
+// Bump up if Manifold leaves a thin floor or wedge. Hidden because it's an
+// internal tuning knob, not a design choice — still -D-settable. NOTE: the
+// extender (and thus this value) is active natively for SLOPED through-cuts
+// too, not only in the web app, so the variable must remain defined.
+screen_through_cut_overlap = 2.0; // [0.5:0.1:5]
 
 // Echo the screen-area dimensions and overall thickness so the web app
 // can size and position the screenshot-under-keyguard plane in Three.js
