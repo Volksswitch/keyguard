@@ -1033,8 +1033,8 @@
    "oa": "iPad 10,11\\SUPCASE-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - Cough Drop QC 112": {
-   "volume_mm3": 43576.5362,
-   "surface_area_mm2": 48257.9932,
+   "volume_mm3": 43576.5363,
+   "surface_area_mm2": 48257.9986,
    "bbox": [
     -119.5,
     -85.45,
@@ -1044,13 +1044,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 51858,
+   "facets": 51884,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - Cough Drop QC 60": {
-   "volume_mm3": 54021.5808,
-   "surface_area_mm2": 49565.7338,
+   "volume_mm3": 54021.5809,
+   "surface_area_mm2": 49565.7284,
    "bbox": [
     -119.5,
     -85.45,
@@ -1060,13 +1060,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 32412,
+   "facets": 32434,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - Grid Super Core 30": {
    "volume_mm3": 55419.6804,
-   "surface_area_mm2": 46549.9437,
+   "surface_area_mm2": 46549.9384,
    "bbox": [
     -119.5,
     -85.45,
@@ -1076,12 +1076,12 @@
     2.0
    ],
    "parts": 1,
-   "facets": 21328,
+   "facets": 21350,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - Grid Super Core 30 max rails": {
-   "volume_mm3": 117130.8175,
+   "volume_mm3": 117130.8176,
    "surface_area_mm2": 65569.0108,
    "bbox": [
     -119.5,
@@ -1092,13 +1092,13 @@
     2.5
    ],
    "parts": 1,
-   "facets": 21100,
+   "facets": 21124,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - Grid Super Core 50": {
    "volume_mm3": 51704.6995,
-   "surface_area_mm2": 49225.0779,
+   "surface_area_mm2": 49225.0833,
    "bbox": [
     -119.5,
     -85.45,
@@ -1108,7 +1108,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 32546,
+   "facets": 32572,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
@@ -1124,12 +1124,12 @@
     2.0
    ],
    "parts": 1,
-   "facets": 14742,
+   "facets": 14766,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\Grid Voco Chat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - LWFL": {
-   "volume_mm3": 51059.3687,
+   "volume_mm3": 51059.3688,
    "surface_area_mm2": 51959.5718,
    "bbox": [
     -119.5,
@@ -1140,13 +1140,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 40540,
+   "facets": 40572,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - LWFL-VI": {
    "volume_mm3": 91091.2405,
-   "surface_area_mm2": 66957.4768,
+   "surface_area_mm2": 66957.466,
    "bbox": [
     -119.5,
     -85.45,
@@ -1156,13 +1156,13 @@
     4.0
    ],
    "parts": 1,
-   "facets": 47896,
+   "facets": 47916,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - P2G 6 x 10": {
-   "volume_mm3": 55881.454,
-   "surface_area_mm2": 51299.7841,
+   "volume_mm3": 55881.4539,
+   "surface_area_mm2": 51299.7788,
    "bbox": [
     -119.5,
     -85.45,
@@ -1172,12 +1172,12 @@
     2.0
    ],
    "parts": 1,
-   "facets": 32402,
+   "facets": 32468,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\P2G\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - P2G 7 x 11": {
-   "volume_mm3": 45309.0204,
+   "volume_mm3": 45309.0203,
    "surface_area_mm2": 48519.2138,
    "bbox": [
     -119.5,
@@ -1188,7 +1188,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 36218,
+   "facets": 36286,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\P2G\\openings_and_additions.txt"
   },
@@ -1204,13 +1204,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 45372,
+   "facets": 45396,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\Proloquo\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - S4Y": {
-   "volume_mm3": 34138.1077,
-   "surface_area_mm2": 40548.978,
+   "volume_mm3": 34138.1078,
+   "surface_area_mm2": 40548.9673,
    "bbox": [
     -120.0,
     -85.95,
@@ -1220,13 +1220,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 49976,
+   "facets": 49996,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 108": {
-   "volume_mm3": 48785.2468,
-   "surface_area_mm2": 52328.6521,
+   "volume_mm3": 48785.2473,
+   "surface_area_mm2": 52328.6524,
    "bbox": [
     -120.0,
     -85.95,
@@ -1236,13 +1236,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 52142,
+   "facets": 52194,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 108 (merged)": {
-   "volume_mm3": 48558.4984,
-   "surface_area_mm2": 52003.828,
+   "volume_mm3": 48558.4989,
+   "surface_area_mm2": 52003.8283,
    "bbox": [
     -120.0,
     -85.95,
@@ -1252,13 +1252,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 51194,
+   "facets": 51246,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 108 (merged) - lg wnd": {
-   "volume_mm3": 48231.5569,
-   "surface_area_mm2": 51260.2802,
+   "volume_mm3": 48231.5574,
+   "surface_area_mm2": 51260.2859,
    "bbox": [
     -120.0,
     -85.95,
@@ -1268,13 +1268,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 51192,
+   "facets": 51246,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 108 - lg wnd": {
-   "volume_mm3": 50587.3134,
-   "surface_area_mm2": 52050.0795,
+   "volume_mm3": 50587.314,
+   "surface_area_mm2": 52050.0905,
    "bbox": [
     -120.0,
     -85.95,
@@ -1284,13 +1284,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 52140,
+   "facets": 52196,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 42": {
-   "volume_mm3": 59505.794,
-   "surface_area_mm2": 50717.9406,
+   "volume_mm3": 59505.7942,
+   "surface_area_mm2": 50717.9354,
    "bbox": [
     -119.5,
     -85.45,
@@ -1300,13 +1300,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 24952,
+   "facets": 25002,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 42 - lg wnd": {
-   "volume_mm3": 61205.1211,
-   "surface_area_mm2": 51032.594,
+   "volume_mm3": 61205.1213,
+   "surface_area_mm2": 51032.5995,
    "bbox": [
     -119.5,
     -85.45,
@@ -1316,13 +1316,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 24954,
+   "facets": 25008,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 60": {
-   "volume_mm3": 64584.3631,
-   "surface_area_mm2": 55195.325,
+   "volume_mm3": 64584.3633,
+   "surface_area_mm2": 55195.3252,
    "bbox": [
     -119.5,
     -85.45,
@@ -1332,13 +1332,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 32366,
+   "facets": 32418,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 60 - lg wnd": {
-   "volume_mm3": 68957.9939,
-   "surface_area_mm2": 55887.1602,
+   "volume_mm3": 68957.9941,
+   "surface_area_mm2": 55887.1604,
    "bbox": [
     -120.0,
     -85.95,
@@ -1348,13 +1348,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 32300,
+   "facets": 32352,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 80": {
-   "volume_mm3": 53592.043,
-   "surface_area_mm2": 52384.0205,
+   "volume_mm3": 53592.0435,
+   "surface_area_mm2": 52384.0154,
    "bbox": [
     -120.0,
     -85.95,
@@ -1364,13 +1364,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 40608,
+   "facets": 40658,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TC WordPower 80 - lg wnd": {
-   "volume_mm3": 52682.2585,
-   "surface_area_mm2": 51380.7629,
+   "volume_mm3": 52682.259,
+   "surface_area_mm2": 51380.7579,
    "bbox": [
     -120.0,
     -85.95,
@@ -1380,13 +1380,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 40608,
+   "facets": 40658,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TD Snap 5 x 5": {
    "volume_mm3": 47326.546,
-   "surface_area_mm2": 43164.1476,
+   "surface_area_mm2": 43164.153,
    "bbox": [
     -119.5,
     -85.45,
@@ -1396,13 +1396,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 21706,
+   "facets": 21732,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TD Snap 5 x 5 max rails": {
    "volume_mm3": 99578.6837,
-   "surface_area_mm2": 60469.8978,
+   "surface_area_mm2": 60469.8979,
    "bbox": [
     -119.5,
     -85.45,
@@ -1412,13 +1412,13 @@
     2.5
    ],
    "parts": 1,
-   "facets": 21512,
+   "facets": 21536,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TD Snap 8 x 10": {
-   "volume_mm3": 47405.287,
-   "surface_area_mm2": 51390.6362,
+   "volume_mm3": 47405.2871,
+   "surface_area_mm2": 51390.6416,
    "bbox": [
     -119.5,
     -85.45,
@@ -1428,13 +1428,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 44786,
+   "facets": 44812,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Fintie - TD Snap MP 66": {
    "volume_mm3": 54695.6276,
-   "surface_area_mm2": 51063.2465,
+   "surface_area_mm2": 51063.2411,
    "bbox": [
     -119.5,
     -85.45,
@@ -1444,7 +1444,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 37244,
+   "facets": 37266,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Fintie-equivalent Case\\openings_and_additions.txt"
   },
@@ -1466,7 +1466,7 @@
   },
   "iPad 7,8,9 - LTROP - Cough Drop QC 60": {
    "volume_mm3": 47988.4962,
-   "surface_area_mm2": 46654.8255,
+   "surface_area_mm2": 46654.8309,
    "bbox": [
     -122.596,
     -85.45,
@@ -1476,13 +1476,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 29956,
+   "facets": 29958,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - Grid Super Core 30": {
    "volume_mm3": 55683.974,
-   "surface_area_mm2": 46356.5888,
+   "surface_area_mm2": 46356.5834,
    "bbox": [
     -122.596,
     -85.45,
@@ -1492,7 +1492,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 20450,
+   "facets": 20448,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\openings_and_additions.txt"
   },
@@ -1514,7 +1514,7 @@
   },
   "iPad 7,8,9 - LTROP - Grid Super Core 50": {
    "volume_mm3": 55595.3321,
-   "surface_area_mm2": 50458.4717,
+   "surface_area_mm2": 50458.4663,
    "bbox": [
     -122.596,
     -85.45,
@@ -1524,13 +1524,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 31646,
+   "facets": 31644,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - Grid Voco Chat": {
    "volume_mm3": 57095.0433,
-   "surface_area_mm2": 43627.7703,
+   "surface_area_mm2": 43627.7757,
    "bbox": [
     -122.596,
     -85.45,
@@ -1540,7 +1540,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 13910,
+   "facets": 13912,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\Grid Voco Chat\\openings_and_additions.txt"
   },
@@ -1556,13 +1556,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 40424,
+   "facets": 40432,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\LWFL\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - LWFL-VI": {
    "volume_mm3": 94080.2167,
-   "surface_area_mm2": 68040.238,
+   "surface_area_mm2": 68040.2433,
    "bbox": [
     -119.946,
     -85.45,
@@ -1572,7 +1572,7 @@
     4.0
    ],
    "parts": 1,
-   "facets": 46408,
+   "facets": 46410,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\LWFL-VI\\openings_and_additions.txt"
   },
@@ -1588,13 +1588,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 31470,
+   "facets": 31514,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\P2G\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - P2G 7 x 11": {
-   "volume_mm3": 49293.9072,
-   "surface_area_mm2": 49914.8228,
+   "volume_mm3": 49293.9071,
+   "surface_area_mm2": 49914.8282,
    "bbox": [
     -122.596,
     -85.45,
@@ -1604,7 +1604,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 36276,
+   "facets": 36322,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\P2G\\openings_and_additions.txt"
   },
@@ -1641,8 +1641,8 @@
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 108": {
-   "volume_mm3": 51278.815,
-   "surface_area_mm2": 52856.8321,
+   "volume_mm3": 51278.8154,
+   "surface_area_mm2": 52856.8324,
    "bbox": [
     -122.596,
     -85.45,
@@ -1652,13 +1652,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 51386,
+   "facets": 51414,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 108 (merged)": {
-   "volume_mm3": 51030.7468,
-   "surface_area_mm2": 52530.8922,
+   "volume_mm3": 51030.7473,
+   "surface_area_mm2": 52530.8925,
    "bbox": [
     -122.596,
     -85.45,
@@ -1668,13 +1668,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 50364,
+   "facets": 50392,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 108 (merged) - lg wnd": {
-   "volume_mm3": 50703.7978,
-   "surface_area_mm2": 51787.347,
+   "volume_mm3": 50703.7983,
+   "surface_area_mm2": 51787.3473,
    "bbox": [
     -122.596,
     -85.45,
@@ -1684,13 +1684,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 50366,
+   "facets": 50394,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 108 - lg wnd": {
-   "volume_mm3": 50935.1201,
-   "surface_area_mm2": 52085.6707,
+   "volume_mm3": 50935.1206,
+   "surface_area_mm2": 52085.671,
    "bbox": [
     -122.596,
     -85.45,
@@ -1700,13 +1700,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 51384,
+   "facets": 51412,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 42": {
-   "volume_mm3": 63217.2881,
-   "surface_area_mm2": 51971.7983,
+   "volume_mm3": 63217.2883,
+   "surface_area_mm2": 51971.7931,
    "bbox": [
     -122.596,
     -85.45,
@@ -1716,13 +1716,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 24122,
+   "facets": 24148,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 42 - lg wnd": {
-   "volume_mm3": 64916.6124,
-   "surface_area_mm2": 52286.4532,
+   "volume_mm3": 64916.6126,
+   "surface_area_mm2": 52286.448,
    "bbox": [
     -122.596,
     -85.45,
@@ -1732,13 +1732,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 24126,
+   "facets": 24152,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 60": {
-   "volume_mm3": 68473.8258,
-   "surface_area_mm2": 56428.1774,
+   "volume_mm3": 68473.826,
+   "surface_area_mm2": 56428.1722,
    "bbox": [
     -122.596,
     -85.45,
@@ -1748,13 +1748,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 31538,
+   "facets": 31564,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 60 - lg wnd": {
-   "volume_mm3": 69651.08,
-   "surface_area_mm2": 56218.2754,
+   "volume_mm3": 69651.0802,
+   "surface_area_mm2": 56218.2755,
    "bbox": [
     -122.596,
     -85.45,
@@ -1764,13 +1764,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 31540,
+   "facets": 31568,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 80": {
-   "volume_mm3": 54289.3561,
-   "surface_area_mm2": 52531.8307,
+   "volume_mm3": 54289.3565,
+   "surface_area_mm2": 52531.8256,
    "bbox": [
     -122.596,
     -85.45,
@@ -1780,13 +1780,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 39850,
+   "facets": 39876,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TC WordPower 80 - lg wnd": {
-   "volume_mm3": 53379.5752,
-   "surface_area_mm2": 51528.5695,
+   "volume_mm3": 53379.5757,
+   "surface_area_mm2": 51528.5752,
    "bbox": [
     -122.596,
     -85.45,
@@ -1796,7 +1796,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 39848,
+   "facets": 39878,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\TouchChat\\openings_and_additions.txt"
   },
@@ -1818,7 +1818,7 @@
   },
   "iPad 7,8,9 - LTROP - TD Snap 5 x 5 max rails": {
    "volume_mm3": 82591.1508,
-   "surface_area_mm2": 57714.4643,
+   "surface_area_mm2": 57714.459,
    "bbox": [
     -122.596,
     -85.45,
@@ -1828,13 +1828,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 20814,
+   "facets": 20812,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - LTROP - TD Snap 8 x 10": {
    "volume_mm3": 51619.1915,
-   "surface_area_mm2": 52604.2413,
+   "surface_area_mm2": 52604.2467,
    "bbox": [
     -122.596,
     -85.45,
@@ -1844,7 +1844,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 44468,
+   "facets": 44470,
    "simple": "yes",
    "oa": "iPad 7,8,9\\LTROP-equivalent Case\\No Mount and Slide-in or Raised Tabs\\openings_and_additions.txt"
   },
@@ -1876,13 +1876,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 52566,
+   "facets": 52590,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - Cough Drop QC 60": {
    "volume_mm3": 57243.3459,
-   "surface_area_mm2": 51193.4144,
+   "surface_area_mm2": 51193.4037,
    "bbox": [
     -120.0,
     -86.95,
@@ -1892,13 +1892,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 33120,
+   "facets": 33140,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - Grid Super Core 30": {
-   "volume_mm3": 58641.4454,
-   "surface_area_mm2": 48177.619,
+   "volume_mm3": 58641.4455,
+   "surface_area_mm2": 48177.6244,
    "bbox": [
     -120.0,
     -86.95,
@@ -1908,12 +1908,12 @@
     2.0
    ],
    "parts": 1,
-   "facets": 22034,
+   "facets": 22060,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - Grid Super Core 30 max rails": {
-   "volume_mm3": 121161.8873,
+   "volume_mm3": 121161.8874,
    "surface_area_mm2": 67199.3939,
    "bbox": [
     -120.0,
@@ -1924,13 +1924,13 @@
     2.5
    ],
    "parts": 1,
-   "facets": 21716,
+   "facets": 21740,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - Grid Super Core 50": {
    "volume_mm3": 54926.4646,
-   "surface_area_mm2": 50852.7639,
+   "surface_area_mm2": 50852.7586,
    "bbox": [
     -120.0,
     -86.95,
@@ -1940,13 +1940,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 33256,
+   "facets": 33278,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - Grid Voco Chat": {
    "volume_mm3": 57020.751,
-   "surface_area_mm2": 43952.6515,
+   "surface_area_mm2": 43952.6461,
    "bbox": [
     -120.0,
     -86.95,
@@ -1956,7 +1956,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 15450,
+   "facets": 15472,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\Grid Voco Chat\\openings_and_additions.txt"
   },
@@ -1972,13 +1972,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 41386,
+   "facets": 41418,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - LWFL-VI": {
    "volume_mm3": 94291.8135,
-   "surface_area_mm2": 68558.8961,
+   "surface_area_mm2": 68558.9014,
    "bbox": [
     -120.0,
     -86.95,
@@ -1988,13 +1988,13 @@
     4.0
    ],
    "parts": 1,
-   "facets": 48386,
+   "facets": 48412,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - P2G 6 x 10": {
-   "volume_mm3": 59048.254,
-   "surface_area_mm2": 53072.0547,
+   "volume_mm3": 59048.2538,
+   "surface_area_mm2": 53072.044,
    "bbox": [
     -120.0,
     -86.95,
@@ -2004,13 +2004,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 32992,
+   "facets": 33056,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\P2G\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - P2G 7 x 11": {
-   "volume_mm3": 48475.8203,
-   "surface_area_mm2": 50291.4844,
+   "volume_mm3": 48475.8202,
+   "surface_area_mm2": 50291.4845,
    "bbox": [
     -120.0,
     -86.95,
@@ -2020,13 +2020,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 36808,
+   "facets": 36876,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\P2G\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - Proloquo": {
-   "volume_mm3": 61063.5939,
-   "surface_area_mm2": 53472.7487,
+   "volume_mm3": 61063.594,
+   "surface_area_mm2": 53472.754,
    "bbox": [
     -120.0,
     -86.95,
@@ -2036,12 +2036,12 @@
     2.0
    ],
    "parts": 1,
-   "facets": 46080,
+   "facets": 46106,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\Proloquo\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - S4Y": {
-   "volume_mm3": 35759.6042,
+   "volume_mm3": 35759.6043,
    "surface_area_mm2": 41342.2401,
    "bbox": [
     -120.0,
@@ -2052,13 +2052,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 50756,
+   "facets": 50780,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 108": {
-   "volume_mm3": 50406.7433,
-   "surface_area_mm2": 53121.9196,
+   "volume_mm3": 50406.7438,
+   "surface_area_mm2": 53121.9145,
    "bbox": [
     -120.0,
     -86.95,
@@ -2068,13 +2068,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 52924,
+   "facets": 52974,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 108 (merged)": {
-   "volume_mm3": 50179.9949,
-   "surface_area_mm2": 52797.0954,
+   "volume_mm3": 50179.9954,
+   "surface_area_mm2": 52797.0957,
    "bbox": [
     -120.0,
     -86.95,
@@ -2084,13 +2084,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 51976,
+   "facets": 52028,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 108 (merged) - lg wnd": {
-   "volume_mm3": 49853.0534,
-   "surface_area_mm2": 52053.553,
+   "volume_mm3": 49853.0539,
+   "surface_area_mm2": 52053.548,
    "bbox": [
     -120.0,
     -86.95,
@@ -2100,13 +2100,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 51976,
+   "facets": 52026,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 108 - lg wnd": {
-   "volume_mm3": 50063.0553,
-   "surface_area_mm2": 52350.7662,
+   "volume_mm3": 50063.0558,
+   "surface_area_mm2": 52350.7665,
    "bbox": [
     -120.0,
     -86.95,
@@ -2116,13 +2116,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 52922,
+   "facets": 52974,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 42": {
-   "volume_mm3": 62727.559,
-   "surface_area_mm2": 52345.6159,
+   "volume_mm3": 62727.5593,
+   "surface_area_mm2": 52345.616,
    "bbox": [
     -120.0,
     -86.95,
@@ -2132,13 +2132,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 25658,
+   "facets": 25710,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 42 - lg wnd": {
-   "volume_mm3": 64426.8861,
-   "surface_area_mm2": 52660.2747,
+   "volume_mm3": 64426.8864,
+   "surface_area_mm2": 52660.2802,
    "bbox": [
     -120.0,
     -86.95,
@@ -2148,13 +2148,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 25662,
+   "facets": 25716,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 60": {
-   "volume_mm3": 67806.1281,
-   "surface_area_mm2": 56823.011,
+   "volume_mm3": 67806.1284,
+   "surface_area_mm2": 56823.0058,
    "bbox": [
     -120.0,
     -86.95,
@@ -2164,13 +2164,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 33076,
+   "facets": 33126,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 60 - lg wnd": {
-   "volume_mm3": 68983.3863,
-   "surface_area_mm2": 56613.1145,
+   "volume_mm3": 68983.3866,
+   "surface_area_mm2": 56613.1146,
    "bbox": [
     -120.0,
     -86.95,
@@ -2180,13 +2180,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 33078,
+   "facets": 33130,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 80": {
-   "volume_mm3": 53624.1463,
-   "surface_area_mm2": 52812.4378,
+   "volume_mm3": 53624.1468,
+   "surface_area_mm2": 52812.4274,
    "bbox": [
     -120.0,
     -86.95,
@@ -2196,13 +2196,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 41388,
+   "facets": 41436,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TC WordPower 80 - lg wnd": {
-   "volume_mm3": 62988.5874,
-   "surface_area_mm2": 56707.4479,
+   "volume_mm3": 62988.5876,
+   "surface_area_mm2": 56707.4427,
    "bbox": [
     -120.0,
     -86.95,
@@ -2212,13 +2212,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 41320,
+   "facets": 41370,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TD Snap 5 x 5": {
-   "volume_mm3": 50548.311,
-   "surface_area_mm2": 44791.8337,
+   "volume_mm3": 50548.3111,
+   "surface_area_mm2": 44791.8283,
    "bbox": [
     -120.0,
     -86.95,
@@ -2228,13 +2228,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 22416,
+   "facets": 22438,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TD Snap 5 x 5 max rails": {
    "volume_mm3": 82516.8584,
-   "surface_area_mm2": 58039.3348,
+   "surface_area_mm2": 58039.3401,
    "bbox": [
     -120.0,
     -86.95,
@@ -2244,7 +2244,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 22350,
+   "facets": 22376,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
@@ -2260,13 +2260,13 @@
     2.0
    ],
    "parts": 1,
-   "facets": 45496,
+   "facets": 45520,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - Rug-Ed - TD Snap MP 66": {
-   "volume_mm3": 57917.3926,
-   "surface_area_mm2": 52690.9271,
+   "volume_mm3": 57917.3927,
+   "surface_area_mm2": 52690.9218,
    "bbox": [
     -120.0,
     -86.95,
@@ -2276,7 +2276,7 @@
     2.0
    ],
    "parts": 1,
-   "facets": 37952,
+   "facets": 37974,
    "simple": "yes",
    "oa": "iPad 7,8,9\\Rug-Ed-equivalent Case\\openings_and_additions.txt"
   },
@@ -2409,7 +2409,7 @@
    "oa": "iPad 7,8,9\\SEYMAC-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SEYMAC - P2G 6 x 10": {
-   "volume_mm3": 40407.6961,
+   "volume_mm3": 40407.6958,
    "surface_area_mm2": 40945.0943,
    "bbox": [
     -104.5,
@@ -2420,7 +2420,7 @@
     1.95
    ],
    "parts": 1,
-   "facets": 28036,
+   "facets": 28136,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SEYMAC-equivalent Case\\P2G\\openings_and_additions.txt"
   },
@@ -2436,7 +2436,7 @@
     1.95
    ],
    "parts": 1,
-   "facets": 33464,
+   "facets": 33564,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SEYMAC-equivalent Case\\P2G\\openings_and_additions.txt"
   },
@@ -2708,7 +2708,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 50632,
+   "facets": 50656,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
@@ -2724,7 +2724,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 31208,
+   "facets": 31232,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
@@ -2740,7 +2740,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 20308,
+   "facets": 20332,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
@@ -2756,7 +2756,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 19928,
+   "facets": 19952,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
@@ -2772,12 +2772,12 @@
     3.0
    ],
    "parts": 1,
-   "facets": 31528,
+   "facets": 31552,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - Grid Voco Chat": {
-   "volume_mm3": 80338.7756,
+   "volume_mm3": 80338.7757,
    "surface_area_mm2": 53167.0734,
    "bbox": [
     -124.5,
@@ -2788,12 +2788,12 @@
     3.0
    ],
    "parts": 1,
-   "facets": 13722,
+   "facets": 13746,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\Grid Voco Chat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - LWFL": {
-   "volume_mm3": 77600.4149,
+   "volume_mm3": 77600.415,
    "surface_area_mm2": 62751.2072,
    "bbox": [
     -124.5,
@@ -2804,7 +2804,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 39328,
+   "facets": 39360,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
@@ -2820,13 +2820,13 @@
     3.0
    ],
    "parts": 1,
-   "facets": 46456,
+   "facets": 46480,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - P2G 6 x 10": {
-   "volume_mm3": 82341.8699,
-   "surface_area_mm2": 63264.414,
+   "volume_mm3": 82281.9499,
+   "surface_area_mm2": 63210.5444,
    "bbox": [
     -124.5,
     -87.5,
@@ -2836,13 +2836,13 @@
     3.0
    ],
    "parts": 1,
-   "facets": 31096,
+   "facets": 31184,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\P2G\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - P2G 7 x 11": {
-   "volume_mm3": 71769.4306,
-   "surface_area_mm2": 60483.8388,
+   "volume_mm3": 71709.5107,
+   "surface_area_mm2": 60429.9692,
    "bbox": [
     -124.5,
     -87.5,
@@ -2852,7 +2852,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 34912,
+   "facets": 35000,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\P2G\\openings_and_additions.txt"
   },
@@ -2868,12 +2868,12 @@
     3.0
    ],
    "parts": 1,
-   "facets": 44130,
+   "facets": 44154,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\Proloquo\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - S4Y": {
-   "volume_mm3": 59485.9226,
+   "volume_mm3": 59485.9227,
    "surface_area_mm2": 50953.7928,
    "bbox": [
     -124.5,
@@ -2884,7 +2884,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 48820,
+   "facets": 48844,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
@@ -2900,7 +2900,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 50912,
+   "facets": 50952,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
@@ -2916,7 +2916,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 49964,
+   "facets": 50004,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
@@ -2932,7 +2932,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 49964,
+   "facets": 50004,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
@@ -2948,13 +2948,13 @@
     3.0
    ],
    "parts": 1,
-   "facets": 50912,
+   "facets": 50952,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - TC WordPower 42": {
-   "volume_mm3": 86046.9032,
-   "surface_area_mm2": 61507.2696,
+   "volume_mm3": 86046.9035,
+   "surface_area_mm2": 61507.2697,
    "bbox": [
     -124.5,
     -87.5,
@@ -2964,13 +2964,13 @@
     3.0
    ],
    "parts": 1,
-   "facets": 23784,
+   "facets": 23836,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - TC WordPower 42 - lg wnd": {
-   "volume_mm3": 87746.1452,
-   "surface_area_mm2": 61825.353,
+   "volume_mm3": 87746.1455,
+   "surface_area_mm2": 61825.3531,
    "bbox": [
     -124.5,
     -87.5,
@@ -2980,13 +2980,13 @@
     3.0
    ],
    "parts": 1,
-   "facets": 23784,
+   "facets": 23836,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - TC WordPower 60": {
-   "volume_mm3": 91125.4735,
-   "surface_area_mm2": 65984.6597,
+   "volume_mm3": 91125.4737,
+   "surface_area_mm2": 65984.6599,
    "bbox": [
     -124.5,
     -87.5,
@@ -2996,13 +2996,13 @@
     3.0
    ],
    "parts": 1,
-   "facets": 31200,
+   "facets": 31252,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - TC WordPower 60 - lg wnd": {
-   "volume_mm3": 93898.75,
-   "surface_area_mm2": 65845.4952,
+   "volume_mm3": 93898.7503,
+   "surface_area_mm2": 65845.4953,
    "bbox": [
     -124.5,
     -87.5,
@@ -3012,7 +3012,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 31200,
+   "facets": 31252,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
@@ -3028,12 +3028,12 @@
     3.0
    ],
    "parts": 1,
-   "facets": 39376,
+   "facets": 39416,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - TC WordPower 80 - lg wnd": {
-   "volume_mm3": 78030.0838,
+   "volume_mm3": 78030.0839,
    "surface_area_mm2": 61785.1881,
    "bbox": [
     -124.5,
@@ -3044,12 +3044,12 @@
     3.0
    ],
    "parts": 1,
-   "facets": 39376,
+   "facets": 39416,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - TD Snap 5 x 5": {
-   "volume_mm3": 73866.3317,
+   "volume_mm3": 73866.3318,
    "surface_area_mm2": 54006.2938,
    "bbox": [
     -124.5,
@@ -3060,7 +3060,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 20688,
+   "facets": 20712,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
@@ -3076,7 +3076,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 20340,
+   "facets": 20364,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
@@ -3092,12 +3092,12 @@
     3.0
    ],
    "parts": 1,
-   "facets": 43768,
+   "facets": 43792,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SP LTROP - TD Snap MP 66": {
-   "volume_mm3": 81235.4153,
+   "volume_mm3": 81235.4154,
    "surface_area_mm2": 61905.3889,
    "bbox": [
     -124.5,
@@ -3108,7 +3108,7 @@
     3.0
    ],
    "parts": 1,
-   "facets": 36224,
+   "facets": 36248,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SP LTROP-equivalent Case\\openings_and_additions.txt"
   },
@@ -3220,7 +3220,7 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 37082,
+   "facets": 37090,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
@@ -3241,7 +3241,7 @@
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - P2G 6 x 10": {
-   "volume_mm3": 46480.5439,
+   "volume_mm3": 46480.5438,
    "surface_area_mm2": 45666.5778,
    "bbox": [
     -116.896,
@@ -3252,12 +3252,12 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 28906,
+   "facets": 28954,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\P2G\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - P2G 7 x 11": {
-   "volume_mm3": 35908.1103,
+   "volume_mm3": 35908.1102,
    "surface_area_mm2": 42886.0075,
    "bbox": [
     -116.896,
@@ -3268,7 +3268,7 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 32722,
+   "facets": 32770,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\P2G\\openings_and_additions.txt"
   },
@@ -3305,8 +3305,8 @@
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 108": {
-   "volume_mm3": 37128.5164,
-   "surface_area_mm2": 45589.8596,
+   "volume_mm3": 37128.5169,
+   "surface_area_mm2": 45589.8599,
    "bbox": [
     -116.896,
     -81.0,
@@ -3316,13 +3316,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 48758,
+   "facets": 48786,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 108 (merged)": {
-   "volume_mm3": 36901.768,
-   "surface_area_mm2": 45265.0355,
+   "volume_mm3": 36901.7684,
+   "surface_area_mm2": 45265.0358,
    "bbox": [
     -116.896,
     -81.0,
@@ -3332,13 +3332,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 47810,
+   "facets": 47838,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 108 (merged) - lg wnd": {
-   "volume_mm3": 36574.8265,
-   "surface_area_mm2": 44521.4931,
+   "volume_mm3": 36574.827,
+   "surface_area_mm2": 44521.4934,
    "bbox": [
     -116.896,
     -81.0,
@@ -3348,13 +3348,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 47810,
+   "facets": 47838,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 108 - lg wnd": {
-   "volume_mm3": 36784.8284,
-   "surface_area_mm2": 44818.7117,
+   "volume_mm3": 36784.8288,
+   "surface_area_mm2": 44818.712,
    "bbox": [
     -116.896,
     -81.0,
@@ -3364,13 +3364,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 48758,
+   "facets": 48786,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 42": {
-   "volume_mm3": 49449.3321,
-   "surface_area_mm2": 44813.5613,
+   "volume_mm3": 49449.3323,
+   "surface_area_mm2": 44813.5615,
    "bbox": [
     -116.896,
     -81.0,
@@ -3380,13 +3380,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 21494,
+   "facets": 21522,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 42 - lg wnd": {
-   "volume_mm3": 51148.6592,
-   "surface_area_mm2": 45128.2201,
+   "volume_mm3": 51148.6595,
+   "surface_area_mm2": 45128.2202,
    "bbox": [
     -116.896,
     -81.0,
@@ -3396,13 +3396,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 21498,
+   "facets": 21526,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 60": {
-   "volume_mm3": 54527.9012,
-   "surface_area_mm2": 49290.9511,
+   "volume_mm3": 54527.9015,
+   "surface_area_mm2": 49290.9512,
    "bbox": [
     -116.896,
     -81.0,
@@ -3412,13 +3412,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 28910,
+   "facets": 28938,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 60 - lg wnd": {
-   "volume_mm3": 55705.1594,
-   "surface_area_mm2": 49081.0599,
+   "volume_mm3": 55705.1596,
+   "surface_area_mm2": 49081.06,
    "bbox": [
     -116.896,
     -81.0,
@@ -3428,13 +3428,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 28914,
+   "facets": 28942,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 80": {
-   "volume_mm3": 40345.9194,
-   "surface_area_mm2": 45280.3779,
+   "volume_mm3": 40345.9199,
+   "surface_area_mm2": 45280.3782,
    "bbox": [
     -116.896,
     -81.0,
@@ -3444,13 +3444,13 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 37222,
+   "facets": 37250,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
   "iPad 7,8,9 - SUPCASE - TC WordPower 80 - lg wnd": {
-   "volume_mm3": 39436.1475,
-   "surface_area_mm2": 44277.1237,
+   "volume_mm3": 39436.148,
+   "surface_area_mm2": 44277.124,
    "bbox": [
     -116.896,
     -81.0,
@@ -3460,7 +3460,7 @@
     4.1132
    ],
    "parts": 1,
-   "facets": 37222,
+   "facets": 37250,
    "simple": "yes",
    "oa": "iPad 7,8,9\\SUPCASE-equivalent Case\\TouchChat\\openings_and_additions.txt"
   },
@@ -3674,7 +3674,7 @@
   },
   "iPad mini 6,7 - AVAWO - Proloquo": {
    "volume_mm3": 38977.1823,
-   "surface_area_mm2": 41703.494,
+   "surface_area_mm2": 41703.4939,
    "bbox": [
     -99.5,
     -69.5,
@@ -4538,7 +4538,7 @@
   },
   "iPad mini 6,7 - SUPCASE - Proloquo": {
    "volume_mm3": 23698.3346,
-   "surface_area_mm2": 36811.1125,
+   "surface_area_mm2": 36811.1134,
    "bbox": [
     -96.0,
     -66.0,
