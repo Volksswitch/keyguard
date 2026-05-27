@@ -5396,13 +5396,35 @@ module cut_opening(cut_width, cut_height, shape, top_slope, bottom_slope, left_s
 // removed volume in body xy is a superset of the original body cutter's
 // volume in that xy). Manifold: clean boundary faces well away from any
 // near-coincident plane.
-// @param w       Body width in mm
-// @param h       Body height in mm
+// @param w       Body width in mm (= bottom-face width of body cutter)
+// @param h       Body height in mm (= bottom-face height of body cutter)
 // @param radius  Corner radius in mm (matches body)
-module screen_through_cut_extender(w, h, radius){
-	if (w > 0 && h > 0){
+// @param ts/bs/ls/rs  Per-edge slopes (default 90 = vertical). For undercut
+//        edges (offset eo = th1*tan(90-s) < 0) the body cutter's TOP face is
+//        INSIDE the bottom by |eo|, so the body's slope wall projects into
+//        the design footprint. A straight prism at design width would clip
+//        through that wall (the TC5 gouge). Pulling the extender's edge
+//        inward by |eo| on those edges keeps the prism inside the slope wall
+//        at every z, preserving the undercut. Positive-slope edges are
+//        unchanged (their body top is OUTWARD from design, so the extender
+//        at design width fits inside the body's projection as before).
+// @param th1   Body cutter z thickness in mm (depth - region_chamfer + 2*ff);
+//        equals the body's hull height, used to size the per-edge offset.
+//        Default 0 = no inset (back-compat for callers that pass all-90).
+module screen_through_cut_extender(w, h, radius,
+                                    ts=90, bs=90, ls=90, rs=90,
+                                    th1=0){
+	function inset(s) = let(eo = th1 * tan(90 - s)) (eo < 0) ? -eo : 0;
+	dl = inset(ls);
+	dr = inset(rs);
+	dt = inset(ts);
+	db = inset(bs);
+	nw = w - dl - dr;
+	nh = h - dt - db;
+	if (nw > 0 && nh > 0){
+		translate([(dl - dr)/2, (db - dt)/2, 0])
 		linear_extrude(kt + 2*screen_through_cut_overlap, center=true)
-		rounded_rect(w, h, min(radius, min(w, h)/2));
+		rounded_rect(nw, nh, min(radius, min(nw, nh)/2));
 	}
 }
 
@@ -5468,6 +5490,11 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	                    (type == "tablet" && generate != "first layer for SVG/DXF file"))
 	                && !other_number && !flip;
 
+	// Body cutter z thickness — matches hole_cutter's `cut()` body span (depth -
+	// edge_chamfer + 2*ff). Used to size the extender's per-edge undercut inset
+	// so it tracks the body cutter's narrow (top) face on negative slopes.
+	body_th = max(0, dep - region_chamfer + 2*ff);
+
 	if (shape == "r"){
 		if (cut_width > 0 && cut_height > 0){
 			tx = is_c ? 0 : cut_width/2;
@@ -5476,7 +5503,8 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 			if (want_extender){
 				translate([tx, ty, 0])
 				rotate([0, 0, rotation])
-				screen_through_cut_extender(cut_width, cut_height, corner);
+				screen_through_cut_extender(cut_width, cut_height, corner,
+					ts=top_slope, bs=bottom_slope, ls=left_slope, rs=right_slope, th1=body_th);
 			}
 		}
 	}
@@ -5488,7 +5516,8 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 				cut_hole(tx, ty, trans, cut_height, cut_height, top_slope, bottom_slope, left_slope, right_slope, cut_height/2, dep, flip, region_chamfer, rotation);
 				if (want_extender){
 					translate([tx, ty, 0])
-					screen_through_cut_extender(cut_height, cut_height, cut_height/2);
+					screen_through_cut_extender(cut_height, cut_height, cut_height/2,
+						ts=top_slope, bs=bottom_slope, ls=left_slope, rs=right_slope, th1=body_th);
 				}
 			}
 			else{
@@ -5512,7 +5541,8 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 			if (want_extender){
 				translate([tx, ty, 0])
 				rotate([0, 0, rotation])
-				screen_through_cut_extender(cut_width, cut_height, m/2);
+				screen_through_cut_extender(cut_width, cut_height, m/2,
+					ts=top_slope, bs=bottom_slope, ls=left_slope, rs=right_slope, th1=body_th);
 			}
 		}
 	}
