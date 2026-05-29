@@ -274,6 +274,18 @@ It only needs to be present when this feature is in use.
 
 ## Known Issues / Current Work
 
+### Pending Uncommitted Branches (do not lose track of these)
+
+- **`undercut-extender`** (commit `08b454f`, parented at `main@39ffdf0`, 2026-05-28). Fixes
+  `screen_through_cut_extender` gouging undercut slopes on screen through-cuts (Ken's TC5
+  row `[10,"r",100,150,20,400,600,0,"L","T",0,0,[60,80,-45,30],[]]`). Visually verified on a
+  focused row-10 CGAL render (Simple: yes; gouge gone). **NOT yet tested:** full `--visual`
+  suite, `--geometry` golden refresh. **Do not merge to main** until both are green. The
+  branch lives in OneDrive's `.git/`, so to resume on the other machine: `git worktree add
+  C:\kg-wt\undercut-extender undercut-extender` (or check it out wherever; short path is
+  required per [[project_scad_worktree_longpath]]). Worktree on the laptop where the branch
+  was authored is at `C:\kg-wt\undercut-extender`.
+
 ### Priority Key
 - **(Clean-up)** — tidy when 2+ months between releases
 - **(Low)** — wait until reported as a problem
