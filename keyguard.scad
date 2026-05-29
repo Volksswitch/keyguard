@@ -1614,9 +1614,9 @@ $vpr = (show_back_of_keyguard=="no" && keyguard_display_angle > 0) ? [90-keyguar
        (show_back_of_keyguard=="yes") ? [0,180,0] : 
 	   $vpr;
 	   
-echo($vpt);
-echo($vpr);
-echo($vpd);
+// echo($vpt);
+// echo($vpr);
+// echo($vpd);
 	   
 	   
 if (system_with_no_case){
