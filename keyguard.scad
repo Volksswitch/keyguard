@@ -3878,7 +3878,22 @@ module hole_cutter(hole_width,hole_height,top_slope,bottom_slope,left_slope,righ
 		}
 	}
 	else{
-		cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,d);
+		// Membrane fix (mirrors the edge_chamfer>0 branch above): with a 0 edge
+		// chamfer a straight (all-90) solid cut must STILL use a single
+		// linear_extrude prism, not cut()'s near-degenerate two-slab hull, or
+		// Manifold/CGAL leave a thin floor ("membrane") at the base of the cut
+		// (TC53: chamfer-0 rounded-rect and circular cuts). The prism is the
+		// SAME solid, CGAL-identical, without the degenerate slab pair. Sloped
+		// cuts and 2D (depth<=0) cuts stay on cut().
+		straight = (top_slope==90 && bottom_slope==90 && left_slope==90 && right_slope==90);
+		if(d>0 && straight){
+			translate([0,0,-d/2-2*ff])
+			linear_extrude(d+3*ff)
+			rounded_rect(hole_width, hole_height, (rad1==0)?0:rad1-ff);
+		}
+		else{
+			cut(hole_width,hole_height,top_slope,bottom_slope,left_slope,right_slope,radius,d);
+		}
 	}
 }
 
