@@ -682,127 +682,142 @@ blank_data=[200,60,3,200,60,0,0,0,0,0,0,0,0,0,0,0,0,[60,200,1],0,0,0,0];
 catch_all_data=[400,100,20,216.576,135.36,11.6,11.6,14,16,7,8,8,3,10,3.5,3.5,1,[1200,1920,0.1128],10,10,10,10];
 
 
-tablet_params = 
-    (type_of_tablet=="iPad")? iPad_data
-  : (type_of_tablet=="iPad2")? iPad2_data
-  : (type_of_tablet=="iPad 3rd generation")? iPad3rdgeneration_data
-  : (type_of_tablet=="iPad 4th generation")? iPad4thgeneration_data
-  : (type_of_tablet=="iPad 5th generation")? iPad5thgeneration_data
-  : (type_of_tablet=="iPad 6th generation")? iPad6thgeneration_data
-  : (type_of_tablet=="iPad 7th generation")? iPad7thgeneration_data
-  : (type_of_tablet=="iPad 8th generation")? iPad8thgeneration_data
-  : (type_of_tablet=="iPad 9th generation")? iPad9thgeneration_data
-  : (type_of_tablet=="iPad 11th generation A16")? iPad11thgeneration_A16_data
-  : (type_of_tablet=="iPad 10th generation")? iPad10thgeneration_data
-  : (type_of_tablet=="iPad Pro 9.7-inch")? iPadPro97inch_data
-  : (type_of_tablet=="iPad Pro 10.5-inch")? iPadPro105inch_data
-  : (type_of_tablet=="iPad Pro 11-inch 1st Generation")? iPadPro11inch1stGeneration_data
-  : (type_of_tablet=="iPad Pro 11-inch 2nd Generation")? iPadPro11inch2ndGeneration_data
-  : (type_of_tablet=="iPad Pro 11-inch 3rd Generation")? iPadPro11inch3rdGeneration_data
-  : (type_of_tablet=="iPad Pro 11-inch 4th Generation")? iPadPro11inch4thGeneration_data
-  : (type_of_tablet=="iPad Pro 11-inch M4")? iPadPro11inch_M4_data
-  : (type_of_tablet=="iPad Pro 11-inch M5")? iPadPro11inch_M5_data
-  : (type_of_tablet=="iPad Pro 12.9-inch 1st Generation")? iPadPro129inch1stGeneration_data
-  : (type_of_tablet=="iPad Pro 12.9-inch 2nd Generation")? iPadPro129inch2ndGeneration_data
-  : (type_of_tablet=="iPad Pro 12.9-inch 3rd Generation")? iPadPro129inch3rdGeneration_data
-  : (type_of_tablet=="iPad Pro 12.9-inch 4th Generation")? iPadPro129inch4thGeneration_data
-  : (type_of_tablet=="iPad Pro 12.9-inch 5th Generation")? iPadPro129inch5thGeneration_data
-  : (type_of_tablet=="iPad Pro 12.9-inch 6th Generation")? iPadPro129inch6thGeneration_data
-  : (type_of_tablet=="iPad Pro 13-inch M4")? iPadPro13inch_M4_data
-  : (type_of_tablet=="iPad Pro 13-inch M5")? iPadPro13inch_M5_data
-  : (type_of_tablet=="iPad mini")? iPadmini_data
-  : (type_of_tablet=="iPad mini 2")? iPadmini2_data
-  : (type_of_tablet=="iPad mini 3")? iPadmini3_data
-  : (type_of_tablet=="iPad mini 4")? iPadmini4_data
-  : (type_of_tablet=="iPad mini 5")? iPadmini5_data
-  : (type_of_tablet=="iPad mini 6")? iPadmini6_data
-  : (type_of_tablet=="iPad mini 7 A17 Pro")? iPadmini7_A17Pro_data
-  : (type_of_tablet=="iPad Air")? iPadAir_data
-  : (type_of_tablet=="iPad Air 2")? iPadAir2_data
-  : (type_of_tablet=="iPad Air 3")? iPadAir3_data
-  : (type_of_tablet=="iPad Air 4")? iPadAir4_data
-  : (type_of_tablet=="iPad Air 5")? iPadAir5_data
-  : (type_of_tablet=="iPad Air 11-inch M2")? iPadAir11inch_M2_data
-  : (type_of_tablet=="iPad Air 11-inch M3")? iPadAir11inch_M3_data
-  : (type_of_tablet=="iPad Air 11-inch M4")? iPadAir11inch_M4_data
-  : (type_of_tablet=="iPad Air 13-inch M2")? iPadAir13inch_M2_data
-  : (type_of_tablet=="iPad Air 13-inch M3")? iPadAir13inch_M3_data
-  : (type_of_tablet=="iPad Air 13-inch M4")? iPadAir13inch_M4_data
-  : (type_of_tablet=="NovaChat 5")? novachat_5_data
-  : (type_of_tablet=="NovaChat 5.3")? novachat_5_3_data
-  : (type_of_tablet=="NovaChat 5.4")? novachat_5_4_data
-  : (type_of_tablet=="NovaChat 8.5")? novachat_8_5_data
-  : (type_of_tablet=="NovaChat 12")? novachat12_data
-  : (type_of_tablet=="Chat Fusion 10")? chatfusion10_data
-  : (type_of_tablet=="Surface 2")? surface_2_data
-  : (type_of_tablet=="Surface 3")? surface_3_data
-  : (type_of_tablet=="Surface Pro 3")? surface_pro_3_data
-  : (type_of_tablet=="Surface Pro 4")? surface_pro_4_data
-  : (type_of_tablet=="Surface Pro 5")? surface_pro_5_data
-  : (type_of_tablet=="Surface Pro 6")? surface_pro_6_data
-  : (type_of_tablet=="Surface Pro 7")? surface_pro_7_data
-  : (type_of_tablet=="Surface Pro 8")? surface_pro_8_data
-  : (type_of_tablet=="Surface Pro 9")? surface_pro_9_data
-  : (type_of_tablet=="Surface Pro X")? surface_pro_x_data
-  : (type_of_tablet=="Surface Go")? surface_go_data
-  : (type_of_tablet=="Surface Go 2")? surface_go_2_data
-  : (type_of_tablet=="Surface Go 3")? surface_go_3_data
-  : (type_of_tablet=="Surface Go 4")? surface_go_4_data
-  : (type_of_tablet=="Accent 800-30")? accent_800_30_data
-  : (type_of_tablet=="Accent 800-40")? accent_800_40_data
-  : (type_of_tablet=="Accent 1000-20")? accent_1000_20_data
-  : (type_of_tablet=="Accent 1000-30")? accent_1000_30_data
-  : (type_of_tablet=="Accent 1000-40")? accent_1000_40_data
-  : (type_of_tablet=="Accent 1400-20")? accent_1400_20_data
-  : (type_of_tablet=="Accent 1400-30a")? accent_1400_30a_data
-  : (type_of_tablet=="Accent 1400-30b")? accent_1400_30b_data
-  : (type_of_tablet=="Via Nano")? Via_Nano_data
-  : (type_of_tablet=="Via Mini")? Via_Mini_data
-  : (type_of_tablet=="Via Pro")? Via_Pro_data
-  : (type_of_tablet=="Amazon Fire HD 7")? amazon_fire_hd_7_data
-  : (type_of_tablet=="Amazon Fire HD 8")? amazon_fire_hd_8_data
-  : (type_of_tablet=="Amazon Fire HD 8 Plus")? amazon_fire_hd_8_plus_data
-  : (type_of_tablet=="Amazon Fire HD 10")? amazon_fire_hd_10_data
-  : (type_of_tablet=="Amazon Fire HD 10 Plus")? amazon_fire_hd_10_plus_data
-  : (type_of_tablet=="Amazon Fire Max 11")? amazon_fire_max_11_data
-  : (type_of_tablet=="Dynavox I-12+")? dynavox_i_12_plus_data
-  : (type_of_tablet=="Tobii-Dynavox T-15+")? tobii_t_15Plus_data
-  : (type_of_tablet=="Tobii-Dynavox I-110")? tobii_i_110_data
-  : (type_of_tablet=="Tobii-Dynavox I-13")? tobii_i_13_data
-  : (type_of_tablet=="Tobii-Dynavox I-16")? tobii_i_16_data
-  : (type_of_tablet=="Dynavox Indi")? dynavox_indi_data
-  : (type_of_tablet=="GridPad 10s") ? gridpad_10s_data
-  : (type_of_tablet=="GridPad 11") ? gridpad_11_data
-  : (type_of_tablet=="GridPad 12") ? gridpad_12_data
-  : (type_of_tablet=="GridPad 13") ? gridpad_13_data
-  : (type_of_tablet=="GridPad 15") ? gridpad_15_data
-  : (type_of_tablet=="Samsung Galaxy Tab A 8.4")? SamsungGalaxyTabA84_data
-  : (type_of_tablet=="Samsung Galaxy Tab A7 10.4")? SamsungGalaxyTabA7104_data
-  : (type_of_tablet=="Samsung Galaxy Tab A7 Lite")? SamsungGalaxyTabA7Lite_data
-  : (type_of_tablet=="Samsung Galaxy Tab A8")? SamsungGalaxyTabA8_data
-  : (type_of_tablet=="Samsung Galaxy Tab A9")? SamsungGalaxyTabA9_data
-  : (type_of_tablet=="Samsung Galaxy Tab A9+")? SamsungGalaxyTabA9Plus_data
-  : (type_of_tablet=="Samsung Galaxy Tab Active 5")? SamsungGalaxyTabActive5_data
-  : (type_of_tablet=="Samsung Galaxy Tab Active 3")? SamsungGalaxyTabActive3_data
-  : (type_of_tablet=="Samsung Galaxy Tab Active 2")? SamsungGalaxyTabActive2_data
-  : (type_of_tablet=="Samsung Galaxy Tab Active 4 Pro")? SamsungGalaxyTabActive4Pro_data
-  : (type_of_tablet=="Samsung Galaxy Tab S3")? SamsungGalaxyTabS3_data
-  : (type_of_tablet=="Samsung Galaxy Tab S6")? SamsungGalaxyTabS6_data
-  : (type_of_tablet=="Samsung Galaxy Tab S6 Lite")? SamsungGalaxyTabS6Lite_data
-  : (type_of_tablet=="Samsung Galaxy Tab S7")? SamsungGalaxyTabS7_data
-  : (type_of_tablet=="Samsung Galaxy Tab S7 FE")? SamsungGalaxyTabS7FE_data
-  : (type_of_tablet=="Samsung Galaxy Tab S7+")? SamsungGalaxyTabS7Plus_data
-  : (type_of_tablet=="Samsung Galaxy Tab S8")? SamsungGalaxyTabS8_data
-  : (type_of_tablet=="Samsung Galaxy Tab S8 Ultra")? SamsungGalaxyTabS8Ultra_data
-  : (type_of_tablet=="Samsung Galaxy Tab S8+")? SamsungGalaxyTabS8Plus_data
-  : (type_of_tablet=="Samsung Galaxy Tab S9")? SamsungGalaxyTabS9_data
-  : (type_of_tablet=="Samsung Galaxy Tab S9 FE")? SamsungGalaxyTabS9FE_data
-  : (type_of_tablet=="Samsung Galaxy Tab S9 FE+")? SamsungGalaxyTabS9FEPlus_data
-  : (type_of_tablet=="Samsung Galaxy Tab S9 Ultra")? SamsungGalaxyTabS9Ultra_data
-  : (type_of_tablet=="Samsung Galaxy Tab S9+")? SamsungGalaxyTabS9Plus_data  
-  : (type_of_tablet=="Samsung Galaxy Tab Pro 12.2")? SamsungGalaxyTabPro12_2_data  
-  : (type_of_tablet=="blank") ? blank_data
-  : catch_all_data;
+// Tablet dimension lookup: each row is [name, data]. Adding a new tablet
+// means adding one row (plus the underlying *_data constant) — no more
+// editing a 100+ line chained-ternary expression. Order is preserved purely
+// for readability; lookup is by name, not position.
+tablet_table = [
+    ["iPad",                                          iPad_data],
+    ["iPad2",                                         iPad2_data],
+    ["iPad 3rd generation",                           iPad3rdgeneration_data],
+    ["iPad 4th generation",                           iPad4thgeneration_data],
+    ["iPad 5th generation",                           iPad5thgeneration_data],
+    ["iPad 6th generation",                           iPad6thgeneration_data],
+    ["iPad 7th generation",                           iPad7thgeneration_data],
+    ["iPad 8th generation",                           iPad8thgeneration_data],
+    ["iPad 9th generation",                           iPad9thgeneration_data],
+    ["iPad 11th generation A16",                      iPad11thgeneration_A16_data],
+    ["iPad 10th generation",                          iPad10thgeneration_data],
+    ["iPad Pro 9.7-inch",                             iPadPro97inch_data],
+    ["iPad Pro 10.5-inch",                            iPadPro105inch_data],
+    ["iPad Pro 11-inch 1st Generation",               iPadPro11inch1stGeneration_data],
+    ["iPad Pro 11-inch 2nd Generation",               iPadPro11inch2ndGeneration_data],
+    ["iPad Pro 11-inch 3rd Generation",               iPadPro11inch3rdGeneration_data],
+    ["iPad Pro 11-inch 4th Generation",               iPadPro11inch4thGeneration_data],
+    ["iPad Pro 11-inch M4",                           iPadPro11inch_M4_data],
+    ["iPad Pro 11-inch M5",                           iPadPro11inch_M5_data],
+    ["iPad Pro 12.9-inch 1st Generation",             iPadPro129inch1stGeneration_data],
+    ["iPad Pro 12.9-inch 2nd Generation",             iPadPro129inch2ndGeneration_data],
+    ["iPad Pro 12.9-inch 3rd Generation",             iPadPro129inch3rdGeneration_data],
+    ["iPad Pro 12.9-inch 4th Generation",             iPadPro129inch4thGeneration_data],
+    ["iPad Pro 12.9-inch 5th Generation",             iPadPro129inch5thGeneration_data],
+    ["iPad Pro 12.9-inch 6th Generation",             iPadPro129inch6thGeneration_data],
+    ["iPad Pro 13-inch M4",                           iPadPro13inch_M4_data],
+    ["iPad Pro 13-inch M5",                           iPadPro13inch_M5_data],
+    ["iPad mini",                                     iPadmini_data],
+    ["iPad mini 2",                                   iPadmini2_data],
+    ["iPad mini 3",                                   iPadmini3_data],
+    ["iPad mini 4",                                   iPadmini4_data],
+    ["iPad mini 5",                                   iPadmini5_data],
+    ["iPad mini 6",                                   iPadmini6_data],
+    ["iPad mini 7 A17 Pro",                           iPadmini7_A17Pro_data],
+    ["iPad Air",                                      iPadAir_data],
+    ["iPad Air 2",                                    iPadAir2_data],
+    ["iPad Air 3",                                    iPadAir3_data],
+    ["iPad Air 4",                                    iPadAir4_data],
+    ["iPad Air 5",                                    iPadAir5_data],
+    ["iPad Air 11-inch M2",                           iPadAir11inch_M2_data],
+    ["iPad Air 11-inch M3",                           iPadAir11inch_M3_data],
+    ["iPad Air 11-inch M4",                           iPadAir11inch_M4_data],
+    ["iPad Air 13-inch M2",                           iPadAir13inch_M2_data],
+    ["iPad Air 13-inch M3",                           iPadAir13inch_M3_data],
+    ["iPad Air 13-inch M4",                           iPadAir13inch_M4_data],
+    ["NovaChat 5",                                    novachat_5_data],
+    ["NovaChat 5.3",                                  novachat_5_3_data],
+    ["NovaChat 5.4",                                  novachat_5_4_data],
+    ["NovaChat 8.5",                                  novachat_8_5_data],
+    ["NovaChat 12",                                   novachat12_data],
+    ["Chat Fusion 10",                                chatfusion10_data],
+    ["Surface 2",                                     surface_2_data],
+    ["Surface 3",                                     surface_3_data],
+    ["Surface Pro 3",                                 surface_pro_3_data],
+    ["Surface Pro 4",                                 surface_pro_4_data],
+    ["Surface Pro 5",                                 surface_pro_5_data],
+    ["Surface Pro 6",                                 surface_pro_6_data],
+    ["Surface Pro 7",                                 surface_pro_7_data],
+    ["Surface Pro 8",                                 surface_pro_8_data],
+    ["Surface Pro 9",                                 surface_pro_9_data],
+    ["Surface Pro X",                                 surface_pro_x_data],
+    ["Surface Go",                                    surface_go_data],
+    ["Surface Go 2",                                  surface_go_2_data],
+    ["Surface Go 3",                                  surface_go_3_data],
+    ["Surface Go 4",                                  surface_go_4_data],
+    ["Accent 800-30",                                 accent_800_30_data],
+    ["Accent 800-40",                                 accent_800_40_data],
+    ["Accent 1000-20",                                accent_1000_20_data],
+    ["Accent 1000-30",                                accent_1000_30_data],
+    ["Accent 1000-40",                                accent_1000_40_data],
+    ["Accent 1400-20",                                accent_1400_20_data],
+    ["Accent 1400-30a",                               accent_1400_30a_data],
+    ["Accent 1400-30b",                               accent_1400_30b_data],
+    ["Via Nano",                                      Via_Nano_data],
+    ["Via Mini",                                      Via_Mini_data],
+    ["Via Pro",                                       Via_Pro_data],
+    ["Amazon Fire HD 7",                              amazon_fire_hd_7_data],
+    ["Amazon Fire HD 8",                              amazon_fire_hd_8_data],
+    ["Amazon Fire HD 8 Plus",                         amazon_fire_hd_8_plus_data],
+    ["Amazon Fire HD 10",                             amazon_fire_hd_10_data],
+    ["Amazon Fire HD 10 Plus",                        amazon_fire_hd_10_plus_data],
+    ["Amazon Fire Max 11",                            amazon_fire_max_11_data],
+    ["Dynavox I-12+",                                 dynavox_i_12_plus_data],
+    ["Tobii-Dynavox T-15+",                           tobii_t_15Plus_data],
+    ["Tobii-Dynavox I-110",                           tobii_i_110_data],
+    ["Tobii-Dynavox I-13",                            tobii_i_13_data],
+    ["Tobii-Dynavox I-16",                            tobii_i_16_data],
+    ["Dynavox Indi",                                  dynavox_indi_data],
+    ["GridPad 10s",                                   gridpad_10s_data],
+    ["GridPad 11",                                    gridpad_11_data],
+    ["GridPad 12",                                    gridpad_12_data],
+    ["GridPad 13",                                    gridpad_13_data],
+    ["GridPad 15",                                    gridpad_15_data],
+    ["Samsung Galaxy Tab A 8.4",                      SamsungGalaxyTabA84_data],
+    ["Samsung Galaxy Tab A7 10.4",                    SamsungGalaxyTabA7104_data],
+    ["Samsung Galaxy Tab A7 Lite",                    SamsungGalaxyTabA7Lite_data],
+    ["Samsung Galaxy Tab A8",                         SamsungGalaxyTabA8_data],
+    ["Samsung Galaxy Tab A9",                         SamsungGalaxyTabA9_data],
+    ["Samsung Galaxy Tab A9+",                        SamsungGalaxyTabA9Plus_data],
+    ["Samsung Galaxy Tab Active 5",                   SamsungGalaxyTabActive5_data],
+    ["Samsung Galaxy Tab Active 3",                   SamsungGalaxyTabActive3_data],
+    ["Samsung Galaxy Tab Active 2",                   SamsungGalaxyTabActive2_data],
+    ["Samsung Galaxy Tab Active 4 Pro",               SamsungGalaxyTabActive4Pro_data],
+    ["Samsung Galaxy Tab S3",                         SamsungGalaxyTabS3_data],
+    ["Samsung Galaxy Tab S6",                         SamsungGalaxyTabS6_data],
+    ["Samsung Galaxy Tab S6 Lite",                    SamsungGalaxyTabS6Lite_data],
+    ["Samsung Galaxy Tab S7",                         SamsungGalaxyTabS7_data],
+    ["Samsung Galaxy Tab S7 FE",                      SamsungGalaxyTabS7FE_data],
+    ["Samsung Galaxy Tab S7+",                        SamsungGalaxyTabS7Plus_data],
+    ["Samsung Galaxy Tab S8",                         SamsungGalaxyTabS8_data],
+    ["Samsung Galaxy Tab S8 Ultra",                   SamsungGalaxyTabS8Ultra_data],
+    ["Samsung Galaxy Tab S8+",                        SamsungGalaxyTabS8Plus_data],
+    ["Samsung Galaxy Tab S9",                         SamsungGalaxyTabS9_data],
+    ["Samsung Galaxy Tab S9 FE",                      SamsungGalaxyTabS9FE_data],
+    ["Samsung Galaxy Tab S9 FE+",                     SamsungGalaxyTabS9FEPlus_data],
+    ["Samsung Galaxy Tab S9 Ultra",                   SamsungGalaxyTabS9Ultra_data],
+    ["Samsung Galaxy Tab S9+",                        SamsungGalaxyTabS9Plus_data],
+    ["Samsung Galaxy Tab Pro 12.2",                   SamsungGalaxyTabPro12_2_data],
+    ["blank",                                         blank_data],
+];
+
+// Look up the row by name. OpenSCAD's built-in search() has fiddly semantics
+// when matching whole strings against a 2D table column, so a small recursive
+// helper is clearer (and is the same O(N) anyway).
+function _lookup_tablet(name, table, i=0) =
+    i >= len(table) ? undef :
+    (table[i][0] == name) ? table[i][1] :
+    _lookup_tablet(name, table, i + 1);
+
+_tablet_hit = _lookup_tablet(type_of_tablet, tablet_table);
+tablet_params = (_tablet_hit == undef) ? catch_all_data : _tablet_hit;
 
 if (tablet_params == catch_all_data && type_of_tablet != "blank" && type_of_tablet != "other tablet") {
     echo(str("WARNING: '", type_of_tablet, "' is not a recognised tablet name. ",

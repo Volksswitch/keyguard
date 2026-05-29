@@ -330,17 +330,17 @@ A full code review was completed on 2026-03-20. Items are listed roughly highest
 Address these one at a time, running the test suite after each change.
 
 ### High Priority
-- [ ] **Fix hardcoded `$fn=60`** in `cut()` (line ~4134) and `cut_2d()` (line ~4179) — these override the global `smoothness_of_circles_and_arcs` parameter; replace with the global `$fn`
-- [ ] **Remove dead module** `add_manual_mount_slide_in_tabs` (lines ~6035–6125) — entirely commented out; either restore and use it or delete it
-- [ ] **Deduplicate bar height conversion** (lines ~1373–1392) — the same 4-level ternary expression is repeated 5 times (once per bar type); extract into a reusable function
-- [ ] **Refactor tablet lookup chain** (lines ~942–1056) — 100+ chained ternaries to select tablet data; replace with a lookup-table approach using `search()` on a `[name, data]` array
+- [x] **Fix hardcoded `$fn=60`** in `cut()` (line ~4134) and `cut_2d()` (line ~4179) — these override the global `smoothness_of_circles_and_arcs` parameter; replace with the global `$fn`
+- [x] **Remove dead module** `add_manual_mount_slide_in_tabs` (lines ~6035–6125) — entirely commented out; either restore and use it or delete it
+- [x] **Deduplicate bar height conversion** (lines ~1373–1392) — the same 4-level ternary expression is repeated 5 times (once per bar type); extract into a reusable function — now `function bar_height(px_val, mm_val)` at line ~1133
+- [x] **Refactor tablet lookup chain** (lines ~942–1056) — 100+ chained ternaries to select tablet data; replace with a lookup-table approach using `search()` on a `[name, data]` array
 
 ### Medium Priority
 - [ ] **Purge V1-flavored parameter names from V2 code paths** (e.g. `top_slope_mm` → `cb_mm`, `bottom_slope_mm` → `thickness_mm`, `left_slope` → `rotation` inside `place_addition_v2` / `cut_opening_v2` and their V2 dispatchers). Leave the V1 `place_addition` / `cut_opening` modules untouched so V1 OA files still process unchanged — the `is_v2()` dispatcher already routes V1 rows there. Also update the guard warning strings to use V2 terms ("invalid length, cb, or thickness" instead of "invalid dimensions or slopes"). Rename one module at a time; after each, run `scripts/test.sh` then a scoped visual on OA-heavy cases (TC3, TC15, TC17, TC18, TC24, TC43, TC47). Watch out for two traps: (1) any named-arg call sites (grep before renaming); (2) the `ttext` branch overloads those slots as font/halign/valign strings, so pick neutral names there. Motivation: the slope-named params caused real diagnostic confusion (2026-05-27 thread on a `vridge` guard).
 - [ ] **Name the magic numbers** — groove dimensions (lines ~1609–1611), clip offsets (~1564), scale factors (~6191–6231), and other unexplained literals should be named constants
 - [ ] **Document array field indices** — `tablet_params[18]`, `tablet_params[21]` etc. are opaque; add a comment block listing what each index means
 - [ ] **Rename cryptic variables** — `sxo`, `xtls`, `ytbs`, `ff`, `sat`, `cts`, `cbs` and similar abbreviations should have clearer names or at least a legend
-- [ ] **Add `type_of_tablet` validation** — if the tablet name matches nothing the designer silently falls back to default data; add an echo warning when this happens
+- [x] **Add `type_of_tablet` validation** — if the tablet name matches nothing the designer silently falls back to default data; add an echo warning when this happens — warning echo now at line ~807
 - [ ] **Add opening dimension validation** — zero or negative widths/heights in `screen_openings` / `case_openings` fail silently; add guards with informative echoes
 - [ ] **Catch conflicting settings early** — e.g. laser-cut + cell inserts, incompatible frame/case settings — add an explicit validation section near the top
 - [ ] **Deduplicate case additions logic** (lines ~5470–5599) — near-identical `add`/`sub` blocks with trimming logic repeated 4+ times; extract shared logic into a module
