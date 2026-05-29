@@ -5870,24 +5870,32 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 	}
 }
 
-// V2-independent variant of place_addition(). All parameters identical except for
-// the ttext shape, where bottom_slope, left_slope, and right_slope accept V2 schema
-// strings directly instead of V1 integer codes:
+// V2-independent variant of place_addition(). Parameter names follow V2
+// conventions — `cb_mm`/`thickness_mm` describe what these slots actually
+// hold (ridge cb height / base thickness in mm), not V1's misleading
+// `*_slope_mm` aliases; `rotation` reflects the dominant non-text use as
+// a Z-axis rotation angle in the ridge/cridge/rridge/hdridge branches.
+//
+// The "text" shape overloads four slots as V2 schema strings:
 //   bottom_slope  font style: "bold", "italic", "bold italic", or "" (normal)
-//   left_slope    halign:     "left", "center", "right"
+//   rotation      halign:     "left", "center", "right"
 //   right_slope   valign:     "bottom", "baseline", "center", "top"
+//   top_slope     direction (Z-rotation in degrees for the text glyphs)
+// (the overload is intentional — these positional slots carry shape-specific
+// payloads, and V2 OA rows fill them with the appropriate strings/numbers).
+//
 // @param addition_width    Width of the addition in mm
 // @param addition_height   Height of the addition in mm
-// @param shape             Shape code string (e.g. "bump", "hridge", "svg", "ttext")
-// @param top_slope         Slope angle for the addition top in degrees
-// @param top_slope_mm      Ridge height in mm (used by ridge-type shapes)
-// @param bottom_slope      Ridge base thickness in mm, or font-style string for text
-// @param bottom_slope_mm   Ridge base thickness in mm (used by ridge-type shapes)
-// @param left_slope        Left-slope / rotation angle in degrees, or halign string for text
-// @param right_slope       Right-slope angle in degrees, or valign string for text
+// @param shape             Shape code string (e.g. "bump", "hridge", "svg", "text")
+// @param top_slope         Top slope angle in degrees (or text Z-rotation)
+// @param cb_mm             Ridge cb (height above surface) in mm — ridge-family shapes
+// @param bottom_slope      Bottom slope angle in degrees (or font-style string for text)
+// @param thickness_mm      Ridge base thickness in mm — ridge-family shapes
+// @param rotation          Z-rotation in degrees for ridge variants (or halign string for text)
+// @param right_slope       Right-slope angle in degrees (or valign string for text)
 // @param corner_radius     Corner radius or arc radius in mm, or text depth in mm
 // @param other             Text string or secondary numeric value (shape-dependent)
-module place_addition_v2(addition_width, addition_height, shape, top_slope, top_slope_mm, bottom_slope, bottom_slope_mm, left_slope, right_slope, corner_radius, other, surface=undef){
+module place_addition_v2(addition_width, addition_height, shape, top_slope, cb_mm, bottom_slope, thickness_mm, rotation, right_slope, corner_radius, other, surface=undef){
 	if (shape=="bump"){
 		if(addition_width>0){
 			difference(){
@@ -5898,22 +5906,22 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 		}
 	}
 	else if (shape=="hridge"){
-		if(addition_width>=1 && bottom_slope_mm>=.1 && top_slope_mm>=.1){
-			ridge(addition_width, bottom_slope_mm, top_slope_mm,0);
+		if(addition_width>=1 && thickness_mm>=.1 && cb_mm>=.1){
+			ridge(addition_width, thickness_mm, cb_mm,0);
 		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid length, cb, or thickness — skipping.")); }
 	}
 	else if (shape=="vridge"){
-		if(addition_height>=1 && bottom_slope_mm>=.1 && top_slope_mm>=.1){
-			ridge(addition_height, bottom_slope_mm, top_slope_mm,90);
+		if(addition_height>=1 && thickness_mm>=.1 && cb_mm>=.1){
+			ridge(addition_height, thickness_mm, cb_mm,90);
 		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid length, cb, or thickness — skipping.")); }
 	}
 	else if (shape=="ridge"){
-		if(addition_width>=1 && bottom_slope_mm>=.1 && top_slope_mm>=.1){
-			ridge(addition_width, bottom_slope_mm, top_slope_mm,left_slope);
+		if(addition_width>=1 && thickness_mm>=.1 && cb_mm>=.1){
+			ridge(addition_width, thickness_mm, cb_mm,rotation);
 		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid length, cb, or thickness — skipping.")); }
 	}
 	else if (shape=="aridge1"){
 		if(corner_radius>=1 && bottom_slope>=.1 && top_slope>=.1){
@@ -5922,7 +5930,7 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 			rotate([0,0,0])
 			aridge(corner_radius, bottom_slope, top_slope);
 		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid corner_radius or slopes — skipping.")); }
 	}
 	else if (shape=="aridge2"){
 		if(corner_radius>=1 && bottom_slope>=.1 && top_slope>=.1){
@@ -5931,7 +5939,7 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 			rotate([0,0,-90])
 			aridge(corner_radius, bottom_slope, top_slope);
 		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid corner_radius or slopes — skipping.")); }
 	}
 	else if (shape=="aridge3"){
 		if(corner_radius>=1 && bottom_slope>=.1 && top_slope>=.1){
@@ -5940,7 +5948,7 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 			rotate([0,0,180])
 			aridge(corner_radius, bottom_slope, top_slope);
 		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid corner_radius or slopes — skipping.")); }
 	}
 	else if (shape=="aridge4"){
 		if(corner_radius>=1 && bottom_slope>=.1 && top_slope>=.1){
@@ -5949,29 +5957,29 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 			rotate([0,0,90])
 			aridge(corner_radius, bottom_slope, top_slope);
 		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid corner_radius or slopes — skipping.")); }
 	}
 	else if (shape=="cridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([0,0,-sata])
-			rotate([0,0,left_slope])
-			circular_wall(addition_height,bottom_slope_mm,top_slope_mm+sata);
+			rotate([0,0,rotation])
+			circular_wall(addition_height,thickness_mm,cb_mm+sata);
 		}
-		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
+		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid length or slopes — skipping.")); }
 	}
 	else if (shape=="rridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
-			rotate([0,0,left_slope])
-			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
+			rotate([0,0,rotation])
+			rounded_rectangle_wall(addition_width,addition_height,corner_radius,thickness_mm,cb_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="hdridge"){
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
-			rotate([0,0,left_slope])
-			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,bottom_slope_mm,top_slope_mm+sata);
+			rotate([0,0,rotation])
+			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,thickness_mm,cb_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
@@ -5988,7 +5996,9 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 		// V2 form: shape="text" + surface "t"/"b". Currently only top-face emboss
 		// (surface != "b") is implemented; bottom-face emboss falls through silently,
 		// matching the pre-V2-native behaviour where place_addition_v2 had no "btext"
-		// branch.
+		// branch. NOTE: this branch repurposes the bottom_slope / rotation /
+		// right_slope slots as font-style / halign / valign strings (see module
+		// docstring above).
 		is_btext = (surface == "B" || surface == "b");
 		f_s =
 			(bottom_slope=="bold")        ? "Liberation Sans:style=Bold"
@@ -5997,9 +6007,9 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, top_
 		  : "Liberation Sans";
 
 		horiz =
-			(left_slope=="left")   ? "left"
-		  : (left_slope=="center") ? "center"
-		  : (left_slope=="right")  ? "right"
+			(rotation=="left")   ? "left"
+		  : (rotation=="center") ? "center"
+		  : (rotation=="right")  ? "right"
 		  : "left";
 
 		vert =
