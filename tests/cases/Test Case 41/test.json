@@ -5,6 +5,7 @@
     {
       "label": "keyguard and frame",
       "params": "Test Case 41",
+      "params_override": { "show_oa_highlights": "yes" },
       "vpt": [1, 1, 1],
       "vpr": [30, 0, 0],
       "vpd": 500,
