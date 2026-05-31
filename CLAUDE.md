@@ -295,6 +295,13 @@ It only needs to be present when this feature is in use.
 
 ### Open Items
 
+- [ ] (Clean-up) Remove or gate explicit `color()` calls on specialty output types (cell inserts
+  render bright green; laser-cut keyguards and other `generate=` modes may have similar colouring).
+  These calls have no effect on STL/print output but cause the web-app's visual reference
+  comparisons to score ~20% mismatch for affected test cases (STL carries no colour data).
+  After removing, re-run `update visual references` and `compare visual references` in the
+  web-app project to confirm the affected cases improve. Also audit frames, clips, SVG-layer
+  output, etc. for similar explicit colouring.
 - [ ] (Clean-up) Go through all `translate` statements and ensure fudge is included where necessary (should be possible to make it as small as 0.001)
 - [ ] (Low) "ridge around cells" doesn't play well with "cell top edge slope" and bottom edge slope
 - [x] (Medium v67) Make snap-in tabs a function of the screen area thickness, not keyguard thickness. Test case 17: snap-in features not playing well with screen area thickness (keyguard frame thickness=10, keyguard thickness=6, screen area thickness=4, keyguard height=119). It's currently possible to omit snap-in tabs on the top and/or bottom — that may resolve this if keyguard width is large enough to exceed screen width.
