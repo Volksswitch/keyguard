@@ -1702,7 +1702,7 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 }
 else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" || m_m=="Slide-in Tabs")){
 	if (only_oa_highlights != "yes") {
-		color("Khaki")
+		color("Turquoise")
 		keyguard("no");
 	}
 
@@ -1750,7 +1750,7 @@ else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame 
 	}
 }
 else if (generate=="horizontal clip"){
-	color("lime")
+	color("Turquoise")
 	if (unequal_left_side_of_case == 0){
 		create_clip(h_clip_reach,horizontal_clip_width);
 	}
@@ -1771,7 +1771,7 @@ else if (generate=="horizontal clip"){
 	}
 }
 else if (generate=="vertical clip"){
-	color("lime")
+	color("Turquoise")
 	if (unequal_bottom_side_of_case == 0){
 		create_clip(v_clip_reach,vertical_clip_width);
 	}
@@ -1792,7 +1792,7 @@ else if (generate=="vertical clip"){
 	}
 }
 else if (generate=="horizontal mini clip"){
-	color("lime")
+	color("Turquoise")
 	if (unequal_left_side_of_case == 0){
 		create_mini_clip1(h_clip_reach,horizontal_clip_width);
 	}
@@ -1813,7 +1813,7 @@ else if (generate=="horizontal mini clip"){
 	}
 }
 else if (generate=="vertical mini clip"){
-	color("lime")
+	color("Turquoise")
 	if (unequal_bottom_side_of_case == 0){
 		create_mini_clip1(v_clip_reach,vertical_clip_width);
 	}
@@ -1834,7 +1834,7 @@ else if (generate=="vertical mini clip"){
 	}
 }
 else if (generate=="horizontal micro clip"){
-	color("lime")
+	color("Turquoise")
 	if (unequal_left_side_of_case == 0){
 		create_mini_clip2(h_clip_reach,horizontal_clip_width);
 	}
@@ -1855,7 +1855,7 @@ else if (generate=="horizontal micro clip"){
 	}
 }
 else if (generate=="vertical micro clip"){
-	color("lime")
+	color("Turquoise")
 	if (unequal_bottom_side_of_case == 0){
 		create_mini_clip2(v_clip_reach,vertical_clip_width);
 	}
@@ -1972,7 +1972,7 @@ else if (generate=="cell insert" && is_laser_cut){
 }
 else if (generate=="cell insert" && !is_laser_cut){ //cell inserts
 	rotation = (Braille_text=="") ? -90 : 0;
-	color("LawnGreen")
+	color("Turquoise")
 	rotate([rotation,0,0])
 	create_cell_insert();
 }
