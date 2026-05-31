@@ -898,6 +898,14 @@ run_visual() {
     [[ -z "$COMPARE" && -n "$PYTHON" ]] && warn "ImageMagick not found — using Python RMSE fallback (install ImageMagick for best results)"
     "$CAPTURE_REFERENCES" && info "Mode: capturing reference images"
 
+    # Progress log — capture-references mode only. One clean line per step, no ANSI codes.
+    # Mirrors golden-stl-stats-progress.log so both long-running capture jobs are tail -f-able.
+    local capture_progress_log=""
+    if "$CAPTURE_REFERENCES"; then
+        capture_progress_log="$PROJECT_ROOT/capture-references-progress.log"
+        : > "$capture_progress_log"
+    fi
+
     local cases; mapfile -t cases < <(get_test_cases)
     if [[ ${#cases[@]} -eq 0 ]]; then
         warn "No test cases found in tests/cases/ — nothing to run"
@@ -905,6 +913,7 @@ run_visual() {
         return
     fi
     info "Found ${#cases[@]} test case(s)"
+    [[ -n "$capture_progress_log" ]] && info "Progress log: capture-references-progress.log (tail -f)"
     [[ -n "$CASE_FILTER" ]] && info "Filter: '$CASE_FILTER'"
 
     # Create a timestamped results directory for this run
@@ -1061,6 +1070,7 @@ run_visual() {
                 case_ok=false
                 case_step_failed=$((case_step_failed + 1))
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | TIMED OUT (>${RENDER_TIMEOUT}s) |"$'\n'
+                [[ -n "$capture_progress_log" ]] && printf "%-35s  %-30s  TIMED OUT\n" "$case_name" "$STEP_LABEL" >> "$capture_progress_log"
                 log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"timed_out\",\"rmse\":null,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
                 continue
             fi
@@ -1070,6 +1080,7 @@ run_visual() {
                 case_ok=false
                 case_step_failed=$((case_step_failed + 1))
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | RENDER FAILED |"$'\n'
+                [[ -n "$capture_progress_log" ]] && printf "%-35s  %-30s  RENDER FAILED\n" "$case_name" "$STEP_LABEL" >> "$capture_progress_log"
                 log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"render_failed\",\"rmse\":null,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
                 continue
             fi
@@ -1081,6 +1092,7 @@ run_visual() {
                 echo -e " ${GREEN}CAPTURED${RESET}"
                 case_step_captured=$((case_step_captured + 1))
                 case_rows+="| $((i+1))/$step_count | $STEP_LABEL | CAPTURED |"$'\n'
+                [[ -n "$capture_progress_log" ]] && printf "%-35s  %-30s  CAPTURED (%ds)\n" "$case_name" "$STEP_LABEL" "$t_step_elapsed" >> "$capture_progress_log"
                 log_event "{\"event\":\"step\",\"run\":\"$(json_str "$run_label")\",\"case\":\"$(json_str "$case_name")\",\"step\":$((i+1)),\"step_count\":$step_count,\"label\":\"$(json_str "$STEP_LABEL")\",\"status\":\"captured\",\"rmse\":null,\"duration_s\":$t_step_elapsed,\"ts\":\"$(iso_ts)\"}"
                 continue
             fi
