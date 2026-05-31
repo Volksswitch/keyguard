@@ -1,7 +1,6 @@
 {
   "description": "standard posts mount",
   "openings": "openings_and_additions.txt",
-  "screenshot": "default.svg",
   "steps": [
     {
       "label": "base design",

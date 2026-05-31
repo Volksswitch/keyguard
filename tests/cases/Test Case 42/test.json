@@ -1,7 +1,6 @@
 {
   "description": "standard posts mount with both upper bars – single post extends from left to right",
   "openings": "openings_and_additions.txt",
-  "screenshot": "default.svg",
   "steps": [
     {
       "label": "base model",
