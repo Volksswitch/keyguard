@@ -5,6 +5,7 @@
     {
       "label": "top view",
       "params": "Test Case 53",
+      "geometry": false,
       "vpt": [-6.37589, 6.766, -26.4954],
       "vpr": [43.8, 0, 11.7],
       "vpd": 600,
