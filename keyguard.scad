@@ -1750,129 +1750,144 @@ else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame 
 	}
 }
 else if (generate=="horizontal clip"){
-	color("Turquoise")
-	if (unequal_left_side_of_case == 0){
-		create_clip(h_clip_reach,horizontal_clip_width);
-	}
-	else{  //if unequal_left_side_of_case>0 then assume that there is a case
-		clip_reach_left = unequal_left_side_of_case + 5;
+	// Clips and cell inserts have no O&A highlights — suppress the geometry in
+	// the web app's highlights-only pass so the pink overlay doesn't wash out
+	// the Turquoise body and make it appear grey.
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
+		if (unequal_left_side_of_case == 0){
+			create_clip(h_clip_reach,horizontal_clip_width);
+		}
+		else{  //if unequal_left_side_of_case>0 then assume that there is a case
+			clip_reach_left = unequal_left_side_of_case + 5;
 
-		clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
+			clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
 
-		//left side clip
-		translate([-clip_display_separation,0,horizontal_clip_width])
-		rotate([0,180,0])
-		translate([0,case_thickness/2+clip_display_gap,0])
-		create_clip(clip_reach_left,horizontal_clip_width);
+			//left side clip
+			translate([-clip_display_separation,0,horizontal_clip_width])
+			rotate([0,180,0])
+			translate([0,case_thickness/2+clip_display_gap,0])
+			create_clip(clip_reach_left,horizontal_clip_width);
 
-		//right side clip
-		translate([0,-case_thickness/2-clip_display_gap,0])
-		create_clip(clip_reach_right,horizontal_clip_width);
+			//right side clip
+			translate([0,-case_thickness/2-clip_display_gap,0])
+			create_clip(clip_reach_right,horizontal_clip_width);
+		}
 	}
 }
 else if (generate=="vertical clip"){
-	color("Turquoise")
-	if (unequal_bottom_side_of_case == 0){
-		create_clip(v_clip_reach,vertical_clip_width);
-	}
-	else{  //if unequal_bottom_side_of_case>0 then assume that there is a case
-		clip_reach_bottom = unequal_bottom_side_of_case + 5;
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
+		if (unequal_bottom_side_of_case == 0){
+			create_clip(v_clip_reach,vertical_clip_width);
+		}
+		else{  //if unequal_bottom_side_of_case>0 then assume that there is a case
+			clip_reach_bottom = unequal_bottom_side_of_case + 5;
 
-		clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
+			clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
 
-		//top side clip
-		translate([-clip_display_separation,0,vertical_clip_width])
-		rotate([0,180,0])
-		translate([0,case_thickness/2+clip_display_gap,0])
-		create_clip(clip_reach_bottom,vertical_clip_width);
+			//top side clip
+			translate([-clip_display_separation,0,vertical_clip_width])
+			rotate([0,180,0])
+			translate([0,case_thickness/2+clip_display_gap,0])
+			create_clip(clip_reach_bottom,vertical_clip_width);
 
-		//bottom side clip
-		translate([0,-case_thickness/2-clip_display_gap,0])
-		create_clip(clip_reach_top,vertical_clip_width);
+			//bottom side clip
+			translate([0,-case_thickness/2-clip_display_gap,0])
+			create_clip(clip_reach_top,vertical_clip_width);
+		}
 	}
 }
 else if (generate=="horizontal mini clip"){
-	color("Turquoise")
-	if (unequal_left_side_of_case == 0){
-		create_mini_clip1(h_clip_reach,horizontal_clip_width);
-	}
-	else{  //if unequal_left_side_of_case>0 then assume that there is a case
-		clip_reach_left = unequal_left_side_of_case + 5;
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
+		if (unequal_left_side_of_case == 0){
+			create_mini_clip1(h_clip_reach,horizontal_clip_width);
+		}
+		else{  //if unequal_left_side_of_case>0 then assume that there is a case
+			clip_reach_left = unequal_left_side_of_case + 5;
 
-		clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
+			clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
 
-		//left side clip
-		translate([-clip_display_separation,0,horizontal_clip_width])
-		rotate([0,180,0])
-		translate([0,case_thickness/2+clip_display_gap,0])
-		create_mini_clip1(clip_reach_left,horizontal_clip_width);
+			//left side clip
+			translate([-clip_display_separation,0,horizontal_clip_width])
+			rotate([0,180,0])
+			translate([0,case_thickness/2+clip_display_gap,0])
+			create_mini_clip1(clip_reach_left,horizontal_clip_width);
 
-		//right side clip
-		translate([0,-case_thickness/2-clip_display_gap,0])
-		create_mini_clip1(clip_reach_right,horizontal_clip_width);
+			//right side clip
+			translate([0,-case_thickness/2-clip_display_gap,0])
+			create_mini_clip1(clip_reach_right,horizontal_clip_width);
+		}
 	}
 }
 else if (generate=="vertical mini clip"){
-	color("Turquoise")
-	if (unequal_bottom_side_of_case == 0){
-		create_mini_clip1(v_clip_reach,vertical_clip_width);
-	}
-	else{  //if unequal_bottom_side_of_case>0 then assume that there is a case
-		clip_reach_bottom = unequal_bottom_side_of_case + 5;
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
+		if (unequal_bottom_side_of_case == 0){
+			create_mini_clip1(v_clip_reach,vertical_clip_width);
+		}
+		else{  //if unequal_bottom_side_of_case>0 then assume that there is a case
+			clip_reach_bottom = unequal_bottom_side_of_case + 5;
 
-		clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
+			clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
 
-		//left side clip
-		translate([-clip_display_separation,0,vertical_clip_width,vertical_clip_width])
-		rotate([0,180,0])
-		translate([0,case_thickness/2+clip_display_gap,0])
-		create_mini_clip1(clip_reach_bottom,vertical_clip_width);
+			//left side clip
+			translate([-clip_display_separation,0,vertical_clip_width,vertical_clip_width])
+			rotate([0,180,0])
+			translate([0,case_thickness/2+clip_display_gap,0])
+			create_mini_clip1(clip_reach_bottom,vertical_clip_width);
 
-		//right side clip
-		translate([0,-case_thickness/2-clip_display_gap,0])
-		create_mini_clip1(clip_reach_top,vertical_clip_width);
+			//right side clip
+			translate([0,-case_thickness/2-clip_display_gap,0])
+			create_mini_clip1(clip_reach_top,vertical_clip_width);
+		}
 	}
 }
 else if (generate=="horizontal micro clip"){
-	color("Turquoise")
-	if (unequal_left_side_of_case == 0){
-		create_mini_clip2(h_clip_reach,horizontal_clip_width);
-	}
-	else{  //if unequal_left_side_of_case>0 then assume that there is a case
-		clip_reach_left = unequal_left_side_of_case + 5;
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
+		if (unequal_left_side_of_case == 0){
+			create_mini_clip2(h_clip_reach,horizontal_clip_width);
+		}
+		else{  //if unequal_left_side_of_case>0 then assume that there is a case
+			clip_reach_left = unequal_left_side_of_case + 5;
 
-		clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
+			clip_reach_right = case_width-kw-unequal_left_side_of_case+5;
 
-		//left side clip
-		translate([-clip_display_separation,0,horizontal_clip_width])
-		rotate([0,180,0])
-		translate([0,case_thickness/2+clip_display_gap,0])
-		create_mini_clip2(clip_reach_left,horizontal_clip_width);
+			//left side clip
+			translate([-clip_display_separation,0,horizontal_clip_width])
+			rotate([0,180,0])
+			translate([0,case_thickness/2+clip_display_gap,0])
+			create_mini_clip2(clip_reach_left,horizontal_clip_width);
 
-		//right side clip
-		translate([0,-case_thickness/2-clip_display_gap,0])
-		create_mini_clip2(clip_reach_right,horizontal_clip_width);
+			//right side clip
+			translate([0,-case_thickness/2-clip_display_gap,0])
+			create_mini_clip2(clip_reach_right,horizontal_clip_width);
+		}
 	}
 }
 else if (generate=="vertical micro clip"){
-	color("Turquoise")
-	if (unequal_bottom_side_of_case == 0){
-		create_mini_clip2(v_clip_reach,vertical_clip_width);
-	}
-	else{  //if unequal_bottom_side_of_case>0 then assume that there is a case
-		clip_reach_bottom = unequal_bottom_side_of_case + 5;
+	if (only_oa_highlights != "yes") {
+		color("Turquoise")
+		if (unequal_bottom_side_of_case == 0){
+			create_mini_clip2(v_clip_reach,vertical_clip_width);
+		}
+		else{  //if unequal_bottom_side_of_case>0 then assume that there is a case
+			clip_reach_bottom = unequal_bottom_side_of_case + 5;
 
-		clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
+			clip_reach_top = case_height-kh-unequal_bottom_side_of_case+5;
 
-		//left side clip
-		translate([-clip_display_separation,0,vertical_clip_width,vertical_clip_width])
-		rotate([0,180,0])
-		translate([0,case_thickness/2+clip_display_gap,0])
-		create_mini_clip2(clip_reach_bottom,vertical_clip_width);
+			//left side clip
+			translate([-clip_display_separation,0,vertical_clip_width,vertical_clip_width])
+			rotate([0,180,0])
+			translate([0,case_thickness/2+clip_display_gap,0])
+			create_mini_clip2(clip_reach_bottom,vertical_clip_width);
 
-		//right side clip
-		translate([0,-case_thickness/2-clip_display_gap,0])
-		create_mini_clip2(clip_reach_top,vertical_clip_width);
+			//right side clip
+			translate([0,-case_thickness/2-clip_display_gap,0])
+			create_mini_clip2(clip_reach_top,vertical_clip_width);
+		}
 	}
 }
 else if (generate=="keyguard frame" && has_frame && !is_laser_cut){
@@ -1971,10 +1986,12 @@ else if (generate=="cell insert" && is_laser_cut){
 	echo();
 }
 else if (generate=="cell insert" && !is_laser_cut){ //cell inserts
-	rotation = (Braille_text=="") ? -90 : 0;
-	color("Turquoise")
-	rotate([rotation,0,0])
-	create_cell_insert();
+	if (only_oa_highlights != "yes") {
+		rotation = (Braille_text=="") ? -90 : 0;
+		color("Turquoise")
+		rotate([rotation,0,0])
+		create_cell_insert();
+	}
 }
 else { //Customizer settings
 	echo_settings();
