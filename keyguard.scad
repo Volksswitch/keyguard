@@ -1723,6 +1723,13 @@ else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" 
 		}
 	}
 }
+else if (is_laser_cut && generate=="first layer for SVG/DXF file" && has_frame){
+	echo();
+	echo();
+	echo("************ Laser-cut keyguard frames are not supported ************");
+	echo();
+	echo();
+}
 else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame && (mounting_method=="No Mount" || mounting_method=="Slide-in Tabs")){
 	if (only_oa_highlights != "yes") {
 		color("DarkSeaGreen")
