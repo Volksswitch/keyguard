@@ -1,0 +1,54 @@
+{
+  "description": "Talk Pad 8 – sloped keyguard edge with slope_gap (thicker keyguard, KT=10). One step per PPTX slope_gap scenario.",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "slope_gap, starting height 0, case_to_slope_depth 0 (PPTX slide 2)",
+      "params": "Test Case 58a",
+      "vpt": [52.3839, 13.3431, 10.3857],
+      "vpr": [103.3, 0, 25.7],
+      "vpd": 200,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "slope_gap, starting height positive, case_to_slope_depth 0 (PPTX slide 3)",
+      "params": "Test Case 58b",
+      "vpt": [52.3839, 13.3431, 10.3857],
+      "vpr": [103.3, 0, 25.7],
+      "vpd": 200,
+      "expected": "step2_expected.png"
+    },
+    {
+      "label": "slope_gap, starting height positive, csd greater than slope_gap (PPTX slide 4)",
+      "params": "Test Case 58c",
+      "vpt": [52.3839, 13.3431, 10.3857],
+      "vpr": [103.3, 0, 25.7],
+      "vpd": 200,
+      "expected": "step3_expected.png"
+    },
+    {
+      "label": "slope_gap, starting height positive, slope_gap greater than csd (PPTX slide 5)",
+      "params": "Test Case 58d",
+      "vpt": [52.3839, 13.3431, 10.3857],
+      "vpr": [103.3, 0, 25.7],
+      "vpd": 200,
+      "expected": "step4_expected.png"
+    },
+    {
+      "label": "slope_gap, starting height 0, csd greater than slope_gap (PPTX slide 6)",
+      "params": "Test Case 58e",
+      "vpt": [52.3839, 13.3431, 10.3857],
+      "vpr": [103.3, 0, 25.7],
+      "vpd": 200,
+      "expected": "step5_expected.png"
+    },
+    {
+      "label": "slope_gap, starting height 0, slope_gap greater than csd (PPTX slide 7)",
+      "params": "Test Case 58f",
+      "vpt": [52.3839, 13.3431, 10.3857],
+      "vpr": [103.3, 0, 25.7],
+      "vpd": 200,
+      "expected": "step6_expected.png"
+    }
+  ]
+}
