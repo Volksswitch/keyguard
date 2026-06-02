@@ -399,6 +399,8 @@ starting_corner_for_screen_measurements = "upper-left"; //[upper-left, lower-lef
 /*[Special Actions and Settings]*/
 // set this option to "no" before rendering your design
 include_screenshot = "no"; //[yes,no]
+//screenshot SVG file name
+screenshot_file = "screenshot.svg";
 keyguard_display_angle = 0; // [0,30,45,60,75,90]
 unequal_left_side_of_case_opening = 0.0; // .1
 unequal_bottom_side_of_case_opening = 0.0; // .1
@@ -424,16 +426,14 @@ use_Laser_Cutting_best_practices = "yes"; // [yes,no]
 other_tablet_general_sizes = "";
 //3 entries e.g., 1000,1500,0.100
 other_tablet_pixel_sizes = "";
-//for use with Maker World's online customizer
+//O&A file alternative
 my_screen_openings = "";
-//for use with Maker World's online customizer
+//O&A file alternative
 my_case_openings = "";
-//for use with Maker World's online customizer
+//O&A file alternative
 my_case_additions = "";
-//for use with Maker World's online customizer
+//O&A file alternative
 my_tablet_openings = "";
-//for use with Maker World's online customizer
-screenshot_file = "default.svg";
 
 
 
