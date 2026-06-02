@@ -207,7 +207,7 @@ commonly adjusted ones are:
 | `have_a_case` | `"yes"` | Whether the tablet is in a case |
 | `keyguard_thickness` | `4.0` | Overall keyguard thickness in mm |
 | `include_screenshot` | `"no"` | Set to `"yes"` to import `default.svg` as a fit-test layer |
-| `screenshot_file` | `"default.svg"` | Filename of the SVG screenshot to import |
+| `screenshot_filename` | `"screenshot.svg"` | Filename of the SVG screenshot to import |
 
 ---
 
@@ -241,7 +241,7 @@ When `include_screenshot = "yes"`, the designer imports `default.svg` (a screens
 tablet app the keyguard is being designed for) as a 2D layer to help verify that cutout
 positions align with the on-screen targets.
 
-**The file must be named exactly `default.svg`** (hardcoded in `screenshot_file`).
+**The filename is set by the `screenshot_filename` parameter** (default `"screenshot.svg"`).
 It only needs to be present when this feature is in use.
 
 ---
