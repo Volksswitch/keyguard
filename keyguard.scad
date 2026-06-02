@@ -401,7 +401,7 @@ starting_corner_for_screen_measurements = "upper-left"; //[upper-left, lower-lef
 // set this option to "no" before rendering your design
 include_screenshot = "no"; //[yes,no]
 //screenshot SVG file name
-screenshot_file = "screenshot.svg";
+screenshot_filename = "screenshot.svg";
 keyguard_display_angle = 0; // [0,30,45,60,75,90]
 unequal_left_side_of_case_opening = 0.0; // .1
 unequal_bottom_side_of_case_opening = 0.0; // .1
@@ -7446,7 +7446,7 @@ module show_screenshot(thickness){
 	translate([msh,msv,-thickness/2-0.5])
 	resize([swm,shm,0])
 	offset(delta = .005)
-	import(file=screenshot_file,center=true);
+	import(file=screenshot_filename,center=true);
 }
 
 // Imports and displays the screenshot SVG as a linearly extruded (solid) overlay
@@ -7458,7 +7458,7 @@ module show_screenshotMW(thickness){
 	linear_extrude(height=.5)   // necessary to make screenshot visible on Maker World
 	resize([swm,shm,0])
 	offset(delta = .005)
-	import(file=screenshot_file,center=true);
+	import(file=screenshot_filename,center=true);
 }
 
 // Places engraved or embossed text on the keyguard by delegating to cut_opening()

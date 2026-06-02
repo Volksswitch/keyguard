@@ -1,7 +1,6 @@
 {
-  "description": "screenshot SVG",
+  "description": "screenshot SVG - not a test anymore",
   "openings": "openings_and_additions.txt",
-  "screenshot": "default.svg",
   "steps": [
     {
       "label": "full view",
