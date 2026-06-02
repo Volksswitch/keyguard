@@ -352,6 +352,7 @@ sloped_edge_starting_height = 1.0; //.1
 horizontal_sloped_edge_width = 10.0; //.1
 vertical_sloped_edge_width = 10.0; //.1
 case_to_slope_depth = 0.0; //.1
+slope_gap = 0.0; //.1
 extend_lip_to_edge_of_case = "no"; //[yes,no]
 
 
@@ -1331,6 +1332,7 @@ strap_cut_to_depth = 9.25 - 3.1 - 3.5; // length of bolt - thickness of acrylic 
 hsew = horizontal_sloped_edge_width;
 vsew = vertical_sloped_edge_width;
 sew = min(hsew, vsew); // backward-compatible alias used in openings_and_additions.txt
+sg = max(slope_gap, 0); // vertical lift of the sloped face to open a tape gap (non-negative)
 
 
 // general case mount veriables
@@ -6406,23 +6408,30 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 		
 		if (is_3d_printed && add_sloped_keyguard_edge=="yes"){
 			difference(){
-				translate([0,0,-fudge])
-				case_opening_blank(widt+5,heig+5,radi,case_to_screen_depth+fudge*2,cheat);
-				
+				union(){
+					translate([0,0,-fudge])
+					case_opening_blank(widt+5,heig+5,radi,case_to_screen_depth+fudge*2,cheat);
+
+					// slope_gap lifts the sloped face by sg; extend the carve only over the
+					// slope footprint (not the lip) so the lip recess stays governed by csd
+					translate([0,0,case_to_screen_depth-fudge])
+					case_opening_blank(cow+hsew*2,coh+vsew*2,[cocr+sew,cocr+sew,cocr+sew,cocr+sew],sg+fudge*2,cheat);
+				}
+
 				union(){
 					hull(){
-						translate([0,0,case_to_screen_depth+fudge])
+						translate([0,0,case_to_screen_depth+sg+fudge])
 						linear_extrude(height=ff)
 						offset(r=cocr+sew)
 						square([cow-cocr*2 + 2*(hsew-sew), coh-cocr*2 + 2*(vsew-sew)],true);
 
-						translate([0,0,sloped_edge_starting_height])
+						translate([0,0,sloped_edge_starting_height+sg])
 						linear_extrude(height=ff)
 						offset(r=cocr)
 						square([cow-cocr*2,coh-cocr*2],true);
 					}
-								
-					linear_extrude(height=sloped_edge_starting_height)
+
+					linear_extrude(height=sloped_edge_starting_height+sg)
 					offset(r=cocr)
 					square([cow-cocr*2,coh-cocr*2],true);
 				}
@@ -7800,6 +7809,7 @@ module echo_settings(){
 		if (horizontal_sloped_edge_width != 10) echo(horizontal_sloped_edge_width = horizontal_sloped_edge_width);
 		if (vertical_sloped_edge_width != 10) echo(vertical_sloped_edge_width = vertical_sloped_edge_width);
 		if (case_to_slope_depth != 0) echo(case_to_slope_depth = case_to_slope_depth);
+		if (slope_gap != 0) echo(slope_gap = slope_gap);
 		if (extend_lip_to_edge_of_case != "no") echo(extend_lip_to_edge_of_case = extend_lip_to_edge_of_case);
 		echo();
 		echo();
