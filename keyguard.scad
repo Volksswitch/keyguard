@@ -510,10 +510,8 @@ if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt, vpt=
 //   tablet selection → screen/case geometry → grid geometry → bar geometry →
 //   cell geometry → opening/addition helpers → mounting geometry → text/SVG helpers
 
-keyguard_designer_version = 78; //*****************************
+keyguard_designer_version = 79; //*****************************
 
-// if this is the "MW" version for Maker World set this statement to true and comment the include statement before start of Main
-MW_version = false;
 
 // Boolean shorthands for the most-used string comparisons.
 // Use these in conditionals instead of comparing against string literals
@@ -526,7 +524,7 @@ has_frame         = (have_a_keyguard_frame == "yes");
 is_landscape      = (orientation == "landscape");
 using_px          = (unit_of_measure_for_screen == "px");
 lc_best_practices = (use_Laser_Cutting_best_practices == "yes");
-screenshotcolor = (MW_version) ? "white" : "magenta";
+screenshotcolor = "magenta";
 
 // the "true" outcome of the following line of code is for controling keyguard frame mounting options
 // orientation = (generate=="keyguard frame") ? "landscape" : orientation;
@@ -1684,12 +1682,7 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 
 	if (only_oa_highlights != "yes") {
 		if (include_screenshot=="yes"){
-			if (MW_version){
-				show_screenshotMW(kt);
-			}
-			else{
-				show_screenshot(kt);
-			}
+			show_screenshot(kt);
 		}
 	}
 
@@ -1714,12 +1707,7 @@ else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" 
 		issues();
 
 		if (include_screenshot=="yes"){
-			if (MW_version){
-				show_screenshotMW(acrylic_thickness);
-			}
-			else{
-				show_screenshot(acrylic_thickness);
-			}
+			show_screenshot(acrylic_thickness);
 		}
 	}
 }
@@ -1747,12 +1735,7 @@ else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame 
 		key_settings();
 
 		if (include_screenshot=="yes"){
-			if (MW_version){
-				show_screenshotMW(acrylic_thickness);
-			}
-			else{
-				show_screenshot(acrylic_thickness);
-			}
+			show_screenshot(acrylic_thickness);
 		}
 	}
 }
@@ -1916,12 +1899,7 @@ else if (generate=="keyguard frame" && has_frame && !is_laser_cut){
 
 	if (only_oa_highlights != "yes") {
 		if (include_screenshot=="yes"){
-			if (MW_version){
-				show_screenshotMW(keyguard_frame_thickness);
-			}
-			else{
-				show_screenshot(keyguard_frame_thickness);
-			}
+			show_screenshot(keyguard_frame_thickness);
 		}
 	}
 
