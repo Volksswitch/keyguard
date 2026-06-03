@@ -286,6 +286,20 @@ It only needs to be present when this feature is in use.
   required per [[project_scad_worktree_longpath]]). Worktree on the laptop where the branch
   was authored is at `C:\kg-wt\undercut-extender`.
 
+### Backward-Compatibility Notes
+
+- **`mounting_method = "- none -"`** (renamed from `"No Mount"`, 2026-06-03). No normalization
+  shim exists in `keyguard.scad` — the code only recognises `"- none -"`. OpenSCAD's Customizer
+  silently maps an unrecognised preset value to the first dropdown option, so user-held `.json`
+  presets self-heal on load. Two paths could still pass the old string to the WASM renderer and
+  produce incorrect output: (1) command-line `-D 'mounting_method="No Mount"'`; (2) the web app
+  forwarding a saved `"No Mount"` value directly to WASM. If either surfaces as a bug, add a
+  normalization variable near the top of `keyguard.scad`:
+  ```openscad
+  _mm_norm = (mounting_method == "No Mount") ? "- none -" : mounting_method;
+  ```
+  and thread `_mm_norm` through all comparison sites.
+
 ### Priority Key
 - **(Clean-up)** — tidy when 2+ months between releases
 - **(Low)** — wait until reported as a problem
