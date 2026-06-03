@@ -251,7 +251,7 @@ hide_grid_region = "no"; //[yes,no]
 
 
 /*[Mounting Method]*/
-mounting_method = "No Mount"; // [No Mount,Suction Cups,Velcro,Screw-on Straps,Clip-on Straps,Posts,Shelf,Slide-in Tabs,Raised Tabs]
+mounting_method = "- none -"; // [- none -,Suction Cups,Velcro,Screw-on Straps,Clip-on Straps,Posts,Shelf,Slide-in Tabs,Raised Tabs]
 
 
 /*[Velcro Info]*/
@@ -549,7 +549,7 @@ rs_inc_acrylic = (is_3d_printed) ? cell_edge_slope : 90;
 bar_edge_slope_inc_acrylic = (is_3d_printed) ? bar_edge_slope : 90;
 m_m = (is_3d_printed)  ? mounting_method :
 	(is_laser_cut && mounting_method=="Slide-in Tabs") ? "Slide-in Tabs" :
-	"No Mount";
+	"- none -";
 hbes = (is_3d_printed) ? home_button_edge_slope : 90;
 
 
@@ -1695,7 +1695,7 @@ else if (is_3d_printed && (generate=="keyguard" || generate=="first half of keyg
 	if (($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes") && show_split_line=="yes")
 		show_line_split_location();
 }
-else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="No Mount" || m_m=="Slide-in Tabs")){
+else if (is_laser_cut && generate=="keyguard" && !has_frame && (m_m=="- none -" || m_m=="Slide-in Tabs")){
 	if (only_oa_highlights != "yes") {
 		color("Turquoise")
 		keyguard("no");
@@ -1720,7 +1720,7 @@ else if (is_laser_cut && generate=="first layer for SVG/DXF file" && has_frame){
 	echo();
 	echo();
 }
-else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame && (mounting_method=="No Mount" || mounting_method=="Slide-in Tabs")){
+else if (is_laser_cut && generate=="first layer for SVG/DXF file" && !has_frame && (mounting_method=="- none -" || mounting_method=="Slide-in Tabs")){
 	if (only_oa_highlights != "yes") {
 		color("DarkSeaGreen")
 		render()
@@ -7709,7 +7709,7 @@ module echo_settings(){
 		echo();
 
 	echo("---- Mounting Method ----");
-		if (mounting_method != "No Mount") echo(mounting_method = mounting_method);
+		if (mounting_method != "- none -") echo(mounting_method = mounting_method);
 		echo();
 		echo();
 
