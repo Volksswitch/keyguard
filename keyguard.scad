@@ -1985,6 +1985,20 @@ else if (generate=="cell insert" && !is_laser_cut){ //cell inserts
 		create_cell_insert();
 	}
 }
+else if (is_laser_cut && mounting_method=="Raised Tabs"){
+	echo();
+	echo();
+	echo("************ Raised Tabs are not supported for laser-cut keyguards ************");
+	echo();
+	echo();
+}
+else if (is_laser_cut && mounting_method=="Clip-on Straps"){
+	echo();
+	echo();
+	echo("************ Clip-on Straps are not supported for laser-cut keyguards ************");
+	echo();
+	echo();
+}
 else { //Customizer settings
 	echo_settings();
 }
