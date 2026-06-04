@@ -276,15 +276,7 @@ It only needs to be present when this feature is in use.
 
 ### Pending Uncommitted Branches (do not lose track of these)
 
-- **`undercut-extender`** (commit `08b454f`, parented at `main@39ffdf0`, 2026-05-28). Fixes
-  `screen_through_cut_extender` gouging undercut slopes on screen through-cuts (Ken's TC5
-  row `[10,"r",100,150,20,400,600,0,"L","T",0,0,[60,80,-45,30],[]]`). Visually verified on a
-  focused row-10 CGAL render (Simple: yes; gouge gone). **NOT yet tested:** full `--visual`
-  suite, `--geometry` golden refresh. **Do not merge to main** until both are green. The
-  branch lives in OneDrive's `.git/`, so to resume on the other machine: `git worktree add
-  C:\kg-wt\undercut-extender undercut-extender` (or check it out wherever; short path is
-  required per [[project_scad_worktree_longpath]]). Worktree on the laptop where the branch
-  was authored is at `C:\kg-wt\undercut-extender`.
+_(none currently)_
 
 ### Backward-Compatibility Notes
 
@@ -309,13 +301,8 @@ It only needs to be present when this feature is in use.
 
 ### Open Items
 
-- [ ] (Clean-up) Remove or gate explicit `color()` calls on specialty output types (cell inserts
-  render bright green; laser-cut keyguards and other `generate=` modes may have similar colouring).
-  These calls have no effect on STL/print output but cause the web-app's visual reference
-  comparisons to score ~20% mismatch for affected test cases (STL carries no colour data).
-  After removing, re-run `update visual references` and `compare visual references` in the
-  web-app project to confirm the affected cases improve. Also audit frames, clips, SVG-layer
-  output, etc. for similar explicit colouring.
+- [x] (Clean-up) Remove or gate explicit `color()` calls on specialty output types — normalised to
+  Turquoise for all non-SVG/DXF output (e640262 + visual refs updated 72f8712, 2026-06-04)
 - [ ] (Clean-up) Go through all `translate` statements and ensure fudge is included where necessary (should be possible to make it as small as 0.001)
 - [ ] (Low) "ridge around cells" doesn't play well with "cell top edge slope" and bottom edge slope
 - [x] (Medium v67) Make snap-in tabs a function of the screen area thickness, not keyguard thickness. Test case 17: snap-in features not playing well with screen area thickness (keyguard frame thickness=10, keyguard thickness=6, screen area thickness=4, keyguard height=119). It's currently possible to omit snap-in tabs on the top and/or bottom — that may resolve this if keyguard width is large enough to exceed screen width.
@@ -331,7 +318,7 @@ It only needs to be present when this feature is in use.
 - [ ] (Medium) Too many variables calculating borders and offsets with overlapping definitions
 - [ ] (Medium) Why don't the offsets need to be part of the `case_xy0` values as well?
 - [ ] (Low) Hiding the screen region doesn't play well with 2D rendering
-- [ ] (Low) Add support for a centre-anchored vertical, horizontal, and angled ridge
+- [x] (Low) Add support for a centre-anchored vertical, horizontal, and angled ridge — C-anchor added for hridge, vridge, angled ridge, rridge (9af16c3)
 - [ ] (Low) Test Case 10 — fillet shouldn't be in the first layer because it's removed by a `-f2` instruction. Low priority because `-` shapes are used to create features that sit up in the air, which is irrelevant for laser-cut keyguards.
 - [x] (Medium) Move all quadrant and edge-based case addition shapes toward their anchor points by `ff` to eliminate the appearance of a small wall or gap on those surfaces
 - [ ] (Low) MakerWorld has three known bugs: (1) displaying a keyguard frame requires `have_a_keyguard_frame="yes"` first or an odd error appears; (2) it ignores shapes less than 1.00001 mm thick when differencing; (3) it ignores anything after a comment even if separated by a carriage return
@@ -358,14 +345,14 @@ Address these one at a time, running the test suite after each change.
 
 ### Medium Priority
 - [x] **Purge V1-flavored parameter names from V2 code paths** (e.g. `top_slope_mm` → `cb_mm`, `bottom_slope_mm` → `thickness_mm`, `left_slope` → `rotation` inside `place_addition_v2` / `cut_opening_v2` and their V2 dispatchers). Leave the V1 `place_addition` / `cut_opening` modules untouched so V1 OA files still process unchanged — the `is_v2()` dispatcher already routes V1 rows there. Also update the guard warning strings to use V2 terms ("invalid length, cb, or thickness" instead of "invalid dimensions or slopes"). Rename one module at a time; after each, run `scripts/test.sh` then a scoped visual on OA-heavy cases (TC3, TC15, TC17, TC18, TC24, TC43, TC47). Watch out for two traps: (1) any named-arg call sites (grep before renaming); (2) the `ttext` branch overloads those slots as font/halign/valign strings, so pick neutral names there. Motivation: the slope-named params caused real diagnostic confusion (2026-05-27 thread on a `vridge` guard). — Done 2026-05-29: `place_addition_v2` only; `cut_opening_v2` skipped (collides with its existing `rotation=0` param + `left_slope` is a real slope there); V2 dispatcher locals also skipped (they're slot-provenance names, not module params).
-- [ ] **Name the magic numbers** — groove dimensions (lines ~1609–1611), clip offsets (~1564), scale factors (~6191–6231), and other unexplained literals should be named constants
+- [ ] **Name the magic numbers** — groove/pedestal/clip constants named (c55873e); scale factors and any remaining unexplained literals may still need attention
 - [ ] **Document array field indices** — `tablet_params[18]`, `tablet_params[21]` etc. are opaque; add a comment block listing what each index means
 - [ ] **Rename cryptic variables** — `sxo`, `xtls`, `ytbs`, `ff`, `sat`, `cts`, `cbs` and similar abbreviations should have clearer names or at least a legend
 - [x] **Add `type_of_tablet` validation** — if the tablet name matches nothing the designer silently falls back to default data; add an echo warning when this happens — warning echo now at line ~807
-- [ ] **Add opening dimension validation** — zero or negative widths/heights in `screen_openings` / `case_openings` fail silently; add guards with informative echoes
-- [ ] **Catch conflicting settings early** — e.g. laser-cut + cell inserts, incompatible frame/case settings — add an explicit validation section near the top
+- [x] **Add opening dimension validation** — zero or negative widths/heights now warn and skip (1e74aee)
+- [ ] **Catch conflicting settings early** — laser-cut + cell inserts and laser-cut + frame now have inline handlers (2803b90, 86fe0e6); remaining incompatible combinations still fall through to echo_settings()
 - [ ] **Deduplicate case additions logic** (lines ~5470–5599) — near-identical `add`/`sub` blocks with trimming logic repeated 4+ times; extract shared logic into a module
-- [ ] **Remove `#` debug modifiers from production code** — `#cut_opening(...)` etc. appear in ~20 locations; safe as examples but risky if copied into active geometry
+- [ ] **Remove `#` debug modifiers from production code** — replaced in O&A context with color() overlays (01e95f4); ~15 remain in built-in geometry (lines ~1900, 2761–2822, 3192, 3239, 7502–7529)
 
 ### Lower Priority
 - [x] **Move version history to `CHANGELOG.md`** — the 493-line header dominates the file; keep only a brief note pointing to the external file
