@@ -1367,6 +1367,11 @@ manual_pedestal_slot_inset = 1.25;  // offset from keyguard edge to groove-slot 
 clip_display_separation = 35; // x-offset to visually separate the two clips in mm
 clip_display_gap = 10;        // extra y-clearance between paired clips beyond case_thickness/2 in mm
 
+// Shared clip body geometry (used by create_clip, create_mini_clip1, create_mini_clip2)
+clip_chamfer_depth = 2;    // edge chamfer depth on all clip variants (mm)
+clip_chamfer_leg   = 2.1;  // chamfer triangle leg — slightly overcuts depth for a clean boolean difference
+clip_spur_profile  = [[0,0],[1,-3],[3,-3],[2,0]]; // grip spur cross-section polygon
+
 pedestal_height = (!has_case)? 0 :
 				  (!has_frame) ? max(case_to_screen_depth - kt,0) :
 				  max(case_to_screen_depth - keyguard_frame_thickness,0);
@@ -6173,9 +6178,18 @@ module aridge(radius, thickness, hi){
 // @param clip_reach  How far the reach leg extends over the case edge in mm
 // @param clip_width  Width of the clip in mm (parallel to the case edge)
 module create_clip(clip_reach,clip_width){
-	base_thickness = 4;
-	clip_thickness = 3;
-	strap_cut = clip_width-4;
+	base_thickness   = 4;
+	clip_thickness   = 3;
+	strap_cut        = clip_width-4;
+	bumper_threshold = 30;    // minimum base length to include bumper recess
+	bumper_x_inset   = 8;    // inset from vertical-leg face to bumper centre
+	bumper_y_inset   = 1;    // inset from inner base face to bumper centre
+	bumper_d         = 11;   // bumper recess diameter
+	bumper_h         = 1.05; // bumper recess depth
+	strap_x_inset    = 7.5;  // distance from base-leg far end to slot centre
+	strap_slot_len   = 15;
+	strap_slot_wid   = 2;
+	strap_slot_y_sep = 5;    // centre-to-centre gap between the two parallel slots
 
 	difference(){
 		union(){
@@ -6194,56 +6208,56 @@ module create_clip(clip_reach,clip_width){
 			//spur
 			translate([-clip_reach,case_thick,0])
 			linear_extrude(height = clip_width)
-			polygon(points=[[0,0],[1,-3],[3,-3],[2,0]]);
+			polygon(points=clip_spur_profile);
 		}
 
 		//chamfers for short edges of reach leg
-		translate([clip_thickness-2,case_thick+clip_thickness-2,-ff])
+		translate([clip_thickness-clip_chamfer_depth,case_thick+clip_thickness-clip_chamfer_depth,-ff])
 		linear_extrude(height = clip_width + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([-clip_reach-ff,case_thick+clip_thickness-2,-ff])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([-clip_reach-ff,case_thick+clip_thickness-clip_chamfer_depth,-ff])
 		linear_extrude(height = clip_width + ff*2)
-		polygon(points=[[0,0],[0,2.1],[2.1,2.1]]);
+		polygon(points=[[0,0],[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg]]);
 
 		//chamfers for vertical leg
-		translate([1,-base_thickness-ff,2])
+		translate([clip_thickness-clip_chamfer_depth,-base_thickness-ff,clip_chamfer_depth])
 		rotate([-90,0,0])
 		linear_extrude(height = base_thickness+case_thick+clip_thickness + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([1,-base_thickness-ff,clip_width+ff])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([clip_thickness-clip_chamfer_depth,-base_thickness-ff,clip_width+ff])
 		rotate([-90,0,0])
 		linear_extrude(height = base_thickness+case_thick+clip_thickness + ff*2)
-		polygon(points=[[0,0],[2.1,0],[2.1,2.1]]);
+		polygon(points=[[0,0],[clip_chamfer_leg,0],[clip_chamfer_leg,clip_chamfer_leg]]);
 
 		//chamfers for long edges of reach leg
-		translate([-clip_reach,case_thick+clip_thickness-2,2-ff])
+		translate([-clip_reach,case_thick+clip_thickness-clip_chamfer_depth,clip_chamfer_depth-ff])
 		rotate([0,90,0])
 		linear_extrude(height = clip_reach+clip_thickness + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([clip_thickness,case_thick+clip_thickness+ff,clip_width-2])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([clip_thickness,case_thick+clip_thickness+ff,clip_width-clip_chamfer_depth])
 		rotate([0,-90,0])
 		linear_extrude(height = clip_reach+clip_thickness + ff*2)
-		polygon(points=[[0,0],[2.1,0],[2.1,-2.1]]);
-		
+		polygon(points=[[0,0],[clip_chamfer_leg,0],[clip_chamfer_leg,-clip_chamfer_leg]]);
+
 		//recess for bumper
-		if (clip_bottom_length>=30){
-			translate([-8+clip_thickness,-base_thickness+1,clip_width/2])
+		if (clip_bottom_length>=bumper_threshold){
+			translate([clip_thickness-bumper_x_inset,-base_thickness+bumper_y_inset,clip_width/2])
 			rotate([90,0,0])
-			cylinder(d=11,h=1.05);
+			cylinder(d=bumper_d,h=bumper_h);
 		}
 
 		//slots for strap
-		translate([-clip_bottom_length+7.5-ff,0,clip_width/2])
+		translate([-clip_bottom_length+strap_x_inset-ff,0,clip_width/2])
 		union(){
-			translate([0,-5,0])
-			cube([15,2,strap_cut],center=true);
-			
+			translate([0,-strap_slot_y_sep,0])
+			cube([strap_slot_len,strap_slot_wid,strap_cut],center=true);
+
 			translate([0,0,0])
-			cube([15,2,strap_cut],center=true);
-			
+			cube([strap_slot_len,strap_slot_wid,strap_cut],center=true);
+
 			translate([-2.5,-3,0])
 			cube([5,6,strap_cut],center=true);
-			
+
 			translate([5,-3,0])
 			cube([5,6,strap_cut],center=true);
 		}
@@ -6257,7 +6271,9 @@ module create_clip(clip_reach,clip_width){
 module create_mini_clip1(clip_reach,clip_width){
 	base_thickness = 4;
 	clip_thickness = 5;
-	strap_cut = clip_width-4;
+	strap_cut      = clip_width-4;
+	strap_slot_len = 15;
+	strap_slot_wid = 2;
 
 	difference(){
 		union(){
@@ -6272,47 +6288,47 @@ module create_mini_clip1(clip_reach,clip_width){
 			//spur
 			translate([-clip_reach,case_thick,0])
 			linear_extrude(height = clip_width)
-			polygon(points=[[0,0],[1,-3],[3,-3],[2,0]]);
+			polygon(points=clip_spur_profile);
 		}
 
 		//chamfers for short edges of reach leg
-		translate([clip_thickness-2,case_thick+clip_thickness-2,-ff])
+		translate([clip_thickness-clip_chamfer_depth,case_thick+clip_thickness-clip_chamfer_depth,-ff])
 		linear_extrude(height = clip_width + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([-clip_reach-ff,case_thick+clip_thickness-2,-ff])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([-clip_reach-ff,case_thick+clip_thickness-clip_chamfer_depth,-ff])
 		linear_extrude(height = clip_width + ff*2)
-		polygon(points=[[0,0],[0,2.1],[2.1,2.1]]);
+		polygon(points=[[0,0],[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg]]);
 
 		//chamfers for vertical leg
-		translate([3,-base_thickness-ff,2])
+		translate([clip_thickness-clip_chamfer_depth,-base_thickness-ff,clip_chamfer_depth])
 		rotate([-90,0,0])
 		linear_extrude(height = base_thickness+case_thick+clip_thickness + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([3,-base_thickness-ff,clip_width+ff])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([clip_thickness-clip_chamfer_depth,-base_thickness-ff,clip_width+ff])
 		rotate([-90,0,0])
 		linear_extrude(height = base_thickness+case_thick+clip_thickness + ff*2)
-		polygon(points=[[0,0],[2.1,0],[2.1,2.1]]);
+		polygon(points=[[0,0],[clip_chamfer_leg,0],[clip_chamfer_leg,clip_chamfer_leg]]);
 
 		//chamfers for long edges of reach leg
-		translate([-clip_reach,case_thick+clip_thickness-2,2-ff])
+		translate([-clip_reach,case_thick+clip_thickness-clip_chamfer_depth,clip_chamfer_depth-ff])
 		rotate([0,90,0])
 		linear_extrude(height = clip_reach+clip_thickness + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([clip_thickness,case_thick+clip_thickness+ff,clip_width-2])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([clip_thickness,case_thick+clip_thickness+ff,clip_width-clip_chamfer_depth])
 		rotate([0,-90,0])
 		linear_extrude(height = clip_reach+clip_thickness + ff*2)
-		polygon(points=[[0,0],[2.1,0],[2.1,-2.1]]);
-		
+		polygon(points=[[0,0],[clip_chamfer_leg,0],[clip_chamfer_leg,-clip_chamfer_leg]]);
+
 		//slots for strap
 		translate([-1+ff,7.5-ff,clip_width/2])
 		rotate([0,0,90])
 		union(){
 			translate([0,-1,0])
-			cube([15,2,strap_cut],center=true);
-			
+			cube([strap_slot_len,strap_slot_wid,strap_cut],center=true);
+
 			translate([-2.5,-3,0])
 			cube([5,6,strap_cut],center=true);
-			
+
 			translate([5,-3,0])
 			cube([5,6,strap_cut],center=true);
 		}
@@ -6326,7 +6342,9 @@ module create_mini_clip1(clip_reach,clip_width){
 module create_mini_clip2(clip_reach,clip_width){
 	base_thickness = 4;
 	clip_thickness = 5;
-	strap_cut = clip_width-4;
+	strap_cut      = clip_width-4;
+	strap_slot_len = 15;
+	strap_slot_wid = 2;
 
 	difference(){
 		union(){
@@ -6337,47 +6355,47 @@ module create_mini_clip2(clip_reach,clip_width){
 			//spur
 			translate([-clip_reach,case_thick,0])
 			linear_extrude(height = clip_width)
-			polygon(points=[[0,0],[1,-3],[3,-3],[2,0]]);
+			polygon(points=clip_spur_profile);
 		}
 
 		//chamfers for short edges of reach leg
-		translate([clip_thickness-2,case_thick+clip_thickness-2,-ff])
+		translate([clip_thickness-clip_chamfer_depth,case_thick+clip_thickness-clip_chamfer_depth,-ff])
 		linear_extrude(height = clip_width + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([-clip_reach-ff,case_thick+clip_thickness-2,-ff])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([-clip_reach-ff,case_thick+clip_thickness-clip_chamfer_depth,-ff])
 		linear_extrude(height = clip_width + ff*2)
-		polygon(points=[[0,0],[0,2.1],[2.1,2.1]]);
+		polygon(points=[[0,0],[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg]]);
 
 		//chamfers for vertical leg
-		translate([3,-base_thickness-ff,2])
+		translate([clip_thickness-clip_chamfer_depth,-base_thickness-ff,clip_chamfer_depth])
 		rotate([-90,0,0])
 		linear_extrude(height = base_thickness+case_thick+clip_thickness + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([3,-base_thickness-ff,clip_width+ff])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([clip_thickness-clip_chamfer_depth,-base_thickness-ff,clip_width+ff])
 		rotate([-90,0,0])
 		linear_extrude(height = base_thickness+case_thick+clip_thickness + ff*2)
-		polygon(points=[[0,0],[2.1,0],[2.1,2.1]]);
+		polygon(points=[[0,0],[clip_chamfer_leg,0],[clip_chamfer_leg,clip_chamfer_leg]]);
 
 		//chamfers for long edges of reach leg
-		translate([-clip_reach,case_thick+clip_thickness-2,2-ff])
+		translate([-clip_reach,case_thick+clip_thickness-clip_chamfer_depth,clip_chamfer_depth-ff])
 		rotate([0,90,0])
 		linear_extrude(height = clip_reach+clip_thickness + ff*2)
-		polygon(points=[[0,2.1],[2.1,2.1],[2.1,0]]);
-		translate([clip_thickness,case_thick+clip_thickness+ff,clip_width-2])
+		polygon(points=[[0,clip_chamfer_leg],[clip_chamfer_leg,clip_chamfer_leg],[clip_chamfer_leg,0]]);
+		translate([clip_thickness,case_thick+clip_thickness+ff,clip_width-clip_chamfer_depth])
 		rotate([0,-90,0])
 		linear_extrude(height = clip_reach+clip_thickness + ff*2)
-		polygon(points=[[0,0],[2.1,0],[2.1,-2.1]]);
-		
+		polygon(points=[[0,0],[clip_chamfer_leg,0],[clip_chamfer_leg,-clip_chamfer_leg]]);
+
 		//slots for strap
 		translate([-2.4,case_thickness-1+ff,clip_width/2])
 		rotate([180,180,0])
 		union(){
 			translate([0,-1,0])
-			cube([15,2,strap_cut],center=true);
-			
+			cube([strap_slot_len,strap_slot_wid,strap_cut],center=true);
+
 			translate([-2.5,-5,0])
 			cube([5,6,strap_cut],center=true);
-			
+
 			translate([5,-5,0])
 			cube([5,6,strap_cut],center=true);
 		}
