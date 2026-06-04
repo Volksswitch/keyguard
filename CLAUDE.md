@@ -352,7 +352,7 @@ Address these one at a time, running the test suite after each change.
 - [x] **Add opening dimension validation** — zero or negative widths/heights now warn and skip (1e74aee)
 - [x] **Catch conflicting settings early** — all known invalid laser-cut combos now emit errors: laser+frame, laser+cell inserts, laser+Raised Tabs, laser+Clip-on Straps (lc-mount-errors branch closes the last two gaps)
 - [ ] **Deduplicate case additions logic** (lines ~5470–5599) — near-identical `add`/`sub` blocks with trimming logic repeated 4+ times; extract shared logic into a module
-- [ ] **Remove `#` debug modifiers from production code** — replaced in O&A context with color() overlays (01e95f4); ~15 remain in built-in geometry (lines ~1900, 2761–2822, 3192, 3239, 7502–7529)
+- [x] **Remove `#` debug modifiers from production code** — O&A context replaced with color() overlays (01e95f4); remaining instances in built-in geometry (frame ghost, split-line guide, magnet indicator, text highlight) are all intentional visualization tools and should stay
 
 ### Lower Priority
 - [x] **Move version history to `CHANGELOG.md`** — the 493-line header dominates the file; keep only a brief note pointing to the external file
