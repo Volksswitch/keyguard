@@ -22,133 +22,137 @@
 //------------------------------------------------------------------
 //
 // TOP-LEVEL GENERATORS
-//   keyguard()                          1860  Main 3D-printed keyguard
-//   lc_keyguard()                       2143  Laser-cut keyguard
-//   keyguard_frame()                    2255  Keyguard frame
+//   keyguard()                          2013  Main 3D-printed keyguard
+//   lc_keyguard()                       2295  Laser-cut keyguard
+//   keyguard_frame()                    2407  Keyguard frame
 //
 // SPLITTING
-//   split_keyguard()                    2507  Split keyguard into halves for printing
-//   show_line_split_location()          2622  Visualise the split line
-//   split_keyguard_frame()              2702  Split keyguard frame into halves
-//   dovetails()                         2733  Dovetail joint geometry
+//   split_keyguard()                    2661  Split keyguard into halves for printing
+//   show_line_split_location()          2776  Visualise the split line
+//   split_keyguard_frame()              2856  Split keyguard frame into halves
+//   dovetails()                         2887  Dovetail joint geometry
 //
 // FRAME & SNAP-IN MOUNTING
-//   add_keyguard_frame_post_slots()     2388  Slots in frame for post mounting
-//   add_keyguard_frame_posts()          2402  Posts that attach keyguard to frame
-//   add_mounting_posts()                2430  Mounting posts (Via Pro etc.)
-//   snap_in_tab_grooves()               6819  Grooves for snap-in tabs in frames
-//   add_snap_ins()                      6855  Add snap-in tabs
-//   make_snap_ins()                     6894  Single snap-in tab geometry
+//   add_keyguard_frame_post_slots()     2540  Slots in frame for post mounting
+//   add_keyguard_frame_posts()          2554  Posts that attach keyguard to frame
+//   add_mounting_posts()                2582  Mounting posts (Via Pro etc.)
+//   snap_in_tab_grooves()               7391  Grooves for snap-in tabs in frames
+//   add_snap_ins()                      7427  Add snap-in tabs
+//   make_snap_ins()                     7466  Single snap-in tab geometry
 //
 // MOUNTING METHODS
-//   case_mounts()                       2748  Dispatch mounting method geometry
-//   add_2d_slide_in_tabs()              2770  Slide-in tabs (2D layout)
-//   create_2D_slide_in_tab()            2825  Single slide-in tab geometry
-//   add_clip_on_strap_pedestals()       2868  Pedestals for clip-on straps
-//   add_raised_tabs()                   2915  Raised tabs
-//   raised_tab()                        2975  Single raised tab geometry
-//   mounting_points()                   3205  Suction-cup / screw mounting points
-//   suction_cups()                      3225  Suction cup geometry
-//   velcro()                            3263  Velcro slot geometry
-//   screw_on_straps()                   3299  Screw-on strap geometry
-//   clip_on_straps_groove()             3352  Groove for clip-on straps
-//   add_manual_mount_pedestals()        6622  Manually placed strap pedestals (V1 format)
-//   add_manual_mount_pedestals_v2()     4869  Manually placed strap pedestals (V2 format)
-//   cut_manual_mount_pedestal_slots()   6694  Slots for manually placed pedestals (V1 format)
-//   cut_manual_mount_pedestal_slots_v2() 4919 Slots for manually placed pedestals (V2 format)
+//   case_mounts()                       2902  Dispatch mounting method geometry
+//   add_2d_slide_in_tabs()              2924  Slide-in tabs (2D layout)
+//   create_2D_slide_in_tab()            2979  Single slide-in tab geometry
+//   add_clip_on_strap_pedestals()       3030  Pedestals for clip-on straps
+//   add_raised_tabs()                   3076  Raised tabs
+//   raised_tab()                        3136  Single raised tab geometry
+//   mounting_points()                   3359  Suction-cup / screw mounting points
+//   suction_cups()                      3384  Suction cup geometry
+//   velcro()                            3416  Velcro slot geometry
+//   screw_on_straps()                   3435  Screw-on strap geometry
+//   clip_on_straps_groove()             3465  Groove for clip-on straps
+//   add_manual_mount_pedestals()        7125  Manually placed strap pedestals (V1 format)
+//   add_manual_mount_pedestals_v2()     5126  Manually placed strap pedestals (V2 format)
+//   cut_manual_mount_pedestal_slots()   7170  Slots for manually placed pedestals (V1 format)
+//   cut_manual_mount_pedestal_slots_v2() 5162 Slots for manually placed pedestals (V2 format)
 //
 // CLIPS
-//   create_clip()                       5703  Standard clip geometry
-//   create_mini_clip1()                 5785  Mini clip geometry
-//   create_mini_clip2()                 5854  Micro clip geometry
+//   create_clip()                       6194  Standard clip geometry
+//   create_mini_clip1()                 6285  Mini clip geometry (variant 1)
+//   create_mini_clip2()                 6356  Mini clip geometry (variant 2)
 //
 // GRID & CELLS
-//   trim_keyguard_to_bar()              2417  Trim keyguard height to bar region
-//   bars()                              3411  Message / command / status bars
-//   bounded_cells()                     3476  Cell openings (bounded by bars)
-//   cells()                             3496  Individual cell openings
-//   cell_ridges()                       3561  Ridges around cell openings
-//   create_cell_insert()                3890  Cell insert / Braille insert
+//   trim_keyguard_to_bar()              2569  Trim keyguard height to bar region
+//   bars()                              3526  Message / command / status bars
+//   bounded_cells()                     3595  Cell openings (bounded by bars)
+//   cells()                             3615  Individual cell openings
+//   cell_ridges()                       3717  Ridges around cell openings
+//   create_cell_insert()                4134  Cell insert / Braille insert
 //
 // RIDGES & WALLS
-//   hridge()                            5598  Horizontal ridge
-//   vridge()                            5626  Vertical ridge
-//   ridge()                             5656  Ridge at arbitrary angle
-//   aridge()                            5684  Arc-shaped ridge
-//   circular_wall()                     3611  Circular wall
-//   rounded_rectangle_wall()            3623  Rounded-rectangle wall
-//   rr_wall1()                          3648  Rounded-rectangle wall (variant 1)
-//   rr_wall2()                          3662  Rounded-rectangle wall (variant 2)
-//   rr_corner_wall()                    3676  Rounded-rectangle corner wall
+//   hridge()                            6089  Horizontal ridge
+//   vridge()                            6117  Vertical ridge
+//   ridge()                             6147  Ridge at arbitrary angle
+//   aridge()                            6175  Arc-shaped ridge
+//   circular_wall()                     3777  Circular wall
+//   rounded_rectangle_wall()            3789  Rounded-rectangle wall
+//   rr_wall1()                          3814  Rounded-rectangle wall (variant 1)
+//   rr_wall2()                          3828  Rounded-rectangle wall (variant 2)
+//   rr_corner_wall()                    3842  Rounded-rectangle corner wall
 //
 // OPENINGS & CUTS (high-level)
-//   cut_screen_openings()               4033  Apply screen_openings vector (V1 format)
-//   cut_screen_openings_v2()            4277  Apply screen_openings vector (V2 format)
-//   cut_case_openings()                 4974  Apply case_openings vector (V1 format)
-//   cut_case_openings_v2()              4427  Apply case_openings vector (V2 format)
-//   cut_tablet_openings()               5029  Apply tablet_openings vector (V1 format)
-//   cut_tablet_openings_v2()            4537  Apply tablet_openings vector (V2 format)
-//   cut_als_openings()                  5073  Apply ALS openings
-//   home_camera()                       3155  Home button and camera openings
-//   trim_to_the_screen()                6766  Trim keyguard to screen boundary
-//   trim_to_rectangle()                 6775  Trim keyguard to arbitrary rectangle
-//   cut_screen()                        6803  Cut out entire screen area
-//   cut_grid()                          6810  Cut out grid area
+//   cut_screen_openings()               4280  Apply screen_openings vector (V1 format)
+//   cut_screen_openings_v2()            4509  Apply screen_openings vector (V2 format)
+//   cut_case_openings()                 5205  Apply case_openings vector (V1 format)
+//   cut_case_openings_v2()              4642  Apply case_openings vector (V2 format)
+//   cut_tablet_openings()               5256  Apply tablet_openings vector (V1 format)
+//   cut_tablet_openings_v2()            4736  Apply tablet_openings vector (V2 format)
+//   cut_als_openings()                  5297  Apply ALS openings
+//   home_camera()                       3316  Home button and camera openings
+//   trim_to_the_screen()                7338  Trim keyguard to screen boundary
+//   trim_to_rectangle()                 7347  Trim keyguard to arbitrary rectangle
+//   cut_screen()                        7375  Cut out entire screen area
+//   cut_grid()                          7382  Cut out grid area
 //
 // OPENINGS & CUTS (primitives)
-//   cut_hole()                          5121  Flip-aware hole cut helper (used by cut_opening)
-//   cut_opening()                       5147  Shape-dispatching opening cutter
-//   cut_opening_2d()                    5323  2D version of cut_opening
-//   cut()                               3841  Core 3D cut primitive (chamfered box)
-//   cut_2d()                            3882  Core 2D cut primitive
-//   hole_cutter()                       3695  Sloped-edge hole (primary)
-//   hole_cutter2()                      3763  Sloped-edge hole (variant)
-//   hole_cutter_3()                     3747  Sloped-edge hole (variant)
-//   hole_cutter_2d()                    3807  2D hole outline
-//   create_cutting_tool()               3122  Rotary cutting tool shape
-//   create_cutting_tool_2d()            3142  2D rotary cutting tool shape
+//   cut_hole()                          5340  Flip-aware hole cut helper (used by cut_opening)
+//   cut_opening()                       5376  Shape-dispatching opening cutter (V1 format)
+//   cut_opening_v2()                    5454  Shape-dispatching opening cutter (V2 format)
+//   cut_opening_2d()                    5650  2D version of cut_opening (V1 format)
+//   cut_opening_2d_v2()                 5671  2D version of cut_opening (V2 format)
+//   screen_through_cut_extender()       5437  Prism extender for Manifold through-cuts
+//   cut()                               4085  Core 3D cut primitive (chamfered box)
+//   cut_2d()                            4126  Core 2D cut primitive
+//   hole_cutter()                       3861  Sloped-edge hole (primary)
+//   hole_cutter2()                      3964  Sloped-edge hole (variant)
+//   hole_cutter_3()                     3948  Sloped-edge hole (variant)
+//   hole_cutter_2d()                    4051  2D hole outline
+//   create_cutting_tool()               3283  Rotary cutting tool shape
+//   create_cutting_tool_2d()            3303  2D rotary cutting tool shape
 //
 // CASE ADDITIONS
-//   adding_plastic()                    5392  Add plastic to case (dispatch, V1 format)
-//   adding_plastic_v2()                 4636  Add plastic to case (dispatch, V2 format)
-//   place_addition()                    5468  Place a single addition shape (V1 format)
-//   place_addition_v2()                 5758  Place a single addition shape (V2 format)
-//   add_case_full_height_shapes()       6084  Full-height case addition shapes (V1 format)
-//   add_case_full_height_shapes_v2()    4805  Full-height case addition shapes (V2 format)
-//   apply_flex_height_shapes()          6459  Add or subtract flexible-height shapes (V1 format)
-//   apply_flex_height_shapes_v2()       4763  Add or subtract flexible-height shapes (V2 format)
-//   build_addition()                    6178  Build a single addition solid
-//   build_trimmed_addition()            6506  Addition solid with edge trimming
-//   add_case_cylinders()                6537  Cylindrical mounting posts
-//   half_rounded_rectangle()            6590  Half rounded-rectangle primitive
+//   adding_plastic()                    5735  Add plastic to case (dispatch, V1 format)
+//   adding_plastic_v2()                 4887  Add plastic to case (dispatch, V2 format)
+//   place_addition()                    5791  Place a single addition shape (V1 format)
+//   place_addition_v2()                 5951  Place a single addition shape (V2 format)
+//   add_case_full_height_shapes()       6596  Full-height case addition shapes (V1 format)
+//   add_case_full_height_shapes_v2()    5074  Full-height case addition shapes (V2 format)
+//   apply_flex_height_shapes()          6967  Add or subtract flexible-height shapes (V1 format)
+//   apply_flex_height_shapes_v2()       5037  Add or subtract flexible-height shapes (V2 format)
+//   build_addition()                    6658  Build a single addition solid
+//   build_trimmed_addition()            7009  Addition solid with edge trimming
+//   add_case_cylinders()                7040  Cylindrical mounting posts
+//   half_rounded_rectangle()            7093  Half rounded-rectangle primitive
 //
 // BASE GEOMETRY
-//   base_keyguard()                     5923  Outer keyguard body
-//   chamfer_slice()                     5992  Chamfer layer for keyguard edge
-//   case_opening_blank()                6014  Solid fill of case opening area
-//   case_opening_blank_2d()             6031  2D version of case opening fill
+//   base_keyguard()                     6427  Outer keyguard body
+//   chamfer_slice()                     6503  Chamfer layer for keyguard edge
+//   case_opening_blank()                6525  Solid fill of case opening area
+//   case_opening_blank_2d()             6542  2D version of case opening fill
 //
 // SCREENSHOT & VISUALISATION
-//   show_screenshot()                   6904  Display SVG screenshot layer
-//   show_screenshotMW()                 6915  Screenshot layer for Maker World
-//   engrave_emboss_instruction()        6927  Engrave/emboss an opening shape
+//   show_screenshot()                   7476  Display SVG screenshot layer
+//   show_screenshotMW()                 7487  Screenshot layer for Maker World
+//   engrave_emboss_instruction()        7499  Engrave/emboss an opening shape
+//   render_oa_highlights()              7226  O&A highlight overlays (web app + preview)
 //
 // TEXT & BRAILLE
-//   add_engraved_text()                 7529  Engrave or emboss text
-//   add_braille()                       7458  Add Braille dots from a word
-//   word_flat()                         7467  Lay out a word in Braille cells
-//   braille_by_row()                    7477  Braille dot pattern by row
-//   dots_letter()                       7497  Individual Braille character dots
+//   add_engraved_text()                 8170  Engrave or emboss text
+//   add_braille()                       8099  Add Braille dots from a word
+//   word_flat()                         8108  Lay out a word in Braille cells
+//   braille_by_row()                    8118  Braille dot pattern by row
+//   dots_letter()                       8138  Individual Braille character dots
 //
 // GEOMETRY HELPERS
-//   chamfered_cuboid()                  7388  Cuboid with chamfered top edge
-//   chamfered_shape()                   7417  Rounded-rectangle with chamfer
-//   rounded_rect()                      3817  Simple rounded rectangle (2D)
+//   chamfered_cuboid()                  8029  Cuboid with chamfered top edge
+//   chamfered_shape()                   8058  Rounded-rectangle with chamfer
+//   rounded_rect()                      4061  Simple rounded rectangle (2D)
 //
 // DIAGNOSTICS & SETTINGS OUTPUT
-//   echo_settings()                     6999  Echo all Customizer settings to console
-//   issues()                            7271  Echo known issues / warnings
-//   key_settings()                      7314  Echo key parameter summary
+//   echo_settings()                     7638  Echo all Customizer settings to console
+//   issues()                            7912  Echo known issues / warnings
+//   key_settings()                      7955  Echo key parameter summary
 //
 //------------------------------------------------------------------
 // User Inputs
