@@ -3870,22 +3870,26 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		if (!right_brg) translate([cx + cwl/2 + t/2, cy - chl/2 + cr, -kt/2 + sata]) ridge(chl - 2*cr, t, height_of_ridge, 90);
 		if (!left_brg) translate([cx - cwl/2 - t/2, cy - chl/2 + cr, -kt/2 + sata]) ridge(chl - 2*cr, t, height_of_ridge, 90);
 
-		// Corner aridges. Convex outer corners use the natural quadrant
-		// (aridge1=BL, 2=TL, 3=TR, 4=BR). Concave L-bay corners use the
-		// opposite quadrant (the wall needs to wrap around the inside of
-		// the bay) — anchor points may need adjustment after visual review.
+		// Corner aridges. Convex outer corners take the OPPOSITE-quadrant
+		// aridge (TR cell corner -> aridge1, TL -> aridge4, BL -> aridge3,
+		// BR -> aridge2) because each aridge1-4 wrapper in V1's
+		// place_addition pre-translates the arc into its NAMED quadrant
+		// relative to the placement point — so placing aridge1 (BL) at a
+		// TR cell corner puts the arc below-and-left of that corner, which
+		// is OUTSIDE the cell at that corner. Concave L-bay corners then
+		// take the natural-quadrant aridge.
 		// TR
-		if (!top_brg && !right_brg) translate([cx + cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
-		else if (top_brg && right_brg && !tr_diag_in) translate([cx + cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
+		if (!top_brg && !right_brg) translate([cx + cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
+		else if (top_brg && right_brg && !tr_diag_in) translate([cx + cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
 		// TL
-		if (!top_brg && !left_brg) translate([cx - cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
-		else if (top_brg && left_brg && !tl_diag_in) translate([cx - cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
+		if (!top_brg && !left_brg) translate([cx - cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
+		else if (top_brg && left_brg && !tl_diag_in) translate([cx - cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
 		// BL
-		if (!bot_brg && !left_brg) translate([cx - cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
-		else if (bot_brg && left_brg && !bl_diag_in) translate([cx - cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
+		if (!bot_brg && !left_brg) translate([cx - cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
+		else if (bot_brg && left_brg && !bl_diag_in) translate([cx - cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
 		// BR
-		if (!bot_brg && !right_brg) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
-		else if (bot_brg && right_brg && !br_diag_in) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
+		if (!bot_brg && !right_brg) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
+		else if (bot_brg && right_brg && !br_diag_in) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
 	}
 
 	// Per-bridge ridges. Each merge bridge contributes two ridges for its two
