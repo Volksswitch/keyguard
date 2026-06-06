@@ -3681,34 +3681,41 @@ module cells(depth){
 				// automatically. cut_opening's oa1-4 branches apply their own (+/-r, +/-r)
 				// internal offset, so the (x,y) here is the cell's geometric corner
 				// (not corner + mrr as the previous direct create_cutting_tool calls used).
-				if (mrr > 0){
+				//
+				// When a ridge is being added to this merge group, the rounded inner
+				// corner gets ENLARGED to `mrr + thickness_of_ridge` so the merged
+				// ridge's outer face (an aridge with outer radius mrr + thickness)
+				// lands exactly on the rounded opening boundary. Plain merges (no
+				// ridge) keep the original `mrr` radius.
+				eff_mrr = _any_in_ridge_set(cell_merge_group(current_cell)) ? mrr + thickness_of_ridge : mrr;
+				if (eff_mrr > 0){
 					// Config 1: same cell starts H-right and V-up — corner at top-right -> oa3
 					if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
 						(search(current_cell,m_c_v))&&(i!=row_count-1)&&
 						!((search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h)))){
 						translate([c__x+c__w/2, c__y+c__h/2, 0])
-						cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, mrr, undef, d, "screen");
+						cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
 					}
 					// Config 2: current starts H-right, cell below starts V-up — corner at bottom-right -> oa4
 					if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
 						(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
 						!((search(current_cell-number_of_columns,m_cell_h))&&(search(current_cell+1-number_of_columns,m_c_v)))){
 						translate([c__x+c__w/2, c__y-c__h/2, 0])
-						cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, mrr, undef, d, "screen");
+						cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
 					}
 					// Config 3: left neighbour starts H-right to current; current starts V-up — corner at top-left -> oa2
 					if((search(current_cell,m_c_v))&&(i!=row_count-1)&&
 						(j!=0)&&(search(current_cell-1,m_cell_h))&&
 						!((search(current_cell-1,m_c_v))&&(search(current_cell-1+number_of_columns,m_cell_h)))){
 						translate([c__x-c__w/2, c__y+c__h/2, 0])
-						cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, mrr, undef, d, "screen");
+						cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
 					}
 					// Config 4: left neighbour starts H-right; cell below starts V-up — corner at bottom-left -> oa1
 					if((j!=0)&&(search(current_cell-1,m_cell_h))&&
 						(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
 						!((search(current_cell-1-number_of_columns,m_cell_h))&&(search(current_cell-1-number_of_columns,m_c_v)))){
 						translate([c__x-c__w/2, c__y-c__h/2, 0])
-						cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, mrr, undef, d, "screen");
+						cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
 					}
 				}
 			}
@@ -3743,6 +3750,12 @@ function _cmg_dedup(list, i, acc) =
 function _cmg_min(list, i=0, m=undef) =
 	(i >= len(list)) ? m
 	: _cmg_min(list, i+1, (m==undef || list[i]<m) ? list[i] : m);
+
+// True if any cell in `group` is listed in a_r_a (the cells the user has
+// asked for a ridge around). cells() uses this to decide whether the
+// oa1-4 corner cut radius should be enlarged for a ridge.
+function _any_in_ridge_set(group) =
+	len([for (c = group) if (search(c, a_r_a)) c]) > 0;
 
 // Adds tactile ridges around the specified grid cells, using either a rounded-rectangle
 // wall or a circular wall depending on the cell shape. Merged cells (horizontal,
@@ -3864,11 +3877,13 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		br_diag_in = (j != column_count-1) && (i != 0) && search(c+1-column_count, group);
 		bl_diag_in = (j != 0) && (i != 0) && search(c-1-column_count, group);
 
-		// Side ridges (length excludes the corner-arc footprint at each end).
-		if (!top_brg) translate([cx - cwl/2 + cr, cy + chl/2 + t/2, -kt/2 + sata]) ridge(cwl - 2*cr, t, height_of_ridge, 0);
-		if (!bot_brg) translate([cx - cwl/2 + cr, cy - chl/2 - t/2, -kt/2 + sata]) ridge(cwl - 2*cr, t, height_of_ridge, 0);
-		if (!right_brg) translate([cx + cwl/2 + t/2, cy - chl/2 + cr, -kt/2 + sata]) ridge(chl - 2*cr, t, height_of_ridge, 90);
-		if (!left_brg) translate([cx - cwl/2 - t/2, cy - chl/2 + cr, -kt/2 + sata]) ridge(chl - 2*cr, t, height_of_ridge, 90);
+		// Side ridges run the FULL cell side. They overlap the corner
+		// aridges by `cr` on each end so the chamfered top profile is
+		// continuous (no end-stub gap visible at the joint).
+		if (!top_brg) translate([cx - cwl/2, cy + chl/2 + t/2, -kt/2 + sata]) ridge(cwl, t, height_of_ridge, 0);
+		if (!bot_brg) translate([cx - cwl/2, cy - chl/2 - t/2, -kt/2 + sata]) ridge(cwl, t, height_of_ridge, 0);
+		if (!right_brg) translate([cx + cwl/2 + t/2, cy - chl/2, -kt/2 + sata]) ridge(chl, t, height_of_ridge, 90);
+		if (!left_brg) translate([cx - cwl/2 - t/2, cy - chl/2, -kt/2 + sata]) ridge(chl, t, height_of_ridge, 90);
 
 		// Corner aridges. Convex outer corners take the OPPOSITE-quadrant
 		// aridge (TR cell corner -> aridge1, TL -> aridge4, BL -> aridge3,
@@ -3876,20 +3891,24 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		// place_addition pre-translates the arc into its NAMED quadrant
 		// relative to the placement point — so placing aridge1 (BL) at a
 		// TR cell corner puts the arc below-and-left of that corner, which
-		// is OUTSIDE the cell at that corner. Concave L-bay corners then
-		// take the natural-quadrant aridge.
+		// is OUTSIDE the cell at that corner. Concave L-bay corners take
+		// the natural-quadrant aridge AND shift outward into the bay by
+		// `t` on each axis — the bay's rounded inner corner has been
+		// enlarged from cr to cr+t by cells() above, so the aridge's
+		// arc center sits at distance (cr+t) along each axis from the
+		// original cell corner, matching the enlarged opening boundary.
 		// TR
 		if (!top_brg && !right_brg) translate([cx + cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
-		else if (top_brg && right_brg && !tr_diag_in) translate([cx + cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
+		else if (top_brg && right_brg && !tr_diag_in) translate([cx + cwl/2 + t, cy + chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
 		// TL
 		if (!top_brg && !left_brg) translate([cx - cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
-		else if (top_brg && left_brg && !tl_diag_in) translate([cx - cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
+		else if (top_brg && left_brg && !tl_diag_in) translate([cx - cwl/2 - t, cy + chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
 		// BL
 		if (!bot_brg && !left_brg) translate([cx - cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
-		else if (bot_brg && left_brg && !bl_diag_in) translate([cx - cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
+		else if (bot_brg && left_brg && !bl_diag_in) translate([cx - cwl/2 - t, cy - chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
 		// BR
 		if (!bot_brg && !right_brg) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
-		else if (bot_brg && right_brg && !br_diag_in) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
+		else if (bot_brg && right_brg && !br_diag_in) translate([cx + cwl/2 + t, cy - chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
 	}
 
 	// Per-bridge ridges. Each merge bridge contributes two ridges for its two
@@ -3907,19 +3926,17 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		      (i!=0 && i==row_count-1) ? chei - row_last_trim :
 		      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
 		      chei;
-		// Horizontal bridge from c to c+1.
+		// Horizontal bridge from c to c+1. The bridge ridges run from cell
+		// c's centre to cell c+1's centre so they fully overlap each cell's
+		// side ridges — no gap at the cell/bridge joint.
 		if ((j != column_count-1) && search(c, m_cell_h) && search(c+1, group)){
-			bx0 = cell_x + cwl/2;
-			blen = gpw - cwl;
-			translate([bx0, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 0);
-			translate([bx0, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 0);
+			translate([cell_x, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(gpw, t, height_of_ridge, 0);
+			translate([cell_x, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(gpw, t, height_of_ridge, 0);
 		}
 		// Vertical bridge from c to c+column_count.
 		if ((i != row_count-1) && search(c, m_c_v) && search(c+column_count, group)){
-			by0 = cell_y + chl/2;
-			blen = gph - chl;
-			translate([cell_x - cwl/2 - t/2, by0, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 90);
-			translate([cell_x + cwl/2 + t/2, by0, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 90);
+			translate([cell_x - cwl/2 - t/2, cell_y, -kt/2 + sata]) ridge(gph, t, height_of_ridge, 90);
+			translate([cell_x + cwl/2 + t/2, cell_y, -kt/2 + sata]) ridge(gph, t, height_of_ridge, 90);
 		}
 	}
 }
