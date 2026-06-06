@@ -1,0 +1,15 @@
+// Test Case 59 — cross-shaped merge group with a ridge.
+// The merge geometry comes entirely from the keyguard.json preset; no
+// custom OA shapes are needed for this test.
+
+screen_openings=[
+];
+
+case_openings=[
+];
+
+case_additions=[
+];
+
+tablet_openings=[
+];
