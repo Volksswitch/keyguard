@@ -269,6 +269,19 @@ It only needs to be present when this feature is in use.
   so end users only need a single `.scad` file
 - **Maintain backward compatibility** of the `openings_and_additions.txt` vector format —
   users may have saved copies of this file with their own custom openings
+- **Do not introduce a UTF-8 BOM in `keyguard.json`.** OpenSCAD 2021.01 (the official
+  release, which Ken and many users run) rejects a BOM-prefixed parameter file with
+  `expected value` at column 1 and silently falls back to .scad defaults — the
+  Customizer GUI's preset dropdown stops loading any preset, and the CLI's
+  `-p keyguard.json -P "..."` does the same. The file must start with `{` as its
+  first byte. A BOM was accidentally added by commit `0360338` (the
+  `mounting_method` rename) and lurked for a couple of weeks before anyone
+  noticed; strip it back out (commit `<bom-strip-sha>`). When editing
+  `keyguard.json` programmatically, read it as `utf-8-sig` (which discards a BOM
+  if present) and write it back as `utf-8` (no BOM) with `\r\n` line endings to
+  match the existing format. `scripts/test.sh` has a defensive BOM-strip preflight
+  for the CLI path, but that doesn't help the GUI — the on-disk file itself must
+  stay BOM-less.
 
 ---
 
