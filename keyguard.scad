@@ -3797,19 +3797,11 @@ module cell_ridges(){
 							place_addition_v2(c__w, c__h, "rridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, ocr, undef);
 						}
 						else{
-							// Multi-cell merge: build the 2D footprint of the merged
-							// opening, then build a chamfered-top perimeter wall around
-							// it. The wall extends through the FULL keyguard depth
-							// (z = -kt/2 up through the top surface and on for
-							// height_of_ridge) — same z span as the single-cell
-							// rounded_rectangle_wall path — so the cell edge chamfer
-							// at the top surface stays joined with the ridge instead
-							// of being exposed as a notch into the cell wall, and the
-							// top edges get the same 0.5 mm chamfer as a single-cell
-							// ridge.
-							translate([0, 0, -kt/2])
-							chamfered_perimeter_wall(thickness_of_ridge, sat + height_of_ridge)
-							merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei);
+							// Multi-cell merge: assemble the ridge from the existing
+							// `ridge` and `aridge` primitives that single-cell ridges
+							// already use, so the chamfered cross-section and corner
+							// arcs are inherited rather than re-implemented.
+							merged_group_ridge(group, grid_part_w, grid_part_h, cwid, chei);
 						}
 					}
 				}
@@ -3825,113 +3817,124 @@ module cell_ridges(){
 	}
 }
 
-// 2D footprint of a merged cell group: union of each cell's rounded-opening rect
-// (sized to the cell opening — c__w x c__h) plus a bridge rect between every
-// adjacent pair of merged cells in the group. Used as both the inner outline of
-// the perimeter ridge and (after offset(r=thickness)) its outer outline, so the
-// ridge's inner outline matches the opening exactly. The final offset(r=ccr)
-// offset(r=-ccr) is a morphological opening on the unioned sharp footprint —
-// it rounds the outer convex corners AND the inner concave corners (at L/T
-// merge bays) at radius `ccr` (cell_corner_radius), mirroring what cells()
-// does via the oa1-4 cuts.
-module merged_group_footprint(group, gpw, gph, cwid, chei){
-	if (ccr > 0) offset(r=ccr) offset(r=-ccr) _mgf_sharp(group, gpw, gph, cwid, chei);
-	else _mgf_sharp(group, gpw, gph, cwid, chei);
-}
+// Assembles the perimeter ridge around a multi-cell merge group from the
+// existing `ridge` and `aridge` primitives — the same primitives a single-cell
+// ridge is built from via rounded_rectangle_wall. Each exposed cell side
+// becomes a `ridge` of length cwl-2*ccr (or chl-2*ccr); each exposed cell
+// corner becomes an `aridge` of radius ccr; each merge bridge contributes
+// two `ridge`s for its exposed transverse sides. Concave inner corners (at
+// L/T merge bays) get an aridge in the opposite quadrant — the anchor point
+// may need tuning once visually inspected.
+module merged_group_ridge(group, gpw, gph, cwid, chei){
+	t = thickness_of_ridge;
+	cr = ccr;
+	// Per-cell pieces.
+	for (c = group){
+		j = (c-1) % column_count;
+		i = floor((c-1)/column_count);
+		cell_x = grid_x0 + j*gpw + gpw/2;
+		cell_y = grid_y0 + i*gph + gph/2;
+		cx = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
+		     (j==column_count-1 && column_count>1) ? cell_x - col_last_trim/2 :
+		     (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
+		     cell_x;
+		cy = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
+		     (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
+		     (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
+		     cell_y;
+		cwl = (j==0 && column_count>1) ? cwid - col_first_trim :
+		      (j==column_count-1 && column_count>1) ? cwid - col_last_trim :
+		      (column_count==1) ? cwid - col_first_trim - col_last_trim :
+		      cwid;
+		chl = (i==0 && i!=row_count-1) ? chei - row_first_trim :
+		      (i!=0 && i==row_count-1) ? chei - row_last_trim :
+		      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
+		      chei;
 
-// Builds a chamfered-top perimeter wall around the 2D inner footprint passed
-// as `children()`. The wall is `thickness` mm thick and `height` mm tall;
-// the top 0.5 mm is a stepped reduction that narrows the wall by 0.5 mm on
-// each side, matching the chamfer profile in rounded_rectangle_wall's
-// cross-section polygon so a merged-cell ridge top looks like a single-cell
-// ridge top. The on-disk step is the same 0.5 mm a single-cell ridge's
-// sloped chamfer would span — visually equivalent at print resolution.
-module chamfered_perimeter_wall(thickness, height, chamfer=0.5){
-	union(){
-		// Full-thickness body from z=0 to z=height-chamfer.
-		linear_extrude(height=height - chamfer)
-		difference(){
-			offset(r=thickness) children();
-			children();
+		// Bridged-side flags (true if cell c has a group-mate on that side).
+		right_brg = (j != column_count-1) && search(c, m_cell_h) && search(c+1, group);
+		left_brg  = (j != 0) && search(c-1, m_cell_h) && search(c-1, group);
+		top_brg   = (i != row_count-1) && search(c, m_c_v) && search(c+column_count, group);
+		bot_brg   = (i != 0) && search(c-column_count, m_c_v) && search(c-column_count, group);
+
+		// Diagonal cells: used to distinguish a concave L-bay corner (diag not
+		// in group) from an interior 2x2 merge corner (diag in group).
+		tr_diag_in = (j != column_count-1) && (i != row_count-1) && search(c+1+column_count, group);
+		tl_diag_in = (j != 0) && (i != row_count-1) && search(c-1+column_count, group);
+		br_diag_in = (j != column_count-1) && (i != 0) && search(c+1-column_count, group);
+		bl_diag_in = (j != 0) && (i != 0) && search(c-1-column_count, group);
+
+		// Side ridges (length excludes the corner-arc footprint at each end).
+		if (!top_brg) translate([cx - cwl/2 + cr, cy + chl/2 + t/2, -kt/2 + sata]) ridge(cwl - 2*cr, t, height_of_ridge, 0);
+		if (!bot_brg) translate([cx - cwl/2 + cr, cy - chl/2 - t/2, -kt/2 + sata]) ridge(cwl - 2*cr, t, height_of_ridge, 0);
+		if (!right_brg) translate([cx + cwl/2 + t/2, cy - chl/2 + cr, -kt/2 + sata]) ridge(chl - 2*cr, t, height_of_ridge, 90);
+		if (!left_brg) translate([cx - cwl/2 - t/2, cy - chl/2 + cr, -kt/2 + sata]) ridge(chl - 2*cr, t, height_of_ridge, 90);
+
+		// Corner aridges. Convex outer corners use the natural quadrant
+		// (aridge1=BL, 2=TL, 3=TR, 4=BR). Concave L-bay corners use the
+		// opposite quadrant (the wall needs to wrap around the inside of
+		// the bay) — anchor points may need adjustment after visual review.
+		// TR
+		if (!top_brg && !right_brg) translate([cx + cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
+		else if (top_brg && right_brg && !tr_diag_in) translate([cx + cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
+		// TL
+		if (!top_brg && !left_brg) translate([cx - cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
+		else if (top_brg && left_brg && !tl_diag_in) translate([cx - cwl/2, cy + chl/2, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
+		// BL
+		if (!bot_brg && !left_brg) translate([cx - cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
+		else if (bot_brg && left_brg && !bl_diag_in) translate([cx - cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
+		// BR
+		if (!bot_brg && !right_brg) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
+		else if (bot_brg && right_brg && !br_diag_in) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
+	}
+
+	// Per-bridge ridges. Each merge bridge contributes two ridges for its two
+	// exposed transverse sides (the side facing the merge direction is internal).
+	for (c = group){
+		j = (c-1) % column_count;
+		i = floor((c-1)/column_count);
+		cell_x = grid_x0 + j*gpw + gpw/2;
+		cell_y = grid_y0 + i*gph + gph/2;
+		cwl = (j==0 && column_count>1) ? cwid - col_first_trim :
+		      (j==column_count-1 && column_count>1) ? cwid - col_last_trim :
+		      (column_count==1) ? cwid - col_first_trim - col_last_trim :
+		      cwid;
+		chl = (i==0 && i!=row_count-1) ? chei - row_first_trim :
+		      (i!=0 && i==row_count-1) ? chei - row_last_trim :
+		      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
+		      chei;
+		// Horizontal bridge from c to c+1.
+		if ((j != column_count-1) && search(c, m_cell_h) && search(c+1, group)){
+			bx0 = cell_x + cwl/2;
+			blen = gpw - cwl;
+			translate([bx0, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 0);
+			translate([bx0, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 0);
 		}
-		// Narrowed top band from z=height-chamfer to z=height. Outer pulled
-		// in by chamfer; inner pushed out by chamfer.
-		translate([0, 0, height - chamfer])
-		linear_extrude(height=chamfer)
-		difference(){
-			offset(r=thickness - chamfer) children();
-			offset(r=chamfer) children();
+		// Vertical bridge from c to c+column_count.
+		if ((i != row_count-1) && search(c, m_c_v) && search(c+column_count, group)){
+			by0 = cell_y + chl/2;
+			blen = gph - chl;
+			translate([cell_x - cwl/2 - t/2, by0, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 90);
+			translate([cell_x + cwl/2 + t/2, by0, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 90);
 		}
 	}
 }
 
-// Inner helper: the sharp-cornered union of per-cell rects + merge bridges.
-// merged_group_footprint wraps this in an offset-opening to round the corners.
-module _mgf_sharp(group, gpw, gph, cwid, chei){
-	union(){
-		// Per-cell sharp rects (rounding is applied by the outer wrapper).
-		for (c = group){
-			j = (c-1) % column_count;
-			i = floor((c-1)/column_count);
-			cell_x = grid_x0 + j*gpw + gpw/2;
-			cell_y = grid_y0 + i*gph + gph/2;
-			cx = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
-			     (j==column_count-1 && column_count>1) ? cell_x - col_last_trim/2 :
-			     (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
-			     cell_x;
-			cy = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
-			     (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
-			     (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
-			     cell_y;
-			cwl = (j==0 && column_count>1) ? cwid - col_first_trim :
-			      (j==column_count-1 && column_count>1) ? cwid - col_last_trim :
-			      (column_count==1) ? cwid - col_first_trim - col_last_trim :
-			      cwid;
-			chl = (i==0 && i!=row_count-1) ? chei - row_first_trim :
-			      (i!=0 && i==row_count-1) ? chei - row_last_trim :
-			      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
-			      chei;
-			translate([cx, cy, 0])
-			square([cwl, chl], center=true);
-		}
-		// Horizontal bridges between adjacent merged cells in this group.
-		for (c = group){
-			j = (c-1) % column_count;
-			i = floor((c-1)/column_count);
-			if (j != column_count-1 && search(c, m_cell_h) && search(c+1, group)){
-				cell_x = grid_x0 + j*gpw + gpw/2;
-				cell_y = grid_y0 + i*gph + gph/2;
-				cy = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
-				     (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
-				     (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
-				     cell_y;
-				chl = (i==0 && i!=row_count-1) ? chei - row_first_trim :
-				      (i!=0 && i==row_count-1) ? chei - row_last_trim :
-				      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
-				      chei;
-				translate([cell_x + gpw/2, cy, 0])
-				square([gpw, chl], center=true);
-			}
-		}
-		// Vertical bridges between adjacent merged cells in this group.
-		for (c = group){
-			j = (c-1) % column_count;
-			i = floor((c-1)/column_count);
-			if (i != row_count-1 && search(c, m_c_v) && search(c+column_count, group)){
-				cell_x = grid_x0 + j*gpw + gpw/2;
-				cell_y = grid_y0 + i*gph + gph/2;
-				cx = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
-				     (j==column_count-1 && column_count>1) ? cell_x - col_last_trim/2 :
-				     (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
-				     cell_x;
-				cwl = (j==0 && column_count>1) ? cwid - col_first_trim :
-				      (j==column_count-1 && column_count>1) ? cwid - col_last_trim :
-				      (column_count==1) ? cwid - col_first_trim - col_last_trim :
-				      cwid;
-				translate([cx, cell_y + gph/2, 0])
-				square([cwl, gph], center=true);
-			}
-		}
+// Place one of aridge1/2/3/4 at the current origin with the given corner
+// radius and thickness. Mirrors the translate+rotate the V1 place_addition
+// rridge dispatch uses, so the four quadrants behave identically here.
+module _aridge_quadrant(which, radius, thickness){
+	if (which == "aridge1"){
+		translate([-radius, -radius, 0]) aridge(radius, thickness, height_of_ridge);
+	}
+	else if (which == "aridge2"){
+		translate([-radius, radius, 0]) rotate([0,0,-90]) aridge(radius, thickness, height_of_ridge);
+	}
+	else if (which == "aridge3"){
+		translate([radius, radius, 0]) rotate([0,0,180]) aridge(radius, thickness, height_of_ridge);
+	}
+	else if (which == "aridge4"){
+		translate([radius, -radius, 0]) rotate([0,0,90]) aridge(radius, thickness, height_of_ridge);
 	}
 }
 
