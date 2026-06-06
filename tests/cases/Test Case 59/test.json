@@ -1,0 +1,14 @@
+{
+  "description": "cell ridge wrapping a +-shaped (cross) merged cell group {3,6,7,8,11}; ridge anchored on cell 11 (not the group's minimum cell) to also exercise the selection-anchor logic",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "ridge wraps a cross merge",
+      "params": "Test Case 59",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
