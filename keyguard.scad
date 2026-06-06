@@ -3832,10 +3832,20 @@ module cell_ridges(){
 // (sized to the cell opening — c__w x c__h) plus a bridge rect between every
 // adjacent pair of merged cells in the group. Used as both the inner outline of
 // the perimeter ridge and (after offset(r=thickness)) its outer outline, so the
-// ridge's inner outline matches the opening exactly.
+// ridge's inner outline matches the opening exactly. The final offset(r=ocr)
+// offset(r=-ocr) is a morphological opening on the unioned sharp footprint —
+// it rounds the outer convex corners AND the inner concave corners (at L/T
+// merge bays) at radius `ocr`, mirroring what cells() does via the oa1-4 cuts.
 module merged_group_footprint(group, gpw, gph, cwid, chei){
+	if (ocr > 0) offset(r=ocr) offset(r=-ocr) _mgf_sharp(group, gpw, gph, cwid, chei);
+	else _mgf_sharp(group, gpw, gph, cwid, chei);
+}
+
+// Inner helper: the sharp-cornered union of per-cell rects + merge bridges.
+// merged_group_footprint wraps this in an offset-opening to round the corners.
+module _mgf_sharp(group, gpw, gph, cwid, chei){
 	union(){
-		// Per-cell rounded openings.
+		// Per-cell sharp rects (rounding is applied by the outer wrapper).
 		for (c = group){
 			j = (c-1) % column_count;
 			i = floor((c-1)/column_count);
@@ -3858,12 +3868,7 @@ module merged_group_footprint(group, gpw, gph, cwid, chei){
 			      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
 			      chei;
 			translate([cx, cy, 0])
-			if (ocr > 0){
-				offset(r=ocr) offset(r=-ocr) square([cwl, chl], center=true);
-			}
-			else{
-				square([cwl, chl], center=true);
-			}
+			square([cwl, chl], center=true);
 		}
 		// Horizontal bridges between adjacent merged cells in this group.
 		for (c = group){
