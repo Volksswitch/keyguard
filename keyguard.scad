@@ -3755,7 +3755,6 @@ module cell_ridges(){
 	cwid = (cell_shape=="rectangular") ? cw : cell_diameter;
 	chei = (cell_shape=="rectangular") ? ch : cell_diameter;
 
-	slope_adjust = sat/tan(rs_inc_acrylic);
 	// place_addition_v2 internally translates by -sata and adds sata to hgt2; the wall
 	// occupies z=[-kt/2, -kt/2+height_of_ridge+sat] when the caller passes
 	// translate [...,-kt/2+sata] and top_slope_mm = height_of_ridge + sat - sata.
@@ -3791,12 +3790,11 @@ module cell_ridges(){
 					// number in the group.
 					if (current_cell == _cmg_min(group)){
 						if (len(group) == 1){
-							// Single-cell ridge: rounded-rectangle wall via V2 rridge
-							// (inner-based — width/height passed are the opening dims).
-							rw = c__w + slope_adjust*2 - cell_edge_chamfer;
-							rh = c__h + slope_adjust*2 - cell_edge_chamfer;
-							translate([c__x - rw/2, c__y - rh/2, -kt/2 + sata])
-							place_addition_v2(rw, rh, "rridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, ocr, undef);
+							// Single-cell ridge: rounded-rectangle wall via V2 rridge.
+							// Pass the cell opening dims as INNER — the wall grows
+							// outward, leaving the opening at its full size.
+							translate([c__x - c__w/2, c__y - c__h/2, -kt/2 + sata])
+							place_addition_v2(c__w, c__h, "rridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, ocr, undef);
 						}
 						else{
 							// Multi-cell merge: build the 2D footprint of the merged
@@ -3806,30 +3804,30 @@ module cell_ridges(){
 							linear_extrude(height=ridge_hgt)
 							difference(){
 								offset(r=thickness_of_ridge)
-								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei, slope_adjust);
-								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei, slope_adjust);
+								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei);
+								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei);
 							}
 						}
 					}
 				}
 				else{
 					// Circular cells: merging is not supported for circular cells, so
-					// always use the per-cell circular wall.
-					cd = cell_diameter + slope_adjust*2 - cell_edge_chamfer;
+					// always use the per-cell circular wall, with the opening diameter
+					// as the inner diameter.
 					translate([c__x, c__y, -kt/2 + sata])
-					place_addition_v2(0, cd, "cridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, 0, undef);
+					place_addition_v2(0, cell_diameter, "cridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, 0, undef);
 				}
 			}
 		}
 	}
 }
 
-// 2D footprint of a merged cell group at the ridge's z plane: union of each cell's
-// rounded-opening rect (sized to the slope-expanded cell opening) plus a bridge rect
-// between every adjacent pair of merged cells in the group. Used as both the inner
-// outline of the perimeter ridge and (after offset(r=thickness)) its outer outline.
-module merged_group_footprint(group, gpw, gph, cwid, chei, slope_adjust){
-	bump = slope_adjust*2 - cell_edge_chamfer;
+// 2D footprint of a merged cell group: union of each cell's rounded-opening rect
+// (sized to the cell opening — c__w x c__h) plus a bridge rect between every
+// adjacent pair of merged cells in the group. Used as both the inner outline of
+// the perimeter ridge and (after offset(r=thickness)) its outer outline, so the
+// ridge's inner outline matches the opening exactly.
+module merged_group_footprint(group, gpw, gph, cwid, chei){
 	union(){
 		// Per-cell rounded openings.
 		for (c = group){
@@ -3855,10 +3853,10 @@ module merged_group_footprint(group, gpw, gph, cwid, chei, slope_adjust){
 			      chei;
 			translate([cx, cy, 0])
 			if (ocr > 0){
-				offset(r=ocr) offset(r=-ocr) square([cwl+bump, chl+bump], center=true);
+				offset(r=ocr) offset(r=-ocr) square([cwl, chl], center=true);
 			}
 			else{
-				square([cwl+bump, chl+bump], center=true);
+				square([cwl, chl], center=true);
 			}
 		}
 		// Horizontal bridges between adjacent merged cells in this group.
@@ -3877,7 +3875,7 @@ module merged_group_footprint(group, gpw, gph, cwid, chei, slope_adjust){
 				      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
 				      chei;
 				translate([cell_x + gpw/2, cy, 0])
-				square([gpw, chl+bump], center=true);
+				square([gpw, chl], center=true);
 			}
 		}
 		// Vertical bridges between adjacent merged cells in this group.
@@ -3896,7 +3894,7 @@ module merged_group_footprint(group, gpw, gph, cwid, chei, slope_adjust){
 				      (column_count==1) ? cwid - col_first_trim - col_last_trim :
 				      cwid;
 				translate([cx, cell_y + gph/2, 0])
-				square([cwl+bump, gph], center=true);
+				square([cwl, gph], center=true);
 			}
 		}
 	}
