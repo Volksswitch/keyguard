@@ -31,6 +31,33 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SCAD_FILE="$PROJECT_ROOT/keyguard.scad"
 JSON_FILE="$PROJECT_ROOT/keyguard.json"
+
+# Single EXIT cleanup — files added to CLEANUP_FILES are removed on exit, and
+# if we hold the run lock we drop it. Keeping this in one place lets the
+# BOM-strip below and the lock-acquisition further down both register without
+# clobbering each other's traps.
+CLEANUP_FILES=()
+_OWNS_LOCK=false
+_test_cleanup() {
+    local f
+    for f in "${CLEANUP_FILES[@]}"; do [[ -e "$f" ]] && rm -f "$f"; done
+    [[ "$_OWNS_LOCK" == "true" && -f "${LOCK_FILE:-}" ]] && rm -f "$LOCK_FILE"
+}
+trap _test_cleanup EXIT
+
+# OpenSCAD 2021.01's `-p ... -P ...` parameter-set loader does NOT tolerate a
+# UTF-8 BOM (0xEF 0xBB 0xBF) at the start of the JSON file — it errors with
+# `expected value` at column 1 and silently falls back to the .scad's default
+# parameters, producing wrong renders. The Customizer GUI writes the BOM, so
+# the on-disk keyguard.json keeps it. We work around the CLI limitation by
+# copying to a BOM-less temp file and pointing -p at that. The on-disk file
+# is never modified.
+if head -c 3 "$JSON_FILE" 2>/dev/null | cmp -s - <(printf '\xef\xbb\xbf'); then
+    _JSON_NOBOM="$(mktemp --suffix=.json)"
+    tail -c +4 "$JSON_FILE" > "$_JSON_NOBOM"
+    JSON_FILE="$_JSON_NOBOM"
+    CLEANUP_FILES+=("$_JSON_NOBOM")
+fi
 OPENINGS_FILE="$PROJECT_ROOT/openings_and_additions.txt"
 DEFAULT_SVG="$PROJECT_ROOT/default.svg"
 OUTPUT_DIR="$PROJECT_ROOT/output/test"
@@ -415,7 +442,7 @@ acquire_test_lock() {
         rm -f "$LOCK_FILE"   # stale lock from a previously crashed run
     fi
     echo "$$" > "$LOCK_FILE"
-    trap 'rm -f "$LOCK_FILE"' EXIT
+    _OWNS_LOCK=true
 }
 
 # ── Layer 1: sca2d lint ────────────────────────────────────────────────────────
