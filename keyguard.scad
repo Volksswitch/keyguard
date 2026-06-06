@@ -3877,16 +3877,48 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		br_diag_in = (j != column_count-1) && (i != 0) && search(c+1-column_count, group);
 		bl_diag_in = (j != 0) && (i != 0) && search(c-1-column_count, group);
 
-		// Side ridges run the FULL cell side plus a `_ridge_chamfer` (= 0.5 mm)
-		// overlap on each end. The overlap sits inside the adjacent component
-		// (aridge body at a corner, or another ridge body at a cell/bridge
-		// joint) so the `ridge` module's end-cap chamfer notches are hidden.
-		_ridge_chamfer = 0.5;
-		_ov = _ridge_chamfer;
-		if (!top_brg) translate([cx - cwl/2 - _ov, cy + chl/2 + t/2, -kt/2 + sata]) ridge(cwl + 2*_ov, t, height_of_ridge, 0);
-		if (!bot_brg) translate([cx - cwl/2 - _ov, cy - chl/2 - t/2, -kt/2 + sata]) ridge(cwl + 2*_ov, t, height_of_ridge, 0);
-		if (!right_brg) translate([cx + cwl/2 + t/2, cy - chl/2 - _ov, -kt/2 + sata]) ridge(chl + 2*_ov, t, height_of_ridge, 90);
-		if (!left_brg) translate([cx - cwl/2 - t/2, cy - chl/2 - _ov, -kt/2 + sata]) ridge(chl + 2*_ov, t, height_of_ridge, 90);
+		// Side ridges. Each end is positioned according to what's at the
+		// adjacent corner:
+		//   • CONVEX (both adjacent sides exposed → corner has an aridge):
+		//     end AT the aridge tangent = cell_edge ∓ ccr. The aridge takes
+		//     over from there; extending past would push the ridge into the
+		//     aridge area where the curved outer face is INSIDE the bridge's
+		//     straight outer line, producing a visible drop.
+		//   • SKIP (one adjacent side bridged → perpendicular bridge meets
+		//     here collinearly): extend by `_ov` past the cell edge so the
+		//     end-cap notch sits inside the perpendicular bridge.
+		// Cell side ridges are only emitted when THIS side is exposed, so the
+		// adjacent corner can never be concave (concave requires THIS side
+		// also bridged).
+		_ov = 0.5;
+		if (!top_brg){
+			tl_off = left_brg ? -_ov : ccr;
+			tr_off = right_brg ? -_ov : ccr;
+			s = cx - cwl/2 + tl_off;
+			e = cx + cwl/2 - tr_off;
+			if (e > s) translate([s, cy + chl/2 + t/2, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 0);
+		}
+		if (!bot_brg){
+			bl_off = left_brg ? -_ov : ccr;
+			br_off = right_brg ? -_ov : ccr;
+			s = cx - cwl/2 + bl_off;
+			e = cx + cwl/2 - br_off;
+			if (e > s) translate([s, cy - chl/2 - t/2, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 0);
+		}
+		if (!right_brg){
+			br_off = bot_brg ? -_ov : ccr;
+			tr_off = top_brg ? -_ov : ccr;
+			s = cy - chl/2 + br_off;
+			e = cy + chl/2 - tr_off;
+			if (e > s) translate([cx + cwl/2 + t/2, s, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 90);
+		}
+		if (!left_brg){
+			bl_off = bot_brg ? -_ov : ccr;
+			tl_off = top_brg ? -_ov : ccr;
+			s = cy - chl/2 + bl_off;
+			e = cy + chl/2 - tl_off;
+			if (e > s) translate([cx - cwl/2 - t/2, s, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 90);
+		}
 
 		// Corner aridges. Convex outer corners take the OPPOSITE-quadrant
 		// aridge (TR cell corner -> aridge1, TL -> aridge4, BL -> aridge3,
@@ -3939,28 +3971,39 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		c_tl_diag = (j != 0) && (i != row_count-1) && search(c-1+column_count, group);
 		c_br_diag = (j != column_count-1) && (i != 0) && search(c+1-column_count, group);
 		c_bl_diag = (j != 0) && (i != 0) && search(c-1-column_count, group);
-		_ov2 = 0.5;
-		shorten2 = ccr + t;
-		// Horizontal bridge from c to c+1. Each transverse side spans the gap
-		// between cells (cell c's right edge to cell c+1's left edge). At any
-		// end whose adjacent cell-corner is concave, the ridge is shortened by
-		// `(ccr + t)` to leave room for the aridge filling that corner. A
-		// `_ov2` overlap is added at each end so end-cap notches sit inside
-		// the adjacent component (aridge or cell ridge).
+		// Bridge ridges. Each transverse end is classified by what's at the
+		// adjacent cell-corner — the side parallel to the bridge is always
+		// bridged here (that's the bridge's reason to exist), so the corner
+		// is either CONCAVE (perpendicular side also bridged AND diagonal
+		// not in group → aridge3 fills the corner) or SKIP (perpendicular
+		// side exposed → cell side ridge meets here collinearly), with one
+		// rare INTERIOR case (perpendicular side bridged AND diagonal in
+		// group → 2×2 merge, this bridge transverse is internal to the
+		// merge; treated as a no-op offset for now).
+		//   • CONCAVE  → bridge end SHORTENS by (ccr + t) so it ends at the
+		//                aridge3's tangent.
+		//   • SKIP     → bridge end EXTENDS by `_ov` past the cell edge so
+		//                its end-cap notch hides inside the cell side ridge.
+		//   • INTERIOR → no adjustment (bridge ends at cell edge); the 2×2
+		//                case still needs the transverse side suppressed.
+		_ov = 0.5;
+		shorten = ccr + t;
+		// Horizontal bridge from c to c+1.
 		if ((j != column_count-1) && search(c, m_cell_h) && search(c+1, group)){
 			c1 = c + 1;
 			c1_top_brg = (i != row_count-1) && search(c1, m_c_v) && search(c1+column_count, group);
 			c1_bot_brg = (i != 0) && search(c1-column_count, m_c_v) && search(c1-column_count, group);
 			c1_tl_diag = (i != row_count-1) && search(c, group);    // c1-1 == c
 			c1_bl_diag = (i != 0) && search(c-column_count, group); // c1-1-ncols
-			west_top_conc = c_top_brg && !c_tr_diag;       // cell c TR
-			east_top_conc = c1_top_brg && !c1_tl_diag;     // cell c+1 TL
-			west_bot_conc = c_bot_brg && !c_br_diag;       // cell c BR
-			east_bot_conc = c1_bot_brg && !c1_bl_diag;     // cell c+1 BL
-			top_start = cell_x + cwl/2 + (west_top_conc ? shorten2 : 0) - _ov2;
-			top_end   = cell_x + gpw - cwl/2 - (east_top_conc ? shorten2 : 0) + _ov2;
-			bot_start = cell_x + cwl/2 + (west_bot_conc ? shorten2 : 0) - _ov2;
-			bot_end   = cell_x + gpw - cwl/2 - (east_bot_conc ? shorten2 : 0) + _ov2;
+			// West top end → cell c TR. East top end → cell c+1 TL. (etc.)
+			west_top_off = c_top_brg ? (c_tr_diag ? 0 : shorten) : -_ov;
+			east_top_off = c1_top_brg ? (c1_tl_diag ? 0 : shorten) : -_ov;
+			west_bot_off = c_bot_brg ? (c_br_diag ? 0 : shorten) : -_ov;
+			east_bot_off = c1_bot_brg ? (c1_bl_diag ? 0 : shorten) : -_ov;
+			top_start = cell_x + cwl/2 + west_top_off;
+			top_end   = cell_x + gpw - cwl/2 - east_top_off;
+			bot_start = cell_x + cwl/2 + west_bot_off;
+			bot_end   = cell_x + gpw - cwl/2 - east_bot_off;
 			if (top_end > top_start)
 				translate([top_start, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(top_end - top_start, t, height_of_ridge, 0);
 			if (bot_end > bot_start)
@@ -3973,14 +4016,14 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			c2_right_brg = (j != column_count-1) && search(c2, m_cell_h) && search(c2+1, group);
 			c2_bl_diag = (j != 0) && search(c-1, group);                  // c2-1-ncols == c-1
 			c2_br_diag = (j != column_count-1) && search(c+1, group);     // c2+1-ncols == c+1
-			south_left_conc  = c_left_brg  && !c_tl_diag;  // cell c TL
-			north_left_conc  = c2_left_brg && !c2_bl_diag; // cell c2 BL
-			south_right_conc = c_right_brg && !c_tr_diag;  // cell c TR
-			north_right_conc = c2_right_brg && !c2_br_diag;// cell c2 BR
-			left_start  = cell_y + chl/2 + (south_left_conc  ? shorten2 : 0) - _ov2;
-			left_end    = cell_y + gph - chl/2 - (north_left_conc  ? shorten2 : 0) + _ov2;
-			right_start = cell_y + chl/2 + (south_right_conc ? shorten2 : 0) - _ov2;
-			right_end   = cell_y + gph - chl/2 - (north_right_conc ? shorten2 : 0) + _ov2;
+			south_left_off  = c_left_brg  ? (c_tl_diag  ? 0 : shorten) : -_ov;  // cell c TL
+			north_left_off  = c2_left_brg ? (c2_bl_diag ? 0 : shorten) : -_ov;  // cell c2 BL
+			south_right_off = c_right_brg ? (c_tr_diag  ? 0 : shorten) : -_ov;  // cell c TR
+			north_right_off = c2_right_brg? (c2_br_diag ? 0 : shorten) : -_ov;  // cell c2 BR
+			left_start  = cell_y + chl/2 + south_left_off;
+			left_end    = cell_y + gph - chl/2 - north_left_off;
+			right_start = cell_y + chl/2 + south_right_off;
+			right_end   = cell_y + gph - chl/2 - north_right_off;
 			if (left_end > left_start)
 				translate([cell_x - cwl/2 - t/2, left_start, -kt/2 + sata]) ridge(left_end - left_start, t, height_of_ridge, 90);
 			if (right_end > right_start)
