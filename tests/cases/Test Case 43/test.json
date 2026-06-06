@@ -17,6 +17,14 @@
       "vpr": [30, 0, 0],
       "vpd": 500,
       "expected": "step2_expected.png"
+    },
+    {
+      "label": "ridge wrapping an L-shaped merged cell group {2,3,6}",
+      "params": "Test Case 43-merged",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step3_expected.png"
     }
   ]
 }
