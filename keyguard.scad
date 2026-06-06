@@ -3926,17 +3926,26 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		      (i!=0 && i==row_count-1) ? chei - row_last_trim :
 		      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
 		      chei;
-		// Horizontal bridge from c to c+1. The bridge ridges run from cell
-		// c's centre to cell c+1's centre so they fully overlap each cell's
-		// side ridges — no gap at the cell/bridge joint.
+		// Horizontal bridge from c to c+1. Bridge ridges span ONLY the gap
+		// between cells (cell c's right edge to cell c+1's left edge). Going
+		// centre-to-centre would extend the ridge across each cell's top/
+		// bottom edges — fine when those edges are exposed, but creates a
+		// wall *inside the opening* when the cell has another perpendicular
+		// bridge there (e.g. cell 3 of an L-merge with both H and V merges
+		// from the same cell). The cell side ridges already cover the
+		// cell-side portion up to the cell edge.
 		if ((j != column_count-1) && search(c, m_cell_h) && search(c+1, group)){
-			translate([cell_x, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(gpw, t, height_of_ridge, 0);
-			translate([cell_x, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(gpw, t, height_of_ridge, 0);
+			bx0 = cell_x + cwl/2;
+			blen = gpw - cwl;
+			translate([bx0, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 0);
+			translate([bx0, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 0);
 		}
-		// Vertical bridge from c to c+column_count.
+		// Vertical bridge from c to c+column_count — gap-only for the same reason.
 		if ((i != row_count-1) && search(c, m_c_v) && search(c+column_count, group)){
-			translate([cell_x - cwl/2 - t/2, cell_y, -kt/2 + sata]) ridge(gph, t, height_of_ridge, 90);
-			translate([cell_x + cwl/2 + t/2, cell_y, -kt/2 + sata]) ridge(gph, t, height_of_ridge, 90);
+			by0 = cell_y + chl/2;
+			blen = gph - chl;
+			translate([cell_x - cwl/2 - t/2, by0, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 90);
+			translate([cell_x + cwl/2 + t/2, by0, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 90);
 		}
 	}
 }
