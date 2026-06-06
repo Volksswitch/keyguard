@@ -3716,14 +3716,50 @@ module cells(depth){
 	}
 }
 
+// Returns the list of cells reachable from `seed` via horizontal/vertical merge links
+// (BFS). A non-merged cell returns [seed].
+function cell_merge_group(seed) = _cmg_bfs([seed], [seed]);
+
+function _cmg_bfs(frontier, visited) =
+	let (raw = [for (c = frontier) for (n = _cmg_neighbors(c)) if (search(n, visited)==[]) n])
+	let (next = _cmg_dedup(raw, 0, []))
+	(len(next) == 0) ? visited
+	: _cmg_bfs(next, concat(visited, next));
+
+function _cmg_neighbors(c) =
+	let (j = (c-1) % column_count, i = floor((c-1)/column_count))
+	[
+		if (j != column_count-1 && search(c, m_cell_h)) c+1,
+		if (j != 0 && search(c-1, m_cell_h)) c-1,
+		if (i != row_count-1 && search(c, m_c_v)) c+column_count,
+		if (i != 0 && search(c-column_count, m_c_v)) c-column_count,
+	];
+
+function _cmg_dedup(list, i, acc) =
+	(i >= len(list)) ? acc
+	: (search(list[i], acc)==[]) ? _cmg_dedup(list, i+1, concat(acc, [list[i]]))
+	: _cmg_dedup(list, i+1, acc);
+
+function _cmg_min(list, i=0, m=undef) =
+	(i >= len(list)) ? m
+	: _cmg_min(list, i+1, (m==undef || list[i]<m) ? list[i] : m);
+
 // Adds tactile ridges around the specified grid cells, using either a rounded-rectangle
-// wall or a circular wall depending on the cell shape.
+// wall or a circular wall depending on the cell shape. Merged cells (horizontal,
+// vertical, or L-shaped combinations) are recognised and wrapped by a single
+// perimeter ridge so the ridge never cuts across the interior of the merge.
 module cell_ridges(){
 	grid_part_w = grid_width/number_of_columns;
 	grid_part_h = grid_height/number_of_rows;
-	
+
 	cwid = (cell_shape=="rectangular") ? cw : cell_diameter;
 	chei = (cell_shape=="rectangular") ? ch : cell_diameter;
+
+	slope_adjust = sat/tan(rs_inc_acrylic);
+	// place_addition_v2 internally translates by -sata and adds sata to hgt2; the wall
+	// occupies z=[-kt/2, -kt/2+height_of_ridge+sat] when the caller passes
+	// translate [...,-kt/2+sata] and top_slope_mm = height_of_ridge + sat - sata.
+	ridge_hgt = height_of_ridge + sat - sata;
 
 	for (i = [0:row_count-1]){
 		for (j = [0:column_count-1]){
@@ -3731,11 +3767,11 @@ module cell_ridges(){
 			cell_x = grid_x0 + j*grid_part_w + grid_part_w/2;
 			cell_y = grid_y0 + i*grid_part_h + grid_part_h/2;
 
-			c__x = (j==0 && column_count>1) ? cell_x + col_first_trim/2 : 
+			c__x = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
 				  (j==column_count-1 && column_count > 1) ? cell_x - col_last_trim/2 :
 				  (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
 				   cell_x;
-			c__y = (i==0 && row_count>1) ? cell_y + row_first_trim/2 : 
+			c__y = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
 				  (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
 				  (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
 				   cell_y;
@@ -3747,27 +3783,120 @@ module cell_ridges(){
 				  (i!=0 && i==row_count-1) ? chei - row_last_trim :
 				  (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
 				  chei;
-		
+
 			if (search(current_cell,a_r_a)){
-				slope_adjust = sat/tan(rs_inc_acrylic);
-				// Route through place_addition_v2 with rridge/cridge. The shape primitives
-				// (rounded_rectangle_wall / circular_wall) have their polygon at z=[0,hgt2]
-				// in local frame; place_addition_v2 adds an internal translate of [..., -sata]
-				// and uses hgt2 = top_slope_mm + sata. To preserve the original wall extent
-				// of z=[-kt/2, -kt/2+height_of_ridge+sat], the call-site translate is
-				// [..., -kt/2+sata] and top_slope_mm = height_of_ridge + sat - sata.
-				ridge_hgt = height_of_ridge + sat - sata;
 				if (cell_shape=="rectangular"){
-					rw = c__w + slope_adjust*2 - cell_edge_chamfer;
-					rh = c__h + slope_adjust*2 - cell_edge_chamfer;
-					translate([c__x - rw/2, c__y - rh/2, -kt/2 + sata])
-					place_addition_v2(rw, rh, "rridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, ocr, undef);
+					group = cell_merge_group(current_cell);
+					// Emit the ridge exactly once per group, anchored at the lowest cell
+					// number in the group.
+					if (current_cell == _cmg_min(group)){
+						if (len(group) == 1){
+							// Single-cell ridge: rounded-rectangle wall via V2 rridge
+							// (inner-based — width/height passed are the opening dims).
+							rw = c__w + slope_adjust*2 - cell_edge_chamfer;
+							rh = c__h + slope_adjust*2 - cell_edge_chamfer;
+							translate([c__x - rw/2, c__y - rh/2, -kt/2 + sata])
+							place_addition_v2(rw, rh, "rridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, ocr, undef);
+						}
+						else{
+							// Multi-cell merge: build the 2D footprint of the merged
+							// opening, then extrude the annulus (footprint + thickness)
+							// minus footprint to form a single perimeter wall.
+							translate([0, 0, -kt/2 + sata])
+							linear_extrude(height=ridge_hgt)
+							difference(){
+								offset(r=thickness_of_ridge)
+								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei, slope_adjust);
+								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei, slope_adjust);
+							}
+						}
+					}
 				}
 				else{
+					// Circular cells: merging is not supported for circular cells, so
+					// always use the per-cell circular wall.
 					cd = cell_diameter + slope_adjust*2 - cell_edge_chamfer;
 					translate([c__x, c__y, -kt/2 + sata])
 					place_addition_v2(0, cd, "cridge", height_of_ridge, ridge_hgt, thickness_of_ridge, thickness_of_ridge, 0, 0, 0, undef);
 				}
+			}
+		}
+	}
+}
+
+// 2D footprint of a merged cell group at the ridge's z plane: union of each cell's
+// rounded-opening rect (sized to the slope-expanded cell opening) plus a bridge rect
+// between every adjacent pair of merged cells in the group. Used as both the inner
+// outline of the perimeter ridge and (after offset(r=thickness)) its outer outline.
+module merged_group_footprint(group, gpw, gph, cwid, chei, slope_adjust){
+	bump = slope_adjust*2 - cell_edge_chamfer;
+	union(){
+		// Per-cell rounded openings.
+		for (c = group){
+			j = (c-1) % column_count;
+			i = floor((c-1)/column_count);
+			cell_x = grid_x0 + j*gpw + gpw/2;
+			cell_y = grid_y0 + i*gph + gph/2;
+			cx = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
+			     (j==column_count-1 && column_count>1) ? cell_x - col_last_trim/2 :
+			     (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
+			     cell_x;
+			cy = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
+			     (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
+			     (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
+			     cell_y;
+			cwl = (j==0 && column_count>1) ? cwid - col_first_trim :
+			      (j==column_count-1 && column_count>1) ? cwid - col_last_trim :
+			      (column_count==1) ? cwid - col_first_trim - col_last_trim :
+			      cwid;
+			chl = (i==0 && i!=row_count-1) ? chei - row_first_trim :
+			      (i!=0 && i==row_count-1) ? chei - row_last_trim :
+			      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
+			      chei;
+			translate([cx, cy, 0])
+			if (ocr > 0){
+				offset(r=ocr) offset(r=-ocr) square([cwl+bump, chl+bump], center=true);
+			}
+			else{
+				square([cwl+bump, chl+bump], center=true);
+			}
+		}
+		// Horizontal bridges between adjacent merged cells in this group.
+		for (c = group){
+			j = (c-1) % column_count;
+			i = floor((c-1)/column_count);
+			if (j != column_count-1 && search(c, m_cell_h) && search(c+1, group)){
+				cell_x = grid_x0 + j*gpw + gpw/2;
+				cell_y = grid_y0 + i*gph + gph/2;
+				cy = (i==0 && row_count>1) ? cell_y + row_first_trim/2 :
+				     (i==row_count-1 && row_count>1) ? cell_y - row_last_trim/2 :
+				     (row_count==1) ? cell_y + row_first_trim/2 - row_last_trim/2 :
+				     cell_y;
+				chl = (i==0 && i!=row_count-1) ? chei - row_first_trim :
+				      (i!=0 && i==row_count-1) ? chei - row_last_trim :
+				      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
+				      chei;
+				translate([cell_x + gpw/2, cy, 0])
+				square([gpw, chl+bump], center=true);
+			}
+		}
+		// Vertical bridges between adjacent merged cells in this group.
+		for (c = group){
+			j = (c-1) % column_count;
+			i = floor((c-1)/column_count);
+			if (i != row_count-1 && search(c, m_c_v) && search(c+column_count, group)){
+				cell_x = grid_x0 + j*gpw + gpw/2;
+				cell_y = grid_y0 + i*gph + gph/2;
+				cx = (j==0 && column_count>1) ? cell_x + col_first_trim/2 :
+				     (j==column_count-1 && column_count>1) ? cell_x - col_last_trim/2 :
+				     (column_count==1) ? cell_x + col_first_trim/2 - col_last_trim/2 :
+				     cell_x;
+				cwl = (j==0 && column_count>1) ? cwid - col_first_trim :
+				      (j==column_count-1 && column_count>1) ? cwid - col_last_trim :
+				      (column_count==1) ? cwid - col_first_trim - col_last_trim :
+				      cwid;
+				translate([cx, cell_y + gph/2, 0])
+				square([cwl+bump, gph], center=true);
 			}
 		}
 	}
@@ -5865,26 +5994,30 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="rridge"){
+		// width/height = INNER opening dims; wall grows outward by thickness on every side
+		// so the thickness never encroaches on the opening.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,left_slope])
-			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
+			rounded_rectangle_wall(addition_width+2*bottom_slope_mm,addition_height+2*bottom_slope_mm,corner_radius+bottom_slope_mm,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="crridge"){
+		// width/height = INNER opening dims (centre-anchored); wall grows outward.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([0,0,-sata])
 			rotate([0,0,left_slope])
-			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
+			rounded_rectangle_wall(addition_width+2*bottom_slope_mm,addition_height+2*bottom_slope_mm,corner_radius+bottom_slope_mm,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="hdridge"){
+		// width/height = INNER opening dims; wall grows outward.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,left_slope])
-			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,bottom_slope_mm,top_slope_mm+sata);
+			rounded_rectangle_wall(addition_width+2*bottom_slope_mm,addition_height+2*bottom_slope_mm,min(addition_width,addition_height)/2+bottom_slope_mm,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
@@ -6025,18 +6158,21 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, cb_m
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid length or slopes — skipping.")); }
 	}
 	else if (shape=="rridge"){
+		// width/height = INNER opening dims; wall grows outward by thickness on every side
+		// so the thickness never encroaches on the opening.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,rotation])
-			rounded_rectangle_wall(addition_width,addition_height,corner_radius,thickness_mm,cb_mm+sata);
+			rounded_rectangle_wall(addition_width+2*thickness_mm,addition_height+2*thickness_mm,corner_radius+thickness_mm,thickness_mm,cb_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="hdridge"){
+		// width/height = INNER opening dims; wall grows outward.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,rotation])
-			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,thickness_mm,cb_mm+sata);
+			rounded_rectangle_wall(addition_width+2*thickness_mm,addition_height+2*thickness_mm,min(addition_width,addition_height)/2+thickness_mm,thickness_mm,cb_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
