@@ -276,7 +276,7 @@ It only needs to be present when this feature is in use.
   `-p keyguard.json -P "..."` does the same. The file must start with `{` as its
   first byte. A BOM was accidentally added by commit `0360338` (the
   `mounting_method` rename) and lurked for a couple of weeks before anyone
-  noticed; strip it back out (commit `<bom-strip-sha>`). When editing
+  noticed; strip it back out (commit `d673077`). When editing
   `keyguard.json` programmatically, read it as `utf-8-sig` (which discards a BOM
   if present) and write it back as `utf-8` (no BOM) with `\r\n` line endings to
   match the existing format. `scripts/test.sh` has a defensive BOM-strip preflight
