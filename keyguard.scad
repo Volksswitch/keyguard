@@ -3799,9 +3799,13 @@ module cell_ridges(){
 			if (search(current_cell,a_r_a)){
 				if (cell_shape=="rectangular"){
 					group = cell_merge_group(current_cell);
-					// Emit the ridge exactly once per group, anchored at the lowest cell
-					// number in the group.
-					if (current_cell == _cmg_min(group)){
+					// Emit the ridge exactly once per group, anchored at the lowest
+					// USER-SELECTED cell in the group. Anchoring at the lowest cell
+					// in the group regardless of selection would miss the ridge when
+					// the user picks (e.g.) the centre cell of a cross merge whose
+					// numeric minimum is an arm tip the user didn't select.
+					selected_in_group = [for (gc = group) if (search(gc, a_r_a)) gc];
+					if (current_cell == _cmg_min(selected_in_group)){
 						if (len(group) == 1){
 							// Single-cell ridge: rounded-rectangle wall via V2 rridge.
 							// Pass the cell opening dims as INNER — the wall grows
@@ -3993,7 +3997,7 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			c1 = c + 1;
 			c1_top_brg = (i != row_count-1) && search(c1, m_c_v) && search(c1+column_count, group);
 			c1_bot_brg = (i != 0) && search(c1-column_count, m_c_v) && search(c1-column_count, group);
-			c1_tl_diag = (i != row_count-1) && search(c, group);    // c1-1 == c
+			c1_tl_diag = (i != row_count-1) && search(c + column_count, group); // c1's TL diag = c1-1+ncols = c+ncols
 			c1_bl_diag = (i != 0) && search(c-column_count, group); // c1-1-ncols
 			// West top end → cell c TR. East top end → cell c+1 TL. (etc.)
 			west_top_off = c_top_brg ? (c_tr_diag ? 0 : shorten) : -_ov;
