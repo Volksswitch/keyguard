@@ -3877,13 +3877,16 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		br_diag_in = (j != column_count-1) && (i != 0) && search(c+1-column_count, group);
 		bl_diag_in = (j != 0) && (i != 0) && search(c-1-column_count, group);
 
-		// Side ridges run the FULL cell side. They overlap the corner
-		// aridges by `cr` on each end so the chamfered top profile is
-		// continuous (no end-stub gap visible at the joint).
-		if (!top_brg) translate([cx - cwl/2, cy + chl/2 + t/2, -kt/2 + sata]) ridge(cwl, t, height_of_ridge, 0);
-		if (!bot_brg) translate([cx - cwl/2, cy - chl/2 - t/2, -kt/2 + sata]) ridge(cwl, t, height_of_ridge, 0);
-		if (!right_brg) translate([cx + cwl/2 + t/2, cy - chl/2, -kt/2 + sata]) ridge(chl, t, height_of_ridge, 90);
-		if (!left_brg) translate([cx - cwl/2 - t/2, cy - chl/2, -kt/2 + sata]) ridge(chl, t, height_of_ridge, 90);
+		// Side ridges run the FULL cell side plus a `_ridge_chamfer` (= 0.5 mm)
+		// overlap on each end. The overlap sits inside the adjacent component
+		// (aridge body at a corner, or another ridge body at a cell/bridge
+		// joint) so the `ridge` module's end-cap chamfer notches are hidden.
+		_ridge_chamfer = 0.5;
+		_ov = _ridge_chamfer;
+		if (!top_brg) translate([cx - cwl/2 - _ov, cy + chl/2 + t/2, -kt/2 + sata]) ridge(cwl + 2*_ov, t, height_of_ridge, 0);
+		if (!bot_brg) translate([cx - cwl/2 - _ov, cy - chl/2 - t/2, -kt/2 + sata]) ridge(cwl + 2*_ov, t, height_of_ridge, 0);
+		if (!right_brg) translate([cx + cwl/2 + t/2, cy - chl/2 - _ov, -kt/2 + sata]) ridge(chl + 2*_ov, t, height_of_ridge, 90);
+		if (!left_brg) translate([cx - cwl/2 - t/2, cy - chl/2 - _ov, -kt/2 + sata]) ridge(chl + 2*_ov, t, height_of_ridge, 90);
 
 		// Corner aridges. Convex outer corners take the OPPOSITE-quadrant
 		// aridge (TR cell corner -> aridge1, TL -> aridge4, BL -> aridge3,
@@ -3926,26 +3929,62 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		      (i!=0 && i==row_count-1) ? chei - row_last_trim :
 		      (i==0 && i==row_count-1) ? chei - row_first_trim - row_last_trim :
 		      chei;
-		// Horizontal bridge from c to c+1. Bridge ridges span ONLY the gap
-		// between cells (cell c's right edge to cell c+1's left edge). Going
-		// centre-to-centre would extend the ridge across each cell's top/
-		// bottom edges — fine when those edges are exposed, but creates a
-		// wall *inside the opening* when the cell has another perpendicular
-		// bridge there (e.g. cell 3 of an L-merge with both H and V merges
-		// from the same cell). The cell side ridges already cover the
-		// cell-side portion up to the cell edge.
+		// Cell-c bridging booleans (recomputed here because the per-cell loop
+		// above is a separate scope).
+		c_top_brg = (i != row_count-1) && search(c, m_c_v) && search(c+column_count, group);
+		c_bot_brg = (i != 0) && search(c-column_count, m_c_v) && search(c-column_count, group);
+		c_left_brg = (j != 0) && search(c-1, m_cell_h) && search(c-1, group);
+		c_right_brg = (j != column_count-1) && search(c, m_cell_h) && search(c+1, group);
+		c_tr_diag = (j != column_count-1) && (i != row_count-1) && search(c+1+column_count, group);
+		c_tl_diag = (j != 0) && (i != row_count-1) && search(c-1+column_count, group);
+		c_br_diag = (j != column_count-1) && (i != 0) && search(c+1-column_count, group);
+		c_bl_diag = (j != 0) && (i != 0) && search(c-1-column_count, group);
+		_ov2 = 0.5;
+		shorten2 = ccr + t;
+		// Horizontal bridge from c to c+1. Each transverse side spans the gap
+		// between cells (cell c's right edge to cell c+1's left edge). At any
+		// end whose adjacent cell-corner is concave, the ridge is shortened by
+		// `(ccr + t)` to leave room for the aridge filling that corner. A
+		// `_ov2` overlap is added at each end so end-cap notches sit inside
+		// the adjacent component (aridge or cell ridge).
 		if ((j != column_count-1) && search(c, m_cell_h) && search(c+1, group)){
-			bx0 = cell_x + cwl/2;
-			blen = gpw - cwl;
-			translate([bx0, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 0);
-			translate([bx0, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 0);
+			c1 = c + 1;
+			c1_top_brg = (i != row_count-1) && search(c1, m_c_v) && search(c1+column_count, group);
+			c1_bot_brg = (i != 0) && search(c1-column_count, m_c_v) && search(c1-column_count, group);
+			c1_tl_diag = (i != row_count-1) && search(c, group);    // c1-1 == c
+			c1_bl_diag = (i != 0) && search(c-column_count, group); // c1-1-ncols
+			west_top_conc = c_top_brg && !c_tr_diag;       // cell c TR
+			east_top_conc = c1_top_brg && !c1_tl_diag;     // cell c+1 TL
+			west_bot_conc = c_bot_brg && !c_br_diag;       // cell c BR
+			east_bot_conc = c1_bot_brg && !c1_bl_diag;     // cell c+1 BL
+			top_start = cell_x + cwl/2 + (west_top_conc ? shorten2 : 0) - _ov2;
+			top_end   = cell_x + gpw - cwl/2 - (east_top_conc ? shorten2 : 0) + _ov2;
+			bot_start = cell_x + cwl/2 + (west_bot_conc ? shorten2 : 0) - _ov2;
+			bot_end   = cell_x + gpw - cwl/2 - (east_bot_conc ? shorten2 : 0) + _ov2;
+			if (top_end > top_start)
+				translate([top_start, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(top_end - top_start, t, height_of_ridge, 0);
+			if (bot_end > bot_start)
+				translate([bot_start, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(bot_end - bot_start, t, height_of_ridge, 0);
 		}
-		// Vertical bridge from c to c+column_count — gap-only for the same reason.
+		// Vertical bridge from c to c+column_count — same logic transposed.
 		if ((i != row_count-1) && search(c, m_c_v) && search(c+column_count, group)){
-			by0 = cell_y + chl/2;
-			blen = gph - chl;
-			translate([cell_x - cwl/2 - t/2, by0, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 90);
-			translate([cell_x + cwl/2 + t/2, by0, -kt/2 + sata]) ridge(blen, t, height_of_ridge, 90);
+			c2 = c + column_count;
+			c2_left_brg = (j != 0) && search(c2-1, m_cell_h) && search(c2-1, group);
+			c2_right_brg = (j != column_count-1) && search(c2, m_cell_h) && search(c2+1, group);
+			c2_bl_diag = (j != 0) && search(c-1, group);                  // c2-1-ncols == c-1
+			c2_br_diag = (j != column_count-1) && search(c+1, group);     // c2+1-ncols == c+1
+			south_left_conc  = c_left_brg  && !c_tl_diag;  // cell c TL
+			north_left_conc  = c2_left_brg && !c2_bl_diag; // cell c2 BL
+			south_right_conc = c_right_brg && !c_tr_diag;  // cell c TR
+			north_right_conc = c2_right_brg && !c2_br_diag;// cell c2 BR
+			left_start  = cell_y + chl/2 + (south_left_conc  ? shorten2 : 0) - _ov2;
+			left_end    = cell_y + gph - chl/2 - (north_left_conc  ? shorten2 : 0) + _ov2;
+			right_start = cell_y + chl/2 + (south_right_conc ? shorten2 : 0) - _ov2;
+			right_end   = cell_y + gph - chl/2 - (north_right_conc ? shorten2 : 0) + _ov2;
+			if (left_end > left_start)
+				translate([cell_x - cwl/2 - t/2, left_start, -kt/2 + sata]) ridge(left_end - left_start, t, height_of_ridge, 90);
+			if (right_end > right_start)
+				translate([cell_x + cwl/2 + t/2, right_start, -kt/2 + sata]) ridge(right_end - right_start, t, height_of_ridge, 90);
 		}
 	}
 }
