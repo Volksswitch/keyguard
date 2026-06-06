@@ -3798,21 +3798,18 @@ module cell_ridges(){
 						}
 						else{
 							// Multi-cell merge: build the 2D footprint of the merged
-							// opening, then extrude the annulus (footprint + thickness)
-							// minus footprint to form a single perimeter wall. The wall
-							// extends through the FULL keyguard depth (z = -kt/2 up
-							// through the top surface and on for height_of_ridge) — same
-							// z span as the single-cell rounded_rectangle_wall path —
-							// so the cell edge chamfer at the top surface stays joined
-							// with the ridge instead of being exposed as a notch into
-							// the cell wall.
+							// opening, then build a chamfered-top perimeter wall around
+							// it. The wall extends through the FULL keyguard depth
+							// (z = -kt/2 up through the top surface and on for
+							// height_of_ridge) — same z span as the single-cell
+							// rounded_rectangle_wall path — so the cell edge chamfer
+							// at the top surface stays joined with the ridge instead
+							// of being exposed as a notch into the cell wall, and the
+							// top edges get the same 0.5 mm chamfer as a single-cell
+							// ridge.
 							translate([0, 0, -kt/2])
-							linear_extrude(height=sat + height_of_ridge)
-							difference(){
-								offset(r=thickness_of_ridge)
-								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei);
-								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei);
-							}
+							chamfered_perimeter_wall(thickness_of_ridge, sat + height_of_ridge)
+							merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei);
 						}
 					}
 				}
@@ -3832,13 +3829,40 @@ module cell_ridges(){
 // (sized to the cell opening — c__w x c__h) plus a bridge rect between every
 // adjacent pair of merged cells in the group. Used as both the inner outline of
 // the perimeter ridge and (after offset(r=thickness)) its outer outline, so the
-// ridge's inner outline matches the opening exactly. The final offset(r=ocr)
-// offset(r=-ocr) is a morphological opening on the unioned sharp footprint —
+// ridge's inner outline matches the opening exactly. The final offset(r=ccr)
+// offset(r=-ccr) is a morphological opening on the unioned sharp footprint —
 // it rounds the outer convex corners AND the inner concave corners (at L/T
-// merge bays) at radius `ocr`, mirroring what cells() does via the oa1-4 cuts.
+// merge bays) at radius `ccr` (cell_corner_radius), mirroring what cells()
+// does via the oa1-4 cuts.
 module merged_group_footprint(group, gpw, gph, cwid, chei){
-	if (ocr > 0) offset(r=ocr) offset(r=-ocr) _mgf_sharp(group, gpw, gph, cwid, chei);
+	if (ccr > 0) offset(r=ccr) offset(r=-ccr) _mgf_sharp(group, gpw, gph, cwid, chei);
 	else _mgf_sharp(group, gpw, gph, cwid, chei);
+}
+
+// Builds a chamfered-top perimeter wall around the 2D inner footprint passed
+// as `children()`. The wall is `thickness` mm thick and `height` mm tall;
+// the top 0.5 mm is a stepped reduction that narrows the wall by 0.5 mm on
+// each side, matching the chamfer profile in rounded_rectangle_wall's
+// cross-section polygon so a merged-cell ridge top looks like a single-cell
+// ridge top. The on-disk step is the same 0.5 mm a single-cell ridge's
+// sloped chamfer would span — visually equivalent at print resolution.
+module chamfered_perimeter_wall(thickness, height, chamfer=0.5){
+	union(){
+		// Full-thickness body from z=0 to z=height-chamfer.
+		linear_extrude(height=height - chamfer)
+		difference(){
+			offset(r=thickness) children();
+			children();
+		}
+		// Narrowed top band from z=height-chamfer to z=height. Outer pulled
+		// in by chamfer; inner pushed out by chamfer.
+		translate([0, 0, height - chamfer])
+		linear_extrude(height=chamfer)
+		difference(){
+			offset(r=thickness - chamfer) children();
+			offset(r=chamfer) children();
+		}
+	}
 }
 
 // Inner helper: the sharp-cornered union of per-cell rects + merge bridges.
