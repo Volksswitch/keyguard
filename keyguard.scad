@@ -3799,9 +3799,15 @@ module cell_ridges(){
 						else{
 							// Multi-cell merge: build the 2D footprint of the merged
 							// opening, then extrude the annulus (footprint + thickness)
-							// minus footprint to form a single perimeter wall.
-							translate([0, 0, -kt/2 + sata])
-							linear_extrude(height=ridge_hgt)
+							// minus footprint to form a single perimeter wall. The wall
+							// extends through the FULL keyguard depth (z = -kt/2 up
+							// through the top surface and on for height_of_ridge) — same
+							// z span as the single-cell rounded_rectangle_wall path —
+							// so the cell edge chamfer at the top surface stays joined
+							// with the ridge instead of being exposed as a notch into
+							// the cell wall.
+							translate([0, 0, -kt/2])
+							linear_extrude(height=sat + height_of_ridge)
 							difference(){
 								offset(r=thickness_of_ridge)
 								merged_group_footprint(group, grid_part_w, grid_part_h, cwid, chei);
