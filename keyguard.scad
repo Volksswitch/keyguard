@@ -3912,7 +3912,7 @@ module circular_wall(ID,thickness,hgt){
 
 // Creates a hollow rounded-rectangle wall of given outer dimensions, corner radius,
 // wall thickness, and height, by combining straight and corner wall segments.
-// @param width          Outer width of the rectangle in mm
+// @param width          INNER opening width in mm (wall grows outward by thickness)
 // @param hgt            Height of the rectangle (Y dimension) in mm
 // @param corner_radius  Corner radius in mm
 // @param thickness      Wall thickness in mm
@@ -3937,7 +3937,7 @@ module rounded_rectangle_wall(width,hgt,corner_radius,thickness,hgt2){
 }
 
 // Generates the top straight segment of a rounded-rectangle wall (used by rounded_rectangle_wall).
-// @param width          Outer width of the rectangle in mm
+// @param width          INNER opening width in mm (wall grows outward by thickness)
 // @param hgt            Height of the rectangle (Y dimension) in mm
 // @param corner_radius  Corner radius in mm
 // @param thickness      Wall thickness in mm
@@ -3951,7 +3951,7 @@ module rr_wall1(width,hgt,corner_radius,thickness,hgt2){
 }
 
 // Generates the left straight segment of a rounded-rectangle wall (used by rounded_rectangle_wall).
-// @param width          Outer width of the rectangle in mm
+// @param width          INNER opening width in mm (wall grows outward by thickness)
 // @param hgt            Height of the rectangle (Y dimension) in mm
 // @param corner_radius  Corner radius in mm
 // @param thickness      Wall thickness in mm
@@ -3965,7 +3965,7 @@ module rr_wall2(width,hgt,corner_radius,thickness,hgt2){
 
 // Generates one 90-degree arc corner segment of a rounded-rectangle wall
 // (used by rounded_rectangle_wall for the top-right quadrant; mirroring covers the rest).
-// @param width          Outer width of the rectangle in mm
+// @param width          INNER opening width in mm (wall grows outward by thickness)
 // @param hgt            Height of the rectangle (Y dimension) in mm
 // @param corner_radius  Corner radius in mm
 // @param thickness      Wall thickness in mm
@@ -5992,30 +5992,31 @@ module place_addition(addition_width, addition_height, shape, top_slope, top_slo
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="rridge"){
-		// width/height = INNER opening dims; wall grows outward by thickness on every side
-		// so the thickness never encroaches on the opening.
+		// width/height are the INNER opening dims; rounded_rectangle_wall's `width`
+		// param IS the inner width — the wall is built outward from it by thickness
+		// on every side, so passing addition_width/_height directly is correct.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,left_slope])
-			rounded_rectangle_wall(addition_width+2*bottom_slope_mm,addition_height+2*bottom_slope_mm,corner_radius+bottom_slope_mm,bottom_slope_mm,top_slope_mm+sata);
+			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="crridge"){
-		// width/height = INNER opening dims (centre-anchored); wall grows outward.
+		// width/height are the INNER opening dims (centre-anchored).
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([0,0,-sata])
 			rotate([0,0,left_slope])
-			rounded_rectangle_wall(addition_width+2*bottom_slope_mm,addition_height+2*bottom_slope_mm,corner_radius+bottom_slope_mm,bottom_slope_mm,top_slope_mm+sata);
+			rounded_rectangle_wall(addition_width,addition_height,corner_radius,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="hdridge"){
-		// width/height = INNER opening dims; wall grows outward.
+		// width/height are the INNER opening dims.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,left_slope])
-			rounded_rectangle_wall(addition_width+2*bottom_slope_mm,addition_height+2*bottom_slope_mm,min(addition_width,addition_height)/2+bottom_slope_mm,bottom_slope_mm,top_slope_mm+sata);
+			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,bottom_slope_mm,top_slope_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
@@ -6156,21 +6157,22 @@ module place_addition_v2(addition_width, addition_height, shape, top_slope, cb_m
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid length or slopes — skipping.")); }
 	}
 	else if (shape=="rridge"){
-		// width/height = INNER opening dims; wall grows outward by thickness on every side
-		// so the thickness never encroaches on the opening.
+		// width/height are the INNER opening dims; rounded_rectangle_wall's `width`
+		// param IS the inner width — the wall grows outward by `thickness` on every
+		// side, so passing addition_width/_height directly is correct.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,rotation])
-			rounded_rectangle_wall(addition_width+2*thickness_mm,addition_height+2*thickness_mm,corner_radius+thickness_mm,thickness_mm,cb_mm+sata);
+			rounded_rectangle_wall(addition_width,addition_height,corner_radius,thickness_mm,cb_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
 	else if (shape=="hdridge"){
-		// width/height = INNER opening dims; wall grows outward.
+		// width/height are the INNER opening dims.
 		if(addition_height>=1 && bottom_slope>=.1 && top_slope>=.1){
 			translate([addition_width/2,addition_height/2,-sata])
 			rotate([0,0,rotation])
-			rounded_rectangle_wall(addition_width+2*thickness_mm,addition_height+2*thickness_mm,min(addition_width,addition_height)/2+thickness_mm,thickness_mm,cb_mm+sata);
+			rounded_rectangle_wall(addition_width,addition_height,min(addition_width,addition_height)/2,thickness_mm,cb_mm+sata);
 		}
 		else{ echo(str("WARNING: screen_openings/case_openings shape '", shape, "' has invalid dimensions or slopes — skipping.")); }
 	}
