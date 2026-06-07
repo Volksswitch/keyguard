@@ -3687,14 +3687,7 @@ module cells(depth){
 				// ridge's outer face (an aridge with outer radius mrr + thickness)
 				// lands exactly on the rounded opening boundary. Plain merges (no
 				// ridge) keep the original `mrr` radius.
-				_group_ct = cell_merge_group(current_cell);
-				_ridge_on_group = _any_in_ridge_set(_group_ct);
-				eff_mrr = _ridge_on_group ? mrr + thickness_of_ridge : mrr;
-				// Tooth-tip rounding radius: with a ridge we match the L-bay
-				// (eff_mrr = mrr + t); without a ridge we use ccr so the
-				// convex tooth-tip corner rounds at the standard cell corner
-				// radius.
-				tt_r = _ridge_on_group ? mrr + thickness_of_ridge : ccr;
+				eff_mrr = _any_in_ridge_set(cell_merge_group(current_cell)) ? mrr + thickness_of_ridge : mrr;
 				if (eff_mrr > 0){
 					// Config 1: same cell starts H-right and V-up — corner at top-right -> oa3
 					if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
@@ -3723,104 +3716,6 @@ module cells(depth){
 						!((search(current_cell-1-number_of_columns,m_cell_h))&&(search(current_cell-1-number_of_columns,m_c_v)))){
 						translate([c__x-c__w/2, c__y-c__h/2, 0])
 						cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
-					}
-				}
-
-				// Tooth-tip rounding: at a junction where all 4 surrounding
-				// cells are in the same merge group and exactly one wall is
-				// present (the tooth wall), round the convex corner where
-				// the tooth tip meets THIS cell. The two cells flanking the
-				// tooth wall each emit one oa cut here; the corresponding
-				// aridge is placed by merged_group_ridge below.
-				if (tt_r > 0){
-					ncols = number_of_columns;
-					// === TR corner (junction at j+1, i+1) ===
-					if (j != column_count-1 && i != row_count-1){
-						pbr = current_cell + 1;
-						ptl = current_cell + ncols;
-						ptr = ptl + 1;
-						if ((search(pbr,_group_ct)!=[]) && (search(ptl,_group_ct)!=[]) && (search(ptr,_group_ct)!=[])){
-							n_abs = (search(ptl, m_cell_h) != []);
-							s_abs = (search(current_cell, m_cell_h) != []);
-							w_abs = (search(current_cell, m_c_v) != []);
-							e_abs = (search(pbr, m_c_v) != []);
-							// S-tooth: bite SE -> oa4
-							if (!s_abs && n_abs && e_abs && w_abs){
-								translate([c__x+c__w/2, c__y+c__h/2, 0])
-								cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
-							}
-							// W-tooth: bite NW -> oa2
-							if (!w_abs && n_abs && s_abs && e_abs){
-								translate([c__x+c__w/2, c__y+c__h/2, 0])
-								cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
-							}
-						}
-					}
-					// === TL corner (junction at j, i+1) ===
-					if (j != 0 && i != row_count-1){
-						pbl = current_cell - 1;
-						ptl = current_cell - 1 + ncols;
-						ptr = current_cell + ncols;
-						if ((search(pbl,_group_ct)!=[]) && (search(ptl,_group_ct)!=[]) && (search(ptr,_group_ct)!=[])){
-							n_abs = (search(ptl, m_cell_h) != []);
-							s_abs = (search(pbl, m_cell_h) != []);
-							w_abs = (search(pbl, m_c_v) != []);
-							e_abs = (search(current_cell, m_c_v) != []);
-							// S-tooth: bite SW -> oa1
-							if (!s_abs && n_abs && e_abs && w_abs){
-								translate([c__x-c__w/2, c__y+c__h/2, 0])
-								cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
-							}
-							// E-tooth: bite NE -> oa3
-							if (!e_abs && n_abs && s_abs && w_abs){
-								translate([c__x-c__w/2, c__y+c__h/2, 0])
-								cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
-							}
-						}
-					}
-					// === BR corner (junction at j+1, i) ===
-					if (j != column_count-1 && i != 0){
-						pbl = current_cell - ncols;
-						pbr = current_cell - ncols + 1;
-						ptr = current_cell + 1;
-						if ((search(pbl,_group_ct)!=[]) && (search(pbr,_group_ct)!=[]) && (search(ptr,_group_ct)!=[])){
-							n_abs = (search(current_cell, m_cell_h) != []);
-							s_abs = (search(pbl, m_cell_h) != []);
-							w_abs = (search(pbl, m_c_v) != []);
-							e_abs = (search(pbr, m_c_v) != []);
-							// N-tooth: bite NE -> oa3
-							if (!n_abs && s_abs && e_abs && w_abs){
-								translate([c__x+c__w/2, c__y-c__h/2, 0])
-								cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
-							}
-							// W-tooth: bite SW -> oa1
-							if (!w_abs && n_abs && s_abs && e_abs){
-								translate([c__x+c__w/2, c__y-c__h/2, 0])
-								cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
-							}
-						}
-					}
-					// === BL corner (junction at j, i) ===
-					if (j != 0 && i != 0){
-						pbl = current_cell - ncols - 1;
-						pbr = current_cell - ncols;
-						ptl = current_cell - 1;
-						if ((search(pbl,_group_ct)!=[]) && (search(pbr,_group_ct)!=[]) && (search(ptl,_group_ct)!=[])){
-							n_abs = (search(ptl, m_cell_h) != []);
-							s_abs = (search(pbl, m_cell_h) != []);
-							w_abs = (search(pbl, m_c_v) != []);
-							e_abs = (search(pbr, m_c_v) != []);
-							// N-tooth: bite NW -> oa2
-							if (!n_abs && s_abs && e_abs && w_abs){
-								translate([c__x-c__w/2, c__y-c__h/2, 0])
-								cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
-							}
-							// E-tooth: bite SE -> oa4
-							if (!e_abs && n_abs && s_abs && w_abs){
-								translate([c__x-c__w/2, c__y-c__h/2, 0])
-								cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
-							}
-						}
 					}
 				}
 			}
@@ -3947,39 +3842,6 @@ module cell_ridges(){
 // two `ridge`s for its exposed transverse sides. Concave inner corners (at
 // L/T merge bays) get an aridge in the opposite quadrant — the anchor point
 // may need tuning once visually inspected.
-//
-// Tooth-tip detection at a cell-corner. Returns the wall direction
-// ("N"/"S"/"E"/"W") of the lone tooth wall at this junction, or "" if not
-// a tooth tip. A tooth tip exists when all 4 surrounding cells are in
-// group and exactly one wall is present. (qx, qy) ∈ {-1,+1} picks the
-// corner of cell c: (+1,+1)=TR, (-1,+1)=TL, (+1,-1)=BR, (-1,-1)=BL.
-function _tt_dir(c, qx, qy, group) =
-	let (j = (c-1) % column_count, i = floor((c-1)/column_count),
-		 ncols = column_count,
-		 oob = (qx>0 && j==ncols-1) || (qx<0 && j==0)
-			|| (qy>0 && i==row_count-1) || (qy<0 && i==0),
-		 // 4 cells around the junction:
-		 //   bl = SW, br = SE, tl = NW, tr = NE
-		 bl = (qx<0 && qy<0) ? c-1-ncols : (qx>0 && qy<0) ? c-ncols : (qx<0 && qy>0) ? c-1 : c,
-		 br = bl + 1,
-		 tl = bl + ncols,
-		 tr = bl + ncols + 1,
-		 all_in = !oob
-			&& (bl==c || search(bl, group)!=[])
-			&& (br==c || search(br, group)!=[])
-			&& (tl==c || search(tl, group)!=[])
-			&& (tr==c || search(tr, group)!=[]),
-		 // Wall present iff cells flanking it are NOT bridged.
-		 n_abs = search(tl, m_cell_h)!=[],
-		 s_abs = search(bl, m_cell_h)!=[],
-		 w_abs = search(bl, m_c_v)!=[],
-		 e_abs = search(br, m_c_v)!=[],
-		 n_only = !all_in ? false : (!n_abs && s_abs && e_abs && w_abs),
-		 s_only = !all_in ? false : (!s_abs && n_abs && e_abs && w_abs),
-		 e_only = !all_in ? false : (!e_abs && n_abs && s_abs && w_abs),
-		 w_only = !all_in ? false : (!w_abs && n_abs && s_abs && e_abs))
-	n_only ? "N" : s_only ? "S" : e_only ? "E" : w_only ? "W" : "";
-
 module merged_group_ridge(group, gpw, gph, cwid, chei){
 	t = thickness_of_ridge;
 	cr = ccr;
@@ -4019,21 +3881,6 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		br_diag_in = (j != column_count-1) && (i != 0) && search(c+1-column_count, group);
 		bl_diag_in = (j != 0) && (i != 0) && search(c-1-column_count, group);
 
-		// Tooth-tip ownership per cell corner. A tooth-tip junction is owned
-		// jointly by the TWO cells flanking the tooth wall; each tooth-tip
-		// direction (N/S/E/W) is owned at one corner of each flanking cell.
-		// _tt_dir reports the topology; the filter below keeps only the
-		// directions this cell owns at this corner. "" means not an owner.
-		_tt_tr_raw = _tt_dir(c, +1, +1, group);
-		_tt_tl_raw = _tt_dir(c, -1, +1, group);
-		_tt_br_raw = _tt_dir(c, +1, -1, group);
-		_tt_bl_raw = _tt_dir(c, -1, -1, group);
-		tt_tr = (_tt_tr_raw=="S" || _tt_tr_raw=="W") ? _tt_tr_raw : "";
-		tt_tl = (_tt_tl_raw=="S" || _tt_tl_raw=="E") ? _tt_tl_raw : "";
-		tt_br = (_tt_br_raw=="N" || _tt_br_raw=="W") ? _tt_br_raw : "";
-		tt_bl = (_tt_bl_raw=="N" || _tt_bl_raw=="E") ? _tt_bl_raw : "";
-		shorten_tt = ccr + t;
-
 		// Side ridges. Each end is positioned according to what's at the
 		// adjacent corner:
 		//   • CONVEX (both adjacent sides exposed → corner has an aridge):
@@ -4056,36 +3903,30 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		// adjacent corner can never be concave (concave requires THIS side
 		// also bridged).
 		_ov = 0.5;
-		// At each (ridge, end) the tooth direction that lets the ridge fire
-		// (one of the two adjacent sides bridged → tooth direction COLLINEAR
-		// with this ridge) is the one that retracts the end by shorten_tt
-		// so the ridge meets the tooth-tip aridge tangent. The PERPENDICULAR
-		// tooth direction at the same end makes the OPPOSITE ridge fire (and
-		// is handled by that block's offset).
 		if (!top_brg){
-			tl_off = left_brg  ? (tl_diag_in ? (tt_tl=="E" ? shorten_tt : 0) : -_ov) : ccr;
-			tr_off = right_brg ? (tr_diag_in ? (tt_tr=="W" ? shorten_tt : 0) : -_ov) : ccr;
+			tl_off = left_brg  ? (tl_diag_in ? 0 : -_ov) : ccr;
+			tr_off = right_brg ? (tr_diag_in ? 0 : -_ov) : ccr;
 			s = cx - cwl/2 + tl_off;
 			e = cx + cwl/2 - tr_off;
 			if (e > s) translate([s, cy + chl/2 + t/2, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 0);
 		}
 		if (!bot_brg){
-			bl_off = left_brg  ? (bl_diag_in ? (tt_bl=="E" ? shorten_tt : 0) : -_ov) : ccr;
-			br_off = right_brg ? (br_diag_in ? (tt_br=="W" ? shorten_tt : 0) : -_ov) : ccr;
+			bl_off = left_brg  ? (bl_diag_in ? 0 : -_ov) : ccr;
+			br_off = right_brg ? (br_diag_in ? 0 : -_ov) : ccr;
 			s = cx - cwl/2 + bl_off;
 			e = cx + cwl/2 - br_off;
 			if (e > s) translate([s, cy - chl/2 - t/2, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 0);
 		}
 		if (!right_brg){
-			br_off = bot_brg ? (br_diag_in ? (tt_br=="N" ? shorten_tt : 0) : -_ov) : ccr;
-			tr_off = top_brg ? (tr_diag_in ? (tt_tr=="S" ? shorten_tt : 0) : -_ov) : ccr;
+			br_off = bot_brg ? (br_diag_in ? 0 : -_ov) : ccr;
+			tr_off = top_brg ? (tr_diag_in ? 0 : -_ov) : ccr;
 			s = cy - chl/2 + br_off;
 			e = cy + chl/2 - tr_off;
 			if (e > s) translate([cx + cwl/2 + t/2, s, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 90);
 		}
 		if (!left_brg){
-			bl_off = bot_brg ? (bl_diag_in ? (tt_bl=="N" ? shorten_tt : 0) : -_ov) : ccr;
-			tl_off = top_brg ? (tl_diag_in ? (tt_tl=="S" ? shorten_tt : 0) : -_ov) : ccr;
+			bl_off = bot_brg ? (bl_diag_in ? 0 : -_ov) : ccr;
+			tl_off = top_brg ? (tl_diag_in ? 0 : -_ov) : ccr;
 			s = cy - chl/2 + bl_off;
 			e = cy + chl/2 - tl_off;
 			if (e > s) translate([cx - cwl/2 - t/2, s, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 90);
@@ -4115,20 +3956,6 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		// BR
 		if (!bot_brg && !right_brg) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
 		else if (bot_brg && right_brg && !br_diag_in) translate([cx + cwl/2 + t, cy - chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
-
-		// Tooth-tip aridges. Mirror of the L-bay treatment: the placement
-		// shifts INTO the bite quadrant by `t` on each axis so the aridge's
-		// outer arc lands on the OA cut boundary at radius cr+t carved into
-		// the tooth solid by cells() above. The aridge# is the bite quadrant
-		// (oa# in cells() and aridge# share the BL/TL/TR/BR=1/2/3/4 scheme).
-		if (tt_tr == "S") translate([cx + cwl/2 + t, cy + chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
-		if (tt_tr == "W") translate([cx + cwl/2 - t, cy + chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
-		if (tt_tl == "S") translate([cx - cwl/2 - t, cy + chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
-		if (tt_tl == "E") translate([cx - cwl/2 + t, cy + chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
-		if (tt_br == "N") translate([cx + cwl/2 + t, cy - chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
-		if (tt_br == "W") translate([cx + cwl/2 - t, cy - chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
-		if (tt_bl == "N") translate([cx - cwl/2 - t, cy - chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
-		if (tt_bl == "E") translate([cx - cwl/2 + t, cy - chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
 	}
 
 	// Per-bridge ridges. Each merge bridge contributes two ridges for its two
@@ -4182,19 +4009,10 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			c1_tl_diag = (i != row_count-1) && search(c + column_count, group); // c1's TL diag = c1-1+ncols = c+ncols
 			c1_bl_diag = (i != 0) && search(c-column_count, group); // c1-1-ncols
 			// West top end → cell c TR. East top end → cell c+1 TL. (etc.)
-			// At each end, if the junction is a tooth tip whose wall is
-			// PERPENDICULAR to this transverse (N at top end, S at bottom),
-			// terminate at the aridge tangent (shorten). When BOTH ends are
-			// truly interior (no tooth) the whole transverse is suppressed
-			// below, so the offset doesn't matter then.
-			_wt_tt = _tt_dir(c,    +1, +1, group);
-			_et_tt = _tt_dir(c+1,  -1, +1, group);
-			_wb_tt = _tt_dir(c,    +1, -1, group);
-			_eb_tt = _tt_dir(c+1,  -1, -1, group);
-			west_top_off = c_top_brg ? (c_tr_diag ? (_wt_tt=="N" ? shorten : 0) : shorten) : -_ov;
-			east_top_off = c1_top_brg ? (c1_tl_diag ? (_et_tt=="N" ? shorten : 0) : shorten) : -_ov;
-			west_bot_off = c_bot_brg ? (c_br_diag ? (_wb_tt=="S" ? shorten : 0) : shorten) : -_ov;
-			east_bot_off = c1_bot_brg ? (c1_bl_diag ? (_eb_tt=="S" ? shorten : 0) : shorten) : -_ov;
+			west_top_off = c_top_brg ? (c_tr_diag ? 0 : shorten) : -_ov;
+			east_top_off = c1_top_brg ? (c1_tl_diag ? 0 : shorten) : -_ov;
+			west_bot_off = c_bot_brg ? (c_br_diag ? 0 : shorten) : -_ov;
+			east_bot_off = c1_bot_brg ? (c1_bl_diag ? 0 : shorten) : -_ov;
 			// Interior-transverse suppression: when BOTH ends of a transverse
 			// are INTERIOR (perpendicular bridge present AND diagonal cell in
 			// group) AND the wall on the far side of the transverse is ALSO
@@ -4228,17 +4046,10 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			c2_right_brg = (j != column_count-1) && search(c2, m_cell_h) && search(c2+1, group);
 			c2_bl_diag = (j != 0) && search(c-1, group);                  // c2-1-ncols == c-1
 			c2_br_diag = (j != column_count-1) && search(c+1, group);     // c2+1-ncols == c+1
-			// Tooth-tip perpendicular check at each end of the vertical
-			// transverses: horizontal tooth direction (E at left, W at right)
-			// is perpendicular to the upward-going transverse.
-			_sl_tt = _tt_dir(c,                  -1, +1, group);
-			_nl_tt = _tt_dir(c+column_count,     -1, -1, group);
-			_sr_tt = _tt_dir(c,                  +1, +1, group);
-			_nr_tt = _tt_dir(c+column_count,     +1, -1, group);
-			south_left_off  = c_left_brg  ? (c_tl_diag  ? (_sl_tt=="E" ? shorten : 0) : shorten) : -_ov;  // cell c TL
-			north_left_off  = c2_left_brg ? (c2_bl_diag ? (_nl_tt=="E" ? shorten : 0) : shorten) : -_ov;  // cell c2 BL
-			south_right_off = c_right_brg ? (c_tr_diag  ? (_sr_tt=="W" ? shorten : 0) : shorten) : -_ov;  // cell c TR
-			north_right_off = c2_right_brg? (c2_br_diag ? (_nr_tt=="W" ? shorten : 0) : shorten) : -_ov;  // cell c2 BR
+			south_left_off  = c_left_brg  ? (c_tl_diag  ? 0 : shorten) : -_ov;  // cell c TL
+			north_left_off  = c2_left_brg ? (c2_bl_diag ? 0 : shorten) : -_ov;  // cell c2 BL
+			south_right_off = c_right_brg ? (c_tr_diag  ? 0 : shorten) : -_ov;  // cell c TR
+			north_right_off = c2_right_brg? (c2_br_diag ? 0 : shorten) : -_ov;  // cell c2 BR
 			// Same interior-transverse suppression as the horizontal bridge,
 			// with the far-side-wall check that distinguishes a true square
 			// 2×2 interior from a (rotated) U/horseshoe tooth.
