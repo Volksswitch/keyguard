@@ -1,0 +1,14 @@
+{
+  "description": "cell ridges around C-shaped and backward-C-shaped (⊃) merged groups — sideways-tooth companion to Test Case 61's U/horseshoe vertical-tooth case, exercising the symmetric fix for vertical-bridge transverses in v80",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "ridge wraps the central tooth of a C-shaped and a backward-C-shaped merge",
+      "params": "Test Case 62",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
