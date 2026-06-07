@@ -519,8 +519,8 @@
       "oa_case": "Test Case 11"
     },
     "Test Case 12": {
-      "volume_mm3": 80516.6694,
-      "surface_area_mm2": 63086.9678,
+      "volume_mm3": 80190.8301,
+      "surface_area_mm2": 62963.8991,
       "bbox": [
         -123.95,
         -83.45,
@@ -530,13 +530,13 @@
         3.0
       ],
       "parts": 1,
-      "facets": 43782,
+      "facets": 43270,
       "oa_source": "case",
       "oa_case": "Test Case 12"
     },
     "Test Case 12a": {
-      "volume_mm3": 94752.2048,
-      "surface_area_mm2": 67065.6766,
+      "volume_mm3": 94284.7817,
+      "surface_area_mm2": 66965.0214,
       "bbox": [
         -123.95,
         -83.45,
@@ -546,13 +546,13 @@
         4.0
       ],
       "parts": 1,
-      "facets": 43250,
+      "facets": 42738,
       "oa_source": "case",
       "oa_case": "Test Case 12"
     },
     "Test Case 12b": {
-      "volume_mm3": 96886.1728,
-      "surface_area_mm2": 69205.0927,
+      "volume_mm3": 96507.9645,
+      "surface_area_mm2": 69191.89,
       "bbox": [
         -123.95,
         -83.45,
@@ -562,13 +562,13 @@
         6.0
       ],
       "parts": 1,
-      "facets": 43250,
+      "facets": 42738,
       "oa_source": "case",
       "oa_case": "Test Case 12"
     },
     "Test Case 12c": {
-      "volume_mm3": 98749.3493,
-      "surface_area_mm2": 69477.5804,
+      "volume_mm3": 98598.5672,
+      "surface_area_mm2": 69522.9073,
       "bbox": [
         -123.95,
         -83.45,
@@ -578,7 +578,7 @@
         6.0
       ],
       "parts": 1,
-      "facets": 42802,
+      "facets": 42098,
       "oa_source": "case",
       "oa_case": "Test Case 12"
     },
@@ -1383,8 +1383,8 @@
       "oa_case": "Test Case 22"
     },
     "Test Case 23": {
-      "volume_mm3": 73620.2749,
-      "surface_area_mm2": 63395.3619,
+      "volume_mm3": 73547.6117,
+      "surface_area_mm2": 63374.1466,
       "bbox": [
         -122.5,
         -87.5,
@@ -1394,13 +1394,13 @@
         4.0
       ],
       "parts": 1,
-      "facets": 8184,
+      "facets": 8196,
       "oa_source": "case",
       "oa_case": "Test Case 23"
     },
     "Test Case 23a": {
-      "volume_mm3": 81532.7785,
-      "surface_area_mm2": 64383.4807,
+      "volume_mm3": 81459.9487,
+      "surface_area_mm2": 64362.2385,
       "bbox": [
         -122.5,
         -87.5,
@@ -1410,13 +1410,13 @@
         4.0
       ],
       "parts": 1,
-      "facets": 44822,
+      "facets": 44834,
       "oa_source": "case",
       "oa_case": "Test Case 23"
     },
     "Test Case 23b": {
-      "volume_mm3": 87066.0095,
-      "surface_area_mm2": 66271.0602,
+      "volume_mm3": 86993.1265,
+      "surface_area_mm2": 66249.5525,
       "bbox": [
         -122.5,
         -87.5,
@@ -1426,13 +1426,13 @@
         4.0
       ],
       "parts": 1,
-      "facets": 44800,
+      "facets": 44748,
       "oa_source": "case",
       "oa_case": "Test Case 23"
     },
     "Test Case 23c": {
-      "volume_mm3": 113066.4597,
-      "surface_area_mm2": 75869.4529,
+      "volume_mm3": 113020.0705,
+      "surface_area_mm2": 75858.1864,
       "bbox": [
         -122.5,
         -87.5,
@@ -1442,7 +1442,7 @@
         4.0
       ],
       "parts": 1,
-      "facets": 54428,
+      "facets": 54550,
       "oa_source": "case",
       "oa_case": "Test Case 23"
     },
@@ -2023,8 +2023,8 @@
       "oa_case": "Test Case 42"
     },
     "Test Case 43": {
-      "volume_mm3": 61307.1221,
-      "surface_area_mm2": 42596.9353,
+      "volume_mm3": 60888.1939,
+      "surface_area_mm2": 42404.5071,
       "bbox": [
         -122.5,
         -87.5,
@@ -2034,13 +2034,13 @@
         4.0
       ],
       "parts": 1,
-      "facets": 9346,
+      "facets": 9130,
       "oa_source": "case",
       "oa_case": "Test Case 43"
     },
     "Test Case 43a": {
-      "volume_mm3": 66876.9485,
-      "surface_area_mm2": 45372.6056,
+      "volume_mm3": 66490.0505,
+      "surface_area_mm2": 45198.4625,
       "bbox": [
         -122.5,
         -87.5,
@@ -2051,6 +2051,22 @@
       ],
       "parts": 1,
       "facets": 9124,
+      "oa_source": "case",
+      "oa_case": "Test Case 43"
+    },
+    "Test Case 43-merged": {
+      "volume_mm3": 63728.434,
+      "surface_area_mm2": 43396.2121,
+      "bbox": [
+        -122.5,
+        -87.5,
+        -2.05,
+        122.5,
+        87.5,
+        6.0
+      ],
+      "parts": 1,
+      "facets": 9176,
       "oa_source": "case",
       "oa_case": "Test Case 43"
     },
@@ -2326,22 +2342,6 @@
       "oa_source": "case",
       "oa_case": "Test Case 52"
     },
-    "Test Case 53": {
-      "volume_mm3": 146705.591,
-      "surface_area_mm2": 81361.1259,
-      "bbox": [
-        -110.0,
-        -85.0,
-        -2.05,
-        110.0,
-        85.0,
-        12.1
-      ],
-      "parts": 7,
-      "facets": 17010,
-      "oa_source": "case",
-      "oa_case": "Test Case 53"
-    },
     "Test Case 54": {
       "volume_mm3": 282068.5277,
       "surface_area_mm2": 93336.2536,
@@ -2469,6 +2469,22 @@
       "facets": 16768,
       "oa_source": "case",
       "oa_case": "Test Case 57"
+    },
+    "Test Case 59": {
+      "volume_mm3": 154682.4981,
+      "surface_area_mm2": 77995.8254,
+      "bbox": [
+        -122.5,
+        -85.0,
+        -2.0,
+        122.5,
+        85.0,
+        10.0
+      ],
+      "parts": 1,
+      "facets": 10876,
+      "oa_source": "case",
+      "oa_case": "Test Case 59"
     }
   }
 }
