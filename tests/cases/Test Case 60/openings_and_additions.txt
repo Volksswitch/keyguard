@@ -1,0 +1,15 @@
+// Test Case 60 — multiple merged groups (incl. a 2x2 rectangular block) with ridges.
+// The merge geometry comes entirely from the keyguard.json preset; no
+// custom OA shapes are needed for this test.
+
+screen_openings=[
+];
+
+case_openings=[
+];
+
+case_additions=[
+];
+
+tablet_openings=[
+];

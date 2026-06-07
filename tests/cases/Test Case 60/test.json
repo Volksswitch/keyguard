@@ -1,0 +1,14 @@
+{
+  "description": "cell ridges around multiple merged groups including a rectangular block — regression gate for the square-merge floating-ridge bug fixed in v79 (suppressed interior bridge transverses in merged_group_ridge)",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "rectangular and irregular merged groups with perimeter ridges",
+      "params": "Test Case 60",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
