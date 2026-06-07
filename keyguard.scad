@@ -4116,19 +4116,25 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		if (!bot_brg && !right_brg) translate([cx + cwl/2, cy - chl/2, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
 		else if (bot_brg && right_brg && !br_diag_in) translate([cx + cwl/2 + t, cy - chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
 
-		// Tooth-tip aridges. Mirror of the L-bay treatment: the placement
-		// shifts INTO the bite quadrant by `t` on each axis so the aridge's
-		// outer arc lands on the OA cut boundary at radius cr+t carved into
-		// the tooth solid by cells() above. The aridge# is the bite quadrant
+		// Tooth-tip aridges. The OA cut in cells() carves a radius cr+t
+		// arc into the tooth solid, centered at cell-corner + (cr+t,
+		// ±(cr+t)). For the aridge's outer arc (radius cr+t around its
+		// own arc-center) to land ON the OA cut boundary, the aridge's
+		// arc-center must EQUAL the OA cut center. Tracing _aridge_quadrant's
+		// `translate(±cr, ±cr) rotate aridge(cr, t)`, the placement needs
+		// offset 2t (not the L-bay's t) from the cell corner. L-bays "get
+		// away with" the t offset because the bay is bounded by surrounding
+		// solid; here the tooth tip has open space all around it so the
+		// mismatch would be visible. The aridge# is the bite quadrant
 		// (oa# in cells() and aridge# share the BL/TL/TR/BR=1/2/3/4 scheme).
-		if (tt_tr == "S") translate([cx + cwl/2 + t, cy + chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
-		if (tt_tr == "W") translate([cx + cwl/2 - t, cy + chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
-		if (tt_tl == "S") translate([cx - cwl/2 - t, cy + chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
-		if (tt_tl == "E") translate([cx - cwl/2 + t, cy + chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
-		if (tt_br == "N") translate([cx + cwl/2 + t, cy - chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
-		if (tt_br == "W") translate([cx + cwl/2 - t, cy - chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
-		if (tt_bl == "N") translate([cx - cwl/2 - t, cy - chl/2 + t, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
-		if (tt_bl == "E") translate([cx - cwl/2 + t, cy - chl/2 - t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
+		if (tt_tr == "S") translate([cx + cwl/2 + 2*t, cy + chl/2 - 2*t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
+		if (tt_tr == "W") translate([cx + cwl/2 - 2*t, cy + chl/2 + 2*t, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
+		if (tt_tl == "S") translate([cx - cwl/2 - 2*t, cy + chl/2 - 2*t, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
+		if (tt_tl == "E") translate([cx - cwl/2 + 2*t, cy + chl/2 + 2*t, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
+		if (tt_br == "N") translate([cx + cwl/2 + 2*t, cy - chl/2 + 2*t, -kt/2 + sata]) _aridge_quadrant("aridge3", cr, t);
+		if (tt_br == "W") translate([cx + cwl/2 - 2*t, cy - chl/2 - 2*t, -kt/2 + sata]) _aridge_quadrant("aridge1", cr, t);
+		if (tt_bl == "N") translate([cx - cwl/2 - 2*t, cy - chl/2 + 2*t, -kt/2 + sata]) _aridge_quadrant("aridge2", cr, t);
+		if (tt_bl == "E") translate([cx - cwl/2 + 2*t, cy - chl/2 - 2*t, -kt/2 + sata]) _aridge_quadrant("aridge4", cr, t);
 	}
 
 	// Per-bridge ridges. Each merge bridge contributes two ridges for its two
