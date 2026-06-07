@@ -378,6 +378,20 @@ Address these one at a time, running the test suite after each change.
 
 ## Working Conventions
 
+### Recording feedback
+- **Always record ongoing-behavior feedback in this `CLAUDE.md`, never in the per-machine
+  memory system.** Memory is per-machine and does not sync — both machines must see the rule,
+  so it has to live in the shared OneDrive-synced `CLAUDE.md`. Applies equally to the
+  `keyguard-designer-web` project's `CLAUDE.md`.
+
+### Log file naming
+- **For any test/job whose stdout you redirect to a log, use a stable per-job-type
+  filename (e.g. `geometry-gate.log`, `visual-update.log`, `compare-visual-references.log`).
+  Never name the log after the specific subset being run** (`geometry-tc43-tc59.log`,
+  `visual-tc18.log`, etc.). Stable names mean Ken, both machines, and future sessions
+  always know where to look — and `tail -f <name>.log` keeps working regardless of scope.
+  The previous run's log is overwritten; git is the history.
+
 ### Git workflow
 1. Before starting any code change, run `git status` in the main project folder. If Ken has
    made manual edits, commit them immediately with the message `"Save manual edits before
