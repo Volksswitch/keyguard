@@ -1,0 +1,15 @@
+// Test Case 61 — U-shaped and horseshoe-shaped merged groups with ridges.
+// The merge geometry comes entirely from the keyguard.json preset; no
+// custom OA shapes are needed for this test.
+
+screen_openings=[
+];
+
+case_openings=[
+];
+
+case_additions=[
+];
+
+tablet_openings=[
+];

@@ -3888,37 +3888,45 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		//     over from there; extending past would push the ridge into the
 		//     aridge area where the curved outer face is INSIDE the bridge's
 		//     straight outer line, producing a visible drop.
-		//   • SKIP (one adjacent side bridged → perpendicular bridge meets
-		//     here collinearly): extend by `_ov` past the cell edge so the
-		//     end-cap notch sits inside the perpendicular bridge.
+		//   • COLLINEAR (one adjacent side bridged, diagonal NOT in group →
+		//     perpendicular bridge meets here collinearly): extend by `_ov`
+		//     past the cell edge so the end-cap notch sits inside the
+		//     perpendicular bridge.
+		//   • TOOTH-TIP (one adjacent side bridged, diagonal IN group → this
+		//     end sits at the tip of an interior "tooth" wall sticking into
+		//     the merged opening, e.g. the central wall of a U/horseshoe
+		//     merge): terminate flush at the cell edge (offset 0) so the
+		//     ridge meets the perpendicular tooth-top transverse with a
+		//     clean square corner instead of extending past the tooth top
+		//     into the merged opening.
 		// Cell side ridges are only emitted when THIS side is exposed, so the
 		// adjacent corner can never be concave (concave requires THIS side
 		// also bridged).
 		_ov = 0.5;
 		if (!top_brg){
-			tl_off = left_brg ? -_ov : ccr;
-			tr_off = right_brg ? -_ov : ccr;
+			tl_off = left_brg  ? (tl_diag_in ? 0 : -_ov) : ccr;
+			tr_off = right_brg ? (tr_diag_in ? 0 : -_ov) : ccr;
 			s = cx - cwl/2 + tl_off;
 			e = cx + cwl/2 - tr_off;
 			if (e > s) translate([s, cy + chl/2 + t/2, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 0);
 		}
 		if (!bot_brg){
-			bl_off = left_brg ? -_ov : ccr;
-			br_off = right_brg ? -_ov : ccr;
+			bl_off = left_brg  ? (bl_diag_in ? 0 : -_ov) : ccr;
+			br_off = right_brg ? (br_diag_in ? 0 : -_ov) : ccr;
 			s = cx - cwl/2 + bl_off;
 			e = cx + cwl/2 - br_off;
 			if (e > s) translate([s, cy - chl/2 - t/2, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 0);
 		}
 		if (!right_brg){
-			br_off = bot_brg ? -_ov : ccr;
-			tr_off = top_brg ? -_ov : ccr;
+			br_off = bot_brg ? (br_diag_in ? 0 : -_ov) : ccr;
+			tr_off = top_brg ? (tr_diag_in ? 0 : -_ov) : ccr;
 			s = cy - chl/2 + br_off;
 			e = cy + chl/2 - tr_off;
 			if (e > s) translate([cx + cwl/2 + t/2, s, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 90);
 		}
 		if (!left_brg){
-			bl_off = bot_brg ? -_ov : ccr;
-			tl_off = top_brg ? -_ov : ccr;
+			bl_off = bot_brg ? (bl_diag_in ? 0 : -_ov) : ccr;
+			tl_off = top_brg ? (tl_diag_in ? 0 : -_ov) : ccr;
 			s = cy - chl/2 + bl_off;
 			e = cy + chl/2 - tl_off;
 			if (e > s) translate([cx - cwl/2 - t/2, s, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 90);
@@ -4007,12 +4015,21 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			east_bot_off = c1_bot_brg ? (c1_bl_diag ? 0 : shorten) : -_ov;
 			// Interior-transverse suppression: when BOTH ends of a transverse
 			// are INTERIOR (perpendicular bridge present AND diagonal cell in
-			// group), the transverse sits entirely inside the merged opening
+			// group) AND the wall on the far side of the transverse is ALSO
+			// bridged, the transverse sits entirely inside the merged opening
 			// (e.g. the row-0 horizontal bridge's TOP side in a 2×2 merge).
 			// Drawing it would deposit a free-floating ridge fragment inside
 			// the opening. Skip those.
-			top_interior = c_top_brg && c_tr_diag && c1_top_brg && c1_tl_diag;
-			bot_interior = c_bot_brg && c_br_diag && c1_bot_brg && c1_bl_diag;
+			//
+			// The far-side-wall check distinguishes a true square 2×2 interior
+			// (where the row above/below is ALSO horizontally merged, so no
+			// tooth) from a U/horseshoe topology (where the row above/below
+			// is NOT merged, leaving a "tooth" wall whose top/bottom edge is
+			// a real perimeter segment that MUST be ridged).
+			top_interior = c_top_brg && c_tr_diag && c1_top_brg && c1_tl_diag
+				&& (search(c+column_count, m_cell_h) != []);
+			bot_interior = c_bot_brg && c_br_diag && c1_bot_brg && c1_bl_diag
+				&& (search(c-column_count, m_cell_h) != []);
 			top_start = cell_x + cwl/2 + west_top_off;
 			top_end   = cell_x + gpw - cwl/2 - east_top_off;
 			bot_start = cell_x + cwl/2 + west_bot_off;
@@ -4033,9 +4050,13 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			north_left_off  = c2_left_brg ? (c2_bl_diag ? 0 : shorten) : -_ov;  // cell c2 BL
 			south_right_off = c_right_brg ? (c_tr_diag  ? 0 : shorten) : -_ov;  // cell c TR
 			north_right_off = c2_right_brg? (c2_br_diag ? 0 : shorten) : -_ov;  // cell c2 BR
-			// Same interior-transverse suppression as the horizontal bridge.
-			left_interior  = c_left_brg  && c_tl_diag  && c2_left_brg  && c2_bl_diag;
-			right_interior = c_right_brg && c_tr_diag  && c2_right_brg && c2_br_diag;
+			// Same interior-transverse suppression as the horizontal bridge,
+			// with the far-side-wall check that distinguishes a true square
+			// 2×2 interior from a (rotated) U/horseshoe tooth.
+			left_interior  = c_left_brg  && c_tl_diag  && c2_left_brg  && c2_bl_diag
+				&& (search(c-1, m_c_v) != []);
+			right_interior = c_right_brg && c_tr_diag  && c2_right_brg && c2_br_diag
+				&& (search(c+1, m_c_v) != []);
 			left_start  = cell_y + chl/2 + south_left_off;
 			left_end    = cell_y + gph - chl/2 - north_left_off;
 			right_start = cell_y + chl/2 + south_right_off;
