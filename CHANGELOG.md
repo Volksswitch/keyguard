@@ -1,5 +1,26 @@
 # Keyguard Designer — Changelog
 
+## Version 79
+- Removed all MakerWorld-specific support — the `MW_version` global and the `show_screenshotMW` code path are gone; locally rendered designs no longer need a "Maker World" flag
+- Added support for the Samsung Galaxy Tab Pro 12.2
+- Added a `slope_gap` parameter to the sloped keyguard edge for finer fit control on screen-protector mounting
+- Renamed the `screenshot_file` parameter to `screenshot_filename`
+- Renamed the `mounting_method` value "No Mount" to "- none -" for clearer presentation in the Customizer dropdown
+- Added clear error messages when a laser-cut keyguard is paired with Raised Tabs or Clip-on Straps, instead of the previous silent fall-through to "Customizer settings"
+- Reworked sizing of the closed-ridge family (`rridge`, `crridge`, `hdridge`) and the cell-ridge wall — ridge dimensions are now inner-based, slope and chamfer no longer bloat the inner dimension, and the ridge wall extends through the full keyguard depth
+- Reworked ridges around merged cell groups (L-shaped and cross-shaped merges): per-end convex/concave corner classification, inner rounding driven by the cell corner radius, chamfered top edges, full-length sides, and enlarged concave corners
+
+## Version 78
+- This release is all about supporting the new Volksswitch Keyguard Designer Web App — you no longer need to install OpenSCAD to do keyguard design
+- The web app will very likely be acceptable to the individuals who manage your company- or district-managed computer
+
+## Version 77
+- Added the ability to put raised tabs on the top and bottom edges of a keyguard or keyguard frame
+- Snap-in tabs for keyguards in frames are now a function of the screen area thickness rather than the keyguard thickness
+- Outer arcs placed in the screen region are now sensitive to cell chamfer values, and those in the case region are sensitive to keyguard chamfer
+- Outer arcs can be applied to a depth less than the full depth of the keyguard
+- Introduced a new design for the `openings_and_additions.txt` file to reduce confusion and add new capabilities; the keyguard designer supports both the new and the original versions of the O&A file
+
 ## Version 76
 - Changed the color used to display a keyguard along with its frame from red to transparent pink
 - Added support for displaying where the frame will be split without first generating frame halves
