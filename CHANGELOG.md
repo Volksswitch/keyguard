@@ -1,5 +1,8 @@
 # Keyguard Designer — Changelog
 
+## Version 80
+- Fixed bug where the ridge around a U-shaped, horseshoe-shaped, C-shaped or other concave-perimeter merged cell group failed to wrap around the central "tooth" wall (the interior cell wall that sticks into the merged opening); the ridge now follows the full merged perimeter, including around the tooth
+
 ## Version 79
 - Removed all MakerWorld-specific support — the `MW_version` global and the `show_screenshotMW` code path are gone; locally rendered designs no longer need a "Maker World" flag
 - Added support for the Samsung Galaxy Tab Pro 12.2

@@ -1,0 +1,14 @@
+{
+  "description": "cell ridges around U-shaped and horseshoe-shaped merged groups — regression gate for the v80 fix that wraps the ridge around an interior tooth wall (the central separator in U/C/∩/⊃ concave-perimeter merges)",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "ridge wraps the central tooth of a U-shaped and a horseshoe-shaped merge",
+      "params": "Test Case 61",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
