@@ -8115,6 +8115,7 @@ module echo_settings(){
 		if (snap_in_tab_on_bottom_edge_of_keyguard != "yes") echo(snap_in_tab_on_bottom_edge_of_keyguard = snap_in_tab_on_bottom_edge_of_keyguard);
 		if (snap_in_tabs_on_left_and_right_edges_of_keyguard != "yes") echo(snap_in_tabs_on_left_and_right_edges_of_keyguard = snap_in_tabs_on_left_and_right_edges_of_keyguard);
 		if (post_tightness_of_fit != 0) echo(post_tightness_of_fit = post_tightness_of_fit);
+		if (post_extension_distance != 4) echo(post_extension_distance = post_extension_distance);
 		if (keyguard_vertical_tightness_of_fit != 0) echo(keyguard_vertical_tightness_of_fit = keyguard_vertical_tightness_of_fit);
 		if (keyguard_horizontal_tightness_of_fit != 0) echo(keyguard_horizontal_tightness_of_fit = keyguard_horizontal_tightness_of_fit);
 		echo();
@@ -8177,6 +8178,7 @@ module echo_settings(){
 
 	echo("---- Special Actions and Settings ----");
 		if (include_screenshot != "no") echo(include_screenshot = include_screenshot);
+		if (screenshot_filename != "screenshot.svg") echo(screenshot_filename = screenshot_filename);
 		if (keyguard_display_angle != 0) echo(keyguard_display_angle = keyguard_display_angle);
 		if (unequal_left_side_of_case_opening != 0) echo(unequal_left_side_of_case_opening = unequal_left_side_of_case_opening);
 		if (unequal_bottom_side_of_case_opening != 0) echo(unequal_bottom_side_of_case_opening = unequal_bottom_side_of_case_opening);

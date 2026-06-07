@@ -384,6 +384,14 @@ Address these one at a time, running the test suite after each change.
   so it has to live in the shared OneDrive-synced `CLAUDE.md`. Applies equally to the
   `keyguard-designer-web` project's `CLAUDE.md`.
 
+### Version bumps
+- **When a release version is bumped (a new `## Version N` entry added to `CHANGELOG.md`),
+  also increment the `keyguard_designer_version` constant in `keyguard.scad`** (line ~518)
+  to that value + 1, marking the start of the next dev cycle. So when you write the
+  v79 entry, `keyguard_designer_version` should already be (or move to) 80. This mirrors
+  the web-app convention of pre-incrementing `APP_RELEASE` on `dev` to (last release + 1),
+  and keeps the on-disk constant always one ahead of the most recently released version.
+
 ### Log file naming
 - **For any test/job whose stdout you redirect to a log, use a stable per-job-type
   filename (e.g. `geometry-gate.log`, `visual-update.log`, `compare-visual-references.log`).
