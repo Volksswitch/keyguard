@@ -1,0 +1,14 @@
+{
+  "description": "cell ridges around a complex 11-cell 'snake' merge — multi-tooth regression gate for the tooth-tip rounding work. The group has three tooth walls, including an asymmetric one between cols 3-4 in row 1 where one end is a true tooth tip and the other end attaches to the group's outer perimeter (3-cells-in-group at that junction). This exercises both the rounded tooth-tip case and the asymmetric not-a-tooth-tip case in a single render.",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "ridge wraps multiple teeth in a complex snake-shaped merge",
+      "params": "Test Case 63",
+      "vpt": [1, 1, 1],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    }
+  ]
+}
