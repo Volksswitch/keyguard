@@ -2472,7 +2472,7 @@
     },
     "Test Case 59": {
       "volume_mm3": 154682.4981,
-      "surface_area_mm2": 77995.8254,
+      "surface_area_mm2": 77995.82,
       "bbox": [
         -122.5,
         -85.0,
@@ -2482,7 +2482,7 @@
         10.0
       ],
       "parts": 1,
-      "facets": 10876,
+      "facets": 10874,
       "oa_source": "case",
       "oa_case": "Test Case 59"
     }
