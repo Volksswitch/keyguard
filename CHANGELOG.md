@@ -9,6 +9,7 @@
 - Added clear error messages when a laser-cut keyguard is paired with Raised Tabs or Clip-on Straps, instead of the previous silent fall-through to "Customizer settings"
 - Reworked sizing of the closed-ridge family (`rridge`, `crridge`, `hdridge`) and the cell-ridge wall — ridge dimensions are now inner-based, slope and chamfer no longer bloat the inner dimension, and the ridge wall extends through the full keyguard depth
 - Reworked ridges around merged cell groups (L-shaped and cross-shaped merges): per-end convex/concave corner classification, inner rounding driven by the cell corner radius, chamfered top edges, full-length sides, and enlarged concave corners
+- Fixed bug where a rectangular merged cell group (e.g. a 2×2 block) produced a small free-floating ridge fragment in the middle of the opening; interior bridge transverses are now suppressed
 - Updated the "Customizer settings" console output: `screenshot_filename` is now reported under Special Actions and Settings (replacing the dropped `screenshot_file`), and `post_extension_distance` is now reported under Keyguard Frame Info
 
 ## Version 78
