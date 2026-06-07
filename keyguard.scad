@@ -3978,18 +3978,19 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 		// Bridge ridges. Each transverse end is classified by what's at the
 		// adjacent cell-corner — the side parallel to the bridge is always
 		// bridged here (that's the bridge's reason to exist), so the corner
-		// is either CONCAVE (perpendicular side also bridged AND diagonal
-		// not in group → aridge3 fills the corner) or SKIP (perpendicular
-		// side exposed → cell side ridge meets here collinearly), with one
-		// rare INTERIOR case (perpendicular side bridged AND diagonal in
-		// group → 2×2 merge, this bridge transverse is internal to the
-		// merge; treated as a no-op offset for now).
-		//   • CONCAVE  → bridge end SHORTENS by (ccr + t) so it ends at the
-		//                aridge3's tangent.
-		//   • SKIP     → bridge end EXTENDS by `_ov` past the cell edge so
-		//                its end-cap notch hides inside the cell side ridge.
-		//   • INTERIOR → no adjustment (bridge ends at cell edge); the 2×2
-		//                case still needs the transverse side suppressed.
+		// is one of:
+		//   • CONCAVE  (perpendicular side bridged AND diagonal NOT in group)
+		//                → aridge3 fills the corner; bridge end SHORTENS by
+		//                  (ccr + t) so it meets the aridge3's tangent.
+		//   • SKIP     (perpendicular side EXPOSED)
+		//                → cell side ridge meets here collinearly; bridge end
+		//                  EXTENDS by `_ov` past the cell edge so its end-cap
+		//                  notch hides inside the cell side ridge.
+		//   • INTERIOR (perpendicular side bridged AND diagonal IN group)
+		//                → this end sits inside the merged opening (e.g. 2×2
+		//                  merge). Offset is 0 here; when BOTH ends are
+		//                  INTERIOR the entire transverse is suppressed
+		//                  below to avoid a free-floating ridge fragment.
 		_ov = 0.5;
 		shorten = ccr + t;
 		// Horizontal bridge from c to c+1.
@@ -4004,13 +4005,21 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			east_top_off = c1_top_brg ? (c1_tl_diag ? 0 : shorten) : -_ov;
 			west_bot_off = c_bot_brg ? (c_br_diag ? 0 : shorten) : -_ov;
 			east_bot_off = c1_bot_brg ? (c1_bl_diag ? 0 : shorten) : -_ov;
+			// Interior-transverse suppression: when BOTH ends of a transverse
+			// are INTERIOR (perpendicular bridge present AND diagonal cell in
+			// group), the transverse sits entirely inside the merged opening
+			// (e.g. the row-0 horizontal bridge's TOP side in a 2×2 merge).
+			// Drawing it would deposit a free-floating ridge fragment inside
+			// the opening. Skip those.
+			top_interior = c_top_brg && c_tr_diag && c1_top_brg && c1_tl_diag;
+			bot_interior = c_bot_brg && c_br_diag && c1_bot_brg && c1_bl_diag;
 			top_start = cell_x + cwl/2 + west_top_off;
 			top_end   = cell_x + gpw - cwl/2 - east_top_off;
 			bot_start = cell_x + cwl/2 + west_bot_off;
 			bot_end   = cell_x + gpw - cwl/2 - east_bot_off;
-			if (top_end > top_start)
+			if (!top_interior && top_end > top_start)
 				translate([top_start, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(top_end - top_start, t, height_of_ridge, 0);
-			if (bot_end > bot_start)
+			if (!bot_interior && bot_end > bot_start)
 				translate([bot_start, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(bot_end - bot_start, t, height_of_ridge, 0);
 		}
 		// Vertical bridge from c to c+column_count — same logic transposed.
@@ -4024,13 +4033,16 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			north_left_off  = c2_left_brg ? (c2_bl_diag ? 0 : shorten) : -_ov;  // cell c2 BL
 			south_right_off = c_right_brg ? (c_tr_diag  ? 0 : shorten) : -_ov;  // cell c TR
 			north_right_off = c2_right_brg? (c2_br_diag ? 0 : shorten) : -_ov;  // cell c2 BR
+			// Same interior-transverse suppression as the horizontal bridge.
+			left_interior  = c_left_brg  && c_tl_diag  && c2_left_brg  && c2_bl_diag;
+			right_interior = c_right_brg && c_tr_diag  && c2_right_brg && c2_br_diag;
 			left_start  = cell_y + chl/2 + south_left_off;
 			left_end    = cell_y + gph - chl/2 - north_left_off;
 			right_start = cell_y + chl/2 + south_right_off;
 			right_end   = cell_y + gph - chl/2 - north_right_off;
-			if (left_end > left_start)
+			if (!left_interior && left_end > left_start)
 				translate([cell_x - cwl/2 - t/2, left_start, -kt/2 + sata]) ridge(left_end - left_start, t, height_of_ridge, 90);
-			if (right_end > right_start)
+			if (!right_interior && right_end > right_start)
 				translate([cell_x + cwl/2 + t/2, right_start, -kt/2 + sata]) ridge(right_end - right_start, t, height_of_ridge, 90);
 		}
 	}
