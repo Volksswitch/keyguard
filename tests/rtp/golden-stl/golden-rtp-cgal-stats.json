@@ -4,7 +4,8 @@
   "flags": "fudge=0.05 ff=0.05 include_screenshot=no (gate-off)",
   "merged_from": [
    "chunk-1-of-2.json (146)",
-   "chunk-2-of-2.json (146)"
+   "chunk-2-of-2.json (146)",
+   "chunk-affected.json (8)"
   ]
  },
  "configs": {
@@ -105,8 +106,8 @@
    "oa": "iPad 10,11\\AVAWO-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad 10,11 - AVAWO - LWFL-VI": {
-   "volume_mm3": 62952.8217,
-   "surface_area_mm2": 59407.4905,
+   "volume_mm3": 62723.361,
+   "surface_area_mm2": 59435.9664,
    "bbox": [
     -124.0,
     -89.0,
@@ -116,7 +117,7 @@
     4.95
    ],
    "parts": 1,
-   "facets": 41326,
+   "facets": 40494,
    "simple": "yes",
    "oa": "iPad 10,11\\AVAWO-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
@@ -361,8 +362,8 @@
    "oa": "iPad 10,11\\Andnary-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad 10,11 - Andnary - LWFL-VI": {
-   "volume_mm3": 34978.2706,
-   "surface_area_mm2": 48413.9516,
+   "volume_mm3": 34748.8099,
+   "surface_area_mm2": 48442.4276,
    "bbox": [
     -118.5,
     -84.5,
@@ -372,7 +373,7 @@
     4.0
    ],
    "parts": 1,
-   "facets": 40042,
+   "facets": 39210,
    "simple": "yes",
    "oa": "iPad 10,11\\Andnary-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
@@ -617,8 +618,8 @@
    "oa": "iPad 10,11\\ProCase-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad 10,11 - ProCase - LWFL-VI": {
-   "volume_mm3": 48012.9798,
-   "surface_area_mm2": 51143.6954,
+   "volume_mm3": 47783.5191,
+   "surface_area_mm2": 51172.1714,
    "bbox": [
     -119.5,
     -88.95,
@@ -628,7 +629,7 @@
     4.0
    ],
    "parts": 1,
-   "facets": 41092,
+   "facets": 40260,
    "simple": "yes",
    "oa": "iPad 10,11\\ProCase-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
@@ -873,8 +874,8 @@
    "oa": "iPad 10,11\\SUPCASE-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad 10,11 - SUPCASE - LWFL-VI": {
-   "volume_mm3": 35614.8055,
-   "surface_area_mm2": 55915.124,
+   "volume_mm3": 35385.3448,
+   "surface_area_mm2": 55943.6,
    "bbox": [
     -123.0,
     -89.0,
@@ -884,7 +885,7 @@
     4.0
    ],
    "parts": 1,
-   "facets": 40722,
+   "facets": 39890,
    "simple": "yes",
    "oa": "iPad 10,11\\SUPCASE-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
@@ -3625,8 +3626,8 @@
    "oa": "iPad mini 6,7\\AVAWO-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad mini 6,7 - AVAWO - LWFL-VI": {
-   "volume_mm3": 42955.7695,
-   "surface_area_mm2": 44406.3085,
+   "volume_mm3": 42762.0243,
+   "surface_area_mm2": 44417.3426,
    "bbox": [
     -99.5,
     -69.5,
@@ -3636,7 +3637,7 @@
     4.0
    ],
    "parts": 1,
-   "facets": 42974,
+   "facets": 42590,
    "simple": "yes",
    "oa": "iPad mini 6,7\\AVAWO-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
@@ -3913,8 +3914,8 @@
    "oa": "iPad mini 6,7\\Andnary-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad mini 6,7 - Andnary - LWFL-VI": {
-   "volume_mm3": 27069.2649,
-   "surface_area_mm2": 40241.0487,
+   "volume_mm3": 26875.5197,
+   "surface_area_mm2": 40252.0828,
    "bbox": [
     -96.5,
     -66.5,
@@ -3924,7 +3925,7 @@
     4.0
    ],
    "parts": 1,
-   "facets": 42050,
+   "facets": 41666,
    "simple": "yes",
    "oa": "iPad mini 6,7\\Andnary-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
@@ -4201,8 +4202,8 @@
    "oa": "iPad mini 6,7\\Fintie-equivalent Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad mini 6,7 - Fintie - LWFL-VI": {
-   "volume_mm3": 34389.3842,
-   "surface_area_mm2": 36138.417,
+   "volume_mm3": 34195.639,
+   "surface_area_mm2": 36149.4511,
    "bbox": [
     -93.0,
     -66.45,
@@ -4212,7 +4213,7 @@
     4.0
    ],
    "parts": 1,
-   "facets": 41982,
+   "facets": 41598,
    "simple": "yes",
    "oa": "iPad mini 6,7\\Fintie-equivalent Case\\LWFL-VI\\openings_and_additions.txt"
   },
@@ -4489,8 +4490,8 @@
    "oa": "iPad mini 6,7\\SUPCASE-equivalent  Case\\LWFL\\openings_and_additions.txt"
   },
   "iPad mini 6,7 - SUPCASE - LWFL-VI": {
-   "volume_mm3": 27867.9257,
-   "surface_area_mm2": 39614.8725,
+   "volume_mm3": 27674.1805,
+   "surface_area_mm2": 39625.9067,
    "bbox": [
     -96.0,
     -66.0,
@@ -4500,7 +4501,7 @@
     4.0
    ],
    "parts": 1,
-   "facets": 41922,
+   "facets": 41538,
    "simple": "yes",
    "oa": "iPad mini 6,7\\SUPCASE-equivalent  Case\\LWFL-VI\\openings_and_additions.txt"
   },
