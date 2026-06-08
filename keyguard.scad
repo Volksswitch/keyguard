@@ -4105,28 +4105,28 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			tr_off = right_brg ? (tr_diag_in ? 0 : -_ov) : ccr;
 			s = cx - cwl/2 + tl_off;
 			e = cx + cwl/2 - tr_off;
-			if (e > s) translate([s, cy + chl/2 + t/2, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 0);
+			if (e > s) translate([s, cy + chl/2 + t/2, -kt/2 + sata]) _mridge(e - s, t, height_of_ridge, 0);
 		}
 		if (!bot_brg){
 			bl_off = left_brg  ? (bl_diag_in ? 0 : -_ov) : ccr;
 			br_off = right_brg ? (br_diag_in ? 0 : -_ov) : ccr;
 			s = cx - cwl/2 + bl_off;
 			e = cx + cwl/2 - br_off;
-			if (e > s) translate([s, cy - chl/2 - t/2, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 0);
+			if (e > s) translate([s, cy - chl/2 - t/2, -kt/2 + sata]) _mridge(e - s, t, height_of_ridge, 0);
 		}
 		if (!right_brg){
 			br_off = bot_brg ? (br_diag_in ? 0 : -_ov) : ccr;
 			tr_off = top_brg ? (tr_diag_in ? 0 : -_ov) : ccr;
 			s = cy - chl/2 + br_off;
 			e = cy + chl/2 - tr_off;
-			if (e > s) translate([cx + cwl/2 + t/2, s, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 90);
+			if (e > s) translate([cx + cwl/2 + t/2, s, -kt/2 + sata]) _mridge(e - s, t, height_of_ridge, 90);
 		}
 		if (!left_brg){
 			bl_off = bot_brg ? (bl_diag_in ? 0 : -_ov) : ccr;
 			tl_off = top_brg ? (tl_diag_in ? 0 : -_ov) : ccr;
 			s = cy - chl/2 + bl_off;
 			e = cy + chl/2 - tl_off;
-			if (e > s) translate([cx - cwl/2 - t/2, s, -kt/2 + sata]) ridge(e - s, t, height_of_ridge, 90);
+			if (e > s) translate([cx - cwl/2 - t/2, s, -kt/2 + sata]) _mridge(e - s, t, height_of_ridge, 90);
 		}
 
 		// Corner aridges. Convex outer corners take the OPPOSITE-quadrant
@@ -4236,10 +4236,10 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			_et_tt = _tt_dir(c+1,  -1, +1, group);
 			_wb_tt = _tt_dir(c,    +1, -1, group);
 			_eb_tt = _tt_dir(c+1,  -1, -1, group);
-			west_top_off = c_top_brg ? (c_tr_diag ? (_wt_tt=="N" ? shorten : 0) : shorten) : -_ov;
-			east_top_off = c1_top_brg ? (c1_tl_diag ? (_et_tt=="N" ? shorten : 0) : shorten) : -_ov;
-			west_bot_off = c_bot_brg ? (c_br_diag ? (_wb_tt=="S" ? shorten : 0) : shorten) : -_ov;
-			east_bot_off = c1_bot_brg ? (c1_bl_diag ? (_eb_tt=="S" ? shorten : 0) : shorten) : -_ov;
+			west_top_off = c_top_brg ? (c_tr_diag ? (_wt_tt != "" ? shorten : 0) : shorten) : -_ov;
+			east_top_off = c1_top_brg ? (c1_tl_diag ? (_et_tt != "" ? shorten : 0) : shorten) : -_ov;
+			west_bot_off = c_bot_brg ? (c_br_diag ? (_wb_tt != "" ? shorten : 0) : shorten) : -_ov;
+			east_bot_off = c1_bot_brg ? (c1_bl_diag ? (_eb_tt != "" ? shorten : 0) : shorten) : -_ov;
 			// Interior-transverse suppression: when BOTH ends of a transverse
 			// are INTERIOR (perpendicular bridge present AND diagonal cell in
 			// group) AND the wall on the far side of the transverse is ALSO
@@ -4262,9 +4262,9 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			bot_start = cell_x + cwl/2 + west_bot_off;
 			bot_end   = cell_x + gpw - cwl/2 - east_bot_off;
 			if (!top_interior && top_end > top_start)
-				translate([top_start, cell_y + chl/2 + t/2, -kt/2 + sata]) ridge(top_end - top_start, t, height_of_ridge, 0);
+				translate([top_start, cell_y + chl/2 + t/2, -kt/2 + sata]) _mridge(top_end - top_start, t, height_of_ridge, 0);
 			if (!bot_interior && bot_end > bot_start)
-				translate([bot_start, cell_y - chl/2 - t/2, -kt/2 + sata]) ridge(bot_end - bot_start, t, height_of_ridge, 0);
+				translate([bot_start, cell_y - chl/2 - t/2, -kt/2 + sata]) _mridge(bot_end - bot_start, t, height_of_ridge, 0);
 		}
 		// Vertical bridge from c to c+column_count — same logic transposed.
 		if ((i != row_count-1) && search(c, m_c_v) && search(c+column_count, group)){
@@ -4273,17 +4273,20 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			c2_right_brg = (j != column_count-1) && search(c2, m_cell_h) && search(c2+1, group);
 			c2_bl_diag = (j != 0) && search(c-1, group);                  // c2-1-ncols == c-1
 			c2_br_diag = (j != column_count-1) && search(c+1, group);     // c2+1-ncols == c+1
-			// Tooth-tip perpendicular check at each end of the vertical
-			// transverses: horizontal tooth direction (E at left, W at right)
-			// is perpendicular to the upward-going transverse.
+			// Tooth-tip check at each end of the vertical transverses: the end
+			// retracts to the tip aridge tangent (shorten) whenever ANY tooth
+			// wall is present at that diag-in corner (_tt_dir != ""), whether
+			// PERPENDICULAR (this transverse caps a horizontal tooth) or
+			// COLLINEAR (it runs along a vertical rail tooth to its tip). A
+			// true square 2x2 interior corner (_tt_dir=="") takes offset 0.
 			_sl_tt = _tt_dir(c,                  -1, +1, group);
 			_nl_tt = _tt_dir(c+column_count,     -1, -1, group);
 			_sr_tt = _tt_dir(c,                  +1, +1, group);
 			_nr_tt = _tt_dir(c+column_count,     +1, -1, group);
-			south_left_off  = c_left_brg  ? (c_tl_diag  ? (_sl_tt=="E" ? shorten : 0) : shorten) : -_ov;  // cell c TL
-			north_left_off  = c2_left_brg ? (c2_bl_diag ? (_nl_tt=="E" ? shorten : 0) : shorten) : -_ov;  // cell c2 BL
-			south_right_off = c_right_brg ? (c_tr_diag  ? (_sr_tt=="W" ? shorten : 0) : shorten) : -_ov;  // cell c TR
-			north_right_off = c2_right_brg? (c2_br_diag ? (_nr_tt=="W" ? shorten : 0) : shorten) : -_ov;  // cell c2 BR
+			south_left_off  = c_left_brg  ? (c_tl_diag  ? (_sl_tt != "" ? shorten : 0) : shorten) : -_ov;  // cell c TL
+			north_left_off  = c2_left_brg ? (c2_bl_diag ? (_nl_tt != "" ? shorten : 0) : shorten) : -_ov;  // cell c2 BL
+			south_right_off = c_right_brg ? (c_tr_diag  ? (_sr_tt != "" ? shorten : 0) : shorten) : -_ov;  // cell c TR
+			north_right_off = c2_right_brg? (c2_br_diag ? (_nr_tt != "" ? shorten : 0) : shorten) : -_ov;  // cell c2 BR
 			// Same interior-transverse suppression as the horizontal bridge,
 			// with the far-side-wall check that distinguishes a true square
 			// 2×2 interior from a (rotated) U/horseshoe tooth.
@@ -4296,9 +4299,9 @@ module merged_group_ridge(group, gpw, gph, cwid, chei){
 			right_start = cell_y + chl/2 + south_right_off;
 			right_end   = cell_y + gph - chl/2 - north_right_off;
 			if (!left_interior && left_end > left_start)
-				translate([cell_x - cwl/2 - t/2, left_start, -kt/2 + sata]) ridge(left_end - left_start, t, height_of_ridge, 90);
+				translate([cell_x - cwl/2 - t/2, left_start, -kt/2 + sata]) _mridge(left_end - left_start, t, height_of_ridge, 90);
 			if (!right_interior && right_end > right_start)
-				translate([cell_x + cwl/2 + t/2, right_start, -kt/2 + sata]) ridge(right_end - right_start, t, height_of_ridge, 90);
+				translate([cell_x + cwl/2 + t/2, right_start, -kt/2 + sata]) _mridge(right_end - right_start, t, height_of_ridge, 90);
 		}
 	}
 }
@@ -6715,17 +6718,32 @@ module ridge(length, thickness, hi,rot){
 		rotate([0,90,0])
 		linear_extrude(height=length)
 		polygon([[0,0],[thickness,0],[thickness,hite-.5],[thickness-.5,hite],[.5,hite],[0,hite-.5]]);
-		
+
 		translate([0-ff,thickness,hite-.5+ff])
 		rotate([90,0,0])
 		linear_extrude(height=thickness)
 		polygon([[0,0],[.5,.5],[0,.5]]);
-	
+
 		translate([length+ff,thickness,hite-.5+ff])
 		rotate([90,0,0])
 		linear_extrude(height=thickness)
 		polygon([[0,0],[-.5,.5],[0,.5]]);
 	}
+}
+
+// Merged-perimeter ridge segment. Same as ridge() but EXTENDED by the
+// end-chamfer width (0.5 mm) at BOTH ends. Every segment of a merged-cell
+// perimeter ridge butts another segment or a corner aridge (the loop is
+// closed), so the 0.5 mm end chamfers would otherwise leave a small notch
+// ("divot") at each butt joint. Lengthening each segment by a chamfer width
+// at both ends buries those chamfers under the adjacent full-height feature
+// (additive overlap), exactly matching the continuous rounded_rectangle_wall
+// the non-merged ridge is built from. The overlap rides along the segment's
+// own run direction (rot°), so it never pushes the ridge into the opening.
+module _mridge(length, thickness, hi, rot){
+	ov = 0.5;
+	translate([-ov*cos(rot), -ov*sin(rot), 0])
+	ridge(length + 2*ov, thickness, hi, rot);
 }
 
 // Creates a quarter-arc ridge segment (one corner of a rounded-rectangle ridge),
