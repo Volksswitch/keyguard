@@ -406,13 +406,19 @@ Address these one at a time, running the test suite after each change.
   work happens in a worktree under `C:\kg-wt\…`. Logs buried in a worktree are invisible
   to Ken and to the other machine; the whole point is that anyone can
   `tail -f "…/keyguard designer/progress.log"` regardless of which worktree is active.
-- Append timestamped lines as each step starts and finishes — what was done, status, and
-  the key result (e.g. a render's vol/area/parts, a test's PASS/FAIL count, a commit SHA).
-  Append; do not overwrite (this is a running session journal). `progress.log` is
-  gitignored — git is the history of the code, `progress.log` is the history of the work.
+- **Every record MUST begin with a wall-clock timestamp** in `[YYYY-MM-DD HH:MM:SS]`
+  form (local time). No exceptions — a line without a leading timestamp is a bug. When you
+  mirror a background job's output into `progress.log`, prepend the timestamp at the moment
+  you write the line. Append timestamped lines as each step starts and finishes — what was
+  done, status, and the key result (e.g. a render's vol/area/parts, a test's PASS/FAIL
+  count, a commit SHA). Append; do not overwrite (this is a running session journal).
+  `progress.log` is gitignored — git is the history of the code, `progress.log` is the
+  history of the work.
 - Background jobs (renders, test suites) may ALSO keep their own stable per-job logs
-  (see Log file naming below), but a one-line summary of each must still land in
-  `progress.log` so it is the single place to see the whole picture.
+  (see Log file naming below), but their progress must flow into `progress.log` LIVE —
+  redirect/tee the job into the main log from the start (timestamping each line), or run a
+  follower that mirrors new lines as they appear. Do not leave a running job's progress
+  stranded in a worktree-local log where Ken cannot see it.
 
 ### Log file naming
 - **For any test/job whose stdout you redirect to a log, use a stable per-job-type
