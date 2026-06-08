@@ -1,0 +1,15 @@
+// Test Case 64 — side-by-side U-merge teeth (covered-cell tooth vs rail tooth).
+// The merge geometry comes entirely from the keyguard.json "special test case"
+// preset; no custom OA shapes are needed for this test.
+
+screen_openings=[
+];
+
+case_openings=[
+];
+
+case_additions=[
+];
+
+tablet_openings=[
+];
