@@ -396,6 +396,24 @@ Address these one at a time, running the test suite after each change.
   the web-app convention of pre-incrementing `APP_RELEASE` on `dev` to (last release + 1),
   and keeps the on-disk constant always one ahead of the most recently released version.
 
+### Progress logging (mandatory)
+- **For ANY multi-step or long-running task, continuously write progress to a single
+  human-readable log file named `progress.log` at the MAIN project root** (the
+  OneDrive-synced `…/keyguard designer/` folder — derive it from `$env:OneDrive`, never
+  hardcode a user path). This is the minimum bar: progress MUST be discoverable there
+  even when it is also tracked elsewhere (the task list, the chat, or a per-job log).
+- **Always write to the MAIN project root, never a worktree root**, even when the code
+  work happens in a worktree under `C:\kg-wt\…`. Logs buried in a worktree are invisible
+  to Ken and to the other machine; the whole point is that anyone can
+  `tail -f "…/keyguard designer/progress.log"` regardless of which worktree is active.
+- Append timestamped lines as each step starts and finishes — what was done, status, and
+  the key result (e.g. a render's vol/area/parts, a test's PASS/FAIL count, a commit SHA).
+  Append; do not overwrite (this is a running session journal). `progress.log` is
+  gitignored — git is the history of the code, `progress.log` is the history of the work.
+- Background jobs (renders, test suites) may ALSO keep their own stable per-job logs
+  (see Log file naming below), but a one-line summary of each must still land in
+  `progress.log` so it is the single place to see the whole picture.
+
 ### Log file naming
 - **For any test/job whose stdout you redirect to a log, use a stable per-job-type
   filename (e.g. `geometry-gate.log`, `visual-update.log`, `compare-visual-references.log`).
