@@ -1,10 +1,10 @@
 {
-  "description": "Tooth-tip ridge location + continuity gate. Two U-shaped merges side by side: LEFT has a 3-column-wide bottom with a covered-cell tooth (handled by the pre-existing covered-cell path); RIGHT has a 2-column-wide bottom with a rail tooth whose tip sits a full rail-width past the flanking cell edge. The rail tooth is what exposed the bug where tooth-tip fillets + OA cuts landed mid-tooth instead of at the capping bridge. Both teeth must round their tips on the underlying surface with continuous (gap-free) side ridges. Wide rails (gph 77.9 vs cell 30) make any mislocation obvious. Preset is Ken's 'special test case'.",
+  "description": "Tooth-tip ridge location + continuity gate. Two U-shaped merges side by side: LEFT has a 3-column-wide bottom with a covered-cell tooth (handled by the pre-existing covered-cell path); RIGHT has a 2-column-wide bottom with a rail tooth whose tip sits a full rail-width past the flanking cell edge. The rail tooth is what exposed the bug where tooth-tip fillets + OA cuts landed mid-tooth instead of at the capping bridge. Both teeth must round their tips on the underlying surface with continuous (gap-free) side ridges. Wide rails (gph 77.9 vs cell 30) make any mislocation obvious. The fix also buries the ridge-end-chamfer divots (via _mridge overlap) and retracts the side/cap transverses to the tip aridge tangent (the general _tt_dir != \"\" rule), so both teeth show no tabs, divots, or breaks.",
   "openings": "openings_and_additions.txt",
   "steps": [
     {
       "label": "both U-merge teeth round their tips with continuous side ridges (covered-cell tooth vs rail tooth)",
-      "params": "special test case",
+      "params": "Test Case 64",
       "vpt": [0, 0, 1],
       "vpr": [30, 0, 0],
       "vpd": 500,

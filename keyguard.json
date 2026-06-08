@@ -46985,7 +46985,7 @@
             "vertical_sloped_edge_width": "10.0",
             "width_of_opening_in_case": "245"
         },
-        "special test case": {
+        "Test Case 64": {
             "Braille_location": "above opening",
             "Braille_size_multiplier": "10",
             "Braille_text": "",
