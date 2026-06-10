@@ -1117,8 +1117,12 @@ sy0 = screen_y0;
 	//test whether the app measurements have been provided in pixels based on a screenshot
 	// px_measurements = ((bottom_of_status_bar>0 || bottom_of_upper_message_bar>0 || bottom_of_upper_command_bar>0 || top_of_lower_message_bar>0 ||
 		// top_of_lower_command_bar>0) && ((bottom_of_status_bar>=bottom_of_upper_message_bar && bottom_of_upper_message_bar>=bottom_of_upper_command_bar && bottom_of_upper_command_bar>=top_of_lower_message_bar && top_of_lower_message_bar>=top_of_lower_command_bar) || (bottom_of_status_bar<=bottom_of_upper_message_bar && bottom_of_upper_message_bar<=bottom_of_upper_command_bar && bottom_of_upper_command_bar<=top_of_lower_message_bar && top_of_lower_message_bar<=top_of_lower_command_bar))); 
-	px_measurements = ((bottom_of_status_bar>0 || bottom_of_upper_message_bar>0 || bottom_of_upper_command_bar>0 || top_of_lower_message_bar>0 || top_of_lower_command_bar>0)); 
-	
+	px_measurements = ((bottom_of_status_bar>0 || bottom_of_upper_message_bar>0 || bottom_of_upper_command_bar>0 || top_of_lower_message_bar>0 || top_of_lower_command_bar>0));
+
+	px_complete = px_measurements
+		&& bottom_of_status_bar>0 && bottom_of_upper_message_bar>0 && bottom_of_upper_command_bar>0 && top_of_lower_message_bar>0 && top_of_lower_command_bar>0
+		&& bottom_of_status_bar<=bottom_of_upper_message_bar && bottom_of_upper_message_bar<=bottom_of_upper_command_bar && bottom_of_upper_command_bar<=top_of_lower_message_bar && top_of_lower_message_bar<=top_of_lower_command_bar;
+
 	//if app measurements been provided in pixels have they been taken from the top or bottom of the screenshot?
 	px_measurements_start = (bottom_of_status_bar < top_of_lower_command_bar) ? "top" : "bottom";
 	
@@ -1254,7 +1258,7 @@ cell_h = (cell_height_in_mm==0) ? cell_height_in_px*mpp : cell_height_in_mm;
 cw = (cell_w*number_of_columns>gwm) ? floor(gwm/number_of_columns)-1 : cell_w;
 ch = (cell_h*number_of_rows>ghm) ? floor(ghm/number_of_rows)-1 : cell_h;
 
-if(((cw!=cell_w) || (ch!=cell_h)) && (column_count!=0 && row_count!=0 && cell_shape!="circular") && grid_height>0 && grid_width>0){
+if(((cw!=cell_w) || (ch!=cell_h)) && (column_count!=0 && row_count!=0 && cell_shape!="circular") && (!px_measurements || px_complete) && grid_height>0 && grid_width>0){
 	echo();
 	if(ch!=cell_h) echo(str("The cell height has been adjusted to ", ch, " mm (or ", round(ch*ppm), " px) in order to fit properly."));
 	if(cw!=cell_w) echo(str("The cell width has been adjusted to ", cw, " mm (or ", round(cw*ppm), " px) in order to fit properly."));
