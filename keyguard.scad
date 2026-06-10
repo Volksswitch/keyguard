@@ -1120,7 +1120,6 @@ sy0 = screen_y0;
 	px_measurements = ((bottom_of_status_bar>0 || bottom_of_upper_message_bar>0 || bottom_of_upper_command_bar>0 || top_of_lower_message_bar>0 || top_of_lower_command_bar>0));
 
 	px_complete = px_measurements
-		&& bottom_of_status_bar>0 && bottom_of_upper_message_bar>0 && bottom_of_upper_command_bar>0 && top_of_lower_message_bar>0 && top_of_lower_command_bar>0
 		&& bottom_of_status_bar<=bottom_of_upper_message_bar && bottom_of_upper_message_bar<=bottom_of_upper_command_bar && bottom_of_upper_command_bar<=top_of_lower_message_bar && top_of_lower_message_bar<=top_of_lower_command_bar;
 
 	//if app measurements been provided in pixels have they been taken from the top or bottom of the screenshot?
