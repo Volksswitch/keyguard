@@ -1140,11 +1140,11 @@ sy0 = screen_y0;
 	// lcbbp = (px_measurements_start=="top") ?  shp : 0; //lower command bar bottom in pixels
 	
 
-	sbhp = (px_measurements_start=="top") ? sbbp : shp - sbbp; // height of status bar in pixels
-	umbhp = (px_measurements_start=="top") ? umbbp - sbbp : sbbp - umbbp; // height of upper message bar in pixels
-	ucbhp = (px_measurements_start=="top") ? ucbbp - umbbp : umbbp - ucbbp; // height of upper command bar in pixels
-	lmbhp = (px_measurements_start=="top") ? lcbtp - lmbtp : lmbtp - lcbtp; // height of lower message bar in pixels
-	lcbhp = (px_measurements_start=="top") ? shp - lcbtp : lcbtp; // height of lower command bar in pixelscel
+	sbhp = max(0, (px_measurements_start=="top") ? sbbp : shp - sbbp); // height of status bar in pixels
+	umbhp = max(0, (px_measurements_start=="top") ? umbbp - sbbp : sbbp - umbbp); // height of upper message bar in pixels
+	ucbhp = max(0, (px_measurements_start=="top") ? ucbbp - umbbp : umbbp - ucbbp); // height of upper command bar in pixels
+	lmbhp = max(0, (px_measurements_start=="top") ? lcbtp - lmbtp : lmbtp - lcbtp); // height of lower message bar in pixels
+	lcbhp = max(0, (px_measurements_start=="top") ? shp - lcbtp : lcbtp); // height of lower command bar in pixels
 	
 // Convert a bar measurement to the working unit (mm or px depending on using_px).
 // px_val: the bar height derived from pixel input; mm_val: the bar height parameter in mm.
