@@ -1140,11 +1140,11 @@ sy0 = screen_y0;
 	// lcbbp = (px_measurements_start=="top") ?  shp : 0; //lower command bar bottom in pixels
 	
 
-	sbhp = max(0, (px_measurements_start=="top") ? sbbp : shp - sbbp); // height of status bar in pixels
-	umbhp = max(0, (px_measurements_start=="top") ? umbbp - sbbp : sbbp - umbbp); // height of upper message bar in pixels
-	ucbhp = max(0, (px_measurements_start=="top") ? ucbbp - umbbp : umbbp - ucbbp); // height of upper command bar in pixels
-	lmbhp = max(0, (px_measurements_start=="top") ? lcbtp - lmbtp : lmbtp - lcbtp); // height of lower message bar in pixels
-	lcbhp = max(0, (px_measurements_start=="top") ? shp - lcbtp : lcbtp); // height of lower command bar in pixels
+	sbhp = (sbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? sbbp : shp - sbbp); // height of status bar in pixels
+	umbhp = (umbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? umbbp - sbbp : sbbp - umbbp); // height of upper message bar in pixels
+	ucbhp = (ucbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? ucbbp - umbbp : umbbp - ucbbp); // height of upper command bar in pixels
+	lmbhp = (lmbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? lcbtp - lmbtp : lmbtp - lcbtp); // height of lower message bar in pixels
+	lcbhp = (lcbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? shp - lcbtp : lcbtp); // height of lower command bar in pixels
 	
 // Convert a bar measurement to the working unit (mm or px depending on using_px).
 // px_val: the bar height derived from pixel input; mm_val: the bar height parameter in mm.
@@ -1254,7 +1254,7 @@ cell_h = (cell_height_in_mm==0) ? cell_height_in_px*mpp : cell_height_in_mm;
 cw = (cell_w*number_of_columns>gwm) ? floor(gwm/number_of_columns)-1 : cell_w;
 ch = (cell_h*number_of_rows>ghm) ? floor(ghm/number_of_rows)-1 : cell_h;
 
-if(((cw!=cell_w) || (ch!=cell_h)) && (column_count!=0 && row_count!=0 && cell_shape!="circular")){
+if(((cw!=cell_w) || (ch!=cell_h)) && (column_count!=0 && row_count!=0 && cell_shape!="circular") && grid_height>0 && grid_width>0){
 	echo();
 	if(ch!=cell_h) echo(str("The cell height has been adjusted to ", ch, " mm (or ", round(ch*ppm), " px) in order to fit properly."));
 	if(cw!=cell_w) echo(str("The cell width has been adjusted to ", cw, " mm (or ", round(cw*ppm), " px) in order to fit properly."));
