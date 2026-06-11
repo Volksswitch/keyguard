@@ -1,0 +1,8 @@
+{
+  "version": 80,
+  "scad_filename": "keyguard_v80.scad",
+  "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
+  "notes": [
+    "Fixed bug where the ridge around a U-shaped, horseshoe-shaped, C-shaped or other concave-perimeter merged cell group failed to wrap around the central \"tooth\" wall (the interior cell wall that sticks into the merged opening); the ridge now follows the full merged perimeter, including around the tooth"
+  ]
+}
