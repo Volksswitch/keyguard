@@ -322,6 +322,10 @@ have_a_keyguard_frame = "no"; //[yes,no]
 keyguard_frame_thickness = 5.0; // .1
 keyguard_height = 160;
 keyguard_width = 210;
+//slides the contained keyguard left/right within the frame, as a % of frame width (+ = right); openings stay registered to the screen
+slide_keyguard_horizontally = 0; //[-100:0.1:100]
+//slides the contained keyguard up/down within the frame, as a % of frame height (+ = up); openings stay registered to the screen
+slide_keyguard_vertically = 0; //[-100:0.1:100]
 keyguard_corner_radius = 2;
 mount_keyguard_with = "snap-in tabs"; //[snap-in tabs, posts]
 snap_in_tab_on_top_edge_of_keyguard = "yes"; // [yes,no]
@@ -986,6 +990,12 @@ fh = (has_case && has_frame) ? coh :
 fcr = (has_case && has_frame) ? [cocria,cocria,cocria,cocria] : 
       (!has_case && has_frame) ? tcr :
 	  [0,0,0,0];
+
+// offset that slides the contained keyguard (its slab + snap-in tabs/posts) and the
+// frame's matching hole/grooves/post-slots within the frame. % of frame width/height,
+// + = right/up. No-op without a frame. Screen/cell openings stay registered to the
+// screen (0,0), so sliding moves which portion of the screen the keyguard covers.
+kg_slide = (has_frame) ? [slide_keyguard_horizontally/100*fw, slide_keyguard_vertically/100*fh, 0] : [0,0,0];
 
 st_screen_width = (is_landscape) ? tablet_params[3] : tablet_params[4];
 ot_screen_width = (is_landscape) ? o_t_g_s[3] : o_t_g_s[4];
@@ -2030,7 +2040,7 @@ module keyguard(cheat){
 						difference(){
 							union(){
 								//base object: tablet body slab or case opening along with case additions if any that can be chamfered
-								base_keyguard(kw,kh,kcr,kt,cheat);
+								translate(kg_slide) base_keyguard(kw,kh,kcr,kt,cheat);
 													
 								//add slide-in & raised tabs
 								if (has_case && !has_frame && (m_m=="Slide-in Tabs" || m_m=="Raised Tabs")){
@@ -2270,15 +2280,17 @@ module keyguard(cheat){
 			
 			//*** add specialized elements for special configurations - like a snap-in keyguard to a keyguard frame
 			
-			// add snap-in tabs
+			// add snap-in tabs (track the slid slab)
 			if (has_frame && hide_screen_region == "no"){
+				translate(kg_slide)
 				add_snap_ins();
 			}
-					
-			//add the posts themselves
+
+			//add the posts themselves (track the slid slab)
 			if(has_case && has_frame && mount_keyguard_with=="posts"){
+				translate(kg_slide)
 				add_keyguard_frame_posts();
-			}	
+			}
 		}
 		//*** last minute cuts
 		
@@ -2479,17 +2491,20 @@ module keyguard_frame(cheat){
 
 		}
 
-		// cut_out_opening for keyguard
+		// cut_out_opening for keyguard (kg_slide repositions the keyguard window within the frame)
+		translate(kg_slide)
 		hole_cutter(keyguard_width,keyguard_height,90,90,90,90,kcr[0],keyguard_frame_thickness);
-		
+
 		//cut clip-on strap pedestals (manual or otherwise) if they extend into the space for the keyguard
 		// translate([0,0,keyguard_frame_thickness/2+pedestal_height/2-ff])
+		translate(kg_slide)
 		translate([0,0,keyguard_frame_thickness/2])
 		linear_extrude(height=pedestal_height+10)
 		offset(r=kcr[0])
 		square([keyguard_width+cec*2-kcr[0]*2,keyguard_height+cec*2-kcr[0]*2], center=true);
 
-		// cut slots for snap-in tabs on keyguard edges
+		// cut slots for snap-in tabs on keyguard edges (track the slid keyguard window)
+		translate(kg_slide)
 		snap_in_tab_grooves();
 		
 		//camera and home button openings
@@ -2526,15 +2541,20 @@ module keyguard_frame(cheat){
 					  (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no") ? shm/2-sbhm-umbhm :	
 					  shm/2-sbhm;
 
+			// post slots track the slid keyguard window
+			translate(kg_slide)
 			translate([keyguard_width/2+post_len/2-5,post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
 
+			translate(kg_slide)
 			translate([keyguard_width/2+post_len/2-5,-post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
-			
+
+			translate(kg_slide)
 			translate([-keyguard_width/2-post_len/2+5,post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
-			
+
+			translate(kg_slide)
 			translate([-keyguard_width/2-post_len/2+5,-post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
 		}
@@ -8397,6 +8417,8 @@ module echo_settings(){
 		if (keyguard_frame_thickness != 5) echo(keyguard_frame_thickness = keyguard_frame_thickness);
 		if (keyguard_height != 160) echo(keyguard_height = keyguard_height);
 		if (keyguard_width != 210) echo(keyguard_width = keyguard_width);
+		if (slide_keyguard_horizontally != 0) echo(slide_keyguard_horizontally = slide_keyguard_horizontally);
+		if (slide_keyguard_vertically != 0) echo(slide_keyguard_vertically = slide_keyguard_vertically);
 		if (keyguard_corner_radius != 2) echo(keyguard_corner_radius = keyguard_corner_radius);
 		if (mount_keyguard_with != "snap-in tabs") echo(mount_keyguard_with = mount_keyguard_with);
 		if (snap_in_tab_on_top_edge_of_keyguard != "yes") echo(snap_in_tab_on_top_edge_of_keyguard = snap_in_tab_on_top_edge_of_keyguard);
