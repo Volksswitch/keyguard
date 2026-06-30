@@ -2451,6 +2451,15 @@ module keyguard_frame(cheat){
 					if(is_v2(m_c_o)) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
 				}
 
+				//add bumps and ridges from screen_openings onto the frame (frame covers
+				//part of the screen when the keyguard is slid within the frame)
+				if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
+					if(is_v2(screen_openings)) adding_plastic_v2(screen_openings,"screen",on_frame=true); else adding_plastic(screen_openings,"screen",on_frame=true);
+				}
+				if(len(m_s_o)>0 && type_of_tablet!="blank"){
+					if(is_v2(m_s_o)) adding_plastic_v2(m_s_o,"screen",on_frame=true); else adding_plastic(m_s_o,"screen",on_frame=true);
+				}
+
 				// adding manual slide-in tabs and pedestals for clip-on straps
 				if(!is_undef(case_additions) && len(case_additions)>0 && (!has_frame ||
 				   (has_frame && generate=="keyguard frame" && cheat=="no"))){
@@ -2475,6 +2484,15 @@ module keyguard_frame(cheat){
 			}
 			if(len(m_c_o)>0){
 				if(is_v2(m_c_o)) cut_case_openings_v2(m_c_o,keyguard_frame_thickness); else cut_case_openings(m_c_o,keyguard_frame_thickness);
+			}
+
+			//cut screen openings through the frame (frame thickness as the material
+			//depth); a value of 0 in the cut/build column cuts fully through the frame
+			if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
+				if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings,keyguard_frame_thickness,on_frame=true); else cut_screen_openings(screen_openings,keyguard_frame_thickness,on_frame=true);
+			}
+			if(len(m_s_o)>0 && type_of_tablet!="blank"){
+				if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o,keyguard_frame_thickness,on_frame=true); else cut_screen_openings(m_s_o,keyguard_frame_thickness,on_frame=true);
 			}
 
 			if (m_m=="Clip-on Straps" && !no_clips){
@@ -4855,7 +4873,14 @@ module create_cell_insert(){
 // @param s_o    Screen openings vector (rows of opening definitions)
 // @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
 // @param hl     false = cut as normal (default); true = emit overlays only for ID == "#"
-module cut_screen_openings(s_o,depth,hl=false){
+// @param on_frame  When true, the openings are cut into the keyguard FRAME (at
+//                  keyguard_frame_thickness) rather than the screen recess — used
+//                  when a slid framed keyguard lets the frame cover part of the
+//                  screen. Forwards type "keyguard" (full-thickness z-placement and
+//                  kec chamfer) instead of "screen"; x/y/unit/starting-corner logic
+//                  is unchanged.
+module cut_screen_openings(s_o,depth,hl=false,on_frame=false){
+	cut_region = on_frame ? "keyguard" : "screen";
 	for(i = [0 : len(s_o)-1]){
 		opening = s_o[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:top slope, 7:bottom slope, 8:left slope, 9:right slope, 10:corner_radius, 11:other
 		opening_ID = opening[0];
@@ -4892,7 +4917,7 @@ module cut_screen_openings(s_o,depth,hl=false){
 		if(depth>0){
 			oa_geom(opening_ID, hl)
 			translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
-			cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other,depth,"screen");
+			cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other,depth,cut_region);
 		}
 		else{
 			oa_geom(opening_ID, hl)
@@ -5084,7 +5109,12 @@ function v2_parse_addition(r) =
 // correct position relative to the screen coordinate origin.
 // @param s_o    Screen openings vector (V2 explicit 14-column format)
 // @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
-module cut_screen_openings_v2(s_o, depth, hl=false) {
+// @param on_frame  When true, cut into the keyguard FRAME (at keyguard_frame_thickness)
+//                  rather than the screen recess — forwards type "keyguard"
+//                  (full-thickness z-placement and kec chamfer) instead of "screen".
+//                  See cut_screen_openings (V1) for the framed-keyguard rationale.
+module cut_screen_openings_v2(s_o, depth, hl=false, on_frame=false) {
+	cut_region = on_frame ? "keyguard" : "screen";
 	for(i = [0 : len(s_o)-1]) {
 		r = s_o[i];
 		opening_ID = r[0];
@@ -5108,7 +5138,7 @@ module cut_screen_openings_v2(s_o, depth, hl=false) {
 				       ((using_px) ? y_raw * mpp : y_raw);
 				oa_geom(opening_ID, hl)
 				translate([sx0+x_mm, sy0+y_mm, 0])
-				cut_opening(w_mm, h_mm, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, "screen");
+				cut_opening(w_mm, h_mm, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, cut_region);
 			}
 
 		} else if (r[1] == "ridge" || r[1] == "cridge" || r[1] == "rridge" ||
@@ -5127,7 +5157,7 @@ module cut_screen_openings_v2(s_o, depth, hl=false) {
 				       ((using_px) ? y_raw * mpp : y_raw);
 				oa_geom(opening_ID, hl)
 				translate([sx0+x_mm, sy0+y_mm, 0])
-				cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, (r[7]==0 ? undef : r[7]), depth, "screen");
+				cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, (r[7]==0 ? undef : r[7]), depth, cut_region);
 			}
 
 		} else if (r[1] == "text") {
@@ -5146,7 +5176,7 @@ module cut_screen_openings_v2(s_o, depth, hl=false) {
 				       ((using_px) ? y_raw * mpp : y_raw);
 				oa_geom(opening_ID, hl)
 				translate([sx0+x_mm, sy0+y_mm, 0])
-				cut_opening_v2(0, h_mm, "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, "screen");
+				cut_opening_v2(0, h_mm, "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, cut_region);
 			}
 
 		} else if (r[1] == "svg") {
@@ -5162,7 +5192,7 @@ module cut_screen_openings_v2(s_o, depth, hl=false) {
 				       ((using_px) ? y_raw * mpp : y_raw);
 				oa_geom(opening_ID, hl)
 				translate([sx0+x_mm, sy0+y_mm, 0])
-				cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, (using_px ? r[4]*mpp : r[4]), other, depth, "screen");
+				cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, (using_px ? r[4]*mpp : r[4]), other, depth, cut_region);
 			}
 
 		} else {
@@ -5197,7 +5227,7 @@ module cut_screen_openings_v2(s_o, depth, hl=false) {
 					       ((using_px) ? y_raw * mpp : y_raw);
 					oa_geom(opening_ID, hl)
 					translate([sx0+x_mm, sy0+y_mm, 0])
-					cut_opening_v2(w_mm, h_mm, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, "screen", rot);
+					cut_opening_v2(w_mm, h_mm, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, cut_region, rot);
 				} else if (depth <= 0) {
 					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
 					       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
@@ -5462,10 +5492,17 @@ module place_emboss_v2(shape, anchor, xb, yb, trans, rot_b,
 // ridges, text, SVG imports) at the correct coordinate-system origin.
 // @param additions  Screen or case openings vector (V2 explicit 14-column format)
 // @param where      Coordinate context: "screen" or "case"
-module adding_plastic_v2(additions, where, hl=false) {
+// @param on_frame  When true with where=="screen", the additions are placed on the
+//                  keyguard FRAME — their z-base becomes the frame top
+//                  (keyguard_frame_thickness/2) instead of the recessed screen
+//                  surface (-kt/2+sat). Used when a slid framed keyguard lets the
+//                  frame cover part of the screen. x/y/unit/starting-corner logic
+//                  (keyed on where=="screen") is unchanged.
+module adding_plastic_v2(additions, where, hl=false, on_frame=false) {
 	x0    = (where == "screen") ? sx0 : cox0;
 	y0    = (where == "screen") ? sy0 : coy0;
-	trans = (where == "screen") ? -kt/2+sat :
+	trans = (where == "screen" && on_frame) ? keyguard_frame_thickness/2 :
+	        (where == "screen") ? -kt/2+sat :
 	        (where == "case" && generate == "keyguard") ? kt/2 :
 	        keyguard_frame_thickness/2;
 
@@ -6310,7 +6347,10 @@ module cut_opening_2d_v2(cut_width, cut_height, shape, anchor, top_slope=0, corn
 // on the keyguard surface at positions relative to the screen or case coordinate origin.
 // @param additions  Vector of addition definitions from screen_openings or case_openings
 // @param where      Coordinate context: "screen" or "case"
-module adding_plastic(additions,where,hl=false){
+// @param on_frame  When true with where=="screen", place additions on the keyguard
+//                  FRAME (z-base = keyguard_frame_thickness/2) instead of the
+//                  recessed screen surface. See adding_plastic_v2 for rationale.
+module adding_plastic(additions,where,hl=false,on_frame=false){
 	for(i = [0 : len(additions)-1]){
 		addition = additions[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:top slope, 7:bottom slope, 8:left slope, 9:right slope, 10:corner_radius, 11:other
 		
@@ -6330,7 +6370,8 @@ module adding_plastic(additions,where,hl=false){
 		x0 = (where=="screen") ? sx0 : cox0;
 		y0 = (where=="screen") ? sy0 : coy0;
 		
-		trans = (where=="screen") ? -kt/2+sat : 
+		trans = (where=="screen" && on_frame) ? keyguard_frame_thickness/2 :
+		        (where=="screen") ? -kt/2+sat :
 		        (where=="case" && generate=="keyguard") ? kt/2 :
 				keyguard_frame_thickness/2;
 		

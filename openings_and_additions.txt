@@ -58,6 +58,16 @@ tablet_openings=[
 
 
 
+/***********SCREEN OPENINGS AND THE KEYGUARD FRAME
+For a framed keyguard, the screen_openings instructions are applied to BOTH the
+keyguard (cut/built at the screen-area thickness) and the keyguard frame (cut/built
+at the frame thickness). This matters when the keyguard is slid within its frame so
+the frame covers part of the screen: a screen opening that lands under the frame is
+then cut/added through the frame as well. A cut/build value of 0 cuts fully through
+the frame. Openings over the keyguard's own area fall in the frame's keyguard window
+and have no effect on the frame.
+
+
 /***********SCREEN VARIABLES
 These special variables can be used to locate screen openings relative to the (0,0) location of the screen opening region
 
