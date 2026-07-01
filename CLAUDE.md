@@ -413,10 +413,21 @@ line ~522) and the update manifest `latest_scad_version.json` — and each exist
 - **Record changes under a `## Version N` section in `CHANGELOG.md`** as you
   develop (N = the pre-bumped dev version). CHANGELOG bullets are clinician-facing
   (the manifest copies them verbatim into the update dialog) — keep them readable.
-- **Releasing version N is an explicit act on Ken's command only** = push the
-  pre-bumped `keyguard.scad` (N) **and** the regenerated manifest (N) to GitHub
-  `main` **together**, so `main`'s served file and the manifest both say N at the
-  same moment. Nothing reaches clinicians until this push.
+- **Releasing version N — trigger phrase "bump keyguard designer" (Ken's explicit
+  command only).** When Ken says **"bump keyguard designer"**, that is the
+  instruction to RELEASE the dev (pre-bumped) keyguard designer **and** manifest to
+  GitHub for deployment to clinicians. Steps:
+  1. Confirm the `## Version N` CHANGELOG bullets read as clinician-facing text —
+     Ken reviews and approves this wording BEFORE giving the command.
+  2. Regenerate the manifest with "publish scad version" so its `version` and `notes`
+     match the constant (N) and the `## Version N` CHANGELOG bullets.
+  3. Push the pre-bumped `keyguard.scad` (N) **and** the manifest (N) to GitHub
+     `main` **together**, so `main`'s served file and the manifest both say N at the
+     same moment. Nothing reaches clinicians until this push. (This is the ONLY
+     time you push `.scad` work to `origin` without a further prompt — the command
+     itself is the authorization.)
+  4. Start the next dev cycle: pre-bump the local `keyguard.scad` constant and the
+     local manifest to N+1 (PC-only), so subsequent changes are attributed to N+1.
 - Note: this mirrors the web app's `APP_RELEASE` (pre-bumped on `dev`), except the
   `.scad`'s pre-bumped copies must be held off GitHub `main` because the updater
   gates on the `main`-vs-manifest match; the web app's own version is not gated
@@ -545,6 +556,14 @@ Scripts must run unchanged on either machine: derive paths from `$env:OneDrive`
 (never hardcode `C:\Users\<name>`), and let Claude pick the interpreter
 (bash/PowerShell/Python) so the phrase is all Ken needs. A new phrase only works
 after OneDrive syncs this file AND the other machine's Claude session is restarted.
+
+**Known trigger phrases:**
+- **"bump keyguard designer"** → RELEASE the dev (pre-bumped) `keyguard.scad` and
+  manifest to GitHub `main` for deployment to clinicians. Full steps are under
+  **Version bumps → "Releasing version N"** above. This is the only phrase that
+  pushes `.scad` work to `origin`.
+- **"run chunk N" / "chunk status" / "list chunks"** → geometry validation chunks
+  (see below).
 
 ### Geometry validation chunks (this project)
 The golden geometry suite is split into 9 chunks, run via
