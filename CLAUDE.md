@@ -389,12 +389,30 @@ Address these one at a time, running the test suite after each change.
   `keyguard-designer-web` project's `CLAUDE.md`.
 
 ### Version bumps
-- **When a release version is bumped (a new `## Version N` entry added to `CHANGELOG.md`),
-  also increment the `keyguard_designer_version` constant in `keyguard.scad`** (line ~518)
-  to that value + 1, marking the start of the next dev cycle. So when you write the
-  v79 entry, `keyguard_designer_version` should already be (or move to) 80. This mirrors
-  the web-app convention of pre-incrementing `APP_RELEASE` on `dev` to (last release + 1),
-  and keeps the on-disk constant always one ahead of the most recently released version.
+- **`keyguard_designer_version` (in `keyguard.scad`, line ~522) tracks the version
+  CURRENTLY RELEASED/OFFERED — NOT a pre-incremented dev number.** It is bumped to N
+  only as part of *releasing* version N, together with regenerating the update
+  manifest `latest_scad_version.json` (run "publish scad version"). Do **not**
+  pre-bump it at the start of a dev cycle.
+  - **Why (this bit us once):** the web app's in-app updater downloads
+    `keyguard.scad` from `main` and refuses any file whose
+    `keyguard_designer_version` does not equal the manifest's `version` (the
+    "version mismatch — aborting" guard in the app). If `main`'s constant is
+    pre-bumped ahead of the manifest (e.g. const=81 while the manifest still
+    advertises 80), every clinician still on an older version is offered an
+    update that then **aborts** on download. Keeping the constant equal to the
+    released/manifest version avoids this entirely.
+- **During development, record changes under a new `## Version N` section in
+  `CHANGELOG.md`** (N = the version those changes will ship in = current released
+  version + 1). This section can exist for a while before release; the constant
+  and the manifest stay at the previous version until you actually release.
+- **Releasing version N** = (1) bump `keyguard_designer_version` to N, (2) run
+  "publish scad version" to regenerate `latest_scad_version.json` (it reads the
+  constant and the matching `## Version N` CHANGELOG bullets), (3) push `main` and
+  the manifest together so `main`'s served file and the manifest both say N.
+- Note: this intentionally differs from the web app's `APP_RELEASE`, which IS
+  pre-incremented on `dev` — the web app's own version is not gated by a
+  download-time mismatch check, so pre-bumping there is harmless.
 
 ### Progress logging (mandatory)
 - **For ANY multi-step or long-running task, continuously write progress to a single
