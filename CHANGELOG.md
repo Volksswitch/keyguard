@@ -1,11 +1,11 @@
 # Keyguard Designer — Changelog
 
 ## Version 81
-- `screen_openings` instructions are now also applied to the keyguard frame (using the frame thickness as the material depth) so that, when a slid framed keyguard lets the frame cover part of the screen, screen-registered openings still cut/add where the frame covers the screen — a cut/build value of 0 cuts fully through the frame. The keyguard and frame are generated separately and run the same `screen_openings` instructions, the keyguard at screen-area thickness and the frame at frame thickness; coordinates continue to honor `unit_of_measure_for_screen` and `starting_corner_for_screen_measurements`
+- Added controls to slide the keyguard left/right or up/down within its frame, so the keyguard can cover just part of the screen while the frame covers the rest.
+- When the keyguard is slid so the frame covers part of the screen, openings placed in the screen area now also cut through the frame — so an opening lands correctly whether it falls on the keyguard or on the frame.
 
 ## Version 80
-- Added "slide keyguard horizontally/vertically" controls for framed keyguards — the contained keyguard (along with its snap-in tabs or posts, and the frame's matching hole, grooves, and post slots) can be slid within the frame as a percentage of the frame width/height, so the keyguard can cover just a portion of the screen while the frame covers the rest; the screen/cell openings stay registered to the screen
-- Fixed bug where the ridge around a U-shaped, horseshoe-shaped, C-shaped or other concave-perimeter merged cell group failed to wrap around the central "tooth" wall (the interior cell wall that sticks into the merged opening); the ridge now follows the full merged perimeter, including around the tooth
+- Fixed a bug that prevented ridges from being produced around certain combinations of merged cells.
 
 ## Version 79
 - Removed all MakerWorld-specific support — the `MW_version` global and the `show_screenshotMW` code path are gone; locally rendered designs no longer need a "Maker World" flag
