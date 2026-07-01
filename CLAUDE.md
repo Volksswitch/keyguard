@@ -389,30 +389,38 @@ Address these one at a time, running the test suite after each change.
   `keyguard-designer-web` project's `CLAUDE.md`.
 
 ### Version bumps
-- **`keyguard_designer_version` (in `keyguard.scad`, line ~522) tracks the version
-  CURRENTLY RELEASED/OFFERED — NOT a pre-incremented dev number.** It is bumped to N
-  only as part of *releasing* version N, together with regenerating the update
-  manifest `latest_scad_version.json` (run "publish scad version"). Do **not**
-  pre-bump it at the start of a dev cycle.
-  - **Why (this bit us once):** the web app's in-app updater downloads
-    `keyguard.scad` from `main` and refuses any file whose
-    `keyguard_designer_version` does not equal the manifest's `version` (the
-    "version mismatch — aborting" guard in the app). If `main`'s constant is
-    pre-bumped ahead of the manifest (e.g. const=81 while the manifest still
-    advertises 80), every clinician still on an older version is offered an
-    update that then **aborts** on download. Keeping the constant equal to the
-    released/manifest version avoids this entirely.
-- **During development, record changes under a new `## Version N` section in
-  `CHANGELOG.md`** (N = the version those changes will ship in = current released
-  version + 1). This section can exist for a while before release; the constant
-  and the manifest stay at the previous version until you actually release.
-- **Releasing version N** = (1) bump `keyguard_designer_version` to N, (2) run
-  "publish scad version" to regenerate `latest_scad_version.json` (it reads the
-  constant and the matching `## Version N` CHANGELOG bullets), (3) push `main` and
-  the manifest together so `main`'s served file and the manifest both say N.
-- Note: this intentionally differs from the web app's `APP_RELEASE`, which IS
-  pre-incremented on `dev` — the web app's own version is not gated by a
-  download-time mismatch check, so pre-bumping there is harmless.
+Two files carry the version — `keyguard_designer_version` (in `keyguard.scad`,
+line ~522) and the update manifest `latest_scad_version.json` — and each exists in
+**two places** with **different rules**: the **local PC / root project folder**
+(dev) and **GitHub `main`** (deployed to clinicians).
+
+- **On the PC (root folder = dev): PRE-BUMP both.** At the start of a dev cycle
+  bump the local `keyguard.scad` constant AND the local manifest to the next
+  version N (= last released + 1), so the working copy's version banner and
+  CHANGELOG attribution read as the version being worked on. Regenerate the local
+  manifest with "publish scad version" (it reads the constant + the `## Version N`
+  CHANGELOG bullets). These pre-bumped copies live only on the PC (shared between
+  machines via OneDrive) — they are **not** pushed to GitHub until release.
+- **On GitHub `main`: stay at the DEPLOYED version.** `keyguard.scad` and the
+  manifest on `main` must both equal the currently-released version **and must
+  equal each other.** Never push a pre-bumped copy to `main` ahead of a release.
+  - **Why they must match on GitHub (this bit us once):** the web app's in-app
+    updater downloads `main/keyguard.scad`, reads its `keyguard_designer_version`,
+    and **refuses (aborts)** if it does not equal the manifest's `version`. If a
+    pre-bumped `keyguard.scad` (N) reaches `main` while the manifest still says
+    N-1, every clinician on an older version is offered an update that then aborts
+    on download. Pre-bump therefore stays on the PC only.
+- **Record changes under a `## Version N` section in `CHANGELOG.md`** as you
+  develop (N = the pre-bumped dev version). CHANGELOG bullets are clinician-facing
+  (the manifest copies them verbatim into the update dialog) — keep them readable.
+- **Releasing version N is an explicit act on Ken's command only** = push the
+  pre-bumped `keyguard.scad` (N) **and** the regenerated manifest (N) to GitHub
+  `main` **together**, so `main`'s served file and the manifest both say N at the
+  same moment. Nothing reaches clinicians until this push.
+- Note: this mirrors the web app's `APP_RELEASE` (pre-bumped on `dev`), except the
+  `.scad`'s pre-bumped copies must be held off GitHub `main` because the updater
+  gates on the `main`-vs-manifest match; the web app's own version is not gated
+  that way.
 
 ### Progress logging (mandatory)
 - **For ANY multi-step or long-running task, continuously write progress to a single
@@ -447,17 +455,30 @@ Address these one at a time, running the test suite after each change.
   The previous run's log is overwritten; git is the history.
 
 ### Git workflow
-1. Before starting any code change, run `git status` in the main project folder. If Ken has
-   made manual edits, commit them immediately with the message `"Save manual edits before
-   automated work"` before touching anything else.
-2. Do all code work in a worktree branch — never edit files directly in the main project
-   folder. This prevents keyguard.json merge conflicts. If a conflict does occur in
-   `keyguard.json`, resolve it with `git checkout --theirs keyguard.json` (the worktree
-   version is authoritative).
-3. After each successful change, immediately merge the worktree branch into `main` and push
-   — do not wait to be asked.
-4. Commit and push all changes immediately after completing them. Do not wait for the user
-   to ask.
+
+**Mental model:** a **worktree** is the dev sandbox; the **root project folder** is
+Ken's test bench (he thinks of it as "main"). Ken does all his manual testing in the
+root folder and does not want to hunt for the right worktree. **GitHub (`origin`) is
+the deployed/release channel** — it is updated ONLY on Ken's explicit command.
+
+1. Before starting any code change, run `git status` in the root project folder. If Ken
+   has made manual edits, commit them locally first with the message `"Save manual edits
+   before automated work"`.
+2. Do development in a worktree branch — do your iterative/exploratory editing there, not
+   directly in the root folder. This keeps the root folder stable and avoids `keyguard.json`
+   churn. If a `keyguard.json` conflict occurs, resolve it with
+   `git checkout --theirs keyguard.json` (the worktree version is authoritative).
+3. **When a change is ready for Ken to test, DELIVER it into the root project folder** —
+   merge the worktree branch into local `main` (or copy the files) — so Ken always tests in
+   the one familiar place and never has to locate a worktree.
+4. **NEVER push to GitHub (`origin`) on your own.** A changed file's presence in the root
+   folder does **not** qualify it for GitHub. Committing locally to `main` is fine and
+   expected; **pushing to `origin` happens ONLY when Ken explicitly directs it** — that is
+   his release action (see Version bumps). Local `main` may sit ahead of `origin/main` with
+   unpushed dev work; that is the normal, intended state between releases.
+   - **Why:** GitHub `main` is served straight to clinicians (the web-app updater downloads
+     raw `main/keyguard.scad`), so anything pushed to `main` is effectively deployed.
+     Un-commanded pushes have deployed unreleased, pre-bumped work and broken the updater.
 
 ### Testing
 - **Always read `scripts/test.sh` before running it.** Never assume flags, paths, or

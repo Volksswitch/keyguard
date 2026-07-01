@@ -1,8 +1,9 @@
 {
-  "version": 80,
-  "scad_filename": "keyguard_v80.scad",
+  "version": 81,
+  "scad_filename": "keyguard_v81.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "Fixed bug where the ridge around a U-shaped, horseshoe-shaped, C-shaped or other concave-perimeter merged cell group failed to wrap around the central \"tooth\" wall (the interior cell wall that sticks into the merged opening); the ridge now follows the full merged perimeter, including around the tooth"
+    "Added controls to slide the keyguard left/right or up/down within its frame, so the keyguard can cover just part of the screen while the frame covers the rest.",
+    "When the keyguard is slid so the frame covers part of the screen, openings placed in the screen area now also cut through the frame — so an opening lands correctly whether it falls on the keyguard or on the frame."
   ]
 }
