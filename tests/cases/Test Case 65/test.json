@@ -1,0 +1,22 @@
+{
+  "description": "keyguard in frame for Conversant AAC with right side keyguard.  Keyguard slid to the left, keyboard and Express Panel openings cut through a widened right part of the frame",
+  "openings": "openings_and_additions.txt",
+  "steps": [
+    {
+      "label": "frame with keyguard openings",
+      "params": "Test Case 65a",
+      "vpt": [0, 0, 0],
+      "vpr": [30, 0, 0],
+      "vpd": 640,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "reduced size keyguard with posts",
+      "params": "Test Case 65b",
+      "vpt": [-40.75, -1.2, 0],
+      "vpr": [30, 0, 0],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    }
+  ]
+}
