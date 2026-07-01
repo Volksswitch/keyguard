@@ -1,5 +1,8 @@
 # Keyguard Designer — Changelog
 
+## Version 82
+- _In development._
+
 ## Version 81
 - Added controls to slide the keyguard left/right or up/down within its frame, so the keyguard can cover just part of the screen while the frame covers the rest.
 - When the keyguard is slid so the frame covers part of the screen, openings placed in the screen area now also cut through the frame — so an opening lands correctly whether it falls on the keyguard or on the frame.
