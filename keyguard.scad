@@ -340,6 +340,8 @@ show_keyguard_with_frame = "no"; //[yes,no]
 keyguard_vertical_tightness_of_fit = 0; // [-1:.1:1]
 //the larger the number the tighter the fit
 keyguard_horizontal_tightness_of_fit = 0; // [-1:.1:1]
+//cut the grid cell openings and exposed bars through the frame (wherever the frame overlaps the screen)
+cut_cell_openings_and_bars_through_frame = "yes"; //[yes,no]
 
 
 /*[Split Keyguard Info]*/
@@ -975,10 +977,15 @@ tcr	= (r180=="no") ? [tt1cr,ttrcr,tb1cr,tbrcr] : [tbrcr,tb1cr,ttrcr,tt1cr];
 
 cocria = case_opening_corner_radius_incl_acrylic;
 
-kcrf = keyguard_corner_radius;  // the keyguard corner radius when in a frame 
+kcrf = keyguard_corner_radius;  // the keyguard corner radius when in a frame
 
-kcr = (!has_case && !has_frame) ? tcr : 
+// kcr order is [top-left, top-right, bottom-left, bottom-right]. When mounted with posts
+// the user's keyguard_corner_radius is ignored: the post end (top) is square so it clears
+// the post reliefs, and the non-post end (bottom) gets a 2 mm radius so the keyguard is
+// less likely to catch in the corners of the frame opening.
+kcr = (!has_case && !has_frame) ? tcr :
 	 (has_case && !has_frame) ? [cocria,cocria,cocria,cocria] :
+	 (mount_keyguard_with == "posts") ? [0,0,2,2] :
 															 [kcrf,kcrf,kcrf,kcrf];
 
 fw = (has_case && has_frame) ? cow : 
@@ -2496,6 +2503,13 @@ module keyguard_frame(cheat){
 				if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o,keyguard_frame_thickness,on_frame=true); else cut_screen_openings(m_s_o,keyguard_frame_thickness,on_frame=true);
 			}
 
+			//cut grid cells and exposed bars through the frame, the same way screen
+			//openings are cut on the frame (cut region "keyguard", frame thickness as depth)
+			if(cut_cell_openings_and_bars_through_frame=="yes" && column_count>0 && row_count>0 && type_of_tablet!="blank"){
+				bars(keyguard_frame_thickness, "keyguard_cell");
+				bounded_cells(keyguard_frame_thickness, "keyguard_cell");
+			}
+
 			if (m_m=="Clip-on Straps" && !no_clips){
 				clip_on_straps_groove();
 			}
@@ -2556,20 +2570,42 @@ module keyguard_frame(cheat){
 		// symmetric openings are not supported for keyguard frames
 		
 		if (mount_keyguard_with=="posts"){
-			// Post cross-location = the keyguard's actual top edge; the post midline sits ON
-			// that edge (upper half protrudes into the frame's receiving groove). Exposed bars
-			// SHRINK the keyguard, so the top edge is the bar-trim line when bars are exposed;
-			// the min() clamps it to keyguard_height/2 so the slot midline can never sit ABOVE
-			// the keyguard's top edge (the TC65 defect — a keyguard shorter than the screen let
-			// the screen-referenced bar line float the slot past, and out of line with, the top
-			// edge). The -post_cl (bottom) slot is a 180-degree-rotation safety net — the
-			// keyguard itself carries only a top post.
+			// Post cross-location = the keyguard's top edge; the post midline sits ON that edge
+			// (upper half protrudes into the frame relief). The edge drops to just below the
+			// LOWEST exposed top-side bar that actually has height — status, upper-message, or
+			// upper-command — since exposing a bar uncovers everything above it (e.g. exposing
+			// the 20 mm status bar drops the post to the top of the grid). Only bars with height
+			// count, so a zero-height bar's exposure does NOT move the post, and all three behave
+			// consistently. The lower message/command bars are NOT considered (they can't affect
+			// a top-edge post). With nothing exposed the edge is keyguard_height/2 — the
+			// keyguard's own edge, NOT the screen (a keyguard taller than the screen still gets
+			// its post at its own edge, e.g. STL 161 for keyguard_height 160). The outer min()
+			// clamps to keyguard_height/2 so the midline can never float ABOVE the edge. The
+			// -post_cl (bottom) slot is a 180-degree-rotation safety net.
 			post_cl = min(keyguard_height/2,
-			              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
-			              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no")  ? shm/2-sbhm-umbhm :
-			                                                                                          shm/2-sbhm);
+			              (expose_upper_command_bar == "yes" && ucbhm > 0) ? shm/2-sbhm-umbhm-ucbhm :
+			              (expose_upper_message_bar == "yes" && umbhm > 0) ? shm/2-sbhm-umbhm :
+			              (expose_status_bar == "yes"        && sbhm  > 0) ? shm/2-sbhm :
+			                                                                  keyguard_height/2);
 
-			// post slots track the slid keyguard window
+			// Square (90-degree), full-thickness relief along the top/bottom edge of the
+			// opening, spanning ONLY the keyguard width (it stops short of the side post
+			// pockets, which remain pockets). It clears the post's protrusion above the
+			// keyguard edge along the keyguard width and gives it room to rotate, opening the
+			// frame by hole_dia/2 past the edge so the opening measures keyguard_height +
+			// hole_dia edge-to-edge (162 mm at the default post fit). The bottom relief is the
+			// 180-degree-rotation safety net.
+			translate(kg_slide)
+			translate([0,post_cl,0])
+			add_keyguard_frame_post_relief(keyguard_width);
+
+			translate(kg_slide)
+			translate([0,-post_cl,0])
+			add_keyguard_frame_post_relief(keyguard_width);
+
+			// Side post pockets that receive the post's protruding ends (both sides, top and
+			// bottom). These are distinct pockets — the square edge relief above stops at the
+			// keyguard width and does not open them up.
 			translate(kg_slide)
 			translate([keyguard_width/2+post_len/2-5,post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
@@ -2590,8 +2626,23 @@ module keyguard_frame(cheat){
 }
 
 
-// Cuts the slot and cylindrical bore that receive a keyguard frame post,
-// allowing the inner keyguard to slide onto the frame posts.
+// Cuts the square (90-degree), full-thickness relief along the opening's top/bottom edge
+// that clears the post's protrusion above the keyguard edge and gives it room to rotate.
+// relief_len is the span along the edge (X) — the keyguard width, so it stops short of the
+// side post pockets. hole_dia (the post diameter, adjusted by post_tightness_of_fit) is the
+// relief's height (Y): centred on the post line, it opens the frame by hole_dia/2 past the
+// keyguard edge, so the opening measures keyguard_height + hole_dia edge-to-edge. Full frame
+// thickness in Z so the post is cleared through the whole slab.
+module add_keyguard_frame_post_relief(relief_len){
+	hole_dia = kt - post_tightness_of_fit/10;
+
+	cube([relief_len, hole_dia, keyguard_frame_thickness + 2*ff], center=true);
+}
+
+
+// Cuts a side pocket (open channel + cylindrical bore) that receives a keyguard frame
+// post's protruding end. One pocket per post end; they stay pockets in the side of the
+// opening (the square edge relief does not extend into them).
 module add_keyguard_frame_post_slots(){
 	hole_dia = kt - post_tightness_of_fit/10;
 
@@ -2613,11 +2664,11 @@ module add_keyguard_frame_posts(){
 	// to keyguard_height/2. The +kt/2 here cancels the translate's -kt/2 below so the post
 	// CENTRE lands on the top edge.
 	post_cl = min(keyguard_height/2,
-	              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
-	              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no")  ? shm/2-sbhm-umbhm :
-	                                                                                          shm/2-sbhm) + kt/2;
+	              (expose_upper_command_bar == "yes" && ucbhm > 0) ? shm/2-sbhm-umbhm-ucbhm :
+	              (expose_upper_message_bar == "yes" && umbhm > 0) ? shm/2-sbhm-umbhm :
+	              (expose_status_bar == "yes"        && sbhm  > 0) ? shm/2-sbhm :
+	                                                                  keyguard_height/2) + kt/2;
 	post_l = kw+post_len*2;
-	
 	translate([0,post_cl-kt/2,0])
 	rotate([0,90,0])
 	cylinder(d=post_dia,h=post_l,center=true);
@@ -2632,9 +2683,10 @@ module trim_keyguard_to_bar(){
 	// into the keyguard when it is shorter than the screen or slid (the TC65 defect). Caller
 	// wraps this in translate(kg_slide) so it tracks the slid slab.
 	post_cl = min(keyguard_height/2,
-	              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
-	              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no")  ? shm/2-sbhm-umbhm :
-	                                                                                          shm/2-sbhm);
+	              (expose_upper_command_bar == "yes" && ucbhm > 0) ? shm/2-sbhm-umbhm-ucbhm :
+	              (expose_upper_message_bar == "yes" && umbhm > 0) ? shm/2-sbhm-umbhm :
+	              (expose_status_bar == "yes"        && sbhm  > 0) ? shm/2-sbhm :
+	                                                                  keyguard_height/2);
 
 	//remove top portion of keyguard
 	translate([0,50+post_cl,0])
@@ -3588,65 +3640,65 @@ module clip_on_straps_groove(){
 // rounded rectangle ("r" + anchor "c") cut in the screen region; type="screen"
 // places the cut at the top of the keyguard (sat/2 - kt/2) and applies cell_edge_chamfer.
 // @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
-module bars(depth){
+module bars(depth, reg="screen"){
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && expose_upper_command_bar=="no" && sbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
-		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="no" && sbh_adjust+umbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm+(max(sbh_adjust,0)+umbh_adjust)/2,0])
-		cut_opening_v2(bar_width,max(sbh_adjust,0)+umbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,max(sbh_adjust,0)+umbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="yes" && umbh_adjust+ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(max(umbh_adjust,0)+ucbh_adjust)/2,0])
-		cut_opening_v2(bar_width,max(umbh_adjust+ff,0)+ucbh_adjust,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,max(umbh_adjust+ff,0)+ucbh_adjust,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="yes" && sbh_adjust+umbh_adjust+ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust)/2,0])
-		cut_opening_v2(bar_width,max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="no" && umbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm+(umbh_adjust)/2,0])
-		cut_opening_v2(bar_width,umbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,umbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="no" && expose_upper_command_bar=="yes" && ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2,0])
-		cut_opening_v2(bar_width,ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && umbhm>0 && expose_upper_command_bar=="yes" && sbh_adjust+ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
-		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2,0])
-		cut_opening_v2(bar_width,ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && umbhm==0 && expose_upper_command_bar=="yes" && sbh_adjust+ucbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
-		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 
 		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2+bcr,0])
-		cut_opening_v2(bar_width,ucbh_adjust+bcr*2+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,ucbh_adjust+bcr*2+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_lower_message_bar=="yes" && expose_lower_command_bar=="no" && lmbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,-shm/2+lmbh_adjust/2+max(lcbh_adjust,0)+adj_bec,0])
-		cut_opening_v2(bar_width,lmbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,lmbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_lower_message_bar=="no" && expose_lower_command_bar=="yes" && lcbh_adjust>0){
 		translate([adj_lec/2-adj_rec/2,-shm/2+lcbhm/2+adj_bec/2,0])
-		cut_opening_v2(bar_width,lcbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,lcbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_lower_message_bar=="yes" && expose_lower_command_bar=="yes" && (lmbh_adjust+max(lcbh_adjust,0))>0){
 		translate([adj_lec/2-adj_rec/2,-shm/2+(lmbh_adjust+max(lcbh_adjust,0))/2+adj_bec,0])
-		cut_opening_v2(bar_width,lmbh_adjust+max(lcbh_adjust,0)+ff,"r","c","T",90,90,90,90,bcr,undef,depth,"screen");
+		cut_opening_v2(bar_width,lmbh_adjust+max(lcbh_adjust,0)+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 }
 
@@ -3657,18 +3709,18 @@ module bars(depth){
 // grid-hole tool routes through cut_opening_v2(type="screen") to match the cell
 // frame.
 // @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
-module bounded_cells(depth){
+module bounded_cells(depth, reg="screen"){
 	adj_grid_width = grid_width-col_first_trim-col_last_trim;
 	adj_grid_height = grid_height-row_first_trim-row_last_trim;
 
 	difference(){
-		cells(depth);
+		cells(depth, reg);
 		difference(){
 			translate([grid_x0-20,grid_y0-20,-kt/2-50])
 			cube([grid_width+40,grid_height+40,kt+100]);
 
 			translate([grid_x0+col_first_trim+adj_grid_width/2, grid_y0+row_first_trim+adj_grid_height/2,0])
-			cut_opening_v2(adj_grid_width, adj_grid_height, "r", "c", "t", 90,90,90,90, ocr, undef, depth+4*ff, "screen");
+			cut_opening_v2(adj_grid_width, adj_grid_height, "r", "c", "t", 90,90,90,90, ocr, undef, depth+4*ff, reg);
 		}
 	}
 }
@@ -3677,7 +3729,8 @@ module bounded_cells(depth){
 // merged cells (horizontal and vertical), covered cells, and both rectangular and
 // circular cell shapes.
 // @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
-module cells(depth){
+// @param reg    Cut region ("screen" for the keyguard, "keyguard" to cut through the frame)
+module cells(depth, reg="screen"){
 	d = (depth > 0) ? depth+2*ff : 0;
 	grid_part_w = grid_width/number_of_columns;
 	grid_part_h = grid_height/number_of_rows;
@@ -3714,27 +3767,27 @@ module cells(depth){
 				// if cell is merged horizontally and rectangular
 				if ((search(current_cell,m_cell_h))&&(j!=column_count-1)){
 					translate([c__x+grid_part_w/2,c__y,0])
-					cut_opening_v2(grid_part_w, c__h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, "screen");
+					cut_opening_v2(grid_part_w, c__h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, reg);
 				}
 				// if cell is merged vertically and rectangular
 				if((search(current_cell,m_c_v))&&(i!=row_count-1)){
 					translate([c__x, c__y+grid_part_h/2, 0])
-					cut_opening_v2(c__w, grid_part_h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, "screen");
+					cut_opening_v2(c__w, grid_part_h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, reg);
 				}
 
 				//clean up center pyramid if a cell is in both horizontal and vertical merge and next cell is also in the vertical merge and the cell above is in the horizontal merge
 				if((search(current_cell,m_cell_h))&&(search(current_cell,m_c_v))&&(search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h))){
 					translate([c__x+grid_part_w/2, c__y+grid_part_h/2, 0])
-					cut_opening_v2(grid_part_w, grid_part_h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, "screen");
+					cut_opening_v2(grid_part_w, grid_part_h, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, reg);
 				}
 
 				//basic, no-merge cell cut these two statements will have no impact if cell has been merged, cell can be any shape
 				translate([c__x,c__y,0])
 				if (cell_shape=="rectangular"){
-					cut_opening_v2(c__w+ff,c__h+ff, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, ocr, undef, d, "screen");
+					cut_opening_v2(c__w+ff,c__h+ff, "r","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, ocr, undef, d, reg);
 				}
 				else{
-					cut_opening_v2(cell_diameter,cell_diameter, "c","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, "screen");
+					cut_opening_v2(cell_diameter,cell_diameter, "c","c","t", cts,cbs,rs_inc_acrylic,rs_inc_acrylic, 0, undef, d, reg);
 				}
 
 				// Outer-arc cuts at the inner concave corners produced by L-shaped merges.
@@ -3762,28 +3815,28 @@ module cells(depth){
 						(search(current_cell,m_c_v))&&(i!=row_count-1)&&
 						!((search(current_cell+1,m_c_v))&&(search(current_cell+number_of_columns,m_cell_h)))){
 						translate([c__x+c__w/2, c__y+c__h/2, 0])
-						cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
+						cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, eff_mrr, undef, d, reg);
 					}
 					// Config 2: current starts H-right, cell below starts V-up — corner at bottom-right -> oa4
 					if((search(current_cell,m_cell_h))&&(j!=column_count-1)&&
 						(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
 						!((search(current_cell-number_of_columns,m_cell_h))&&(search(current_cell+1-number_of_columns,m_c_v)))){
 						translate([c__x+c__w/2, c__y-c__h/2, 0])
-						cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
+						cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, eff_mrr, undef, d, reg);
 					}
 					// Config 3: left neighbour starts H-right to current; current starts V-up — corner at top-left -> oa2
 					if((search(current_cell,m_c_v))&&(i!=row_count-1)&&
 						(j!=0)&&(search(current_cell-1,m_cell_h))&&
 						!((search(current_cell-1,m_c_v))&&(search(current_cell-1+number_of_columns,m_cell_h)))){
 						translate([c__x-c__w/2, c__y+c__h/2, 0])
-						cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
+						cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, eff_mrr, undef, d, reg);
 					}
 					// Config 4: left neighbour starts H-right; cell below starts V-up — corner at bottom-left -> oa1
 					if((j!=0)&&(search(current_cell-1,m_cell_h))&&
 						(i!=0)&&(search(current_cell-number_of_columns,m_c_v))&&
 						!((search(current_cell-1-number_of_columns,m_cell_h))&&(search(current_cell-1-number_of_columns,m_c_v)))){
 						translate([c__x-c__w/2, c__y-c__h/2, 0])
-						cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, eff_mrr, undef, d, "screen");
+						cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, eff_mrr, undef, d, reg);
 					}
 				}
 
@@ -3809,13 +3862,13 @@ module cells(depth){
 							// above (cells ptl/ptr); place at ptl's opening bottom.
 							if (!s_abs && n_abs && e_abs && w_abs){
 								translate([c__x+c__w/2, _cell_oy(ptl)-_cell_oh(ptl)/2, 0])
-								cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
+								cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, tt_r, undef, d, reg);
 							}
 							// W-tooth: bite NW -> oa2. Tip capped by the E bridge
 							// to the right (cells pbr/ptr); place at pbr's left edge.
 							if (!w_abs && n_abs && s_abs && e_abs){
 								translate([_cell_ox(pbr)-_cell_ow(pbr)/2, c__y+c__h/2, 0])
-								cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
+								cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, tt_r, undef, d, reg);
 							}
 						}
 					}
@@ -3833,13 +3886,13 @@ module cells(depth){
 							// above (cells ptl/ptr); place at ptl's opening bottom.
 							if (!s_abs && n_abs && e_abs && w_abs){
 								translate([c__x-c__w/2, _cell_oy(ptl)-_cell_oh(ptl)/2, 0])
-								cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
+								cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, tt_r, undef, d, reg);
 							}
 							// E-tooth: bite NE -> oa3. Tip capped by the W bridge
 							// to the left (cells pbl/ptl); place at pbl's right edge.
 							if (!e_abs && n_abs && s_abs && w_abs){
 								translate([_cell_ox(pbl)+_cell_ow(pbl)/2, c__y+c__h/2, 0])
-								cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
+								cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, tt_r, undef, d, reg);
 							}
 						}
 					}
@@ -3857,13 +3910,13 @@ module cells(depth){
 							// below (cells pbl/pbr); place at pbl's opening top.
 							if (!n_abs && s_abs && e_abs && w_abs){
 								translate([c__x+c__w/2, _cell_oy(pbl)+_cell_oh(pbl)/2, 0])
-								cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
+								cut_opening_v2(0,0, "oa3", undef,undef, cts,0,0,0, tt_r, undef, d, reg);
 							}
 							// W-tooth: bite SW -> oa1. Tip capped by the E bridge
 							// to the right (cells pbr/ptr); place at pbr's left edge.
 							if (!w_abs && n_abs && s_abs && e_abs){
 								translate([_cell_ox(pbr)-_cell_ow(pbr)/2, c__y-c__h/2, 0])
-								cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
+								cut_opening_v2(0,0, "oa1", undef,undef, cts,0,0,0, tt_r, undef, d, reg);
 							}
 						}
 					}
@@ -3881,13 +3934,13 @@ module cells(depth){
 							// below (cells pbl/pbr); place at pbl's opening top.
 							if (!n_abs && s_abs && e_abs && w_abs){
 								translate([c__x-c__w/2, _cell_oy(pbl)+_cell_oh(pbl)/2, 0])
-								cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
+								cut_opening_v2(0,0, "oa2", undef,undef, cts,0,0,0, tt_r, undef, d, reg);
 							}
 							// E-tooth: bite SE -> oa4. Tip capped by the W bridge
 							// to the left (cells pbl/ptl); place at pbl's right edge.
 							if (!e_abs && n_abs && s_abs && w_abs){
 								translate([_cell_ox(pbl)+_cell_ow(pbl)/2, c__y-c__h/2, 0])
-								cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, tt_r, undef, d, "screen");
+								cut_opening_v2(0,0, "oa4", undef,undef, cts,0,0,0, tt_r, undef, d, reg);
 							}
 						}
 					}
@@ -6093,13 +6146,15 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	other_neg = other_number && other<0;
 
 	// Region chamfer: screen area uses cell_edge_chamfer (cec), case/keyguard
-	// and tablet regions use keyguard_edge_chamfer (kec).
-	region_chamfer = (type=="screen") ? cec : kec;
+	// and tablet regions use keyguard_edge_chamfer (kec). "keyguard_cell" positions like
+	// "keyguard" (cells/bars cut THROUGH the frame) but is a screen feature, so it keeps
+	// the cell chamfer (cec).
+	region_chamfer = (type=="screen" || type=="keyguard_cell") ? cec : kec;
 
-	offset = (is_3d_printed && other_number && other_pos && type=="screen")   ? depth - other :
-	         (is_3d_printed && other_number && other_pos && type=="keyguard") ? (depth - other)/2 :
-	         (is_3d_printed && other_number && other_neg && type=="screen")   ? -depth-other :
-	         (is_3d_printed && other_number && other_neg && type=="keyguard") ? -(depth+other)/2 :
+	offset = (is_3d_printed && other_number && other_pos && type=="screen")                              ? depth - other :
+	         (is_3d_printed && other_number && other_pos && (type=="keyguard"||type=="keyguard_cell")) ? (depth - other)/2 :
+	         (is_3d_printed && other_number && other_neg && type=="screen")                              ? -depth-other :
+	         (is_3d_printed && other_number && other_neg && (type=="keyguard"||type=="keyguard_cell")) ? -(depth+other)/2 :
 	         0;
 	dep  = (is_3d_printed && other_number && other_pos) ? other :
 	       (is_3d_printed && other_number && other_neg) ? -other :
@@ -8489,6 +8544,7 @@ module echo_settings(){
 		if (post_extension_distance != 4) echo(post_extension_distance = post_extension_distance);
 		if (keyguard_vertical_tightness_of_fit != 0) echo(keyguard_vertical_tightness_of_fit = keyguard_vertical_tightness_of_fit);
 		if (keyguard_horizontal_tightness_of_fit != 0) echo(keyguard_horizontal_tightness_of_fit = keyguard_horizontal_tightness_of_fit);
+		if (cut_cell_openings_and_bars_through_frame != "yes") echo(cut_cell_openings_and_bars_through_frame = cut_cell_openings_and_bars_through_frame);
 		echo();
 		echo();
 
