@@ -2631,12 +2631,13 @@ module keyguard_frame(cheat){
 // relief_len is the span along the edge (X) — the keyguard width, so it stops short of the
 // side post pockets. hole_dia (the post diameter, adjusted by post_tightness_of_fit) is the
 // relief's height (Y): centred on the post line, it opens the frame by hole_dia/2 past the
-// keyguard edge, so the opening measures keyguard_height + hole_dia edge-to-edge. Full frame
-// thickness in Z so the post is cleared through the whole slab.
+// keyguard edge, so the opening measures keyguard_height + hole_dia edge-to-edge. Built with
+// hole_cutter (radius 0 = square corners) so the new top/bottom edge gets the same edge
+// chamfer as the opening's left/right edges, which hole_cutter also cuts.
 module add_keyguard_frame_post_relief(relief_len){
 	hole_dia = kt - post_tightness_of_fit/10;
 
-	cube([relief_len, hole_dia, keyguard_frame_thickness + 2*ff], center=true);
+	hole_cutter(relief_len, hole_dia, 90, 90, 90, 90, 0, keyguard_frame_thickness);
 }
 
 
