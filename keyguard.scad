@@ -2263,8 +2263,9 @@ module keyguard(cheat){
 				
 				//*** add cuts that should override anything added to the screen
 				
-				// remove parts of keyguard frame above posts
+				// remove parts of keyguard frame above posts (tracks the slid keyguard)
 				if(has_case && has_frame && mount_keyguard_with=="posts"){
+					translate(kg_slide)
 					trim_keyguard_to_bar();
 				}
 										
@@ -2555,9 +2556,18 @@ module keyguard_frame(cheat){
 		// symmetric openings are not supported for keyguard frames
 		
 		if (mount_keyguard_with=="posts"){
-			post_cl = (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
-					  (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no") ? shm/2-sbhm-umbhm :	
-					  shm/2-sbhm;
+			// Post cross-location = the keyguard's actual top edge; the post midline sits ON
+			// that edge (upper half protrudes into the frame's receiving groove). Exposed bars
+			// SHRINK the keyguard, so the top edge is the bar-trim line when bars are exposed;
+			// the min() clamps it to keyguard_height/2 so the slot midline can never sit ABOVE
+			// the keyguard's top edge (the TC65 defect — a keyguard shorter than the screen let
+			// the screen-referenced bar line float the slot past, and out of line with, the top
+			// edge). The -post_cl (bottom) slot is a 180-degree-rotation safety net — the
+			// keyguard itself carries only a top post.
+			post_cl = min(keyguard_height/2,
+			              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
+			              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no")  ? shm/2-sbhm-umbhm :
+			                                                                                          shm/2-sbhm);
 
 			// post slots track the slid keyguard window
 			translate(kg_slide)
@@ -2598,9 +2608,14 @@ module add_keyguard_frame_post_slots(){
 // the corresponding post slots of the inner keyguard.
 module add_keyguard_frame_posts(){
 	post_dia = kt;
-	post_cl = (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm+kt/2 :
-              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no") ? shm/2-sbhm-umbhm+kt/2 :	
-			  shm/2-sbhm+kt/2;
+	// post midline rides the keyguard's actual top edge (upper half protrudes into the frame
+	// groove). Matches the slot cross-location: bar-trim line when bars are exposed, clamped
+	// to keyguard_height/2. The +kt/2 here cancels the translate's -kt/2 below so the post
+	// CENTRE lands on the top edge.
+	post_cl = min(keyguard_height/2,
+	              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
+	              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no")  ? shm/2-sbhm-umbhm :
+	                                                                                          shm/2-sbhm) + kt/2;
 	post_l = kw+post_len*2;
 	
 	translate([0,post_cl-kt/2,0])
@@ -2612,9 +2627,14 @@ module add_keyguard_frame_posts(){
 // Cuts away the top portion of the keyguard above the exposed status/message/command bar,
 // so the bar opening is flush with the top edge of the remaining keyguard body.
 module trim_keyguard_to_bar(){
-	post_cl = (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
-              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no") ? shm/2-sbhm-umbhm :	
-			  shm/2-sbhm;
+	// trim the keyguard to its actual top edge: the bar-trim line when bars are exposed
+	// (exposed bars shrink the keyguard), clamped to keyguard_height/2 so it can never chop
+	// into the keyguard when it is shorter than the screen or slid (the TC65 defect). Caller
+	// wraps this in translate(kg_slide) so it tracks the slid slab.
+	post_cl = min(keyguard_height/2,
+	              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "yes") ? shm/2-sbhm-umbhm-ucbhm :
+	              (expose_upper_message_bar == "yes" && expose_upper_command_bar == "no")  ? shm/2-sbhm-umbhm :
+	                                                                                          shm/2-sbhm);
 
 	//remove top portion of keyguard
 	translate([0,50+post_cl,0])

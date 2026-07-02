@@ -3,11 +3,11 @@
   "openings": "openings_and_additions.txt",
   "steps": [
     {
-      "label": "frame with keyguard openings",
+      "label": "frame post groove on top edge (back)",
       "params": "Test Case 65a",
-      "vpt": [0, 0, 0],
-      "vpr": [30, 0, 0],
-      "vpd": 640,
+      "vpt": [52, 83.44, 2],
+      "vpr": [216, 0, 0],
+      "vpd": 85,
       "expected": "step1_expected.png"
     },
     {

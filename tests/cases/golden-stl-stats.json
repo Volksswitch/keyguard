@@ -2567,8 +2567,8 @@
       "oa_case": "Test Case 64"
     },
     "Test Case 65a": {
-      "volume_mm3": 58073.9796,
-      "surface_area_mm2": 44978.5655,
+      "volume_mm3": 58188.2359,
+      "surface_area_mm2": 44953.2491,
       "bbox": [
         -144.5,
         -98.5,
@@ -2578,23 +2578,23 @@
         2.0
       ],
       "parts": 1,
-      "facets": 17152,
+      "facets": 17120,
       "oa_source": "case",
       "oa_case": "Test Case 65"
     },
     "Test Case 65b": {
-      "volume_mm3": 19518.0256,
-      "surface_area_mm2": 21065.9265,
+      "volume_mm3": 19033.8514,
+      "surface_area_mm2": 20687.5735,
       "bbox": [
         -136.749,
         -88.561,
         -2.0,
         55.251,
-        86.1702,
+        85.439,
         2.0
       ],
       "parts": 1,
-      "facets": 6180,
+      "facets": 6020,
       "oa_source": "case",
       "oa_case": "Test Case 65"
     }
