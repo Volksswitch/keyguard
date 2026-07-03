@@ -2454,12 +2454,17 @@ module keyguard_frame(cheat){
 				}
 
 				//add bumps and ridges from screen_openings onto the frame (frame covers
-				//part of the screen when the keyguard is slid within the frame)
-				if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
-					if(is_v2(screen_openings)) adding_plastic_v2(screen_openings,"screen",on_frame=true); else adding_plastic(screen_openings,"screen",on_frame=true);
-				}
-				if(len(m_s_o)>0 && type_of_tablet!="blank"){
-					if(is_v2(m_s_o)) adding_plastic_v2(m_s_o,"screen",on_frame=true); else adding_plastic(m_s_o,"screen",on_frame=true);
+				//part of the screen when the keyguard is slid within the frame).
+				//translate(-trans) undoes the enclosing unequal-case-opening shift: screen
+				//features register to the screen (which does NOT move for an unequal case
+				//opening), unlike the case-opening-shaped frame body that trans slides.
+				translate(-trans){
+					if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
+						if(is_v2(screen_openings)) adding_plastic_v2(screen_openings,"screen",on_frame=true); else adding_plastic(screen_openings,"screen",on_frame=true);
+					}
+					if(len(m_s_o)>0 && type_of_tablet!="blank"){
+						if(is_v2(m_s_o)) adding_plastic_v2(m_s_o,"screen",on_frame=true); else adding_plastic(m_s_o,"screen",on_frame=true);
+					}
 				}
 
 				// adding manual slide-in tabs and pedestals for clip-on straps
@@ -2489,16 +2494,23 @@ module keyguard_frame(cheat){
 			}
 
 			//cut screen openings through the frame (frame thickness as the material
-			//depth); a value of 0 in the cut/build column cuts fully through the frame
-			if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
-				if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings,keyguard_frame_thickness,on_frame=true); else cut_screen_openings(screen_openings,keyguard_frame_thickness,on_frame=true);
-			}
-			if(len(m_s_o)>0 && type_of_tablet!="blank"){
-				if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o,keyguard_frame_thickness,on_frame=true); else cut_screen_openings(m_s_o,keyguard_frame_thickness,on_frame=true);
+			//depth); a value of 0 in the cut/build column cuts fully through the frame.
+			//translate(-trans) anchors them to the screen (see the additions above): the
+			//screen area does not move for an unequal case opening, only the frame does.
+			translate(-trans){
+				if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
+					if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings,keyguard_frame_thickness,on_frame=true); else cut_screen_openings(screen_openings,keyguard_frame_thickness,on_frame=true);
+				}
+				if(len(m_s_o)>0 && type_of_tablet!="blank"){
+					if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o,keyguard_frame_thickness,on_frame=true); else cut_screen_openings(m_s_o,keyguard_frame_thickness,on_frame=true);
+				}
 			}
 
 			//cut grid cells and exposed bars through the frame, the same way screen
-			//openings are cut on the frame (cut region "keyguard", frame thickness as depth)
+			//openings are cut on the frame (cut region "keyguard", frame thickness as depth).
+			//translate(-trans) anchors them to the screen: cells/bars "don't move with
+			//unequal case opening" (matching keyguard(), where they sit outside translate(unequal_opening)).
+			translate(-trans)
 			if(cut_cell_openings_and_bars_through_frame=="yes" && column_count>0 && row_count>0 && type_of_tablet!="blank"){
 				bars(keyguard_frame_thickness, "keyguard_cell");
 				bounded_cells(keyguard_frame_thickness, "keyguard_cell");
