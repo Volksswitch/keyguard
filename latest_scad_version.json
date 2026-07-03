@@ -1,9 +1,11 @@
 {
-  "version": 81,
-  "scad_filename": "keyguard_v81.scad",
+  "version": 82,
+  "scad_filename": "keyguard_v82.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "Added controls to slide the keyguard left/right or up/down within its frame, so the keyguard can cover just part of the screen while the frame covers the rest.",
-    "When the keyguard is slid so the frame covers part of the screen, openings placed in the screen area now also cut through the frame — so an opening lands correctly whether it falls on the keyguard or on the frame."
+    "The controls to slide the keyguard within its frame now take a distance in millimeters (entered in a number box, in 0.5 mm steps) instead of a percentage of the frame — so you can position the keyguard by the exact amount you want.",
+    "Frame posts now attach the keyguard to its frame correctly when the keyguard is slid within a widened frame: the frame's post slots and relief openings track the keyguard's position, the relief is squared to clear the posts, and cells/bars extend through the frame where they overlap it.",
+    "Fixed a bug where a frame post (and its matching slot) could float above the top edge of the keyguard instead of meeting it.",
+    "The top and bottom edges of the frame's post-relief opening are now chamfered."
   ]
 }
