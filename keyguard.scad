@@ -2586,60 +2586,47 @@ module keyguard_frame(cheat){
 			// a top-edge post). With nothing exposed the edge is keyguard_height/2 — the
 			// keyguard's own edge, NOT the screen (a keyguard taller than the screen still gets
 			// its post at its own edge, e.g. STL 161 for keyguard_height 160). The outer min()
-			// clamps to keyguard_height/2 so the midline can never float ABOVE the edge. The
-			// -post_cl (bottom) slot is a 180-degree-rotation safety net.
+			// clamps to keyguard_height/2 so the midline can never float ABOVE the edge.
 			post_cl = min(keyguard_height/2,
 			              (expose_upper_command_bar == "yes" && ucbhm > 0) ? shm/2-sbhm-umbhm-ucbhm :
 			              (expose_upper_message_bar == "yes" && umbhm > 0) ? shm/2-sbhm-umbhm :
 			              (expose_status_bar == "yes"        && sbhm  > 0) ? shm/2-sbhm :
 			                                                                  keyguard_height/2);
 
-			// Square (90-degree), full-thickness relief along the top/bottom edge of the
+			// Square (90-degree), full-thickness relief along the keyguard's top edge of the
 			// opening, spanning ONLY the keyguard width (it stops short of the side post
 			// pockets, which remain pockets). It clears the post's protrusion above the
-			// keyguard edge along the keyguard width and gives it room to rotate, opening the
-			// frame by hole_dia/2 past the edge so the opening measures keyguard_height +
-			// hole_dia edge-to-edge (162 mm at the default post fit). The bottom relief is the
-			// 180-degree-rotation safety net.
+			// keyguard edge along the keyguard width, opening the frame by hole_dia/2 past the
+			// top edge. The keyguard carries only a top post and is NOT rotated 180 degrees, so
+			// there is no mirrored bottom relief — that only opened the frame hole_dia/2 below
+			// the keyguard's bottom edge, leaving a gap there for a moderately thick keyguard.
 			translate(kg_slide)
 			translate([0,post_cl,0])
 			add_keyguard_frame_post_relief(keyguard_width);
 
-			translate(kg_slide)
-			translate([0,-post_cl,0])
-			add_keyguard_frame_post_relief(keyguard_width);
-
-			// Side post pockets that receive the post's protruding ends (both sides, top and
-			// bottom). These are distinct pockets — the square edge relief above stops at the
-			// keyguard width and does not open them up.
+			// Side post pockets that receive the post's protruding ends (both sides, at the
+			// keyguard's top edge). These are distinct pockets — the square edge relief above
+			// stops at the keyguard width and does not open them up. No mirrored bottom pockets
+			// (the 180-degree-rotation provision is removed along with the bottom relief).
 			translate(kg_slide)
 			translate([keyguard_width/2+post_len/2-5,post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
 
 			translate(kg_slide)
-			translate([keyguard_width/2+post_len/2-5,-post_cl,-keyguard_frame_thickness/2-ff])
-			add_keyguard_frame_post_slots();
-
-			translate(kg_slide)
 			translate([-keyguard_width/2-post_len/2+5,post_cl,-keyguard_frame_thickness/2-ff])
-			add_keyguard_frame_post_slots();
-
-			translate(kg_slide)
-			translate([-keyguard_width/2-post_len/2+5,-post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
 		}
 	}
 }
 
 
-// Cuts the square (90-degree), full-thickness relief along the opening's top/bottom edge
-// that clears the post's protrusion above the keyguard edge and gives it room to rotate.
+// Cuts the square (90-degree), full-thickness relief along the opening's top edge
+// that clears the post's protrusion above the keyguard edge as it tilts into place.
 // relief_len is the span along the edge (X) — the keyguard width, so it stops short of the
 // side post pockets. hole_dia (the post diameter, adjusted by post_tightness_of_fit) is the
 // relief's height (Y): centred on the post line, it opens the frame by hole_dia/2 past the
-// keyguard edge, so the opening measures keyguard_height + hole_dia edge-to-edge. Built with
-// hole_cutter (radius 0 = square corners) so the new top/bottom edge gets the same edge
-// chamfer as the opening's left/right edges, which hole_cutter also cuts.
+// keyguard edge. Built with hole_cutter (radius 0 = square corners) so the new top edge gets
+// the same edge chamfer as the opening's left/right edges, which hole_cutter also cuts.
 module add_keyguard_frame_post_relief(relief_len){
 	hole_dia = kt - post_tightness_of_fit/10;
 
