@@ -272,8 +272,14 @@ It only needs to be present when this feature is in use.
   mirror exactly what is in the root code — no more, no less. **Exclude** internal-only changes
   (tests, tooling, refactors, geometry-harness work with no visible effect); when in doubt, ask
   Ken. **Committing is Claude's job, never Ken's** — Ken does not run git/commit commands; Claude
-  commits the code + changelog change together as part of finishing the work. At release the
-  `## Version N` section is already complete — nothing is authored at the end.
+  commits the code + changelog change together as part of finishing the work. **Ken's own edits to
+  `CHANGELOG.md` are authoritative and must be preserved** — he may reword, reorder, or rewrite
+  entries whenever he likes; treat his phrasing as final. Only ever make *surgical* changes to
+  `CHANGELOG.md` (a targeted `Edit`, NEVER a whole-file `Write` or regenerate): add an entry when
+  new clinician-facing code lands, delete one when a change is backed out, and otherwise leave the
+  file exactly as Ken left it. Never overwrite, reword, or reorder his existing entries; if you
+  believe one is inaccurate, ask him rather than change it. At release the `## Version N` section
+  is already complete — nothing is authored at the end.
 
 ---
 
