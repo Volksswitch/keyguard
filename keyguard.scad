@@ -133,7 +133,6 @@
 //
 // SCREENSHOT & VISUALISATION
 //   show_screenshot()                   7476  Display SVG screenshot layer
-//   show_screenshotMW()                 7487  Screenshot layer for Maker World
 //   engrave_emboss_instruction()        7499  Engrave/emboss an opening shape
 //   render_oa_highlights()              7226  O&A highlight overlays (web app + preview)
 //
@@ -322,10 +321,10 @@ have_a_keyguard_frame = "no"; //[yes,no]
 keyguard_frame_thickness = 5.0; // .1
 keyguard_height = 160;
 keyguard_width = 210;
-//slides the contained keyguard left/right within the frame, as a % of frame width (+ = right); openings stay registered to the screen
-slide_keyguard_horizontally = 0; //[-100:0.1:100]
-//slides the contained keyguard up/down within the frame, as a % of frame height (+ = up); openings stay registered to the screen
-slide_keyguard_vertically = 0; //[-100:0.1:100]
+//slides the contained keyguard left/right within the frame, in mm (+ = right); openings stay registered to the screen
+slide_keyguard_horizontally = 0; // .5
+//slides the contained keyguard up/down within the frame, in mm (+ = up); openings stay registered to the screen
+slide_keyguard_vertically = 0; // .5
 keyguard_corner_radius = 2;
 mount_keyguard_with = "snap-in tabs"; //[snap-in tabs, posts]
 snap_in_tab_on_top_edge_of_keyguard = "yes"; // [yes,no]
@@ -835,7 +834,7 @@ if (tablet_params == catch_all_data && type_of_tablet != "blank" && type_of_tabl
 }
 
 
-//logic to handle strings/vectors as input - primarily for use on Maker World
+//logic to handle strings/vectors as input
 c_t_c = parse_csv_mixed_top(cover_these_cells); // same call handles plain CSV
 m_cell_h = parse_csv_mixed_top(merge_cells_horizontally_starting_at); // same call handles plain CSV
 m_c_v = parse_csv_mixed_top(merge_cells_vertically_starting_at); // same call handles plain CSV
@@ -999,10 +998,10 @@ fcr = (has_case && has_frame) ? [cocria,cocria,cocria,cocria] :
 	  [0,0,0,0];
 
 // offset that slides the contained keyguard (its slab + snap-in tabs/posts) and the
-// frame's matching hole/grooves/post-slots within the frame. % of frame width/height,
+// frame's matching hole/grooves/post-slots within the frame. In mm,
 // + = right/up. No-op without a frame. Screen/cell openings stay registered to the
 // screen (0,0), so sliding moves which portion of the screen the keyguard covers.
-kg_slide = (has_frame) ? [slide_keyguard_horizontally/100*fw, slide_keyguard_vertically/100*fh, 0] : [0,0,0];
+kg_slide = (has_frame) ? [slide_keyguard_horizontally, slide_keyguard_vertically, 0] : [0,0,0];
 
 st_screen_width = (is_landscape) ? tablet_params[3] : tablet_params[4];
 ot_screen_width = (is_landscape) ? o_t_g_s[3] : o_t_g_s[4];
@@ -1624,7 +1623,7 @@ ttao =
   : (type_of_tablet=="TobiiDynavox I-16")? als_openings[28] 
   : []; // all other tablets
   
-// All variables that can be used in the openings an additions file called out here for Maker World customizer
+// All variables that can be used in the openings an additions file called out here for Customizer parameters
 // Put this *above* where you parse user input.
 // Add every variable name you want resolvable.
 RESOLVE_NAMES  = ["bcoh","bp","ccr","ch","cloc","cmd","cmh","cmw","cocr","coh","cow","cw","gb","gh","gt","gw","hbd","hbh","hbw","hloc","hor","hrw","kcr","kh","kw","lcbb","lcbh","lcow","lmbb","lmbh","lmbt","lp","mpp","nc","nr","ppm","r180","rp","sbb","sbh","sh","shp","sw","swm","swp","sxo","syo","tcr","th","tor","tp","tw","ucbb","ucbh","umbb","umbh","vrw","xols","xors","yobs","yots"];
@@ -1657,11 +1656,6 @@ $vpt = (keyguard_display_angle>0) ? [1,1,1] :
 $vpr = (show_back_of_keyguard=="no" && keyguard_display_angle > 0) ? [90-keyguard_display_angle,0,0] :
        (show_back_of_keyguard=="yes") ? [0,180,0] : 
 	   $vpr;
-	   
-// echo($vpt);
-// echo($vpr);
-// echo($vpd);
-	   
 	   
 if (system_with_no_case){
 	echo();
@@ -8200,18 +8194,6 @@ module show_screenshot(thickness){
 	import(file=screenshot_filename,center=true);
 }
 
-// Imports and displays the screenshot SVG as a linearly extruded (solid) overlay
-// scaled to fit the screen area. Used on Maker World where pure 2D imports are invisible.
-// @param thickness  Keyguard thickness in mm; positions the overlay just below the top face
-module show_screenshotMW(thickness){
-	color(screenshotcolor,.5)
-	translate([msh,msv,-thickness/2-0.5])
-	linear_extrude(height=.5)   // necessary to make screenshot visible on Maker World
-	resize([swm,shm,0])
-	offset(delta = .005)
-	import(file=screenshot_filename,center=true);
-}
-
 // Places engraved or embossed text on the keyguard by delegating to cut_opening()
 // or place_addition(), positioning the text according to the region, alignment,
 // angle, depth, and slide parameters.
@@ -8993,12 +8975,6 @@ function _substr(str, i, j, out="") = (i==j) ? out : str(str[i], _substr(str, i+
 
 // function getsplit(str, index=0, char=" ") = (index==0) ? substr(str, 0, search(char, str)[0]) : getsplit(   substr(str, search(char, str)[0]+1)   , index-1, char);
 
-
-//************* The following code was written by ChatGPT to support Maker World customization ********************
-// =========================
-// 1) Whitespace / indexing (robust)
-// =========================
-function ord_safe(c) = (is_string(c) && len(c) > 0) ? ord(c[0]) : -1;
 
 // ASCII control/space (<=32) + NBSP(160) + ZWSP(8203) + BOM(65279)
 function is_ws_any(c) =
