@@ -256,6 +256,20 @@ It only needs to be present when this feature is in use.
 - **Units:** All dimensions in **millimetres**
 - **`$fn`:** Controlled by the `number_of_facets` parameter (default 90) rather than hardcoded
 - **Version history:** Extensively documented in comments at the top of the file
+- **Changelog-as-you-go (mandatory):** Updating `CHANGELOG.md` is NOT a pre-release step — it
+  happens *with each change*. Whenever a commit adds a clinician-facing feature or fixes a
+  clinician-visible bug, add a one-line plain-English entry under the **current in-development
+  `## Version N` heading** (the topmost section — the pre-bumped `keyguard_designer_version`;
+  replace its `- _In development._` placeholder with the first real bullet), **in the same commit
+  as the change**. Write it the way a clinician would read it (what they can now see or do
+  differently), matching the voice of the existing bullets. This matters more here than usual:
+  the web app's `publish-scad-version.mjs` copies this section **verbatim** into
+  `latest_scad_version.json`, which is exactly the "What's new" list clinicians see in the in-app
+  **Keyguard update** dialog — so these bullets are literally clinician-facing UI text, not just a
+  repo note. **Exclude** internal-only changes (tests, tooling, refactors, geometry-harness work
+  with no visible effect); when in doubt, ask Ken. At release the `## Version N` section is
+  already complete — nothing is authored at the end. Keeping it current lets Ken review real
+  wording at any time instead of reconstructing it later.
 
 ---
 
