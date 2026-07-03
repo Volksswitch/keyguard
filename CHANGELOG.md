@@ -1,7 +1,9 @@
 # Keyguard Designer — Changelog
 
 ## Version 82
-- _In development._
+- Frame posts now attach the keyguard to its frame correctly when the keyguard is slid within a widened frame: the frame's post slots and relief openings track the keyguard's position, the relief is squared to clear the posts, and cells/bars extend through the frame where they overlap it.
+- Fixed a bug where a frame post (and its matching slot) could float above the top edge of the keyguard instead of meeting it.
+- The top and bottom edges of the frame's post-relief opening are now chamfered.
 
 ## Version 81
 - Added controls to slide the keyguard left/right or up/down within its frame, so the keyguard can cover just part of the screen while the frame covers the rest.
