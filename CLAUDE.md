@@ -259,9 +259,9 @@ It only needs to be present when this feature is in use.
 - **Changelog-as-you-go (mandatory):** `CHANGELOG.md` is kept **in lockstep with the root
   `keyguard.scad`** — it is NOT a pre-release step. The moment you change `keyguard.scad` in a way
   a clinician can see or do differently (a new feature or a visible bug fix), add or edit the
-  matching plain-English entry under the **current in-development `## Version N` heading** (the
-  topmost section — the pre-bumped `keyguard_designer_version`; replace its `- _In development._`
-  placeholder with the first real bullet) **in the same edit, before you consider that change
+  matching plain-English entry under the topmost **`## Unreleased (next release)` heading**
+  (replace its `- _In development._` placeholder with the first real bullet; it is renamed to
+  `## Version N` at release) **in the same edit, before you consider that change
   done** — so the code Ken tests in the root and the changelog he reads always describe the same
   program. Write it the way a clinician would read it, matching the voice of the existing bullets.
   This matters more here than usual: the web app's `publish-scad-version.mjs` copies this section
@@ -278,8 +278,9 @@ It only needs to be present when this feature is in use.
   `CHANGELOG.md` (a targeted `Edit`, NEVER a whole-file `Write` or regenerate): add an entry when
   new clinician-facing code lands, delete one when a change is backed out, and otherwise leave the
   file exactly as Ken left it. Never overwrite, reword, or reorder his existing entries; if you
-  believe one is inaccurate, ask him rather than change it. At release the `## Version N` section
-  is already complete — nothing is authored at the end.
+  believe one is inaccurate, ask him rather than change it. At release the notes are already
+  complete — the ritual only renames `## Unreleased (next release)` to `## Version N`; nothing is
+  authored at the end. See [RELEASING.md](RELEASING.md) for the full release ritual.
 
 ---
 
@@ -413,49 +414,27 @@ Address these one at a time, running the test suite after each change.
   `keyguard-designer-web` project's `CLAUDE.md`.
 
 ### Version bumps
-Two files carry the version — `keyguard_designer_version` (in `keyguard.scad`,
-line ~522) and the update manifest `latest_scad_version.json` — and each exists in
-**two places** with **different rules**: the **local PC / root project folder**
-(dev) and **GitHub `main`** (deployed to clinicians).
 
-- **On the PC (root folder = dev): PRE-BUMP both.** At the start of a dev cycle
-  bump the local `keyguard.scad` constant AND the local manifest to the next
-  version N (= last released + 1), so the working copy's version banner and
-  CHANGELOG attribution read as the version being worked on. Regenerate the local
-  manifest with "publish scad version" (it reads the constant + the `## Version N`
-  CHANGELOG bullets). These pre-bumped copies live only on the PC (shared between
-  machines via OneDrive) — they are **not** pushed to GitHub until release.
-- **On GitHub `main`: stay at the DEPLOYED version.** `keyguard.scad` and the
-  manifest on `main` must both equal the currently-released version **and must
-  equal each other.** Never push a pre-bumped copy to `main` ahead of a release.
-  - **Why they must match on GitHub (this bit us once):** the web app's in-app
-    updater downloads `main/keyguard.scad`, reads its `keyguard_designer_version`,
-    and **refuses (aborts)** if it does not equal the manifest's `version`. If a
-    pre-bumped `keyguard.scad` (N) reaches `main` while the manifest still says
-    N-1, every clinician on an older version is offered an update that then aborts
-    on download. Pre-bump therefore stays on the PC only.
-- **Record changes under a `## Version N` section in `CHANGELOG.md`** as you
-  develop (N = the pre-bumped dev version). CHANGELOG bullets are clinician-facing
-  (the manifest copies them verbatim into the update dialog) — keep them readable.
-- **Releasing version N — trigger phrase "bump keyguard designer" (Ken's explicit
-  command only).** When Ken says **"bump keyguard designer"**, that is the
-  instruction to RELEASE the dev (pre-bumped) keyguard designer **and** manifest to
-  GitHub for deployment to clinicians. Steps:
-  1. Confirm the `## Version N` CHANGELOG bullets read as clinician-facing text —
-     Ken reviews and approves this wording BEFORE giving the command.
-  2. Regenerate the manifest with "publish scad version" so its `version` and `notes`
-     match the constant (N) and the `## Version N` CHANGELOG bullets.
-  3. Push the pre-bumped `keyguard.scad` (N) **and** the manifest (N) to GitHub
-     `main` **together**, so `main`'s served file and the manifest both say N at the
-     same moment. Nothing reaches clinicians until this push. (This is the ONLY
-     time you push `.scad` work to `origin` without a further prompt — the command
-     itself is the authorization.)
-  4. Start the next dev cycle: pre-bump the local `keyguard.scad` constant and the
-     local manifest to N+1 (PC-only), so subsequent changes are attributed to N+1.
-- Note: this mirrors the web app's `APP_RELEASE` (pre-bumped on `dev`), except the
-  `.scad`'s pre-bumped copies must be held off GitHub `main` because the updater
-  gates on the `main`-vs-manifest match; the web app's own version is not gated
-  that way.
+The full release process is in **[RELEASING.md](RELEASING.md)** — the same shape used
+across all Volksswitch projects (*work locally; log user-visible changes to
+`## Unreleased` in clinician language; say **"bump keyguard designer"** to release*).
+The essentials specific to the `.scad`:
+
+- **PC = dev, GitHub = release, single `main`.** Commit each change to local `main` but
+  do **not** push; the copy of `keyguard.scad` on `main` is what clinicians download, so
+  **pushing `main` is the release.** Nothing is pushed between releases.
+- **`keyguard_designer_version`** (in `keyguard.scad`, line ~522) is **pre-bumped** to
+  `(last release + 1)` at the end of each release, so the dev banner always reads one
+  ahead of public. The pre-bump lives **locally only (unpushed)** until its release.
+- **The updater gate (this bit us once):** on GitHub `main`, `keyguard.scad`'s version and
+  `latest_scad_version.json`'s `version` must **always match** — the web app's updater
+  downloads `main/keyguard.scad` and **aborts** if the two disagree. So a pre-bumped
+  `.scad` never reaches `main` ahead of a matching manifest; at release the file and the
+  manifest are pushed together, both reading `N`.
+- **`## Unreleased (next release)` in `CHANGELOG.md`** holds the in-dev clinician notes; at
+  release it is renamed to `## Version N` and `publish-scad-version.mjs` copies those
+  bullets verbatim into the manifest (it reads the version from the constant and the notes
+  from `## Version N`, falling back to `## Unreleased`).
 
 ### Progress logging (mandatory)
 - **For ANY multi-step or long-running task, continuously write progress to a single

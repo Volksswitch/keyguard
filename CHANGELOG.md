@@ -1,6 +1,6 @@
 # Keyguard Designer — Changelog
 
-## Version 83
+## Unreleased (next release)
 - _In development._
 
 ## Version 82
