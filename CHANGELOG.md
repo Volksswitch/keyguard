@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 83
 - Openings and additions marked for highlighting (`"#"`) are now highlighted when you generate a keyguard **frame**, not just a keyguard. Previously a highlighted item simply didn't show up while the frame was being displayed. This covers everything the frame itself carries: openings placed in the screen area or the case area, plastic added to or subtracted from the frame edge, and tablet openings.
 - Fixed: a tablet opening now cuts all the way through a keyguard frame. It was only being cut to the *keyguard's* thickness, so on a frame thicker than the keyguard it left a blind pocket with a floor in it instead of an opening.
 - Fixed: when your design has a frame, tablet openings and case additions are now applied only to the frame — the part that actually carries them. The keyguard was also being cut for the same tablet openings (leaving a second, shallower hole with its own chamfer) and slotted for clip-on strap pedestals it never receives.
