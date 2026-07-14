@@ -2142,11 +2142,14 @@ module keyguard(cheat){
 								if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, true); else apply_flex_height_shapes(m_c_a, true);
 							}
 
-							// add slots to manually added clip-on strap pedestals
-							if(!is_undef(case_additions) && len(case_additions)>0 && has_case && !is_laser_cut && cheat=="no"){
+							// add slots to manually added clip-on strap pedestals. Same frame gate
+							// as the pedestals themselves (above): with a frame, the case additions
+							// — pedestals included — are built on the FRAME, so slotting the
+							// keyguard for pedestals it never receives would cut it for nothing.
+							if(!is_undef(case_additions) && len(case_additions)>0 && has_case && !is_laser_cut && cheat=="no" && !has_frame){
 								if(is_v2(case_additions)) cut_manual_mount_pedestal_slots_v2(case_additions); else cut_manual_mount_pedestal_slots(case_additions);
 							}
-							if(len(m_c_a)>0 && has_case && !is_laser_cut && cheat=="no"){
+							if(len(m_c_a)>0 && has_case && !is_laser_cut && cheat=="no" && !has_frame){
 								if(is_v2(m_c_a)) cut_manual_mount_pedestal_slots_v2(m_c_a); else cut_manual_mount_pedestal_slots(m_c_a);
 							}
 						}
@@ -2191,11 +2194,15 @@ module keyguard(cheat){
 						// make cuts associated with the tablet like ALS openings and symmetric camera/home button slots that are as deep as the keyguard
 						//    - can affect slide-in tabs and raised tabs (in particular)
 
-						// cut tablet openings
-						if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+						// cut tablet openings — the keyguard's, only when there is NO frame.
+						// Tablet openings belong to whatever spans the tablet: with a frame
+						// that is the frame (keyguard_frame cuts them at frame thickness).
+						// Cutting them here too would put a second hole, with its own chamfer
+						// at the keyguard's height, through a design the frame already opens.
+						if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no" && !has_frame){
 							if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings,kt); else cut_tablet_openings(tablet_openings,kt);
 						}
-						if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+						if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no" && !has_frame){
 							if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o,kt); else cut_tablet_openings(m_t_o,kt);
 						}
 
@@ -2386,11 +2393,13 @@ module lc_keyguard(){
 							cut_als_openings(ttao,0);
 						}
 											
-						// cut tablet openings
-						if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0){
+						// cut tablet openings — as above, the keyguard's own only when it has
+						// no frame (a frame can't be laser-cut, so this 2D layer would be the
+						// keyguard of a design whose frame already carries them).
+						if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && !has_frame){
 							if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings,0); else cut_tablet_openings(tablet_openings,0);
 						}
-						if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0){
+						if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && !has_frame){
 							if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o,0); else cut_tablet_openings(m_t_o,0);
 						}
 
@@ -2555,12 +2564,15 @@ module keyguard_frame(cheat){
 		//camera and home button openings
 		home_camera(keyguard_frame_thickness);
 		
-		// cut tablet openings
+		// cut tablet openings — through the FRAME's thickness, not the keyguard's
+		// (as home_camera and the ALS openings above already do). With kt they cut
+		// only keyguard-deep into a thicker frame, leaving a blind pocket instead of
+		// an opening.
 		if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-			if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings,kt); else cut_tablet_openings(tablet_openings,kt);
+			if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings,keyguard_frame_thickness); else cut_tablet_openings(tablet_openings,keyguard_frame_thickness);
 		}
 		if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-			if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o,kt); else cut_tablet_openings(m_t_o,kt);
+			if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o,keyguard_frame_thickness); else cut_tablet_openings(m_t_o,keyguard_frame_thickness);
 		}
 
 		// remove non-full height "-" shapes
@@ -8055,12 +8067,12 @@ module render_oa_highlights(depth, sat_d, cheat="no", on_frame=false) {
 			else             apply_flex_height_shapes   (m_c_a, true, hl=true);
 		}
 		if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-			if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings, kt, hl=true);
-			else                       cut_tablet_openings   (tablet_openings, kt, hl=true);
+			if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings, depth, hl=true);
+			else                       cut_tablet_openings   (tablet_openings, depth, hl=true);
 		}
 		if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
-			if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o, kt, hl=true);
-			else             cut_tablet_openings   (m_t_o, kt, hl=true);
+			if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o, depth, hl=true);
+			else             cut_tablet_openings   (m_t_o, depth, hl=true);
 		}
 	}
 	else {
@@ -8110,19 +8122,22 @@ module render_oa_highlights(depth, sat_d, cheat="no", on_frame=false) {
 		}
 	}
 
-	// Tablet openings — cuts
-	if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+	// Tablet openings — cuts. Same !has_frame gate as keyguard()'s own cut: with a
+	// frame these belong to the frame, so the keyguard must not ghost them either.
+	if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no" && !has_frame){
 		if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings, depth, hl=true);
 		else                       cut_tablet_openings   (tablet_openings, depth, hl=true);
 	}
-	if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+	if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no" && !has_frame){
 		if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o, depth, hl=true);
 		else             cut_tablet_openings   (m_t_o, depth, hl=true);
 	}
 
 	// Case additions — both positive (add) and negative (sub) entries,
 	// flex-height and full-height variants, plus manual-mount pedestals/slots.
-	if(!is_undef(case_additions) && len(case_additions)>0 && has_case){
+	// With a frame these are built on the FRAME (keyguard() skips them), so the
+	// keyguard must not ghost them either — the frame's own pass highlights them.
+	if(!is_undef(case_additions) && len(case_additions)>0 && has_case && !has_frame){
 		if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, false, hl=true);
 		else                      apply_flex_height_shapes   (case_additions, false, hl=true);
 		if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, true,  hl=true);
@@ -8144,7 +8159,7 @@ module render_oa_highlights(depth, sat_d, cheat="no", on_frame=false) {
 			else                      cut_manual_mount_pedestal_slots   (case_additions, hl=true);
 		}
 	}
-	if(len(m_c_a)>0 && has_case){
+	if(len(m_c_a)>0 && has_case && !has_frame){
 		if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, false, hl=true);
 		else             apply_flex_height_shapes   (m_c_a, false, hl=true);
 		if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, true,  hl=true);
