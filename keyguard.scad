@@ -333,11 +333,10 @@ snap_in_tabs_on_left_and_right_edges_of_keyguard = "yes"; // [yes,no]
 //the larger the number the tighter the fit, affects only the keyguard frame
 post_tightness_of_fit = 0; //[-10:10]
 post_extension_distance = 4; // [1:5]
-// set this option to "no" before rendering your design
 show_keyguard_with_frame = "no"; //[yes,no]
-//the larger the number the tighter the fit
+//adjusts the keyguard height, the larger the number the tighter the fit
 keyguard_vertical_tightness_of_fit = 0; // [-1:.1:1]
-//the larger the number the tighter the fit
+//adjusts the keyguard width, the larger the number the tighter the fit
 keyguard_horizontal_tightness_of_fit = 0; // [-1:.1:1]
 //cut the grid cell openings and exposed bars through the frame (wherever the frame overlaps the screen)
 cut_cell_openings_and_bars_through_frame = "yes"; //[yes,no]
@@ -1912,6 +1911,13 @@ else if (generate=="keyguard frame" && has_frame && !is_laser_cut){
 		color("Turquoise")
 		keyguard_frame("no");
 	}
+
+	// O&A highlight overlays for the frame's own openings. Same gate as the
+	// keyguard branch; on_frame=true because the frame cuts everything at
+	// keyguard_frame_thickness (see render_oa_highlights). Without this a "#"
+	// row was simply invisible whenever a frame was being generated.
+	if ($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes")
+		render_oa_highlights(keyguard_frame_thickness, keyguard_frame_thickness, "no", on_frame=true);
 
 	// The keyguard shown inside the frame is a preview aid (the .scad uses
 	// the # debug modifier for a translucent ghost). Treat it like an O&A
@@ -7935,7 +7941,129 @@ module cut_manual_mount_pedestal_slots(c_a,hl=false){
 // @param sat_d  Screen-area cut depth (sat for 3D, 0 for laser-cut)
 // @param cheat  Forwarded "yes"/"no" cheat flag controlling the same conditions
 //               that gate the real cuts inside keyguard()
-module render_oa_highlights(depth, sat_d, cheat="no") {
+// @param on_frame  true when generating the keyguard FRAME. The frame cuts its
+//               openings differently from keyguard(): everything at
+//               keyguard_frame_thickness, case openings inside the frame body's
+//               unequal-case-opening shift, screen openings anchored to the
+//               screen (outside that shift) with the "keyguard" cut region.
+//               Mirror that here, or the frame's "#" rows produce no overlay at
+//               all — which is what used to happen: the frame branch never
+//               called this module.
+module render_oa_highlights(depth, sat_d, cheat="no", on_frame=false) {
+	// The frame body's own shift (keyguard_frame()'s `trans`). Case openings are
+	// cut inside it; screen openings are cut outside it (the screen does not move
+	// for an unequal case opening, only the frame does).
+	frame_trans = (has_case)
+		? [-unequal_left_side_offset,-unequal_bottom_side_offset,0]
+		: [-unequal_tablet_left_side_offset,-unequal_tablet_bottom_side_offset,0];
+
+	if (on_frame) {
+		// Screen openings cut through the frame (region "keyguard", frame depth).
+		if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
+			if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings, depth, hl=true, on_frame=true);
+			else                       cut_screen_openings   (screen_openings, depth, hl=true, on_frame=true);
+			if(is_3d_printed){
+				if(is_v2(screen_openings)) adding_plastic_v2(screen_openings, "screen", hl=true, on_frame=true);
+				else                       adding_plastic   (screen_openings, "screen", hl=true, on_frame=true);
+			}
+		}
+		if(len(m_s_o)>0 && type_of_tablet!="blank"){
+			if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o, depth, hl=true, on_frame=true);
+			else             cut_screen_openings   (m_s_o, depth, hl=true, on_frame=true);
+			if(is_3d_printed){
+				if(is_v2(m_s_o)) adding_plastic_v2(m_s_o, "screen", hl=true, on_frame=true);
+				else             adding_plastic   (m_s_o, "screen", hl=true, on_frame=true);
+			}
+		}
+
+		// Case openings — cut in the frame body's shifted space.
+		translate(frame_trans){
+			if(!is_undef(case_openings) && len(case_openings)>0){
+				if(is_v2(case_openings)) cut_case_openings_v2(case_openings, depth, hl=true);
+				else                     cut_case_openings   (case_openings, depth, hl=true);
+				if(is_3d_printed){
+					if(is_v2(case_openings)) adding_plastic_v2(case_openings, "case", hl=true);
+					else                     adding_plastic   (case_openings, "case", hl=true);
+				}
+			}
+			if(len(m_c_o)>0){
+				if(is_v2(m_c_o)) cut_case_openings_v2(m_c_o, depth, hl=true);
+				else             cut_case_openings   (m_c_o, depth, hl=true);
+				if(is_3d_printed){
+					if(is_v2(m_c_o)) adding_plastic_v2(m_c_o, "case", hl=true);
+					else             adding_plastic   (m_c_o, "case", hl=true);
+				}
+			}
+
+			// Full-height case additions (thickness 0). These shape the frame's own
+			// OUTLINE via case_opening_blank_2d — that is how a "-" row subtracts
+			// plastic from the frame edge — so they must be highlighted here too,
+			// extruded to the FRAME's thickness rather than the keyguard's. Same
+			// gate case_opening_blank_2d uses. (2D shapes; the extrude keeps them
+			// from mixing 2D and 3D at the top level.)
+			if(add_symmetric_openings=="no" && has_case && cheat=="no"){
+				linear_extrude(height=depth, center=true){
+					if(!is_undef(case_additions) && len(case_additions)>0){
+						if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions, "add", hl=true);
+						else                      add_case_full_height_shapes   (case_additions, "add", hl=true);
+						if(is_v2(case_additions)) add_case_full_height_shapes_v2(case_additions, "sub", hl=true);
+						else                      add_case_full_height_shapes   (case_additions, "sub", hl=true);
+					}
+					if(len(m_c_a)>0){
+						if(is_v2(m_c_a)) add_case_full_height_shapes_v2(m_c_a, "add", hl=true);
+						else             add_case_full_height_shapes   (m_c_a, "add", hl=true);
+						if(is_v2(m_c_a)) add_case_full_height_shapes_v2(m_c_a, "sub", hl=true);
+						else             add_case_full_height_shapes   (m_c_a, "sub", hl=true);
+					}
+				}
+			}
+
+			// Case additions the frame BUILDS on its surface: the "+" flex-height
+			// shapes and the manual strap pedestals (with their slots), at frame
+			// thickness and inside the frame body's shift.
+			if(!is_undef(case_additions) && len(case_additions)>0 && cheat=="no"){
+				if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, false, hl=true);
+				else                      apply_flex_height_shapes   (case_additions, false, hl=true);
+				if(!is_laser_cut){
+					if(is_v2(case_additions)) add_manual_mount_pedestals_v2(case_additions, depth, hl=true);
+					else                      add_manual_mount_pedestals   (case_additions, hl=true);
+					if(is_v2(case_additions)) cut_manual_mount_pedestal_slots_v2(case_additions, hl=true);
+					else                      cut_manual_mount_pedestal_slots   (case_additions, hl=true);
+				}
+			}
+			if(len(m_c_a)>0 && cheat=="no"){
+				if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, false, hl=true);
+				else             apply_flex_height_shapes   (m_c_a, false, hl=true);
+				if(!is_laser_cut){
+					if(is_v2(m_c_a)) add_manual_mount_pedestals_v2(m_c_a, depth, hl=true);
+					else             add_manual_mount_pedestals   (m_c_a, hl=true);
+					if(is_v2(m_c_a)) cut_manual_mount_pedestal_slots_v2(m_c_a, hl=true);
+					else             cut_manual_mount_pedestal_slots   (m_c_a, hl=true);
+				}
+			}
+		}
+
+		// Outside the frame body's shift — keyguard_frame() cuts these in the outer
+		// difference(), not inside translate(trans): the "-" flex-height shapes, and
+		// the tablet openings (which use kt, not the frame thickness).
+		if(!is_undef(case_additions) && len(case_additions)>0 && cheat=="no"){
+			if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, true, hl=true);
+			else                      apply_flex_height_shapes   (case_additions, true, hl=true);
+		}
+		if(len(m_c_a)>0 && cheat=="no"){
+			if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, true, hl=true);
+			else             apply_flex_height_shapes   (m_c_a, true, hl=true);
+		}
+		if(!is_undef(tablet_openings) && len(tablet_openings)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+			if(is_v2(tablet_openings)) cut_tablet_openings_v2(tablet_openings, kt, hl=true);
+			else                       cut_tablet_openings   (tablet_openings, kt, hl=true);
+		}
+		if(len(m_t_o)>0 && tablet_height>0 && tablet_width>0 && cheat=="no"){
+			if(is_v2(m_t_o)) cut_tablet_openings_v2(m_t_o, kt, hl=true);
+			else             cut_tablet_openings   (m_t_o, kt, hl=true);
+		}
+	}
+	else {
 	// Screen openings — cuts and positive plastic (bumps/ridges/text/svg)
 	if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
 		if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings, sat_d, hl=true);
@@ -8042,6 +8170,7 @@ module render_oa_highlights(depth, sat_d, cheat="no") {
 	// where the clinician otherwise has no visual cue.
 	if (text != "" && text_depth != 0)
 		color(oa_highlight_color) engrave_emboss_instruction_hl();
+	}   // end !on_frame
 }
 
 

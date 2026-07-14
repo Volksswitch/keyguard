@@ -1,7 +1,7 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
-- _In development._
+- Openings and additions marked for highlighting (`"#"`) are now highlighted when you generate a keyguard **frame**, not just a keyguard. Previously a highlighted item simply didn't show up while the frame was being displayed. This covers everything the frame itself carries: openings placed in the screen area or the case area, plastic added to or subtracted from the frame edge, and tablet openings.
 
 ## Version 82
 - The controls to slide the keyguard within its frame now take a distance in millimeters (entered in a number box, in 0.5 mm steps) instead of a percentage of the frame — so you can position the keyguard by the exact amount you want.
