@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 84
 - Removed `tab1-4` from the list of case addition shapes in `openings_and_additions.txt`. The designer has never supported a shape by that name, so asking for one simply produced nothing.
 - If you use a case addition shape name the designer doesn't recognise, it now tells you so instead of quietly leaving that item out of your design.
 
