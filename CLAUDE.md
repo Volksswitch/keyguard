@@ -505,6 +505,23 @@ the deployed/release channel** — it is updated ONLY on Ken's explicit command.
   tests render every named config to STL and take a very long time. Always explain why
   they are needed and wait for approval before running them.
 
+#### Test-file cleanup is deferred to the next significant .scad change (Ken, 2026-08-05)
+
+Ken's standing decision: **the testing-related files get cleaned up in one pass when we
+next make really significant changes to the `.scad` code** — not piecemeal as small
+changes land. So when a change leaves a reference or a captured artifact stale, **say so
+once and move on**; do not offer to regenerate it each time, and do not treat a stale
+reference as blocking a release (v84 and web Release 18 both shipped with one outstanding).
+
+Known outstanding as of 2026-08-05:
+- The **web app's** visual reference PNGs — stale for every case containing an O&A
+  highlight, after the highlight material went solid (web `4057ef7`). The `.scad`'s own
+  visual references are NOT affected by that change (it is web-side only).
+
+When the cleanup window arrives, ask Ken what he wants in scope before starting — "clean
+up the testing files" could reasonably mean regenerating references and goldens, clearing
+out accumulated logs and `-Helix2` duplicates, or both.
+
 #### Scope test runs to what you are validating
 
 The full visual suite takes ~25 minutes. When iterating on a **localized bug** —
