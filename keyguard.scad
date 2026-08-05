@@ -5138,9 +5138,10 @@ module oa_geom(id, highlight_only=false) {
 
 // Parses a single V2 compact case_additions row.
 //
-// Supported shapes: r1-4, rr, tab1-4, cm1-4, t1-4, f1-4, oa1-4, ped1-4.
+// Supported shapes: r1-4, cm1-4, t1-4, f1-4, oa1-4, ped1-4.
 // Subtractive shapes use a negative cb value instead of a "-" shape name prefix.
 // "c" and "r" are not supported in V2 case_additions; use r1-4 instead.
+// "rr" and "crr" are rejected with a warning by the V2 dispatchers; use r1-4.
 //
 // Compact format (all fields explicit — no blank entries):
 //   without cut | build: [ID, shape, height, width, corner, x, y,      [trim]]
@@ -7681,6 +7682,16 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 			translate([addition_corner_radius,-addition_corner_radius])
 			create_cutting_tool_2d(90, addition_corner_radius*2);
 		}
+	}
+	// Anything else is a typo or an unimplemented shape name — it would otherwise
+	// produce no geometry and no message at all. ped1-4 and cyl1-4 reach here with
+	// nothing to draw by design (they are placed by their own modules), so skip them.
+	else if (addition_shape != undef
+	      && addition_shape != "ped1" && addition_shape != "ped2"
+	      && addition_shape != "ped3" && addition_shape != "ped4"
+	      && addition_shape != "cyl1" && addition_shape != "cyl2"
+	      && addition_shape != "cyl3" && addition_shape != "cyl4"){
+		echo(str("WARNING: unrecognised case_additions shape '", addition_shape, "'; nothing was added. Check the shape name against the list in openings_and_additions.txt"));
 	}
 }
 

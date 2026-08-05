@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- Removed `tab1-4` from the list of case addition shapes in `openings_and_additions.txt`. The designer has never supported a shape by that name, so asking for one simply produced nothing.
+- If you use a case addition shape name the designer doesn't recognise, it now tells you so instead of quietly leaving that item out of your design.
 
 ## Version 83
 - Openings and additions marked for highlighting (`"#"`) are now highlighted when you generate a keyguard **frame**, not just a keyguard. Previously a highlighted item simply didn't show up while the frame was being displayed. This covers everything the frame itself carries: openings placed in the screen area or the case area, plastic added to or subtracted from the frame edge, and tablet openings.
