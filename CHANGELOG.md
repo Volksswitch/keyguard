@@ -1,7 +1,6 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
-- The actual horizontal and vertical rail widths are now reported in the console every time you render, so they update as soon as you change anything that affects them (rows and columns, cell size, padding, bar heights, orientation, tablet or case dimensions). Previously they were only reported when you generated the first layer for a laser-cut SVG/DXF file.
 - "Hide the grid region" and "hide the screen region" now apply to the keyguard **frame** as well as the keyguard. Previously the frame kept that material even though the keyguard had it removed.
 
 ## Version 84

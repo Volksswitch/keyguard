@@ -499,7 +499,23 @@ screen_through_cut_overlap = 2.0; // [0.5:0.1:5]
 // no tilt baked into the exported solid). OpenSCAD evaluates assignments at
 // parse time regardless of source order, so this echo can reference globals
 // and the $vp* special vars even though they are assigned later in the file.
-if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt, vpt=$vpt, vpr=$vpr, vpd=$vpd);
+//
+// vrw/hrw (the ACTUAL vertical and horizontal rail widths, after cw/ch have been
+// clamped to fit) ride along on the same line so the web app can tell the user
+// what the rails came out to. It reports them only when they CHANGE, which needs
+// memory of the previous render — something OpenSCAD does not have, so the
+// change-detection lives in the web app and the .scad just states the current
+// values. They go out as undef when the design has no grid at all (no rows or
+// columns, or nothing to put them in), which the web app reads as "nothing to
+// report". Native OpenSCAD leaves echo_dims "no" and sees none of this; its
+// rail-width report is still key_settings(), for laser-cut SVG/DXF output.
+// The no-grid test is written inline rather than hoisted into a variable on
+// purpose: a variable's expression IS evaluated in file order (see the
+// declaration-order note below), so it would read column_count as undef here,
+// whereas an echo statement sees every global's final value.
+if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt, vpt=$vpt, vpr=$vpr, vpd=$vpd,
+                           vrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0) ? vrw : undef,
+                           hrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0) ? hrw : undef);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
@@ -1281,19 +1297,6 @@ if(((cw!=cell_w) || (ch!=cell_h)) && (column_count!=0 && row_count!=0 && cell_sh
 
 vrw = grid_width/number_of_columns - cw;
 hrw = grid_height/number_of_rows - ch;
-
-// Report the ACTUAL rail widths that fell out of the current settings. This is a
-// top-level statement (like the cell-adjustment echo above), so it is re-evaluated
-// on every render — change any parameter that feeds the rails (grid size, padding,
-// bar heights, row/column count, cell size, screen/case dimensions, orientation,
-// tablet) and the new widths are echoed. Previously these were reported only by
-// key_settings(), which runs for the laser-cut SVG/DXF output alone.
-if(column_count>0 && row_count>0 && grid_width>0 && grid_height>0){
-	echo();
-	echo(str("vertical rail width: ", vrw, " mm."));
-	echo(str("horizontal rail width: ", hrw, " mm."));
-	echo();
-}
 
 // // this module should go away after "n" releases or "m" months when people have had a chance to move beyond 66- versions
 // echo_upgrade_recommendations(cw,ch,cell_edge_slope,screen_area_thickness);
