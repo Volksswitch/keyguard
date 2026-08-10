@@ -1282,6 +1282,19 @@ if(((cw!=cell_w) || (ch!=cell_h)) && (column_count!=0 && row_count!=0 && cell_sh
 vrw = grid_width/number_of_columns - cw;
 hrw = grid_height/number_of_rows - ch;
 
+// Report the ACTUAL rail widths that fell out of the current settings. This is a
+// top-level statement (like the cell-adjustment echo above), so it is re-evaluated
+// on every render — change any parameter that feeds the rails (grid size, padding,
+// bar heights, row/column count, cell size, screen/case dimensions, orientation,
+// tablet) and the new widths are echoed. Previously these were reported only by
+// key_settings(), which runs for the laser-cut SVG/DXF output alone.
+if(column_count>0 && row_count>0 && grid_width>0 && grid_height>0){
+	echo();
+	echo(str("vertical rail width: ", vrw, " mm."));
+	echo(str("horizontal rail width: ", hrw, " mm."));
+	echo();
+}
+
 // // this module should go away after "n" releases or "m" months when people have had a chance to move beyond 66- versions
 // echo_upgrade_recommendations(cw,ch,cell_edge_slope,screen_area_thickness);
 
