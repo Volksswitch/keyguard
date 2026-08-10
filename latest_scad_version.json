@@ -1,9 +1,10 @@
 {
-  "version": 84,
-  "scad_filename": "keyguard_v84.scad",
+  "version": 85,
+  "scad_filename": "keyguard_v85.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "Removed `tab1-4` from the list of case addition shapes in `openings_and_additions.txt`. The designer has never supported a shape by that name, so asking for one simply produced nothing.",
-    "If you use a case addition shape name the designer doesn't recognise, it now tells you so instead of quietly leaving that item out of your design."
+    "\"First two layers only\" now applies to the keyguard **frame** as well as the keyguard, so you can print a quick two-layer test of a frame to check its fit before committing to the full print. It carries through to the two halves of a split frame as well.",
+    "Fixed: with the number of rows or columns set to 0 there is no grid, so \"hide the grid region\" now leaves your design alone. It used to cut out the area the grid *would* have occupied.",
+    "\"Hide the grid region\" and \"hide the screen region\" now apply to the keyguard **frame** as well as the keyguard. Previously the frame kept that material even though the keyguard had it removed."
   ]
 }
