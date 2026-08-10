@@ -2662,6 +2662,15 @@ module keyguard_frame(cheat){
 		if (hide_grid_region == "yes"){
 			cut_grid(keyguard_frame_thickness);
 		}
+
+		//trim down to the first two layers — the keyguard's own last-minute cut,
+		//measured off the FRAME's bottom face (-keyguard_frame_thickness/2) since
+		//the frame is the taller part. Inside keyguard_frame() so it reaches the
+		//split halves too, which difference() this module at their call sites.
+		if (first_two_layers_only=="yes"){
+			translate([0,0,50-keyguard_frame_thickness/2+0.4])
+			cube([1000,1000,100],center=true);
+		}
 	}
 }
 
