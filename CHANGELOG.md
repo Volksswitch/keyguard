@@ -1,6 +1,7 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- "Move screenshot horizontally" and "move screenshot vertically" now move the screenshot by the number of millimeters you enter. They were moving it only a tenth of that, so any small adjustment looked like it did nothing at all. The instructions printed in the Console now keep a tenth of a millimeter as well, instead of rounding the suggested border to the nearest whole millimeter.
 
 ## Version 85
 - "First two layers only" now applies to the keyguard **frame** as well as the keyguard, so you can print a quick two-layer test of a frame to check its fit before committing to the full print. It carries through to the two halves of a split frame as well.

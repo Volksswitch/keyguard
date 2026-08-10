@@ -1063,16 +1063,16 @@ adj_case_border_right = cow-swm-adj_case_border_left;
 adj_case_border_bottom = (unequal_bottom_side_of_case_opening>0) ? unequal_bottom_side_of_case_opening : equal_co_border_bottom;
 adj_case_border_top = coh-shm-adj_case_border_bottom;	
 		
-msh = move_screenshot_horizontally/10;
+msh = move_screenshot_horizontally;
 if (msh != 0){
-	slide_h = round(equal_co_border_left + msh);
+	slide_h = round((equal_co_border_left + msh)*10)/10;
 	echo();
 	echo(str("Set 'unequal left side of case opening' to ", slide_h, " then set 'move screen horizontally' to 0"));
 	echo();
 }
-msv = move_screenshot_vertically/10;
+msv = move_screenshot_vertically;
 if (msv != 0){
-	slide_v = round(equal_co_border_bottom + msv);
+	slide_v = round((equal_co_border_bottom + msv)*10)/10;
 	echo();
 	echo(str("Set 'unequal bottom side of case opening' to ", slide_v, " then set 'move screen vertically' to 0"));
 	echo();
