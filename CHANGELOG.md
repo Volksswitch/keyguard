@@ -2,6 +2,7 @@
 
 ## Unreleased (next release)
 - "First two layers only" now applies to the keyguard **frame** as well as the keyguard, so you can print a quick two-layer test of a frame to check its fit before committing to the full print. It carries through to the two halves of a split frame as well.
+- Fixed: with the number of rows or columns set to 0 there is no grid, so "hide the grid region" now leaves your design alone. It used to cut out the area the grid *would* have occupied.
 - "Hide the grid region" and "hide the screen region" now apply to the keyguard **frame** as well as the keyguard. Previously the frame kept that material even though the keyguard had it removed.
 
 ## Version 84

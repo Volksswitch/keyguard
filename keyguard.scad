@@ -8287,9 +8287,15 @@ module cut_screen(t=kt){
 // the keyguard (used as a helper for SVG layer output).
 // t is the thickness of the part being cut: kt for the keyguard,
 // keyguard_frame_thickness when the same cut is made on the keyguard frame.
+// Emits nothing when there is no grid to hide (zero rows or zero columns).
+// grid_width/grid_height are still perfectly good numbers in that case — they're
+// just the screen less its padding and bars — so without this test "hide the grid
+// region" would carve that whole area out of a design that never had a grid in it.
 module cut_grid(t=kt){
-	translate([grid_x0,grid_y0,-t/2-ff])
-	cube([gwm,ghm,100]);
+	if (column_count>0 && row_count>0){
+		translate([grid_x0,grid_y0,-t/2-ff])
+		cube([gwm,ghm,100]);
+	}
 }
 
 // Cuts the triangular snap-in grooves into the keyguard frame at the positions
