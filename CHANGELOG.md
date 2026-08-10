@@ -1,6 +1,7 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- "Hide the grid region" and "hide the screen region" now apply to the keyguard **frame** as well as the keyguard. Previously the frame kept that material even though the keyguard had it removed.
 
 ## Version 84
 - Removed `tab1-4` from the list of case addition shapes in `openings_and_additions.txt`. The designer has never supported a shape by that name, so asking for one simply produced nothing.

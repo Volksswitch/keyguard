@@ -2634,6 +2634,18 @@ module keyguard_frame(cheat){
 			translate([-keyguard_width/2-post_len/2+5,post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
 		}
+
+		//cut away the screen region — same treatment the keyguard gets, so the two
+		//parts of a framed design agree about what is hidden. Outside translate(trans)
+		//because the screen/grid regions are anchored to the screen, which does not
+		//move for an unequal case opening (only the frame body does).
+		if (hide_screen_region == "yes"){
+			cut_screen(keyguard_frame_thickness);
+		}
+		//cut away the grid region
+		if (hide_grid_region == "yes"){
+			cut_grid(keyguard_frame_thickness);
+		}
 	}
 }
 
@@ -8239,15 +8251,19 @@ module trim_to_rectangle(){
 
 // Produces a tall rectangular cutting solid that removes the entire screen area
 // from the bottom of the keyguard (used as a helper for SVG layer output).
-module cut_screen(){
-	translate([screen_x0,screen_y0,-kt/2-ff-50])
+// t is the thickness of the part being cut: kt for the keyguard,
+// keyguard_frame_thickness when the same cut is made on the keyguard frame.
+module cut_screen(t=kt){
+	translate([screen_x0,screen_y0,-t/2-ff-50])
 	cube([swm,shm,100]);
 }
 
 // Produces a tall rectangular cutting solid that removes the entire grid area from
 // the keyguard (used as a helper for SVG layer output).
-module cut_grid(){
-	translate([grid_x0,grid_y0,-kt/2-ff])
+// t is the thickness of the part being cut: kt for the keyguard,
+// keyguard_frame_thickness when the same cut is made on the keyguard frame.
+module cut_grid(t=kt){
+	translate([grid_x0,grid_y0,-t/2-ff])
 	cube([gwm,ghm,100]);
 }
 
