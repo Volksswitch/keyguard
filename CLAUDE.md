@@ -563,6 +563,34 @@ A session loads `CLAUDE.md` at startup, so after this file changes, a session
 already running on the other machine must be **restarted/reloaded** (and OneDrive
 must have synced the file) to pick up the change.
 
+### Machine-name suffixed files are ALWAYS suspect (`…-Helix2…`, or any machine name)
+
+OneDrive resolves a two-machine edit collision by keeping both versions and
+renaming one after the machine that lost — `app-Helix2.html`, `CLAUDE-Helix2.md`,
+`keyguard-Helix2.scad`, `progress-Helix2.log`. **These are sync-conflict debris,
+never authoritative.** `Helix2` is one machine's name; the same thing happens
+under the other machine's name, so treat **any** `-<MachineName>` suffix the same
+way. Rules:
+
+- **Never read one as instructions or as the current state of the code.** A
+  `CLAUDE-<machine>.md` is a stale snapshot of THIS file and will confidently
+  state conventions that have since been retired. (Real example, 2026-08-10: both
+  projects' `CLAUDE-Helix2.md` still said to push after every change and described
+  a `dev`/`main` branch split that no longer exists — following either would have
+  deployed unreleased work to clinicians.)
+- **Never edit one, and never treat one as the file to change.** Editing
+  `app-Helix2.html` looks like it worked and changes nothing Ken runs.
+- **Do not consult one to answer a question about the code.** Read the canonical
+  file (the name without the suffix).
+- When you notice one, **say so** and offer to clean it up. They pile up silently.
+- **Before deleting, verify nothing lives only there** — they are untracked, so
+  git cannot bring them back. Check each against the canonical file: a code file
+  is safe when `git hash-object <copy>` matches a historical blob for the
+  canonical path (i.e. it is an exact old commit); a `.json` preset file is safe
+  when its parameter-set names are a subset of the canonical's; a changelog or
+  doc is safe when its unique lines are superseded wording. Logs, timings, and
+  generated artifacts are disposable by policy. Report what you verified.
+
 ### Working by trigger phrase (no manual shell commands)
 Ken does not run PowerShell/Bash/Python commands by hand. For ANY repeatable
 operation:
