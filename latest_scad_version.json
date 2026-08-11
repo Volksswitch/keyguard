@@ -1,10 +1,8 @@
 {
-  "version": 85,
-  "scad_filename": "keyguard_v85.scad",
+  "version": 86,
+  "scad_filename": "keyguard_v86.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "\"First two layers only\" now applies to the keyguard **frame** as well as the keyguard, so you can print a quick two-layer test of a frame to check its fit before committing to the full print. It carries through to the two halves of a split frame as well.",
-    "Fixed: with the number of rows or columns set to 0 there is no grid, so \"hide the grid region\" now leaves your design alone. It used to cut out the area the grid *would* have occupied.",
-    "\"Hide the grid region\" and \"hide the screen region\" now apply to the keyguard **frame** as well as the keyguard. Previously the frame kept that material even though the keyguard had it removed."
+    "\"Move screenshot horizontally\" and \"move screenshot vertically\" now move the screenshot by the number of millimeters you enter. They were moving it only a tenth of that, so any small adjustment looked like it did nothing at all. The instructions printed in the Console now keep a tenth of a millimeter as well, instead of rounding the suggested border to the nearest whole millimeter."
   ]
 }
