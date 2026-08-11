@@ -570,7 +570,19 @@ renaming one after the machine that lost — `app-Helix2.html`, `CLAUDE-Helix2.m
 `keyguard-Helix2.scad`, `progress-Helix2.log`. **These are sync-conflict debris,
 never authoritative.** `Helix2` is one machine's name; the same thing happens
 under the other machine's name, so treat **any** `-<MachineName>` suffix the same
-way. Rules:
+way.
+
+**The test is whether the same name WITHOUT the machine suffix exists:**
+
+- **Canonical twin exists** (the normal case) → the suffixed file is a stale
+  duplicate: **ignore it entirely** and work from the canonical one. Everything
+  below applies.
+- **No canonical twin** → do NOT ignore it. It may be the only copy of something
+  (created on the other machine and never synced under its real name, or its
+  canonical was deleted). Don't rename, adopt, or delete it on a guess — tell Ken
+  what it is and let him decide.
+
+Rules for the normal (duplicate) case:
 
 - **Never read one as instructions or as the current state of the code.** A
   `CLAUDE-<machine>.md` is a stale snapshot of THIS file and will confidently
