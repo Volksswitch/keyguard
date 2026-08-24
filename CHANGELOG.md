@@ -2,6 +2,9 @@
 
 ## Unreleased (next release)
 
+## Version 87
+- Adds the information the Keyguard Designer web app’s new **by eye** opening editor needs in order to work when your screen measurements are in pixels. Nothing about the keyguard changes, and there is nothing different to see in OpenSCAD.
+
 ## Version 86
 - "Move screenshot horizontally" and "move screenshot vertically" now move the screenshot by the number of millimeters you enter. They were moving it only a tenth of that, so any small adjustment looked like it did nothing at all. The instructions printed in the Console now keep a tenth of a millimeter as well, instead of rounding the suggested border to the nearest whole millimeter.
 
