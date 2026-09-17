@@ -19,6 +19,27 @@ layouts, and outputs either 3D-printed or laser-cut keyguards.
 
 **Target use:** FDM 3D printing and laser cutting
 
+## ⚠ The web app: TWO folders exist, and only one is live
+
+This project has a companion web app. There are two sibling folders for it and
+they look nearly identical — editing the wrong one feels completely normal and
+changes nothing any clinician runs. **This has happened twice** (1 Sep 2026, and
+again 17 Sep 2026 while adding keyguard inset mode).
+
+| Folder | Repo | What it is |
+|---|---|---|
+| **`…/Keyguard/keyguard-web`** | `Volksswitch/keyguard-web` | **THE LIVE APP.** Serves `keyguard.volksswitch.org`. Its `CLAUDE.md` governs. |
+| `…/Keyguard/keyguard-designer-web` | `Volksswitch/keyguard-designer-web` | **RETIRED APP**, frozen at the old address. Gets no updates, ever. |
+
+**`APP_RELEASE` in `app.html` tells them apart instantly: ≥100 is live, ≤21 is
+retired.** Check it before believing you are in the right place.
+
+The retired folder is NOT dead weight, which is what makes this confusing: the
+**Playwright test harness** (`tests/`), **`RELEASING.md`**, the **RTP/cross-compare
+tooling** and the **RTP trigger phrases** still live ONLY there and are still
+authoritative there. So a path under `keyguard-designer-web` in this file is
+correct when it names harness or tooling, and wrong if it seems to name the app.
+
 ---
 
 ## What Is OpenSCAD?
@@ -102,7 +123,8 @@ Use `scripts/test.sh` to validate changes. It has five layers, selectable via fl
 **Golden STL stats manifest** (`tests/cases/golden-stl-stats.json`): records
 per-config CGAL geometry stats (volume, surface area, bbox, parts, facets) for
 every named config. The web app's geometry test layer
-(`keyguard-designer-web/tests/geometry.spec.mjs`) reads it as the authoritative
+(`keyguard-designer-web/tests/geometry.spec.mjs` — the harness folder, not the
+live app; see the two-folder warning above) reads it as the authoritative
 reference for Manifold-backend STL validation — Manifold sometimes produces
 broken STLs (e.g. TC57 membranes) that pass admesh but diverge from CGAL in
 surface area / part count. Regenerate via `--update-golden` whenever .scad-side
@@ -411,7 +433,8 @@ Address these one at a time, running the test suite after each change.
 - **Always record ongoing-behavior feedback in this `CLAUDE.md`, never in the per-machine
   memory system.** Memory is per-machine and does not sync — both machines must see the rule,
   so it has to live in the shared OneDrive-synced `CLAUDE.md`. Applies equally to the
-  `keyguard-designer-web` project's `CLAUDE.md`.
+  web app — which means **`keyguard-web`'s `CLAUDE.md`**, the live one. Do not record
+  feedback in the retired `keyguard-designer-web`; nothing reads it.
 
 ### Version bumps
 
@@ -645,10 +668,11 @@ geometry chunk on both machines simultaneously** — run them sequentially (on
 either machine); the per-chunk result files accumulate cleanly.
 
 NOTE: the ready-to-print **Manifold-vs-CGAL** work ("run RTP chunk N", "merge the
-RTP golden", "run the membrane comparison") is a SEPARATE thing that lives in the
-**web app project** (`keyguard-designer-web`) and is documented in *its*
-`CLAUDE.md`. Don't confuse "run chunk N" (geometry, here) with "run RTP chunk N"
-(ready-to-print, web app).
+RTP golden", "run the membrane comparison") is a SEPARATE thing that lives with the
+**test harness**, in `keyguard-designer-web`, and is documented in *that* folder's
+`CLAUDE.md`. That is the RETIRED app folder, but it is the right place for this —
+the harness never moved (see the two-folder warning above). Don't confuse "run
+chunk N" (geometry, here) with "run RTP chunk N" (ready-to-print, harness).
 
 ---
 
