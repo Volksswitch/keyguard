@@ -527,11 +527,18 @@ screen_through_cut_overlap = 2.0; // [0.5:0.1:5]
 // unit — swm/shm alone cannot say how many pixels wide the screen is, and a
 // unit-dependent pair cannot say both at once.
 //
+// awm/ahm (the APP's width and height in millimetres) ride along for the same
+// editor. They equal swm/shm unless keyguard inset mode is on, in which case the
+// app has been shrunk inside a border and millimetre coordinates are measured
+// from the app, not the screen — so the editor has to draw and record against
+// the app to agree with the pixels/millimetres tab. Pixel coordinates still come
+// off the full screenshot, which is why the screen pair is still reported too.
+//
 // The no-grid test is written inline rather than hoisted into a variable on
 // purpose: a variable's expression IS evaluated in file order (see the
 // declaration-order note below), so it would read column_count as undef here,
 // whereas an echo statement sees every global's final value.
-if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, sat=sat, kt=kt, swp=swp, shp=shp, vpt=$vpt, vpr=$vpr, vpd=$vpd,
+if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, awm=awm, ahm=ahm, sat=sat, kt=kt, swp=swp, shp=shp, vpt=$vpt, vpr=$vpr, vpd=$vpd,
                            vrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0) ? vrw : undef,
                            hrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0) ? hrw : undef);
 
