@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 88
 - Edge compensation for tight cases now works on designs that use a keyguard frame. It used to be ignored whenever a frame was turned on, so the openings ran the full width of the screen and cut right through the sides of both the keyguard and the frame.
 
 ## Version 87
