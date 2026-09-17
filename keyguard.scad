@@ -93,6 +93,7 @@
 //   trim_to_the_screen()                7338  Trim keyguard to screen boundary
 //   trim_to_rectangle()                 7347  Trim keyguard to arbitrary rectangle
 //   cut_screen()                        7375  Cut out entire screen area
+//   cut_app()                           7382  Cut out entire app area
 //   cut_grid()                          7382  Cut out grid area
 //
 // OPENINGS & CUTS (primitives)
@@ -217,6 +218,7 @@ left_inset_size_in_px = 0; //[0:10000]
 bottom_inset_size_in_px = 0; //[0:10000]
 left_inset_size_in_mm = 0.0; // .1
 bottom_inset_size_in_mm = 0.0; // .1
+hide_app_region = "no"; //[yes,no]
 
 
 /*[Bar Info]*/
@@ -2370,6 +2372,10 @@ module keyguard(cheat){
 				if (hide_screen_region == "yes"){
 					cut_screen();
 				}
+				//cut away the app region
+				if (hide_app_region == "yes"){
+					cut_app();
+				}
 				//cut away the grid region
 				if (hide_grid_region == "yes"){
 					cut_grid();
@@ -2724,6 +2730,10 @@ module keyguard_frame(cheat){
 		//move for an unequal case opening (only the frame body does).
 		if (hide_screen_region == "yes"){
 			cut_screen(keyguard_frame_thickness);
+		}
+		//cut away the app region
+		if (hide_app_region == "yes"){
+			cut_app(keyguard_frame_thickness);
 		}
 		//cut away the grid region
 		if (hide_grid_region == "yes"){
@@ -8352,6 +8362,16 @@ module cut_screen(t=kt){
 	cube([swm,shm,100]);
 }
 
+// Produces a tall rectangular cutting solid that removes the entire app area from
+// the keyguard. Without keyguard inset mode the app fills the screen, so this cuts
+// exactly what cut_screen() does; with it on, the border around the app is left behind.
+// t is the thickness of the part being cut: kt for the keyguard,
+// keyguard_frame_thickness when the same cut is made on the keyguard frame.
+module cut_app(t=kt){
+	translate([app_x0,app_y0,-t/2-ff-50])
+	cube([awm,ahm,100]);
+}
+
 // Produces a tall rectangular cutting solid that removes the entire grid area from
 // the keyguard (used as a helper for SVG layer output).
 // t is the thickness of the part being cut: kt for the keyguard,
@@ -8666,6 +8686,16 @@ module echo_settings(){
 		if (upper_command_bar_height != 0) echo(upper_command_bar_height = upper_command_bar_height);
 		if (lower_message_bar_height != 0) echo(lower_message_bar_height = lower_message_bar_height);
 		if (lower_command_bar_height != 0) echo(lower_command_bar_height = lower_command_bar_height);
+		echo();
+		echo();
+
+	echo("---- Keyguard Inset Info ----");
+		if (keyguard_inset_mode != "no") echo(keyguard_inset_mode = keyguard_inset_mode);
+		if (left_inset_size_in_px != 0) echo(left_inset_size_in_px = left_inset_size_in_px);
+		if (bottom_inset_size_in_px != 0) echo(bottom_inset_size_in_px = bottom_inset_size_in_px);
+		if (left_inset_size_in_mm != 0) echo(left_inset_size_in_mm = left_inset_size_in_mm);
+		if (bottom_inset_size_in_mm != 0) echo(bottom_inset_size_in_mm = bottom_inset_size_in_mm);
+		if (hide_app_region != "no") echo(hide_app_region = hide_app_region);
 		echo();
 		echo();
 
