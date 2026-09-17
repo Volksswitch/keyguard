@@ -101,6 +101,15 @@ These special variables can be used to locate screen openings relative to the (0
 	lmbb	lower message bar bottom
 	lcbb	lower command bar bottom
 	
+** app variables (the value is in millimeters or pixels as appropriate)
+	aw	app width
+	ah	app height
+	at 	app top
+	ab	app bottom
+
+	Without keyguard inset mode the app fills the screen, so these are the screen's
+	own width, height and edges. In keyguard inset mode they follow the app.
+
 ** grid variables (the value is in millimeters or pixels as appropriate)
 	gw	grid width
 	gh	grid height

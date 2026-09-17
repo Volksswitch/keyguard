@@ -1301,6 +1301,19 @@ grid_y0 = app_y0 + bottom_padding + lmbhm + lcbhm;
 	gh = (!using_px) ? grid_height : grid_height * ppm;
 	gt = ucbb;  // grid top
 	gb = lmbt;  // grid bottom
+
+	// The app's own edges, for txt files, in the same working unit as the grid
+	// variables above. Without keyguard inset mode the app fills the screen and
+	// these are simply the screen's width, height and edges. With it on, the app
+	// sits inside a border: aw/ah shrink to the app, and at/ab move in from the
+	// screen's edges by that border whenever the working unit is px (a px
+	// coordinate is measured from the screenshot, which shows the whole screen).
+	// In mm the coordinates are already measured from the app, so at/ab are simply
+	// its own top and bottom. vb_u carries whichever of the two applies.
+	aw = (!using_px) ? awm : awm * ppm;  // app width
+	ah = (!using_px) ? ahm : ahm * ppm;  // app height
+	at = (starting_corner_for_screen_measurements=="upper-left") ? vb_u : sh - vb_u;  // app top
+	ab = (starting_corner_for_screen_measurements=="upper-left") ? sh - vb_u : vb_u;  // app bottom
 	
 	gwm = grid_width;  // grid width in millimeters
 	ghm = grid_height;  // grid height in millimeters
@@ -1695,8 +1708,8 @@ ttao =
 // All variables that can be used in the openings an additions file called out here for Customizer parameters
 // Put this *above* where you parse user input.
 // Add every variable name you want resolvable.
-RESOLVE_NAMES  = ["bcoh","bp","ccr","ch","cloc","cmd","cmh","cmw","cocr","coh","cow","cw","gb","gh","gt","gw","hbd","hbh","hbw","hloc","hor","hrw","kcr","kh","kw","lcbb","lcbh","lcow","lmbb","lmbh","lmbt","lp","mpp","nc","nr","ppm","r180","rp","sbb","sbh","sh","shp","sw","swm","swp","sxo","syo","tcr","th","tor","tp","tw","ucbb","ucbh","umbb","umbh","vrw","xols","xors","yobs","yots"];
-RESOLVE_VALUES = [bcoh,bp,ccr,ch,cloc,cmd,cmh,cmw,cocr,coh,cow,cw,gb,gh,gt,gw,hbd,hbh,hbw,hloc,hor,hrw,kcr,kh,kw,lcbb,lcbh,lcow,lmbb,lmbh,lmbt,lp,mpp,nc,nr,ppm,r180,rp,sbb,sbh,sh,shp,sw,awm,swp,sxo,syo,tcr,th,tor,tp,tw,ucbb,ucbh,umbb,umbh,vrw,xols,xors,yobs,yots]; 
+RESOLVE_NAMES  = ["ab","ah","at","aw","bcoh","bp","ccr","ch","cloc","cmd","cmh","cmw","cocr","coh","cow","cw","gb","gh","gt","gw","hbd","hbh","hbw","hloc","hor","hrw","kcr","kh","kw","lcbb","lcbh","lcow","lmbb","lmbh","lmbt","lp","mpp","nc","nr","ppm","r180","rp","sbb","sbh","sh","shp","sw","swm","swp","sxo","syo","tcr","th","tor","tp","tw","ucbb","ucbh","umbb","umbh","vrw","xols","xors","yobs","yots"];
+RESOLVE_VALUES = [ab,ah,at,aw,bcoh,bp,ccr,ch,cloc,cmd,cmh,cmw,cocr,coh,cow,cw,gb,gh,gt,gw,hbd,hbh,hbw,hloc,hor,hrw,kcr,kh,kw,lcbb,lcbh,lcow,lmbb,lmbh,lmbt,lp,mpp,nc,nr,ppm,r180,rp,sbb,sbh,sh,shp,sw,awm,swp,sxo,syo,tcr,th,tor,tp,tw,ucbb,ucbh,umbb,umbh,vrw,xols,xors,yobs,yots]; 
 
 m_s_o = parse_user_vector(my_screen_openings, /*strict=*/true);
 m_c_o = parse_user_vector(my_case_openings, /*strict=*/true);
