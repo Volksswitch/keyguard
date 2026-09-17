@@ -74,6 +74,13 @@ These special variables can be used to locate screen openings relative to the (0
 	sh 	screen height (the value is in millimeters or pixels as appropriate)
 	sw	screen width (the value is in millimeters or pixels as appropriate)
 
+	In keyguard inset mode the app does not fill the screen, so where you measure from
+	depends on the unit you are working in. With the unit of measure for the screen set
+	to mm, the (0,0) location is the lower-left corner of the app and sh/sw are the
+	app's height and width. With it set to px, the (0,0) location is the corner of the
+	screenshot and sh/sw are the screen's height and width, because that is where a
+	graphics program measures from.
+
 	mpp	millimeters per pixel	
 	ppm	pixels per millimeter
 

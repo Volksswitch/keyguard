@@ -210,6 +210,15 @@ lower_message_bar_height = 0.0; // .1
 lower_command_bar_height = 0.0; // .1
 
 
+/*[Keyguard Inset Info]*/
+//the app has been shrunk to leave an equal border on the left/right and an equal border on the top/bottom of the screen
+keyguard_inset_mode = "no"; //[yes,no]
+left_inset_size_in_px = 0; //[0:10000]
+bottom_inset_size_in_px = 0; //[0:10000]
+left_inset_size_in_mm = 0.0; // .1
+bottom_inset_size_in_mm = 0.0; // .1
+
+
 /*[Bar Info]*/
 expose_status_bar = "no"; //[yes,no]
 expose_upper_message_bar = "no"; //[yes,no]
@@ -1112,6 +1121,30 @@ case_y0 = -coh/2;
 screen_x0 = -swm/2;
 screen_y0 = -shm/2;
 
+// The app rectangle. Identical to the screen unless keyguard inset mode is on, in which
+// case the app has been shrunk to leave an equal border on the left and right of the
+// screen and an equal border on the top and bottom, so the app stays centered on the
+// screen. Millimeter measurements of the app are taken against THIS rectangle; pixel
+// measurements come off a full-screen screenshot and stay screen-relative.
+// The inset sizes may be given in either unit - millimeters if supplied, otherwise pixels.
+// The right inset matches the left, and the top inset matches the bottom.
+inset_left = (left_inset_size_in_mm != 0) ? left_inset_size_in_mm : left_inset_size_in_px*mpp;
+inset_bottom = (bottom_inset_size_in_mm != 0) ? bottom_inset_size_in_mm : bottom_inset_size_in_px*mpp;
+inset_mode = (keyguard_inset_mode=="yes" && (inset_left > 0 || inset_bottom > 0));
+if (keyguard_inset_mode=="yes" && !inset_mode)
+	echo("WARNING: keyguard inset mode is on but the left and bottom inset sizes are 0 - the full screen is being used.");
+
+awm = (inset_mode) ? swm - inset_left*2 : swm; // app width in millimeters
+ahm = (inset_mode) ? shm - inset_bottom*2 : shm; // app height in millimeters
+
+app_x0 = -awm/2;
+app_y0 = -ahm/2;
+
+// the border between the screen and the app, in screenshot pixels, used to convert a
+// pixel measurement taken from the screenshot into a distance from the app's edge
+vbp = (inset_mode && mpp > 0) ? inset_bottom/mpp : 0;
+vb_u = (using_px) ? vbp : 0; // the same border expressed in the working unit
+
 keyguard_x0 = (!has_case) ? tablet_x0 : -kw/2;
 keyguard_y0 = (!has_case) ? tablet_y0 : -kh/2;
 
@@ -1133,6 +1166,11 @@ ky0 = keyguard_y0;
 
 sx0 = screen_x0;
 sy0 = screen_y0;
+
+// Origin for openings and additions placed against the screen: millimeter measurements
+// are taken from the app's corner, pixel measurements from the screenshot's corner.
+osx0 = (using_px) ? sx0 : app_x0;
+osy0 = (using_px) ? sy0 : app_y0;
 
 
 //** Variables for use in txt files and here
@@ -1169,8 +1207,8 @@ sy0 = screen_y0;
 	nr = number_of_rows;
 	
 	//the following values depend on the setting in the Freeform and hybrid Openings section
-	sh = (using_px) ? shp : shm;
-	sw = (using_px) ? swp : swm;
+	sh = (using_px) ? shp : ahm;
+	sw = (using_px) ? swp : awm;
 	
 // app variables - used in opentings_and_additions.txt file
 
@@ -1183,11 +1221,11 @@ sy0 = screen_y0;
 	// lcbbp = (px_measurements_start=="top") ?  shp : 0; //lower command bar bottom in pixels
 	
 
-	sbhp = (sbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? sbbp : shp - sbbp); // height of status bar in pixels
+	sbhp = (sbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? sbbp - vbp : shp - vbp - sbbp); // height of status bar in pixels
 	umbhp = (umbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? umbbp - sbbp : sbbp - umbbp); // height of upper message bar in pixels
 	ucbhp = (ucbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? ucbbp - umbbp : umbbp - ucbbp); // height of upper command bar in pixels
 	lmbhp = (lmbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? lcbtp - lmbtp : lmbtp - lcbtp); // height of lower message bar in pixels
-	lcbhp = (lcbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? shp - lcbtp : lcbtp); // height of lower command bar in pixels
+	lcbhp = (lcbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? shp - vbp - lcbtp : lcbtp - vbp); // height of lower command bar in pixels
 	
 // Convert a bar measurement to the working unit (mm or px depending on using_px).
 // px_val: the bar height derived from pixel input; mm_val: the bar height parameter in mm.
@@ -1204,12 +1242,12 @@ function bar_height(px_val, mm_val) =
 	lcbh = bar_height(lcbhp, lower_command_bar_height); // lower command bar height
 
 
-	sbb = (starting_corner_for_screen_measurements=="upper-left") ? sbh : sh - (sbh); //status bar bottom
-	umbb = (starting_corner_for_screen_measurements=="upper-left") ?  sbh + umbh : sh - (sbh + umbh); // upper message bar bottom
-	ucbb = (starting_corner_for_screen_measurements=="upper-left") ? sbh + umbh + ucbh : sh - (sbh + umbh + ucbh); // upper command bar bottom
-	lmbt = (starting_corner_for_screen_measurements=="upper-left") ? sh - lcbh - lmbh : lcbh + lmbh; // lower message bar top
-	lmbb = (starting_corner_for_screen_measurements=="upper-left") ? sh - lcbh : lcbh; // lower message bar bottom
-	lcbb = (starting_corner_for_screen_measurements=="upper-left") ? sh : 0; // lower command bar bottom
+	sbb = (starting_corner_for_screen_measurements=="upper-left") ? vb_u + sbh : sh - vb_u - (sbh); //status bar bottom
+	umbb = (starting_corner_for_screen_measurements=="upper-left") ?  vb_u + sbh + umbh : sh - vb_u - (sbh + umbh); // upper message bar bottom
+	ucbb = (starting_corner_for_screen_measurements=="upper-left") ? vb_u + sbh + umbh + ucbh : sh - vb_u - (sbh + umbh + ucbh); // upper command bar bottom
+	lmbt = (starting_corner_for_screen_measurements=="upper-left") ? sh - vb_u - lcbh - lmbh : vb_u + lcbh + lmbh; // lower message bar top
+	lmbb = (starting_corner_for_screen_measurements=="upper-left") ? sh - vb_u - lcbh : vb_u + lcbh; // lower message bar bottom
+	lcbb = (starting_corner_for_screen_measurements=="upper-left") ? sh - vb_u : vb_u; // lower command bar bottom
 
 	hloc = home_loc;  // home button location: 1,2,3,4 (adjusted for orientation)
 	hbd = distance_from_screen_to_home_button;
@@ -1231,7 +1269,7 @@ lcbhm = (px_measurements) ? lcbhp * mpp : lower_command_bar_height; /// lower co
 adj_lec = (has_case) ? max(lec-adj_case_border_left,0) : 0;  // positive if lec is larger than the left border
 adj_rec = (has_case) ? max(rec-adj_case_border_right,0) : 0;  // positive if rec is larger than the right border
 
-bar_width = swm - adj_lec - adj_rec;
+bar_width = awm - adj_lec - adj_rec;
 
 // if keyguard will go in a case, determine if edge compensation will affect bar height and by how much
 adj_tec =(has_case) ?  max(tec-adj_case_border_top,0) : 0;  // positive if tec is larger than the top border
@@ -1246,11 +1284,11 @@ lcbh_adjust = (adj_bec>0) ? lcbhm - adj_bec : lcbhm;
 bcr = bar_corner_radius;
 
 //Grid variables in millimeters
-grid_width = swm - left_padding - right_padding;
-grid_height = shm - sbhm - umbhm - ucbhm - top_padding - bottom_padding - lmbhm - lcbhm;
+grid_width = awm - left_padding - right_padding;
+grid_height = ahm - sbhm - umbhm - ucbhm - top_padding - bottom_padding - lmbhm - lcbhm;
 
-grid_x0 = screen_x0 + left_padding;
-grid_y0 = screen_y0 + bottom_padding + lmbhm + lcbhm;
+grid_x0 = app_x0 + left_padding;
+grid_y0 = app_y0 + bottom_padding + lmbhm + lcbhm;
 
 	gw = (!using_px) ? grid_width : grid_width * ppm;
 	gh = (!using_px) ? grid_height : grid_height * ppm;
@@ -1651,7 +1689,7 @@ ttao =
 // Put this *above* where you parse user input.
 // Add every variable name you want resolvable.
 RESOLVE_NAMES  = ["bcoh","bp","ccr","ch","cloc","cmd","cmh","cmw","cocr","coh","cow","cw","gb","gh","gt","gw","hbd","hbh","hbw","hloc","hor","hrw","kcr","kh","kw","lcbb","lcbh","lcow","lmbb","lmbh","lmbt","lp","mpp","nc","nr","ppm","r180","rp","sbb","sbh","sh","shp","sw","swm","swp","sxo","syo","tcr","th","tor","tp","tw","ucbb","ucbh","umbb","umbh","vrw","xols","xors","yobs","yots"];
-RESOLVE_VALUES = [bcoh,bp,ccr,ch,cloc,cmd,cmh,cmw,cocr,coh,cow,cw,gb,gh,gt,gw,hbd,hbh,hbw,hloc,hor,hrw,kcr,kh,kw,lcbb,lcbh,lcow,lmbb,lmbh,lmbt,lp,mpp,nc,nr,ppm,r180,rp,sbb,sbh,sh,shp,sw,swm,swp,sxo,syo,tcr,th,tor,tp,tw,ucbb,ucbh,umbb,umbh,vrw,xols,xors,yobs,yots]; 
+RESOLVE_VALUES = [bcoh,bp,ccr,ch,cloc,cmd,cmh,cmw,cocr,coh,cow,cw,gb,gh,gt,gw,hbd,hbh,hbw,hloc,hor,hrw,kcr,kh,kw,lcbb,lcbh,lcow,lmbb,lmbh,lmbt,lp,mpp,nc,nr,ppm,r180,rp,sbb,sbh,sh,shp,sw,awm,swp,sxo,syo,tcr,th,tor,tp,tw,ucbb,ucbh,umbb,umbh,vrw,xols,xors,yobs,yots]; 
 
 m_s_o = parse_user_vector(my_screen_openings, /*strict=*/true);
 m_c_o = parse_user_vector(my_case_openings, /*strict=*/true);
@@ -2631,9 +2669,9 @@ module keyguard_frame(cheat){
 			// its post at its own edge, e.g. STL 161 for keyguard_height 160). The outer min()
 			// clamps to keyguard_height/2 so the midline can never float ABOVE the edge.
 			post_cl = min(keyguard_height/2,
-			              (expose_upper_command_bar == "yes" && ucbhm > 0) ? shm/2-sbhm-umbhm-ucbhm :
-			              (expose_upper_message_bar == "yes" && umbhm > 0) ? shm/2-sbhm-umbhm :
-			              (expose_status_bar == "yes"        && sbhm  > 0) ? shm/2-sbhm :
+			              (expose_upper_command_bar == "yes" && ucbhm > 0) ? ahm/2-sbhm-umbhm-ucbhm :
+			              (expose_upper_message_bar == "yes" && umbhm > 0) ? ahm/2-sbhm-umbhm :
+			              (expose_status_bar == "yes"        && sbhm  > 0) ? ahm/2-sbhm :
 			                                                                  keyguard_height/2);
 
 			// Square (90-degree), full-thickness relief along the keyguard's top edge of the
@@ -2722,9 +2760,9 @@ module add_keyguard_frame_posts(){
 	// to keyguard_height/2. The +kt/2 here cancels the translate's -kt/2 below so the post
 	// CENTRE lands on the top edge.
 	post_cl = min(keyguard_height/2,
-	              (expose_upper_command_bar == "yes" && ucbhm > 0) ? shm/2-sbhm-umbhm-ucbhm :
-	              (expose_upper_message_bar == "yes" && umbhm > 0) ? shm/2-sbhm-umbhm :
-	              (expose_status_bar == "yes"        && sbhm  > 0) ? shm/2-sbhm :
+	              (expose_upper_command_bar == "yes" && ucbhm > 0) ? ahm/2-sbhm-umbhm-ucbhm :
+	              (expose_upper_message_bar == "yes" && umbhm > 0) ? ahm/2-sbhm-umbhm :
+	              (expose_status_bar == "yes"        && sbhm  > 0) ? ahm/2-sbhm :
 	                                                                  keyguard_height/2) + kt/2;
 	post_l = kw+post_len*2;
 	translate([0,post_cl-kt/2,0])
@@ -2741,9 +2779,9 @@ module trim_keyguard_to_bar(){
 	// into the keyguard when it is shorter than the screen or slid (the TC65 defect). Caller
 	// wraps this in translate(kg_slide) so it tracks the slid slab.
 	post_cl = min(keyguard_height/2,
-	              (expose_upper_command_bar == "yes" && ucbhm > 0) ? shm/2-sbhm-umbhm-ucbhm :
-	              (expose_upper_message_bar == "yes" && umbhm > 0) ? shm/2-sbhm-umbhm :
-	              (expose_status_bar == "yes"        && sbhm  > 0) ? shm/2-sbhm :
+	              (expose_upper_command_bar == "yes" && ucbhm > 0) ? ahm/2-sbhm-umbhm-ucbhm :
+	              (expose_upper_message_bar == "yes" && umbhm > 0) ? ahm/2-sbhm-umbhm :
+	              (expose_status_bar == "yes"        && sbhm  > 0) ? ahm/2-sbhm :
 	                                                                  keyguard_height/2);
 
 	//remove top portion of keyguard
@@ -3702,62 +3740,62 @@ module clip_on_straps_groove(){
 // @param depth  Cutting depth in mm; pass 0 for laser-cut (2D) output
 module bars(depth, reg="screen"){
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && expose_upper_command_bar=="no" && sbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm+sbh_adjust/2,0])
 		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="no" && sbh_adjust+umbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm+(max(sbh_adjust,0)+umbh_adjust)/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm-umbhm+(max(sbh_adjust,0)+umbh_adjust)/2,0])
 		cut_opening_v2(bar_width,max(sbh_adjust,0)+umbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="yes" && umbh_adjust+ucbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(max(umbh_adjust,0)+ucbh_adjust)/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm-umbhm-ucbhm+(max(umbh_adjust,0)+ucbh_adjust)/2,0])
 		cut_opening_v2(bar_width,max(umbh_adjust+ff,0)+ucbh_adjust,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="yes" && sbh_adjust+umbh_adjust+ucbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust)/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm-umbhm-ucbhm+(max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust)/2,0])
 		cut_opening_v2(bar_width,max(sbh_adjust,0)+max(umbh_adjust,0)+ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="yes" && expose_upper_command_bar=="no" && umbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm+(umbh_adjust)/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm-umbhm+(umbh_adjust)/2,0])
 		cut_opening_v2(bar_width,umbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="no" && expose_upper_message_bar=="no" && expose_upper_command_bar=="yes" && ucbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2,0])
 		cut_opening_v2(bar_width,ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && umbhm>0 && expose_upper_command_bar=="yes" && sbh_adjust+ucbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm+sbh_adjust/2,0])
 		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2,0])
 		cut_opening_v2(bar_width,ucbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_status_bar=="yes" && expose_upper_message_bar=="no" && umbhm==0 && expose_upper_command_bar=="yes" && sbh_adjust+ucbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm+sbh_adjust/2,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm+sbh_adjust/2,0])
 		cut_opening_v2(bar_width,sbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 
-		translate([adj_lec/2-adj_rec/2,shm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2+bcr,0])
+		translate([adj_lec/2-adj_rec/2,ahm/2-sbhm-umbhm-ucbhm+(ucbh_adjust)/2+bcr,0])
 		cut_opening_v2(bar_width,ucbh_adjust+bcr*2+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_lower_message_bar=="yes" && expose_lower_command_bar=="no" && lmbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,-shm/2+lmbh_adjust/2+max(lcbh_adjust,0)+adj_bec,0])
+		translate([adj_lec/2-adj_rec/2,-ahm/2+lmbh_adjust/2+max(lcbh_adjust,0)+adj_bec,0])
 		cut_opening_v2(bar_width,lmbh_adjust+ff,"r","c","T",90,bar_edge_slope_inc_acrylic,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_lower_message_bar=="no" && expose_lower_command_bar=="yes" && lcbh_adjust>0){
-		translate([adj_lec/2-adj_rec/2,-shm/2+lcbhm/2+adj_bec/2,0])
+		translate([adj_lec/2-adj_rec/2,-ahm/2+lcbhm/2+adj_bec/2,0])
 		cut_opening_v2(bar_width,lcbh_adjust+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 
 	if (expose_lower_message_bar=="yes" && expose_lower_command_bar=="yes" && (lmbh_adjust+max(lcbh_adjust,0))>0){
-		translate([adj_lec/2-adj_rec/2,-shm/2+(lmbh_adjust+max(lcbh_adjust,0))/2+adj_bec,0])
+		translate([adj_lec/2-adj_rec/2,-ahm/2+(lmbh_adjust+max(lcbh_adjust,0))/2+adj_bec,0])
 		cut_opening_v2(bar_width,lmbh_adjust+max(lcbh_adjust,0)+ff,"r","c","T",90,90,90,90,bcr,undef,depth,reg);
 	}
 }
@@ -5045,16 +5083,16 @@ module cut_screen_openings(s_o,depth,hl=false,on_frame=false){
 		}
 		if (!has_invalid_dims) {
 		opening_y_mm = (starting_corner_for_screen_measurements == "upper-left")
-		             ? ((using_px) ? (shp - opening_y) * mpp : (shm - opening_y))
+		             ? ((using_px) ? (shp - opening_y) * mpp : (ahm - opening_y))
 		             : ((using_px) ? opening_y * mpp : opening_y);
 		if(depth>0){
 			oa_geom(opening_ID, hl)
-			translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
+			translate([osx0+opening_x_mm,osy0+opening_y_mm,0])
 			cut_opening(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_bottom_slope, opening_left_slope, opening_right_slope, opening_corner_radius_mm, opening_other,depth,cut_region);
 		}
 		else{
 			oa_geom(opening_ID, hl)
-			translate([sx0+opening_x_mm,sy0+opening_y_mm,0])
+			translate([osx0+opening_x_mm,osy0+opening_y_mm,0])
 			cut_opening_2d(opening_width_mm, opening_height_mm, opening_shape, opening_top_slope, opening_corner_radius_mm);
 		}
 		} // end if (!has_invalid_dims)
@@ -5268,10 +5306,10 @@ module cut_screen_openings_v2(s_o, depth, hl=false, on_frame=false) {
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			if (depth > 0) {
 				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
-				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+				       ((using_px) ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 				       ((using_px) ? y_raw * mpp : y_raw);
 				oa_geom(opening_ID, hl)
-				translate([sx0+x_mm, sy0+y_mm, 0])
+				translate([osx0+x_mm, osy0+y_mm, 0])
 				cut_opening(w_mm, h_mm, r[1], top_sl, bot_sl, lft_sl, 0, 0, undef, depth, cut_region);
 			}
 
@@ -5287,10 +5325,10 @@ module cut_screen_openings_v2(s_o, depth, hl=false, on_frame=false) {
 			c_r = rr ? r[4] : r[11];
 			if (depth > 0) {
 				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
-				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+				       ((using_px) ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 				       ((using_px) ? y_raw * mpp : y_raw);
 				oa_geom(opening_ID, hl)
-				translate([sx0+x_mm, sy0+y_mm, 0])
+				translate([osx0+x_mm, osy0+y_mm, 0])
 				cut_opening(w_mm, ridge_h, r[1], top_sl, bot_sl, lft_sl, 0, c_r, (r[7]==0 ? undef : r[7]), depth, cut_region);
 			}
 
@@ -5306,10 +5344,10 @@ module cut_screen_openings_v2(s_o, depth, hl=false, on_frame=false) {
 			other  = (len(sp) >= 1) ? sp[0] : undef;
 			if (depth > 0) {
 				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
-				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+				       ((using_px) ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 				       ((using_px) ? y_raw * mpp : y_raw);
 				oa_geom(opening_ID, hl)
-				translate([sx0+x_mm, sy0+y_mm, 0])
+				translate([osx0+x_mm, osy0+y_mm, 0])
 				cut_opening_v2(0, h_mm, "text", undef, surface, top_sl, bot_sl, lft_sl, rgt_sl, (using_px ? r[7]*mpp : r[7]), other, depth, cut_region);
 			}
 
@@ -5322,10 +5360,10 @@ module cut_screen_openings_v2(s_o, depth, hl=false, on_frame=false) {
 			other  = (len(sp) >= 1) ? sp[0] : undef;
 			if (depth > 0) {
 				y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
-				       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+				       ((using_px) ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 				       ((using_px) ? y_raw * mpp : y_raw);
 				oa_geom(opening_ID, hl)
-				translate([sx0+x_mm, sy0+y_mm, 0])
+				translate([osx0+x_mm, osy0+y_mm, 0])
 				cut_opening(w_mm, h_mm, "svg", top_sl, 0, 0, 0, (using_px ? r[4]*mpp : r[4]), other, depth, cut_region);
 			}
 
@@ -5357,17 +5395,17 @@ module cut_screen_openings_v2(s_o, depth, hl=false, on_frame=false) {
 			if (!has_invalid_dims) {
 				if (depth > 0 && r[7] <= 0) {
 					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
-					       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+					       ((using_px) ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 					       ((using_px) ? y_raw * mpp : y_raw);
 					oa_geom(opening_ID, hl)
-					translate([sx0+x_mm, sy0+y_mm, 0])
+					translate([osx0+x_mm, osy0+y_mm, 0])
 					cut_opening_v2(w_mm, h_mm, r[1], anchor, surface, top_sl, bot_sl, lft_sl, rgt_sl, c_r_mm, (r[7]==0 ? undef : (surface=="b") ? r[7] : -r[7]), depth, cut_region, rot);
 				} else if (depth <= 0) {
 					y_mm = (starting_corner_for_screen_measurements == "upper-left") ?
-					       ((using_px) ? (shp - y_raw) * mpp : (shm - y_raw)) :
+					       ((using_px) ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 					       ((using_px) ? y_raw * mpp : y_raw);
 					oa_geom(opening_ID, hl)
-					translate([sx0+x_mm, sy0+y_mm, 0])
+					translate([osx0+x_mm, osy0+y_mm, 0])
 					cut_opening_2d_v2(w_mm, h_mm, r[1], anchor, top_sl, c_r_mm, rot);
 				}
 				// r[7] > 0: build — handled by adding_plastic_v2
@@ -5633,8 +5671,8 @@ module place_emboss_v2(shape, anchor, xb, yb, trans, rot_b,
 //                  frame cover part of the screen. x/y/unit/starting-corner logic
 //                  (keyed on where=="screen") is unchanged.
 module adding_plastic_v2(additions, where, hl=false, on_frame=false) {
-	x0    = (where == "screen") ? sx0 : cox0;
-	y0    = (where == "screen") ? sy0 : coy0;
+	x0    = (where == "screen") ? osx0 : cox0;
+	y0    = (where == "screen") ? osy0 : coy0;
 	trans = (where == "screen" && on_frame) ? keyguard_frame_thickness/2 :
 	        (where == "screen") ? -kt/2+sat :
 	        (where == "case" && generate == "keyguard") ? kt/2 :
@@ -5658,7 +5696,7 @@ module adding_plastic_v2(additions, where, hl=false, on_frame=false) {
 			lft_sl  = v2_slope(r[12], 2, "bump");
 			rgt_sl  = v2_slope(r[12], 3, "bump");
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
-			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			oa_geom(addition_ID, hl)
 			translate([x0+x_mm, y0+y_mm, trans-ff])
@@ -5674,7 +5712,7 @@ module adding_plastic_v2(additions, where, hl=false, on_frame=false) {
 			bot_sl = r[11]; bot_sl_mm = px ? bot_sl * mpp : bot_sl;
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
-			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			c_ax = ((r[8] == "C" || r[8] == "c") && r[1] == "hridge") ? -w_mm/2 : 0;
 			c_ay = ((r[8] == "C" || r[8] == "c") && r[1] == "vridge") ? -h_mm/2 : 0;
@@ -5697,7 +5735,7 @@ module adding_plastic_v2(additions, where, hl=false, on_frame=false) {
 			bot_sl = r[11]; bot_sl_mm = px ? bot_sl * mpp : bot_sl;
 			lft_sl = (len(sp) >= 1) ? sp[0] : 0;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
-			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			// cridge: circular_wall is centered at origin so x,y is always the centre unless we
 			// apply an offset. For "L" anchor shift by inner_radius so x,y becomes the lower-left
@@ -5725,7 +5763,7 @@ module adding_plastic_v2(additions, where, hl=false, on_frame=false) {
 			rgt_sl = (len(sp) >= 5) ? sp[4] : "";   // valign string: "bottom", "baseline", "center", "top"
 			other  = (len(sp) >= 1) ? sp[0] : undef;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
-			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			oa_geom(addition_ID, hl)
 			translate([x0+x_mm, y0+y_mm, trans-ff])
@@ -5739,7 +5777,7 @@ module adding_plastic_v2(additions, where, hl=false, on_frame=false) {
 			top_sl_mm = px ? top_sl * mpp : top_sl;
 			other  = (len(sp) >= 1) ? sp[0] : undef;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
-			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			oa_geom(addition_ID, hl)
 			translate([x0+x_mm, y0+y_mm, trans-ff])
@@ -5765,7 +5803,7 @@ module adding_plastic_v2(additions, where, hl=false, on_frame=false) {
 			has_ch_b = ec_b > 0 && dep_b > ec_b;
 			main_dep_b = has_ch_b ? dep_b - ec_b : dep_b;
 			y_mm = (starting_corner_for_screen_measurements == "upper-left" && where == "screen") ?
-			       (px ? (shp - y_raw) * mpp : (shm - y_raw)) :
+			       (px ? (shp - y_raw) * mpp : (ahm - y_raw)) :
 			       (px ? y_raw * mpp : y_raw);
 			if (is_3d_printed && h_mm_b > 0) {
 				oa_geom(addition_ID, hl)
@@ -6503,8 +6541,8 @@ module adding_plastic(additions,where,hl=false,on_frame=false){
 		addition_corner_radius = addition[10];
 		addition_other = addition[11];
 		
-		x0 = (where=="screen") ? sx0 : cox0;
-		y0 = (where=="screen") ? sy0 : coy0;
+		x0 = (where=="screen") ? osx0 : cox0;
+		y0 = (where=="screen") ? osy0 : coy0;
 		
 		trans = (where=="screen" && on_frame) ? keyguard_frame_thickness/2 :
 		        (where=="screen") ? -kt/2+sat :
@@ -6521,7 +6559,7 @@ module adding_plastic(additions,where,hl=false,on_frame=false){
 			addition_bottom_slope_mm = (using_px && where=="screen") ? addition_bottom_slope * mpp : addition_bottom_slope;
 
 			addition_y_mm = (starting_corner_for_screen_measurements == "upper-left" && where=="screen")
-			              ? ((using_px) ? (shp - addition_y) * mpp : (shm - addition_y))
+			              ? ((using_px) ? (shp - addition_y) * mpp : (ahm - addition_y))
 			              : ((using_px && where=="screen") ? addition_y * mpp : addition_y);
 			oa_geom(addition_ID, hl)
 			translate([x0+addition_x_mm,y0+addition_y_mm,trans-ff])

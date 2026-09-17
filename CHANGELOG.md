@@ -1,6 +1,7 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- New **Keyguard Inset Info** section, for apps that have been shrunk to sit inside a white border rather than filling the whole screen. Turn on "keyguard inset mode" and enter the size of the border down the left side and the border across the bottom — in pixels measured off your screenshot, or in millimeters, whichever is easier. The right border is taken to match the left and the top to match the bottom, so those two numbers are all it needs. The designer then lays the grid, the bars, and any millimeter measurements in your openings and additions file out against the app instead of against the screen. The camera and home button cutouts, the fit of the keyguard in its case, and your imported screenshot all continue to use the real screen, so nothing about how the keyguard sits on the tablet changes. Measurements you give in pixels still start at the corner of the screenshot, since that is where a graphics program measures from.
 
 ## Version 88
 - Edge compensation for tight cases now works on designs that use a keyguard frame. It used to be ignored whenever a frame was turned on, so the openings ran the full width of the screen and cut right through the sides of both the keyguard and the frame.
