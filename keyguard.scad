@@ -1046,10 +1046,10 @@ swp = (is_landscape) ? ps[1] : ps[0]; // screen width in pixels
 mpp =  ps[2]; // millimeters per pixel
 ppm = 1/mpp; // pixels per millimeter
 
-lec = (!has_frame) ? left_edge_compensation_for_tight_cases : 0;  // you won't use a frame if the case opening is tight to the screen
-rec = (!has_frame) ? right_edge_compensation_for_tight_cases : 0;
-bec = (!has_frame) ? bottom_edge_compensation_for_tight_cases : 0;
-tec = (!has_frame) ? top_edge_compensation_for_tight_cases : 0;
+lec = left_edge_compensation_for_tight_cases;  // applies with or without a frame: with a frame it narrows the openings in the framed keyguard
+rec = right_edge_compensation_for_tight_cases;
+bec = bottom_edge_compensation_for_tight_cases;
+tec = top_edge_compensation_for_tight_cases;
 
 equal_tablet_border_left = (tablet_width-swm)/2;
 equal_tablet_border_bottom = (tablet_height-shm)/2;
@@ -2761,11 +2761,13 @@ module add_mounting_posts(){
 	bdr = (cow-swm)/2;
 
 	post_height = coh/2 - mount_to_top_of_opening_distance;
-	post_len_r = p_l + bdr + rec;
-	post_len_l = p_l + bdr + lec;
+	prec = (has_frame) ? 0 : rec;  // with a frame the posts sit on the frame, which compensation doesn't narrow
+	plec = (has_frame) ? 0 : lec;
+	post_len_r = p_l + bdr + prec;
+	post_len_l = p_l + bdr + plec;
 	
-	post_r0 = cow/2 + post_len_r/2 -bdr - rec;
-	post_l0 = -cow/2 - post_len_l/2 + bdr + lec;
+	post_r0 = cow/2 + post_len_r/2 -bdr - prec;
+	post_l0 = -cow/2 - post_len_l/2 + bdr + plec;
 	
 	cut_angle = 17;
 	offset_angle = 38;

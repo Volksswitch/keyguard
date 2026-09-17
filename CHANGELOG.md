@@ -1,6 +1,7 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- Edge compensation for tight cases now works on designs that use a keyguard frame. It used to be ignored whenever a frame was turned on, so the openings ran the full width of the screen and cut right through the sides of both the keyguard and the frame.
 
 ## Version 87
 - Adds the information the Keyguard Designer web app’s new **by eye** opening editor needs in order to work when your screen measurements are in pixels. Nothing about the keyguard changes, and there is nothing different to see in OpenSCAD.
