@@ -2519,10 +2519,22 @@ module lc_keyguard(){
 
 		}
 		//*** last minute cuts
-		
-		// nothing of this type to delete for a laser-cut keyguard
 
-		
+		//cut away the screen region — laser-cut output is 2D, so these are the flat
+		//(t=0) branches of the same cutters the 3D keyguard uses. Without them the
+		//three "hide" settings could not remove anything here: a laser-cut design came
+		//out a solid slab with only the grid missing.
+		if (hide_screen_region == "yes"){
+			cut_screen(0);
+		}
+		//cut away the app region
+		if (hide_app_region == "yes"){
+			cut_app(0);
+		}
+		//cut away the grid region
+		if (hide_grid_region == "yes"){
+			cut_grid(0);
+		}
 	}
 }
 
@@ -8358,8 +8370,14 @@ module trim_to_rectangle(){
 // t is the thickness of the part being cut: kt for the keyguard,
 // keyguard_frame_thickness when the same cut is made on the keyguard frame.
 module cut_screen(t=kt){
-	translate([screen_x0,screen_y0,-t/2-ff-50])
-	cube([swm,shm,100]);
+	if (t > 0){
+		translate([screen_x0,screen_y0,-t/2-ff-50])
+		cube([swm,shm,100]);
+	}
+	else{ //to be laser cut
+		translate([screen_x0,screen_y0])
+		square([swm,shm]);
+	}
 }
 
 // Produces a tall rectangular cutting solid that removes the entire app area from
@@ -8368,8 +8386,14 @@ module cut_screen(t=kt){
 // t is the thickness of the part being cut: kt for the keyguard,
 // keyguard_frame_thickness when the same cut is made on the keyguard frame.
 module cut_app(t=kt){
-	translate([app_x0,app_y0,-t/2-ff-50])
-	cube([awm,ahm,100]);
+	if (t > 0){
+		translate([app_x0,app_y0,-t/2-ff-50])
+		cube([awm,ahm,100]);
+	}
+	else{ //to be laser cut
+		translate([app_x0,app_y0])
+		square([awm,ahm]);
+	}
 }
 
 // Produces a tall rectangular cutting solid that removes the entire grid area from
@@ -8382,8 +8406,14 @@ module cut_app(t=kt){
 // region" would carve that whole area out of a design that never had a grid in it.
 module cut_grid(t=kt){
 	if (column_count>0 && row_count>0){
-		translate([grid_x0,grid_y0,-t/2-ff])
-		cube([gwm,ghm,100]);
+		if (t > 0){
+			translate([grid_x0,grid_y0,-t/2-ff])
+			cube([gwm,ghm,100]);
+		}
+		else{ //to be laser cut
+			translate([grid_x0,grid_y0])
+			square([gwm,ghm]);
+		}
 	}
 }
 

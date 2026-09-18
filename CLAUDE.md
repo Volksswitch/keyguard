@@ -381,7 +381,17 @@ _(none currently)_
 - [x] (Medium) Add more complete handling in iPad 6/7 and iPad 10/11 `openings_and_additions.txt` files for rotation and column count merging/cutting
 - [x] (Medium) Too many variables calculating borders and offsets with overlapping definitions
 - [x] (Medium) Why don't the offsets need to be part of the `case_xy0` values as well?
-- [ ] (Low) Hiding the screen region doesn't play well with 2D rendering. **Diagnosed
+- [x] (Low) Hiding the screen region doesn't play well with 2D rendering. **FIXED
+  2026-09-17** (see below for the diagnosis that led to it). `lc_keyguard` now applies
+  all three region cuts in its last-minute-cuts slot, and `cut_screen`/`cut_app`/`cut_grid`
+  each grew a flat `t=0` branch (`square` instead of `cube`) alongside the 3D one, the same
+  shape `case_opening_blank` already uses. Verified: all three settings now cut in 2D, and
+  all 174 presets render byte-identical CSG in 3D. **Still outstanding:** the
+  `column_count`/`row_count` zeroing on `hide_screen_region=="yes"` (line ~1348) is now dead
+  in BOTH paths and could be removed — it would change only console output (rail-width
+  warnings and the `__KG_DIMS__` rail echo would start reporting for a hidden screen), not
+  geometry. Left in place deliberately; ask Ken before removing. Original diagnosis:
+  **Diagnosed
   2026-09-17.** The laser-cut path (`lc_keyguard`, reached only by
   `generate="first layer for SVG/DXF file"`) never calls `cut_screen()` / `cut_grid()` —
   those calls exist ONLY in `keyguard()` and `keyguard_frame()`. So in 2D the setting
