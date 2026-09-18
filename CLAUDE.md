@@ -255,6 +255,15 @@ etc.).
 **Do not rename or move this file** — it is referenced by name with no path prefix, so it must
 remain in the same directory as `keyguard.scad`.
 
+**Two independent "which way is up" settings — do not conflate them** (Ken, 2026-09-18).
+`starting_corner_for_screen_measurements` is used ONLY to interpret the numbers in
+`screen_openings` / `my_screen_openings` (and the O&A-facing coordinates derived for them,
+e.g. `sbb`, `lcbb`, `at`, `ab`). The **App Layout in px** values are interpreted separately:
+`px_measurements_start` compares `bottom_of_status_bar` with `top_of_lower_command_bar` to
+detect whether the clinician's graphics editor puts y=0 at the top or the bottom of the
+screenshot. It is a direction test, NOT a validity check, and the two settings may
+legitimately disagree — never "reconcile" them.
+
 ---
 
 ## How `default.svg` Works
