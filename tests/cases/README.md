@@ -81,7 +81,7 @@ camera values in a step always take final precedence.
 |---|---|---|
 | `label` | Yes | Short name for this step (used in output and filenames) |
 | `params` | No | Named parameter set from `keyguard.json`; if absent, renders with current defaults |
-| `params_override` | No | Key/value pairs applied on top of `params` as `-D` flags |
+| `params_override` | No | Key/value pairs applied on top of `params` as `-D` flags. **Caution:** on OpenSCAD 2021.01 a `-D` is silently ignored for any key the named preset also sets (and Customizer-saved presets set every visible parameter). To vary a setting between steps, give each step its own preset instead — e.g. `Test Case 66` / `Test Case 66a`. See CLAUDE.md, OpenSCAD Gotchas #5. |
 | `vpt` | No | Viewport translation `[x, y, z]` — equivalent to OpenSCAD's `$vpt`; defaults to the value in the openings file, or `[0, 0, 0]` if absent |
 | `vpr` | No | Viewport rotation `[x, y, z]` — equivalent to OpenSCAD's `$vpr`; defaults to the value in the openings file, or `[55, 0, 25]` if absent |
 | `vpd` | No | Viewport distance — equivalent to OpenSCAD's `$vpd`; defaults to the value in the openings file, or `250` if absent |

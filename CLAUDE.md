@@ -738,6 +738,21 @@ See `docs/openscad-reference.md` for a full reference. Critical points:
    CGAL (slow but exact). A model can look fine in preview and fail to render.
 4. **Non-manifold geometry is silent:** OpenSCAD will silently produce broken STLs if geometry
    is non-manifold. Always check rendered STLs in a slicer after significant changes.
+5. **On OpenSCAD 2021.01, a saved preset BEATS command-line overrides** (verified 2026-09-18).
+   With `-p keyguard.json -P "<set>" -D 'x=...'`, if the parameter set contains `x`, the
+   preset's value wins and the `-D` is **silently ignored** — even when `-D` comes after
+   `-p/-P`. Customizer-saved presets contain EVERY visible parameter, so in practice almost
+   any override on top of a preset is dropped. (The web app's newer WASM build honours
+   later `-D`s; the desktop 2021.01 CLI does not — they disagree.) To render a preset with
+   changes, write a modified COPY of the parameter set (read `utf-8-sig`, change the values,
+   write it to a scratch file) and point `-p` at that. Known consequences in the harness:
+   (a) the geometry gate's `-D fudge=0.05` is ignored for the 140 of 174 presets that pin
+   their own `fudge` (0.001 / 0.005 / 0.01), so the gate does NOT render with the web app's
+   fudge for them — still self-consistent for drift detection, since the goldens were
+   captured the same way, but not the web app's settings its description claims; `ff` is
+   pinned by none, so `-D ff=0.05` does work; (b) a visual step's `params_override` is
+   dropped for any key its preset also sets. Also: `-o file.echo` writes the echo output
+   INTO that file, not to the console — read the file.
 
 ---
 
