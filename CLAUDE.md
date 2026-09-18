@@ -386,11 +386,15 @@ _(none currently)_
   all three region cuts in its last-minute-cuts slot, and `cut_screen`/`cut_app`/`cut_grid`
   each grew a flat `t=0` branch (`square` instead of `cube`) alongside the 3D one, the same
   shape `case_opening_blank` already uses. Verified: all three settings now cut in 2D, and
-  all 174 presets render byte-identical CSG in 3D. **Still outstanding:** the
-  `column_count`/`row_count` zeroing on `hide_screen_region=="yes"` (line ~1348) is now dead
-  in BOTH paths and could be removed — it would change only console output (rail-width
-  warnings and the `__KG_DIMS__` rail echo would start reporting for a hidden screen), not
-  geometry. Left in place deliberately; ask Ken before removing. Original diagnosis:
+  all 174 presets render byte-identical CSG in 3D. The `column_count`/`row_count` zeroing on
+  `hide_screen_region=="yes"` — the workaround that stood in for the missing cut — was
+  REMOVED the same day, once the cuts made it dead in both paths. Geometry is unchanged
+  (all 174 presets, plus screen-hidden renders in 3D, 3D+ridges, frame, split and
+  laser-cut). Its one side effect was that the `__KG_DIMS__` rail echo would have started
+  reporting rail widths for a hidden screen, which the web app prints to the clinician's
+  console; a new `grid_is_hidden` flag on that echo keeps it `undef`, and now also
+  suppresses it for `hide_grid_region` / `hide_app_region`, which used to report the rails
+  of a grid that had just been cut away. Original diagnosis:
   **Diagnosed
   2026-09-17.** The laser-cut path (`lc_keyguard`, reached only by
   `generate="first layer for SVG/DXF file"`) never calls `cut_screen()` / `cut_grid()` —

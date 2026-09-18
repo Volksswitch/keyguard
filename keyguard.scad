@@ -536,13 +536,19 @@ screen_through_cut_overlap = 2.0; // [0.5:0.1:5]
 // the app to agree with the pixels/millimetres tab. Pixel coordinates still come
 // off the full screenshot, which is why the screen pair is still reported too.
 //
+// grid_is_hidden covers the other way to end up with no rails: the grid is still
+// generated, but one of the hide settings cuts it away again. The web app prints
+// these rail widths to the clinician's console and reads undef as "no grid", so
+// reporting the rails of a grid that has been cut away would simply be untrue.
+//
 // The no-grid test is written inline rather than hoisted into a variable on
 // purpose: a variable's expression IS evaluated in file order (see the
 // declaration-order note below), so it would read column_count as undef here,
 // whereas an echo statement sees every global's final value.
+grid_is_hidden = (hide_screen_region=="yes" || hide_app_region=="yes" || hide_grid_region=="yes");
 if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, awm=awm, ahm=ahm, sat=sat, kt=kt, swp=swp, shp=shp, vpt=$vpt, vpr=$vpr, vpd=$vpd,
-                           vrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0) ? vrw : undef,
-                           hrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0) ? hrw : undef);
+                           vrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? vrw : undef,
+                           hrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? hrw : undef);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
@@ -1345,8 +1351,8 @@ $fn=64;
 system_with_no_case = ((tablet_width==0) || (tablet_height == 0)) && (!has_case);
 
 //cell variables
-column_count = (system_with_no_case || hide_screen_region == "yes") ? 0 : number_of_columns;
-row_count = (system_with_no_case || hide_screen_region == "yes") ? 0 : number_of_rows;
+column_count = (system_with_no_case) ? 0 : number_of_columns;
+row_count = (system_with_no_case) ? 0 : number_of_rows;
 
 max_cell_width = grid_width/column_count;
 max_cell_height = grid_height/row_count;
