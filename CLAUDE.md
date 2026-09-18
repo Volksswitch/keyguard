@@ -381,7 +381,21 @@ _(none currently)_
 - [x] (Medium) Add more complete handling in iPad 6/7 and iPad 10/11 `openings_and_additions.txt` files for rotation and column count merging/cutting
 - [x] (Medium) Too many variables calculating borders and offsets with overlapping definitions
 - [x] (Medium) Why don't the offsets need to be part of the `case_xy0` values as well?
-- [ ] (Low) Hiding the screen region doesn't play well with 2D rendering
+- [ ] (Low) Hiding the screen region doesn't play well with 2D rendering. **Diagnosed
+  2026-09-17.** The laser-cut path (`lc_keyguard`, reached only by
+  `generate="first layer for SVG/DXF file"`) never calls `cut_screen()` / `cut_grid()` —
+  those calls exist ONLY in `keyguard()` and `keyguard_frame()`. So in 2D the setting
+  cannot remove the screen area; you get a solid slab with the grid missing, not a hole.
+  The zeroing of `column_count`/`row_count` on `hide_screen_region=="yes"` (line ~1348) is
+  the workaround that makes the setting do *anything* at all in 2D: verified by removing
+  it — the 2D render then comes out pixel-identical to not hiding at all. On the 3D path
+  that zeroing is **redundant**: verified identical with and without it for a plain grid,
+  a grid with raised ridges, and a keyguard frame (the screen cutter spans well above the
+  top face, so it takes the ridges too). **This is one bug, not two.** The real fix is to
+  give the laser-cut path its own region cuts, after which the zeroing can come out
+  entirely. `hide_app_region` (added 2026-09-17) has the SAME gap for the same reason —
+  fix all three together. NOTE: the web app hits this too; its SVG button drives the same
+  `keyguard.scad` with the same two flags, so it is not a desktop-only issue.
 - [x] (Low) Add support for a centre-anchored vertical, horizontal, and angled ridge — C-anchor added for hridge, vridge, angled ridge, rridge (9af16c3)
 - [x] (Low) Test Case 10 — fillet shouldn't be in the first layer because it's removed by a `-f2` instruction. Low priority because `-` shapes are used to create features that sit up in the air, which is irrelevant for laser-cut keyguards.
 - [x] (Medium) Move all quadrant and edge-based case addition shapes toward their anchor points by `ff` to eliminate the appearance of a small wall or gap on those surfaces
