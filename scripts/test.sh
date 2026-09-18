@@ -619,6 +619,13 @@ for name in sorted(os.listdir(cases_dir), key=nat):
         continue
     oa = test.get('openings') or 'openings_and_additions.txt'
     if not os.path.isfile(os.path.join(d, oa)):
+        # No openings file to pair its presets with (see above), and there is
+        # deliberately no fallback to the root file - that fallback is what
+        # produced the bad references. But a case dropped silently looks
+        # exactly like one that passed, so report it if it had anything to gate.
+        if any(st and st.get('params') and st.get('geometry') is not False
+               for st in test.get('steps', [])):
+            print(f"SKIP	{name}	{oa}")
         continue
     for step in test.get('steps', []):
         if not step or not step.get('params'):
@@ -632,6 +639,19 @@ for name in sorted(os.listdir(cases_dir), key=nat):
         print(f"{preset}\t{name}\t{oa}")
 PYEOF
 )
+    # Pull out the cases the discovery had to skip (SKIP lines) and say so.
+    local -a kept_specs=() skipped_cases=()
+    local sp
+    for sp in ${specs[@]+"${specs[@]}"}; do
+        if [[ "$sp" == SKIP$'	'* ]]; then skipped_cases+=("$sp"); else kept_specs+=("$sp"); fi
+    done
+    specs=(${kept_specs[@]+"${kept_specs[@]}"})
+    for sp in ${skipped_cases[@]+"${skipped_cases[@]}"}; do
+        local sk_case sk_oa
+        IFS=$'	' read -r _ sk_case sk_oa <<< "$sp"
+        case_matches_filter "$sk_case" || continue
+        warn "'$sk_case' is NOT geometry-gated: its openings file '$sk_oa' is not in the case folder. Every case must carry its own (a copy of the plain template is fine)."
+    done
     info "Discovered ${#specs[@]} unique geometry presets across test cases"
     info "Manifest: $(realpath --relative-to="$PROJECT_ROOT" "$manifest" 2>/dev/null || echo "$manifest")"
     [[ -n "$CASE_FILTER" ]] && info "Filter: '$CASE_FILTER' (matches preset OR case name; existing entries outside the filter are preserved)"
