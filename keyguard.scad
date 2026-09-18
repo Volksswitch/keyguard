@@ -1236,11 +1236,21 @@ osy0 = (using_px) ? sy0 : app_y0;
 	// lcbbp = (px_measurements_start=="top") ?  shp : 0; //lower command bar bottom in pixels
 	
 
-	sbhp = (sbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? sbbp - vbp : shp - vbp - sbbp); // height of status bar in pixels
-	umbhp = (umbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? umbbp - sbbp : sbbp - umbbp); // height of upper message bar in pixels
-	ucbhp = (ucbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? ucbbp - umbbp : umbbp - ucbbp); // height of upper command bar in pixels
-	lmbhp = (lmbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? lcbtp - lmbtp : lmbtp - lcbtp); // height of lower message bar in pixels
-	lcbhp = (lcbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? shp - vbp - lcbtp : lcbtp - vbp); // height of lower command bar in pixels
+	// In keyguard inset mode the screenshot shows a white border around the app, and a
+	// bar edge can be entered inside it - the screenshot's own edge for a bar with no
+	// height, or 0 for a bar left unset. Either way that edge IS the app's edge as far as
+	// the bars are concerned, so a position in the border is pulled in to the app's edge
+	// before bar heights are taken as differences. Left raw, the border was counted as
+	// part of the neighbouring bar and the grid came out one border short. The border is
+	// the same size top and bottom, so the app spans vbp..shp-vbp whichever edge the
+	// measurements start from. No-op without an inset.
+	function app_px(p) = (vbp > 0) ? min(max(p, vbp), shp - vbp) : p;
+
+	sbhp = (sbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? app_px(sbbp) - vbp : shp - vbp - app_px(sbbp)); // height of status bar in pixels
+	umbhp = (umbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? app_px(umbbp) - app_px(sbbp) : app_px(sbbp) - app_px(umbbp)); // height of upper message bar in pixels
+	ucbhp = (ucbbp==0) ? 0 : max(0, (px_measurements_start=="top") ? app_px(ucbbp) - app_px(umbbp) : app_px(umbbp) - app_px(ucbbp)); // height of upper command bar in pixels
+	lmbhp = (lmbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? app_px(lcbtp) - app_px(lmbtp) : app_px(lmbtp) - app_px(lcbtp)); // height of lower message bar in pixels
+	lcbhp = (lcbtp==0) ? 0 : max(0, (px_measurements_start=="top") ? shp - vbp - app_px(lcbtp) : app_px(lcbtp) - vbp); // height of lower command bar in pixels
 	
 // Convert a bar measurement to the working unit (mm or px depending on using_px).
 // px_val: the bar height derived from pixel input; mm_val: the bar height parameter in mm.
