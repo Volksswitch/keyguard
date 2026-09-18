@@ -1,0 +1,37 @@
+{
+  "description": "Keyguard inset mode, supplied by Ken 2026-09-18 ('keyguard frame with keyguard inset test'). iPad 11th generation A16, landscape, px measurements, 65 px inset on every side, 9x12 grid, upper message and upper command bars exposed, keyguard frame with posts on a shelf. The lower command bar's top is entered at 1640 - the screenshot's own bottom edge, inside the white border - which is the case that leaked the border into the lower message bar and made the grid one border short (gh 1145 instead of 1210). Correct result: grid from 323 to 1533 px, exposed-bar opening from the app's top edge (65 px) to 323 px, all of it inside the app's 65 px border. Uses the plain (vanilla) openings file, so no case-level openings file. Ken's screenshot.png is not included: OpenSCAD cannot draw a PNG, so the preset has include_screenshot='no'; opening-to-button alignment was verified separately by overlaying the exported laser-cut outline on the screenshot (all 108 cells centred on their buttons).",
+  "steps": [
+    {
+      "label": "keyguard - inset grid and exposed bars inside the app border",
+      "params": "Test Case 66",
+      "vpt": [
+        0,
+        0,
+        0
+      ],
+      "vpr": [
+        0,
+        0,
+        0
+      ],
+      "vpd": 500,
+      "expected": "step1_expected.png"
+    },
+    {
+      "label": "keyguard frame with posts",
+      "params": "Test Case 66a",
+      "vpt": [
+        0,
+        0,
+        0
+      ],
+      "vpr": [
+        30,
+        0,
+        0
+      ],
+      "vpd": 500,
+      "expected": "step2_expected.png"
+    }
+  ]
+}
