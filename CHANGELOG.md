@@ -1,6 +1,7 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- Fixed: **laser-cut designs now honor the "trim to rectangle" settings.** Asking for the first layer for an SVG/DXF file gave you the whole keyguard, ignoring the lower-left and upper-right corners you entered, even though the same settings trimmed the keyguard shown in OpenSCAD. The SVG you export for laser cutting is now trimmed to the rectangle you asked for.
 
 ## Version 89
 - New **Keyguard Inset Info** section, for apps that have been shrunk to sit inside a white border rather than filling the whole screen. Turn on "keyguard inset mode" and enter the size of the border down the left side and the border across the bottom — in pixels measured off your screenshot, or in millimeters, whichever is easier. The right border is taken to match the left and the top to match the bottom, so those two numbers are all it needs. The designer then lays the grid, the bars, and any millimeter measurements in your openings and additions file out against the app instead of against the screen. The camera and home button cutouts, the fit of the keyguard in its case, and your imported screenshot all continue to use the real screen, so nothing about how the keyguard sits on the tablet changes. Measurements you give in pixels still start at the corner of the screenshot, since that is where a graphics program measures from.

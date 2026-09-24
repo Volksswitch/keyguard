@@ -2516,6 +2516,10 @@ module lc_keyguard(){
 							if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o,0); else cut_screen_openings(m_s_o,0);
 						}
 
+						//if the keyguard will be trimmed to a specific pair of x,y locations
+						if (len(t_t_r_ll)==2 && len(t_t_r_ur)==2 && hide_screen_region=="no"){
+							trim_to_rectangle(0);
+						}
 					}
 					
 					//*** add items screen elements and case elements that will override screen cutouts
@@ -8355,7 +8359,9 @@ module trim_to_the_screen(){
 
 // Produces a cutting solid that trims the keyguard to the user-defined rectangular
 // region (trim_to_rectangle_lower_left / upper_right parameters).
-module trim_to_rectangle(){
+// t is the thickness of the part being cut: kt for the 3D-printed keyguard,
+// 0 for the flat (2D) laser-cut outline.
+module trim_to_rectangle(t=kt){
 	x0 = (generate_keyguard) ? kx0 : case_x0;
 	y0 = (generate_keyguard) ? ky0 : case_y0;
 	
@@ -8370,14 +8376,24 @@ module trim_to_rectangle(){
 	w1=x2-x1;
 	h1=y2-y1;
 	
+	final_rotation = (is_landscape) ? [0,0,0] : [0,0,-90];
+
 	translate([x0+w1/2+x1,y0+h1/2+y1,0])
-	difference(){
-		final_rotation = (is_landscape) ? [0,0,0] : [0,0,-90];
-		
-		rotate(final_rotation)
-		cube([major_dim*3,minor_dim*3,kt+ff*2],true);
-		
-		cube([w1-ff,h1-ff,kt+ff*4],true);
+	if (t > 0){
+		difference(){
+			rotate(final_rotation)
+			cube([major_dim*3,minor_dim*3,t+ff*2],true);
+			
+			cube([w1-ff,h1-ff,t+ff*4],true);
+		}
+	}
+	else{ //to be laser cut
+		difference(){
+			rotate(final_rotation)
+			square([major_dim*3,minor_dim*3],true);
+			
+			square([w1-ff,h1-ff],true);
+		}
 	}
 }
 
