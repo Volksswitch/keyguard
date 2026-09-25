@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 90
 - Fixed: **laser-cut designs now honor the "trim to rectangle" settings.** Asking for the first layer for an SVG/DXF file gave you the whole keyguard, ignoring the lower-left and upper-right corners you entered, even though the same settings trimmed the keyguard shown in OpenSCAD. The SVG you export for laser cutting is now trimmed to the rectangle you asked for.
 
 ## Version 89
