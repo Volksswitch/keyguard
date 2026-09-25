@@ -14,16 +14,28 @@ instead of a served app) differ.
   and synced across your machines by OneDrive, which syncs the whole project folder
   including the `.git` directory.
 - **GitHub is the release environment.** The repository is
-  <https://github.com/Volksswitch/keyguard>. There is no served app — instead the
-  Keyguard Designer **web app's in-app updater** downloads `main/keyguard.scad`, and the
-  Volksswitch web pages link to it. So the copy of `keyguard.scad` on `main` **is** what
-  clinicians get. Therefore:
+  <https://github.com/Volksswitch/keyguard>. Pushing `main` publishes `keyguard.scad`
+  there, which is where the Volksswitch web pages link and where the web app's publish
+  step fetches it from. Therefore:
 
   > **Commit to local `main` = save your work.
-  > Push `main` = release to clinicians.**
+  > Push `main` = publish the file.**
 
   Everything you commit piles up locally, invisible to clinicians, until you release.
   We do not push between releases.
+
+- **⚠ Pushing this repository is NOT the whole release.** Clinicians do **not** download
+  `keyguard.scad` from GitHub. Since web app release 102 the app fetches the designer
+  file and its version list from **its own address** (`keyguard.volksswitch.org`),
+  because school networks block GitHub by hostname and a clinician behind one would
+  otherwise never be offered an update. So a version that is on GitHub and nowhere else
+  has reached **nobody**. The copy that matters lives in the `keyguard-web` folder,
+  beside `app.html`, as `keyguard_v<N>.scad` + `latest_scad_version.json`.
+
+  **This is exactly how the v90 release stalled half-done on 24 Sep 2026** — this file
+  described only the GitHub half, so that is all that got done, and Ken was still being
+  offered v89. Both halves are one act. `release-designer.mjs` does both; do not do
+  either by hand.
 
 There is one branch: `main` (plus any transient `claude/*` worktree branches from cloud
 agents, which never deploy). There is no separate `dev` or release branch.
@@ -77,27 +89,80 @@ fixed and tested. Anything below that bar stays as local commits; `main` does no
 ## Releasing — trigger phrase "bump keyguard designer"
 
 Ken says **"bump keyguard designer"** (or an obvious variant). Ken issues this only **after he
-has verified the `CHANGELOG.md` contents.** That single command authorizes the entire ritual
-below **through the push** — Claude runs it end to end and does **not** pause for a second
-confirmation before pushing. Let `N` = the pre-bumped `keyguard_designer_version`.
+has verified the `CHANGELOG.md` contents.** That single command authorizes the whole thing
+**through both pushes** — Claude runs it end to end and does **not** pause for a second
+confirmation.
 
-1. **Verify** `keyguard_designer_version` reads `N` (it was pre-bumped at the last release).
-2. **Finalize the changelog.** Rename the topmost **`## Unreleased (next release)`** heading to
+**Claude runs one command and nothing else:**
+
+```
+node scripts/release-designer.mjs        # in the keyguard-web folder
+```
+
+Add `--dry-run` to print the plan and change nothing. **Do not hand-run the steps below.**
+They are here so you can read what the script does and check its work — not as a recipe.
+Hand-running them is how v90 went out half-finished on 24 Sep 2026.
+
+Let `N` = the pre-bumped `keyguard_designer_version`.
+
+**Preflight (all of it before the first push, so a failure never leaves one repository
+released and the other not):** both repos on `main`; no uncommitted edits to release files;
+`N` actually leads the published version; `## Unreleased` has clinician notes (a version is
+never advertised without them); the retired app at release 21 can still drive the new file
+(`check-old-app-compat.mjs`); and the web app has no unreleased work of its own — see
+"What this command must never carry" below.
+
+**Phase 1 — publish the file (the `.scad` repo):**
+
+1. **Finalize the changelog.** Rename the topmost **`## Unreleased (next release)`** heading to
    **`## Version N`**, and add a fresh empty `## Unreleased (next release)` section above it.
-3. **Regenerate the manifest:** "publish scad version"
-   (`node scripts/publish-scad-version.mjs` in the web-app repo) — writes `version: N` and the
+2. **Regenerate the manifest** (`publish-scad-version.mjs`) — writes `version: N` and the
    `## Version N` bullets into `latest_scad_version.json`. Confirm the number matches.
-4. **Commit** the release (`keyguard.scad`, `CHANGELOG.md`, `latest_scad_version.json`) as one
-   commit, so `main`'s served file and the manifest both say `N` at the same moment.
-5. **Push `origin main`.** The updater now offers `N` to clinicians on older versions.
-6. **Start the next cycle — pre-bump.** Increment `keyguard_designer_version` to `N+1`, commit
-   that locally, and **do not push.**
+3. **Commit** (`keyguard.scad`, `CHANGELOG.md`, `latest_scad_version.json`) as one commit, so
+   the file and the manifest say `N` at the same moment.
+4. **Push `origin main`.**
+5. **Pre-bump.** Increment `keyguard_designer_version` to `N+1`, commit locally, **do not push.**
+
+**Phase 2 — deliver it (the `keyguard-web` repo):** *without this, nothing reaches anyone.*
+
+6. **Wait for GitHub** to actually serve `v N` (the publish step verifies what it fetched
+   rather than shipping the wrong bytes).
+7. **Publish the designer file** (`publish-designer-file.mjs`) — writes `keyguard_v<N>.scad`
+   and `latest_scad_version.json` beside `app.html` and deletes the superseded copy.
+8. **Commit and push** just those files. Live within about ten minutes (GitHub Pages
+   freshness). Clinicians are offered `N` the next time they open a project.
+
+**No web app release is involved.** `APP_RELEASE`, `CACHE_NAME`, the app's changelog and
+`latest_app_version.json` are **not** touched — publishing a keyguard file is not an app
+change, and the app does not need to be re-released to deliver one. Both designer files are
+deliberately kept **out** of `sw.js`'s `SHELL` precache, so a running app fetches them from
+the network every time it checks. (Until 24 Sep 2026 this command also shipped a token app
+release, on the belief that it had to. It does not; Ken's call.)
+
+## What this command must never carry
+
+Pushing `keyguard-web`'s `main` deploys **whatever is committed there** — GitHub Pages serves
+that branch. So a keyguard delivery must never be the thing that puts unrelated app work in
+front of clinicians. `release-designer.mjs` refuses to run when the web app has unreleased
+clinician-facing changes of its own, or unpushed commits touching anything but the designer
+files, and names what it found. That work deserves its own considered release: say
+**"bump keyguard web app"** first, then release the keyguard.
+
+The two phrases are separate and stay separate (Ken, 24 Sep 2026):
+
+| Phrase | Releases |
+|---|---|
+| **"bump keyguard designer"** | the `.scad` only — published and delivered, no app release |
+| **"bump keyguard web app"** | the web app's own work |
 
 ## Invariants — do not break these
 
-- **Never push to `main` except as step 5 of "bump keyguard designer".** The copy of
-  `keyguard.scad` on `main` is what clinicians download. Between releases, everything stays as
-  local commits.
+- **Never push either repository except as part of "bump keyguard designer"** (or, for the app's
+  own work, "bump keyguard web app"). Between releases, everything stays as local commits.
+- **A release is not finished until Phase 2 is pushed.** Stopping after the GitHub push leaves
+  clinicians on the previous version with nothing to show that anything went wrong. Confirm it:
+  `latest_scad_version.json` at `keyguard.volksswitch.org` must report `N`, and
+  `keyguard_v<N>.scad` must download from there.
 - **On `main`, `keyguard.scad`'s version and the manifest's `version` must always match** (the
   updater aborts otherwise). The pre-bumped `.scad` stays local (unpushed) until its manifest is
   pushed with it.
@@ -111,4 +176,6 @@ confirmation before pushing. Let `N` = the pre-bumped `keyguard_designer_version
 
 Revert the release commit on `main`, then bump the version **up** again (e.g. `84` → `85`, never
 back to `83`), regenerate the manifest so it matches, and push both together — same "file and
-manifest agree on `main`" rule as a forward release.
+manifest agree on `main`" rule as a forward release. Then run Phase 2 again so the good version
+is the one sitting beside `app.html`: a rollback that stops at GitHub leaves clinicians being
+offered the bad file.
