@@ -1,8 +1,8 @@
 {
-  "version": 90,
-  "scad_filename": "keyguard_v90.scad",
+  "version": 91,
+  "scad_filename": "keyguard_v91.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "Fixed: **laser-cut designs now honor the \"trim to rectangle\" settings.** Asking for the first layer for an SVG/DXF file gave you the whole keyguard, ignoring the lower-left and upper-right corners you entered, even though the same settings trimmed the keyguard shown in OpenSCAD. The SVG you export for laser cutting is now trimmed to the rectangle you asked for."
+    "The pink marker on a highlighted opening now stops at the keyguard's surfaces in the Keyguard Designer web app. It used to stand about 2 mm proud of the front and back, because the marker is drawn from the same shape that cuts the opening and that shape is deliberately longer than the keyguard so it cuts cleanly through — which meant the bar of pink hid the very chamfer or slope you highlighted the opening to look at. Nothing about any keyguard changes, and there is nothing different to see in OpenSCAD."
   ]
 }
