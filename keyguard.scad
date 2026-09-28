@@ -6358,10 +6358,23 @@ module cut_opening_v2(cut_width, cut_height, shape, anchor, surface, top_slope, 
 	// a blind pocket (the TC54 regression). So sloped cuts (!all_90) keep the
 	// extender even natively. The web app still passes extend_through_cuts="yes"
 	// to also fix the Manifold thin-floor membrane on flat cuts.
+	//
+	// HIGHLIGHT-ONLY PASS: skipped. The extender is a cutting aid — it exists so
+	// the cut punches clean through the faces — and it is screen_through_cut_overlap
+	// (2 mm) longer than the part at each end for that reason. In the web app's
+	// highlights pass nothing is being cut: the same shapes are emitted purely to
+	// be painted pink over the keyguard, so the overlap has no job to do and shows
+	// as a pink bar standing proud of both faces, hiding the chamfer or slope the
+	// clinician opened the marker to look at. Suppressing it here changes the
+	// marker only — every real cut still gets its extender, because that pass runs
+	// with only_oa_highlights=="no". (Native preview draws highlights in the SAME
+	// pass as the keyguard, so this does not reach OpenSCAD's own display; that is
+	// a display nicety there and not worth threading a flag down for.)
 	all_90 = (top_slope == 90) && (bottom_slope == 90) && (left_slope == 90) && (right_slope == 90);
 	want_extender = (extend_through_cuts == "yes" || !all_90)
 	                && ((type == "screen" && is_3d_printed) ||
 	                    (type == "tablet" && generate != "first layer for SVG/DXF file"))
+	                && only_oa_highlights != "yes"
 	                && !other_number && !flip;
 
 	// Body cutter z thickness — matches hole_cutter's `cut()` body span (depth -
