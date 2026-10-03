@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 92
 - **Cell inserts now fit circular cells.** With the cell shape set to circular, a cell insert used to come out as a disc the size of the cell width and height settings rather than the cell diameter, so it did not fit the hole it was made for. It is now sized from the cell diameter, with Braille, engraved text and the finger opening placed within it, and your tightness of fit applies just as it does to a rectangular insert.
 - **A cell insert's finger opening is now centered when the insert carries no Braille or engraved text.** It used to sit low, leaving room for Braille that was never there.
 

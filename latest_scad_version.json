@@ -1,8 +1,9 @@
 {
-  "version": 91,
-  "scad_filename": "keyguard_v91.scad",
+  "version": 92,
+  "scad_filename": "keyguard_v92.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "The pink marker on a highlighted opening now stops at the keyguard's surfaces in the Keyguard Designer web app. It used to stand about 2 mm proud of the front and back, because the marker is drawn from the same shape that cuts the opening and that shape is deliberately longer than the keyguard so it cuts cleanly through — which meant the bar of pink hid the very chamfer or slope you highlighted the opening to look at. Nothing about any keyguard changes, and there is nothing different to see in OpenSCAD."
+    "**Cell inserts now fit circular cells.** With the cell shape set to circular, a cell insert used to come out as a disc the size of the cell width and height settings rather than the cell diameter, so it did not fit the hole it was made for. It is now sized from the cell diameter, with Braille, engraved text and the finger opening placed within it, and your tightness of fit applies just as it does to a rectangular insert.",
+    "**A cell insert's finger opening is now centered when the insert carries no Braille or engraved text.** It used to sit low, leaving room for Braille that was never there."
   ]
 }
