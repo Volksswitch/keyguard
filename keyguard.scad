@@ -4972,9 +4972,18 @@ module create_cell_insert(){
 
 	roo = diameter_of_opening/2+2;
 
+	// A circular cell takes a disc the size of the hole it drops into; a
+	// rectangular one takes the cell's width and height.
+	iw = (cell_shape=="rectangular") ? cw : cell_diameter;
+	ih = (cell_shape=="rectangular") ? ch : cell_diameter;
+
+	// With no Braille and no engraved text there is nothing to make room for,
+	// so the opening sits in the middle of the insert.
+	no_text = (Braille_text=="" && e_t=="");
+
 	// above below
 	bh = bsm * 6.5; //braille height
-	v = ch/2;
+	v = ih/2;
 
 	BA = (Braille_location=="above opening" && e_t=="");
 	BB = (Braille_location=="below opening" && e_t=="");
@@ -4995,12 +5004,12 @@ module create_cell_insert(){
 		 (BAE) ? -v+(v-roo)/2 :
 		 (BBE) ? v-(v-roo)/2 : 0;
 		 
-	o_z = (BAB || BAE || BBE) ? 0 : 
+	o_z = (no_text || BAB || BAE || BBE) ? 0 : 
 		  (BA) ? -v+roo+b_v :
 		  (BB) ? v-roo-b_v : 0;
 
 	//left right
-	hacw = cw/2;
+	hacw = iw/2;
 
 	BL = (Braille_location=="left of opening" && e_t=="");
 	BR = (Braille_location=="right of opening" && e_t=="");
@@ -5029,7 +5038,7 @@ module create_cell_insert(){
 		 (BLE) ? hacw-(hacw-roo)/2 : 
 		 (BRE) ? -hacw+(hacw-roo)/2 : 0;
 
-	o_x = (BLE || BRE) ? 0 :
+	o_x = (no_text || BLE || BRE) ? 0 :
 		  (BL) ? hacw-b_h-roo :
 		  (BLR) ? -hacw+b_h+w1+btod+roo :
 		  (BR) ? -hacw+b_h+roo : 0;
@@ -5039,12 +5048,7 @@ module create_cell_insert(){
 	if (BA || BB || BAB || BAE || BBE){
 		difference(){
 			rotate([90,0,0])
-			if (cell_shape=="rectangular"){
-				chamfered_shape(cw+s_f/2,insert_thickness,ch+s_f/2,chamfer,cell_corner_radius);
-			}
-			else{
-				chamfered_shape(cw+s_f/2,insert_thickness,ch+s_f/2,chamfer,cell_corner_radius);
-			}
+			chamfered_shape(iw+s_f/2,insert_thickness,ih+s_f/2,chamfer,cell_corner_radius);
 			
 			if(add_circular_opening=="yes"){
 				translate([0,0,o_z])
@@ -5069,7 +5073,7 @@ module create_cell_insert(){
 	else {
 		difference(){
 			rotate([90,0,0])
-			chamfered_shape(cw+s_f/2,insert_thickness,ch+s_f/2,chamfer,cell_corner_radius);
+			chamfered_shape(iw+s_f/2,insert_thickness,ih+s_f/2,chamfer,cell_corner_radius);
 			
 			if(add_circular_opening=="yes"){
 				translate([o_x,0,0])
