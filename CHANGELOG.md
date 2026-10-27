@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 94
 - **Raised tabs are now exactly as thick as your "preferred raised tab thickness".** A raised tab that is all ramp with no flat section on top — which is how the tabs come out with the designer's standard settings, and always the case with a ramp angle of 0 — used to come out 1 mm thicker than the setting. The designer would also quietly make a tab thinner than you asked if it would have stood more than 1 mm above the top of the keyguard. Now every tab is built at the thickness you enter, however thick that is. If you made a keyguard with ramped raised tabs before this version and want the same tab when you print it again, add 1 mm to its preferred raised tab thickness (from 2 to 3, for example). The ready-to-print designs have been changed to 3 mm, so they print exactly as before. A tab with embedded magnets is still made thick enough to hold them.
 - "Show split line" no longer tells you to set it to "no" before rendering your design. The split line only ever appears on screen while you design; it is never part of a rendered keyguard or a file you export, so you can leave it on.
 
