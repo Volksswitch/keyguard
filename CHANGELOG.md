@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- **Light-sensor openings are in the right place again on the iPad Pro 13-inch (M4 and M5), the iPad Air 11-inch (M2, M3 and M4) and the iPad Air 13-inch (M2, M3 and M4).** Since version 78, a mistake in the designer's list of light-sensor positions gave each of these tablets another model's openings: small holes in the border where there is no sensor, with the real sensors covered, which can upset the screen's automatic brightness. Each tablet now gets its own. If you made a keyguard for one of these iPads with "expose ambient light sensors" set to yes, open the design again and export it once you have this version.
+- **The Tobii-Dynavox I-16 now gets its light-sensor openings.** It wasn't getting any, even with "expose ambient light sensors" set to yes.
 
 ## Version 92
 - **Cell inserts now fit circular cells.** With the cell shape set to circular, a cell insert used to come out as a disc the size of the cell width and height settings rather than the cell diameter, so it did not fit the hole it was made for. It is now sized from the cell diameter, with Braille, engraved text and the finger opening placed within it, and your tightness of fit applies just as it does to a rectangular insert.
