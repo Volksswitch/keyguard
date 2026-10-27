@@ -1652,7 +1652,7 @@ als_openings=[
 	[[ "Pro-11M4ALS1",  "c",   3.0,   0,   0,   xtls+sxo*4.71,            ytbs+syo*88.76,   0,   "",   "",   0,   0,   [60],   [] ],
 	[  "Pro-11M4ALS2",  "c",   3.0,   0,   0,   xtls+sxo*124.85,          ytts-syo*4.71,    0,   "",   "",   0,   0,   [60],   [] ]],
 
-	/* iPad Pro 13-inch M4 *& M5/
+	/* iPad Pro 13-inch M4 & M5 */
 	[[ "Pro-13M4ALS1",  "c",   3.0,   0,   0,   xtls+sxo*4.71,            ytbs+syo*107.76,  0,   "",   "",   0,   0,   [60],   [] ],
 	[  "Pro-13M4ALS2",  "c",   3.0,   0,   0,   xtls+sxo*140.79,          ytts-syo*4.71,    0,   "",   "",   0,   0,   [60],   [] ]],
 
@@ -1720,7 +1720,7 @@ ttao =
   : (type_of_tablet=="iPad Air 13-inch M4")? als_openings[27] 
   : (type_of_tablet=="Via Mini")? als_openings[19]  
   : (type_of_tablet=="Via Pro")? als_openings[8]
-  : (type_of_tablet=="TobiiDynavox I-16")? als_openings[28] 
+  : (type_of_tablet=="Tobii-Dynavox I-16")? als_openings[28] 
   : []; // all other tablets
   
 // All variables that can be used in the openings an additions file called out here for Customizer parameters
