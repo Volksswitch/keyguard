@@ -356,7 +356,6 @@ cut_cell_openings_and_bars_through_frame = "yes"; //[yes,no]
 
 /*[Split Keyguard Info]*/
 split_line_location = 0; // [-300:.1:300]
-// set this option to "no" before rendering your design
 show_split_line = "no"; //[yes,no]
 split_line_type = "flat"; //[flat,dovetails]
 dovetail_width = 4.0; //[3:.1:6]
