@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 93
 - **Light-sensor openings are in the right place again on the iPad Pro 13-inch (M4 and M5), the iPad Air 11-inch (M2, M3 and M4) and the iPad Air 13-inch (M2, M3 and M4).** Since version 78, a mistake in the designer's list of light-sensor positions gave each of these tablets another model's openings: small holes in the border where there is no sensor, with the real sensors covered, which can upset the screen's automatic brightness. Each tablet now gets its own. If you made a keyguard for one of these iPads with "expose ambient light sensors" set to yes, open the design again and export it once you have this version.
 - **The Tobii-Dynavox I-16 now gets its light-sensor openings.** It wasn't getting any, even with "expose ambient light sensors" set to yes.
 
