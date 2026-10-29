@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 97
 - **Ridges and other raised shapes no longer stick out underneath the keyguard.** Where the underside of the keyguard is cut away (under a sloped keyguard edge, at the case-to-slope step, or by a "my case additions" shape that thins the keyguard from below), a ridge, bump or other raised shape placed above that spot used to poke out below it. These cuts now trim raised shapes too, so the underside keeps the shape you designed and the keyguard still sits flat on the case. A ridge that crosses an opening still reaches down through it, as before.
 
 ## Version 96

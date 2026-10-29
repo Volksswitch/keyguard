@@ -1,8 +1,8 @@
 {
-  "version": 96,
-  "scad_filename": "keyguard_v96.scad",
+  "version": 97,
+  "scad_filename": "keyguard_v97.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "**Screen openings now follow the surface they sit on when your keyguard is thicker than its screen area.** An opening or addition placed past the edge of the screen area, over the thicker border around it, used to be cut and built from the height of the screen area. A ridge there ended up hidden inside the plastic and stuck out underneath the keyguard, and a hole lost the bevel on its top edge. Now the part of an opening that is over the border is cut from the keyguard's top surface, just as a case opening is, with its top edge beveled on both sides. A ridge, bump or other raised shape that reaches the border keeps one flat top: it stands its full height above the border, and wherever it passes over the screen area it is filled down to meet it. This applies to Custom Openings, the \"my screen openings\" setting and the screen openings in `openings_and_additions.txt`. Openings and additions that sit entirely on the screen area are unchanged, and so is any keyguard whose screen area is as thick as the keyguard. If you have a design with a ridge that crosses the edge of the screen area, it now comes out taller on the screen side, so that it stands its full height above the border too."
+    "**Ridges and other raised shapes no longer stick out underneath the keyguard.** Where the underside of the keyguard is cut away (under a sloped keyguard edge, at the case-to-slope step, or by a \"my case additions\" shape that thins the keyguard from below), a ridge, bump or other raised shape placed above that spot used to poke out below it. These cuts now trim raised shapes too, so the underside keeps the shape you designed and the keyguard still sits flat on the case. A ridge that crosses an opening still reaches down through it, as before."
   ]
 }
