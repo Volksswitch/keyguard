@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 96
 - **Screen openings now follow the surface they sit on when your keyguard is thicker than its screen area.** An opening or addition placed past the edge of the screen area, over the thicker border around it, used to be cut and built from the height of the screen area. A ridge there ended up hidden inside the plastic and stuck out underneath the keyguard, and a hole lost the bevel on its top edge. Now the part of an opening that is over the border is cut from the keyguard's top surface, just as a case opening is, with its top edge beveled on both sides. A ridge, bump or other raised shape that reaches the border keeps one flat top: it stands its full height above the border, and wherever it passes over the screen area it is filled down to meet it. This applies to Custom Openings, the "my screen openings" setting and the screen openings in `openings_and_additions.txt`. Openings and additions that sit entirely on the screen area are unchanged, and so is any keyguard whose screen area is as thick as the keyguard. If you have a design with a ridge that crosses the edge of the screen area, it now comes out taller on the screen side, so that it stands its full height above the border too.
 
 ## Version 95

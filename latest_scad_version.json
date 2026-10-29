@@ -1,8 +1,8 @@
 {
-  "version": 95,
-  "scad_filename": "keyguard_v95.scad",
+  "version": 96,
+  "scad_filename": "keyguard_v96.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "**All of the case variables in the openings and additions notes now work in the \"my screen openings\", \"my case openings\", \"my case additions\" and \"my tablet openings\" settings.** Using case height (**c_h**), case width (**c_w**), case corner radius (**c_cr**), case to screen depth (**ctsd**) or sloped edge width (**sew**) in one of these settings used to stop the keyguard from rendering at all, with \"Unknown identifier\" in the console. They now work there just as they do in `openings_and_additions.txt`."
+    "**Screen openings now follow the surface they sit on when your keyguard is thicker than its screen area.** An opening or addition placed past the edge of the screen area, over the thicker border around it, used to be cut and built from the height of the screen area. A ridge there ended up hidden inside the plastic and stuck out underneath the keyguard, and a hole lost the bevel on its top edge. Now the part of an opening that is over the border is cut from the keyguard's top surface, just as a case opening is, with its top edge beveled on both sides. A ridge, bump or other raised shape that reaches the border keeps one flat top: it stands its full height above the border, and wherever it passes over the screen area it is filled down to meet it. This applies to Custom Openings, the \"my screen openings\" setting and the screen openings in `openings_and_additions.txt`. Openings and additions that sit entirely on the screen area are unchanged, and so is any keyguard whose screen area is as thick as the keyguard. If you have a design with a ridge that crosses the edge of the screen area, it now comes out taller on the screen side, so that it stands its full height above the border too."
   ]
 }
