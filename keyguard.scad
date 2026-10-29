@@ -1726,8 +1726,8 @@ ttao =
 // All variables that can be used in the openings an additions file called out here for Customizer parameters
 // Put this *above* where you parse user input.
 // Add every variable name you want resolvable.
-RESOLVE_NAMES  = ["ab","ah","at","aw","bcoh","bp","ccr","ch","cloc","cmd","cmh","cmw","cocr","coh","cow","cw","gb","gh","gt","gw","hbd","hbh","hbw","hloc","hor","hrw","kcr","kh","kw","lcbb","lcbh","lcow","lmbb","lmbh","lmbt","lp","mpp","nc","nr","ppm","r180","rp","sbb","sbh","sh","shp","sw","swm","swp","sxo","syo","tcr","th","tor","tp","tw","ucbb","ucbh","umbb","umbh","vrw","xols","xors","yobs","yots"];
-RESOLVE_VALUES = [ab,ah,at,aw,bcoh,bp,ccr,ch,cloc,cmd,cmh,cmw,cocr,coh,cow,cw,gb,gh,gt,gw,hbd,hbh,hbw,hloc,hor,hrw,kcr,kh,kw,lcbb,lcbh,lcow,lmbb,lmbh,lmbt,lp,mpp,nc,nr,ppm,r180,rp,sbb,sbh,sh,shp,sw,awm,swp,sxo,syo,tcr,th,tor,tp,tw,ucbb,ucbh,umbb,umbh,vrw,xols,xors,yobs,yots]; 
+RESOLVE_NAMES  = ["ab","ah","at","aw","bcoh","bp","c_cr","c_h","c_w","ccr","ch","cloc","cmd","cmh","cmw","cocr","coh","cow","ctsd","cw","gb","gh","gt","gw","hbd","hbh","hbw","hloc","hor","hrw","kcr","kh","kw","lcbb","lcbh","lcow","lmbb","lmbh","lmbt","lp","mpp","nc","nr","ppm","r180","rp","sbb","sbh","sew","sh","shp","sw","swm","swp","sxo","syo","tcr","th","tor","tp","tw","ucbb","ucbh","umbb","umbh","vrw","xols","xors","yobs","yots"];
+RESOLVE_VALUES = [ab,ah,at,aw,bcoh,bp,c_cr,c_h,c_w,ccr,ch,cloc,cmd,cmh,cmw,cocr,coh,cow,ctsd,cw,gb,gh,gt,gw,hbd,hbh,hbw,hloc,hor,hrw,kcr,kh,kw,lcbb,lcbh,lcow,lmbb,lmbh,lmbt,lp,mpp,nc,nr,ppm,r180,rp,sbb,sbh,sew,sh,shp,sw,awm,swp,sxo,syo,tcr,th,tor,tp,tw,ucbb,ucbh,umbb,umbh,vrw,xols,xors,yobs,yots]; 
 
 m_s_o = parse_user_vector(my_screen_openings, /*strict=*/true);
 m_c_o = parse_user_vector(my_case_openings, /*strict=*/true);
