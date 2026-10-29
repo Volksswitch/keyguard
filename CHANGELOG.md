@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 95
 - **All of the case variables in the openings and additions notes now work in the "my screen openings", "my case openings", "my case additions" and "my tablet openings" settings.** Using case height (**c_h**), case width (**c_w**), case corner radius (**c_cr**), case to screen depth (**ctsd**) or sloped edge width (**sew**) in one of these settings used to stop the keyguard from rendering at all, with "Unknown identifier" in the console. They now work there just as they do in `openings_and_additions.txt`.
 
 ## Version 94
