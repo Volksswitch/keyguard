@@ -350,6 +350,12 @@ It only needs to be present when this feature is in use.
   them); proven against all 176 test presets — only items that really cross the
   recess wall change (TC5/5a, TC12, whose edge ridges became 1 mm taller on the
   screen side).
+- **Underside cuts trim raised items too (Ken, 29 Oct 2026).** Ridges and other builds
+  are unioned after the keyguard is cut, so the sloped-edge carve, the case-to-slope
+  step and subtractive ("-") case additions never reached them, and a ridge on the lip
+  poked out below the sloped edge. `keyguard_underside_trim()` cuts them with the same
+  cuts (lifted/spread by `ff` so trimmed ends stay inside the plastic). Through-cuts are
+  deliberately NOT applied — a ridge over an opening still reaches down through it.
 
 ---
 

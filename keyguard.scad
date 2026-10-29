@@ -2343,36 +2343,39 @@ module keyguard(cheat){
 
 					//*** add items screen elements  and case elements that will override screen cutouts
 					
-					//add cell ridges	
-					if (column_count>0 && row_count>0 && is_3d_printed){
-						cell_ridges();
-					}
-
-					//add bumps and ridges
-					if(!is_undef(screen_openings) && len(screen_openings)>0 && is_3d_printed){
-						screen_openings_build(screen_openings);
-					}
-					if(len(m_s_o)>0 && is_3d_printed){
-						screen_openings_build(m_s_o);
-					}
-
-					//add bumps and ridges from case_openings file and adjust for unequal case opening
-					if(!is_undef(case_openings) && len(case_openings)>0){
-						translate(unequal_opening)
-						if(is_3d_printed && has_case && !has_frame && cheat=="no"){
-							if(is_v2(case_openings)) adding_plastic_v2(case_openings,"case"); else adding_plastic(case_openings,"case");
+					// cut by the underside's own cuts too, so nothing raised hangs out underneath
+					keyguard_underside_trim(cheat){
+						//add cell ridges	
+						if (column_count>0 && row_count>0 && is_3d_printed){
+							cell_ridges();
 						}
-					}
-					if(len(m_c_o)>0){
-						translate(unequal_opening)
-						if(is_3d_printed && has_case && !has_frame && cheat=="no"){
-							if(is_v2(m_c_o)) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
-						}
-					}
 
-					// add embossed text
-					if (text!="" && keyguard_region=="screen region" && text_depth > 0){
-						engrave_emboss_instruction();
+						//add bumps and ridges
+						if(!is_undef(screen_openings) && len(screen_openings)>0 && is_3d_printed){
+							screen_openings_build(screen_openings);
+						}
+						if(len(m_s_o)>0 && is_3d_printed){
+							screen_openings_build(m_s_o);
+						}
+
+						//add bumps and ridges from case_openings file and adjust for unequal case opening
+						if(!is_undef(case_openings) && len(case_openings)>0){
+							translate(unequal_opening)
+							if(is_3d_printed && has_case && !has_frame && cheat=="no"){
+								if(is_v2(case_openings)) adding_plastic_v2(case_openings,"case"); else adding_plastic(case_openings,"case");
+							}
+						}
+						if(len(m_c_o)>0){
+							translate(unequal_opening)
+							if(is_3d_printed && has_case && !has_frame && cheat=="no"){
+								if(is_v2(m_c_o)) adding_plastic_v2(m_c_o,"case"); else adding_plastic(m_c_o,"case");
+							}
+						}
+
+						// add embossed text
+						if (text!="" && keyguard_region=="screen region" && text_depth > 0){
+							engrave_emboss_instruction();
+						}
 					}
 				}
 				
@@ -6123,7 +6126,7 @@ module adding_plastic_v2(additions, where, hl=false, on_frame=false, on_keyguard
 // that have an explicit thickness (flex-height shapes).
 // @param c_a     Case additions vector (V2 format)
 // @param is_sub  false = add positive shapes; true = subtract negative shapes
-module apply_flex_height_shapes_v2(c_a, is_sub, hl=false) {
+module apply_flex_height_shapes_v2(c_a, is_sub, hl=false, grow=0) {
 	if (len(c_a) > 0) {
 		for(i = [0 : len(c_a)-1]) {
 			p = v2_parse_addition(c_a[i]);
@@ -6148,8 +6151,10 @@ module apply_flex_height_shapes_v2(c_a, is_sub, hl=false) {
 			} else if (addition_thickness > 0 && is_sub == is_sub_shape) {
 				oa_geom(addition_ID, hl)
 				translate([0, 0, is_sub ? -kt/2-ff : -kt/2])
-				linear_extrude(height=addition_thickness)
-				build_trimmed_addition(addition_x, addition_y, addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left, addition_corner_radius);
+				linear_extrude(height=addition_thickness+grow)
+				// grow: keyguard_underside_trim() spreads and raises the cut slightly (see there)
+				if (grow == 0) build_trimmed_addition(addition_x, addition_y, addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left, addition_corner_radius);
+				else offset(delta=grow) build_trimmed_addition(addition_x, addition_y, addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left, addition_corner_radius);
 			}
 		}
 	}
@@ -7571,6 +7576,33 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 	difference(){
 		case_opening_blank(widt,heig,radi,thickness,cheat);
 		
+		keyguard_underside_carve(wid,hei,crad,thickness,cheat);
+
+		if (is_3d_printed){  //add chamfer
+			for (i = [1:1:chamfer_slices]) { 
+				chamfer_slice(i,widt,heig,radi,thickness,cheat);
+			}
+		}
+	}
+}
+
+// The cuts that shape the keyguard's underside: the sloped-edge carve and the
+// case-to-slope step. base_keyguard() cuts the blank with them; keyguard_underside_trim()
+// cuts raised items with them too.
+// @param wid,hei,crad,thickness,cheat  as base_keyguard()
+// @param lift  0 for the blank. For raised items, the carve is raised by this much and
+//              pulled this far into the keyguard's own footprint, so a trimmed end stays
+//              just inside the plastic instead of landing exactly on its surface.
+module keyguard_underside_carve(wid,hei,crad,thickness,cheat,lift=0){
+	widt = (add_sloped_keyguard_edge=="no") ? wid :
+			(extend_lip_to_edge_of_case=="no") ? cow + hsew*2: case_width;
+	heig = (add_sloped_keyguard_edge=="no") ? hei :
+			(extend_lip_to_edge_of_case=="no") ? coh + vsew*2: case_height;
+	radi = (add_sloped_keyguard_edge=="no") ? crad :
+			(extend_lip_to_edge_of_case=="no") ? [cocr+sew,cocr+sew,cocr+sew,cocr+sew] :
+											  [case_corner_radius,case_corner_radius,case_corner_radius,case_corner_radius];
+
+	translate([0,0,lift]){
 		if (is_3d_printed && add_sloped_keyguard_edge=="yes"){
 			difference(){
 				union(){
@@ -7602,7 +7634,8 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 				}
 				
 				translate([0,0,-5])
-				case_opening_blank(wid,hei,crad,thickness+10,cheat);
+				if (lift == 0) case_opening_blank(wid,hei,crad,thickness+10,cheat);
+				else linear_extrude(height=thickness+10) offset(delta=-lift) case_opening_blank_2d(wid,hei,crad,cheat);
 			}
 		}
 		
@@ -7616,10 +7649,41 @@ module base_keyguard(wid,hei,crad,thickness,cheat){
 
 			}
 		}
+	}
+}
 
-		if (is_3d_printed){  //add chamfer
-			for (i = [1:1:chamfer_slices]) { 
-				chamfer_slice(i,widt,heig,radi,thickness,cheat);
+// Raised items (ridges, bumps, raised text and shapes, from the screen and the case
+// openings) are added after the keyguard has been cut, so the cuts that shape its
+// underside never reached them: a ridge on the case lip hung out below the sloped
+// edge. Ken (29 Oct 2026): cuts on the underside also cut any additive shape that
+// extends into that area. So the sloped-edge carve, the case-to-slope step and the
+// subtractive case additions that thin the keyguard from below cut the children too.
+// Through-cuts are deliberately not applied: a ridge over an opening still reaches
+// down through it, as ridges always have.
+// @param cheat  as keyguard()
+module keyguard_underside_trim(cheat){
+	unequal_opening = (!has_frame) ? [-unequal_left_side_offset,-unequal_bottom_side_offset,0] : [0,0,0];
+	// the same gate keyguard() applies to subtractive case additions
+	flex = has_case && (!has_frame || (has_frame && generate=="keyguard frame" && cheat=="no"));
+	has_flex = flex && (len(m_c_a)>0 || (!is_undef(case_additions) && len(case_additions)>0));
+	if (!is_3d_printed || !(add_sloped_keyguard_edge=="yes" || case_to_slope_depth>0 || has_flex)){
+		children();
+	}
+	else{
+		difference(){
+			children();
+
+			translate(unequal_opening){
+				translate(kg_slide)
+				translate([0,0,-kt/2])
+				keyguard_underside_carve(kw,kh,kcr,kt,cheat,lift=ff);
+
+				if(flex && !is_undef(case_additions) && len(case_additions)>0){
+					if(is_v2(case_additions)) apply_flex_height_shapes_v2(case_additions, true, grow=ff); else apply_flex_height_shapes(case_additions, true, grow=ff);
+				}
+				if(flex && len(m_c_a)>0){
+					if(is_v2(m_c_a)) apply_flex_height_shapes_v2(m_c_a, true, grow=ff); else apply_flex_height_shapes(m_c_a, true, grow=ff);
+				}
 			}
 		}
 	}
@@ -8107,7 +8171,7 @@ module build_addition(addition_width, addition_height, addition_shape, addition_
 // (shapes with a leading "-", extruded slightly oversized to ensure clean cuts).
 // @param c_a     Case additions vector (rows of addition definitions)
 // @param is_sub  false = add positive shapes; true = subtract negative shapes
-module apply_flex_height_shapes(c_a, is_sub, hl=false){
+module apply_flex_height_shapes(c_a, is_sub, hl=false, grow=0){
 	if (len(c_a)>0){
 		for(i = [0 : len(c_a)-1]){
 			addition = c_a[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:thickness, 7:trim_above, 8:trim_below, 9:trim_to_right, 10:trim_to_left, 11:corner_radius, 12:other
@@ -8130,8 +8194,10 @@ module apply_flex_height_shapes(c_a, is_sub, hl=false){
 			if(addition_thickness>0 && is_sub==is_negative){
 				oa_geom(addition_ID, hl)
 				translate([0, 0, is_sub ? -kt/2-ff : -kt/2])
-				linear_extrude(height=addition_thickness)
-				build_trimmed_addition(addition_x,addition_y,addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left,addition_corner_radius);
+				linear_extrude(height=addition_thickness+grow)
+				// grow: keyguard_underside_trim() spreads and raises the cut slightly (see there)
+				if (grow == 0) build_trimmed_addition(addition_x,addition_y,addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left,addition_corner_radius);
+				else offset(delta=grow) build_trimmed_addition(addition_x,addition_y,addition_width, addition_height, addition_shape, addition_trim_above, addition_trim_below, addition_trim_to_right, addition_trim_to_left,addition_corner_radius);
 			}
 		}
 	}
@@ -8492,11 +8558,11 @@ module render_oa_highlights(depth, sat_d, cheat="no", on_frame=false) {
 	// Screen openings — cuts and positive plastic (bumps/ridges/text/svg)
 	if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
 		screen_openings_cut(screen_openings, sat_d, hl=true);
-		if(is_3d_printed) screen_openings_build(screen_openings, hl=true);
+		if(is_3d_printed) keyguard_underside_trim(cheat) screen_openings_build(screen_openings, hl=true);
 	}
 	if(len(m_s_o)>0 && type_of_tablet!="blank"){
 		screen_openings_cut(m_s_o, sat_d, hl=true);
-		if(is_3d_printed) screen_openings_build(m_s_o, hl=true);
+		if(is_3d_printed) keyguard_underside_trim(cheat) screen_openings_build(m_s_o, hl=true);
 	}
 
 	// Case openings — cuts (translated by unequal_opening to match keyguard())
@@ -8515,13 +8581,13 @@ module render_oa_highlights(depth, sat_d, cheat="no", on_frame=false) {
 		}
 	}
 	if(!is_undef(case_openings) && len(case_openings)>0 && is_3d_printed && has_case && !has_frame && cheat=="no"){
-		translate(unequal_opening) {
+		keyguard_underside_trim(cheat) translate(unequal_opening) {
 			if(is_v2(case_openings)) adding_plastic_v2(case_openings, "case", hl=true);
 			else                     adding_plastic   (case_openings, "case", hl=true);
 		}
 	}
 	if(len(m_c_o)>0 && is_3d_printed && has_case && !has_frame && cheat=="no"){
-		translate(unequal_opening) {
+		keyguard_underside_trim(cheat) translate(unequal_opening) {
 			if(is_v2(m_c_o)) adding_plastic_v2(m_c_o, "case", hl=true);
 			else             adding_plastic   (m_c_o, "case", hl=true);
 		}
