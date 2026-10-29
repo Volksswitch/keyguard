@@ -59,6 +59,15 @@ tablet_openings=[
 
 
 
+/***********SCREEN OPENINGS PAST THE EDGE OF THE SCREEN
+When the keyguard is thicker than its screen area, the screen area sits lower than the
+border around it. A screen opening, or the part of one, that lands on that border is
+cut from the keyguard's top surface, just like a case opening, with its top edge
+beveled. A ridge, bump or other raised shape that reaches the border is built on the
+border's top surface and keeps one flat top; where it passes over the screen area it
+is filled down to meet it.
+
+
 /***********SCREEN OPENINGS AND THE KEYGUARD FRAME
 For a framed keyguard, the screen_openings instructions are applied to BOTH the
 keyguard (cut/built at the screen-area thickness) and the keyguard frame (cut/built

@@ -338,6 +338,18 @@ It only needs to be present when this feature is in use.
   match the existing format. `scripts/test.sh` has a defensive BOM-strip preflight
   for the CLI path, but that doesn't help the GUI — the on-disk file itself must
   stay BOM-less.
+- **Screen openings follow the surface they land on (Ken, 29 Oct 2026).** When the
+  keyguard is thicker than its screen area, the part of a screen opening over the
+  thicker border is cut from the keyguard's top surface, exactly as a case opening is,
+  and **a cut's top edge is chamfered everywhere** — on both sides of the screen
+  recess wall. **Anything raised from the top surface has ONE flat top, never a step**
+  (Ken: "The top edge can't 'step up'"): a ridge, bump or built shape that reaches the
+  border is built on the top surface and filled down to the screen area where it
+  crosses it. Items wholly on the screen area are untouched. Implemented by
+  `screen_openings_cut()` / `screen_openings_build()` (see the comment block above
+  them); proven against all 176 test presets — only items that really cross the
+  recess wall change (TC5/5a, TC12, whose edge ridges became 1 mm taller on the
+  screen side).
 
 ---
 
