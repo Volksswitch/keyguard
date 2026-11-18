@@ -2380,7 +2380,22 @@ module keyguard(cheat){
 				}
 				
 				//*** add cuts that should override anything added to the screen
-				
+
+				// nothing may stand above the posts, or the keyguard cannot swing on them
+				// (Ken, 18 Nov 2026). The outline is trimmed there already; this also takes
+				// raised and part-height additions, ridges and text. The posts themselves
+				// are spared, so their upper half still stands above the line.
+				if(has_case && m_m=="Posts"){
+					translate(unequal_opening)
+					difference(){
+						translate([0,0,-500])
+						linear_extrude(height=1000)
+						above_posts_2d();
+
+						add_mounting_posts();
+					}
+				}
+
 				// remove parts of keyguard frame above posts (tracks the slid keyguard)
 				if(has_case && has_frame && mount_keyguard_with=="posts"){
 					translate(kg_slide)
@@ -2852,6 +2867,16 @@ module trim_keyguard_to_bar(){
 	//remove top portion of keyguard
 	translate([0,50+post_cl,0])
 	cube([keyguard_width+10,100,kt+10],center=true);
+}
+
+
+// The region above the posts' centre line, in case-opening coordinates: everything
+// there is removed, so the keyguard can swing on its posts. It is far wider than the
+// case opening on purpose. It used to be only 1 mm wider, so a case addition reaching
+// more than 0.5 mm past the side of the opening kept its part above the posts.
+module above_posts_2d(){
+	translate([0,coh/2-mount_to_top_of_opening_distance+500])
+	square([1000,1000],center=true);
 }
 
 
@@ -7780,8 +7805,7 @@ module case_opening_blank_2d(shape_x,shape_y,c_r,cheat){
 		}
 
 		if(has_case && m_m=="Posts"){
-			translate([0,coh/2+25-mount_to_top_of_opening_distance,0])
-			square([cow+1,50],center=true);
+			above_posts_2d();
 		}
 	}
 }

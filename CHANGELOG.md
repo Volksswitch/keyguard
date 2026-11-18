@@ -1,6 +1,7 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- **Nothing on a keyguard mounted on posts stands above the posts any more, so the keyguard can always swing on them.** The keyguard has always been cut off at the posts, but a case addition reaching more than half a millimeter past the side of the case opening kept the part of it that was above the posts. So did raised additions, ridges and raised text placed above the posts. Everything above the posts is now cut away, whatever it is; only the posts themselves stand there. If you made a keyguard with posts that had something above the posts, open the design again and export it once you have this version.
 
 ## Version 97
 - **Ridges and other raised shapes no longer stick out underneath the keyguard.** Where the underside of the keyguard is cut away (under a sloped keyguard edge, at the case-to-slope step, or by a "my case additions" shape that thins the keyguard from below), a ridge, bump or other raised shape placed above that spot used to poke out below it. These cuts now trim raised shapes too, so the underside keeps the shape you designed and the keyguard still sits flat on the case. A ridge that crosses an opening still reaches down through it, as before.
