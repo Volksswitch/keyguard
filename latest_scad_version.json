@@ -1,8 +1,8 @@
 {
-  "version": 97,
-  "scad_filename": "keyguard_v97.scad",
+  "version": 98,
+  "scad_filename": "keyguard_v98.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "**Ridges and other raised shapes no longer stick out underneath the keyguard.** Where the underside of the keyguard is cut away (under a sloped keyguard edge, at the case-to-slope step, or by a \"my case additions\" shape that thins the keyguard from below), a ridge, bump or other raised shape placed above that spot used to poke out below it. These cuts now trim raised shapes too, so the underside keeps the shape you designed and the keyguard still sits flat on the case. A ridge that crosses an opening still reaches down through it, as before."
+    "**Nothing on a keyguard mounted on posts reaches past the posts toward the top of the case any more, so the keyguard can always swing on them.** The keyguard has always been cut off at the posts, but a case addition reaching more than half a millimeter past the side of the case opening kept the part of it that lay beyond the posts. So did ridges, raised text and additions thinner than the keyguard that were placed beyond the posts. Everything between the posts and the top of the case opening is now cut away, whatever it is; only the posts themselves remain there. Nothing changes below the posts. If you made a keyguard with posts that had something beyond them, open the design again and export it once you have this version."
   ]
 }

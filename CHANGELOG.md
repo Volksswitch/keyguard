@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 98
 - **Nothing on a keyguard mounted on posts reaches past the posts toward the top of the case any more, so the keyguard can always swing on them.** The keyguard has always been cut off at the posts, but a case addition reaching more than half a millimeter past the side of the case opening kept the part of it that lay beyond the posts. So did ridges, raised text and additions thinner than the keyguard that were placed beyond the posts. Everything between the posts and the top of the case opening is now cut away, whatever it is; only the posts themselves remain there. Nothing changes below the posts. If you made a keyguard with posts that had something beyond them, open the design again and export it once you have this version.
 
 ## Version 97
