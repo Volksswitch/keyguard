@@ -130,6 +130,9 @@ These special variables can be used to locate screen openings relative to the (0
 	ucbh	upper command bar height
 	lmbh	lower message bar height
 	lcbh	lower command bar height
+	bw	bar width - the width the bars are actually cut at: the app width, less
+		any left or right edge compensation for tight cases that reaches past the
+		case border
 
 	sbb	status bar bottom
 	umbb	upper message bar bottom
