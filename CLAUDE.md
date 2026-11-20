@@ -360,15 +360,18 @@ It only needs to be present when this feature is in use.
   built by `keyguard_supports()` from the keyguard AS CUT. Ken's decisions, not to be
   "simplified": (1) it is exactly as thick as the keyguard where it lies, never proud;
   (2) fillets come from the real shape — wherever it touches plastic, including every
-  opening and every piece of plastic between them along its length — never from assumed
+  opening and every piece of plastic between them along its length, and every other
+  support it crosses (every bar counts as plastic, Ken 20 Nov 2026) — never from assumed
   wall positions at its ends; (3) the fillet radius is the row's corner value, stated, one
   per support; (4) its top edges are beveled by the cell edge chamfer (keyguard edge
   chamfer over a thicker border); (5) **right angles only** (0/90/180/270) — narrower than
   a ridge on purpose; any other angle is skipped with a warning. Implementation traps
   learned the hard way: grow its 2D outlines with `offset(r=…)`, never `delta` (a delta
   offset draws slivers out into long spikes that notch nearby cells), and give every
-  outline that gets extruded an `offset(r=0.01)` (pieces touching at a point make CGAL
-  2021 fail with "mesh is not closed"). Cost: desktop F5 previews as slowly as F6, since
+  outline that gets extruded a 0.01 mm grow (pieces touching at a point make CGAL 2021
+  fail with "mesh is not closed"). The bevel cutter's grow must be `delta` — a rounded
+  one there made the minkowski ~2× slower — and a `$fn` set on an outer `offset()` leaks
+  into everything inside it (it once turned every fillet into 8 facets), so hand it back. Cost: desktop F5 previews as slowly as F6, since
   the support must see the cut keyguard.
 
 ---

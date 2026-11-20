@@ -5773,7 +5773,8 @@ module screen_openings_build(s_o, hl=false){
 //
 // The fillets follow the keyguard as actually cut, so the bar can cross a round
 // opening or a slanted wall, cross several openings and the plastic between them,
-// or run on into the plastic, and is filleted wherever it really meets plastic. The keyguard, with everything cut but before
+// or run on into the plastic, and is filleted wherever it really meets plastic —
+// including another support it crosses, whose bar counts as plastic here. The keyguard, with everything cut but before
 // ridges and other builds, is sliced just below the bevel on its top edges. Near
 // the bar, the openings in that slice, less the bar, have their corners rounded
 // by the radius (shrunk by it, then grown by it), and the plastic that rounding
@@ -5897,7 +5898,12 @@ module _sup_bevel(s, ztop, c){
 	minkowski(){
 		translate([0, 0, ztop])
 		linear_extrude(height = 1)
-		offset(r = 0.01)   // merges pieces that touch at a point, which CGAL cannot close
+		// merges pieces that touch at a point, which CGAL cannot close. delta, not
+		// r: rounding every corner here quadruples the minkowski's work (two
+		// crossing supports took 6.4 s in the web app's engine instead of 3.4).
+		// The openings here are already rounded by the fillet radius, so a
+		// 0.01 mm mitered grow cannot draw out a spike of any size.
+		offset(delta = 0.01)
 		intersection(){
 			offset(delta = 2*s[5] + 2*c + 1) _sup_bar_2d(s);
 			_sup_holes(s) children();
@@ -5916,22 +5922,35 @@ module _sup_zone(zone){
 	else children();
 }
 
+// The plastic every support is filleted against: the keyguard (children) sliced at
+// zs, and every support's bar. With the bars in it, where two supports cross each
+// sees the other as plastic, so the corners where they meet get fillets too (Ken,
+// 20 Nov 2026).
+module _sup_plastic(sups, zs){
+	projection(cut = true) translate([0, 0, -zs]) children();
+	for (t = sups) _sup_bar_2d(t);
+}
+
 // The supports over one zone, up to its top surface ztop and beveled by c.
 // children(): the keyguard with everything cut.
 module _sup_part(sups, zone, ztop, c){
 	zs = max(ztop - c - 0.05, -kt/2 + 0.02);
+	fn0 = $fn;
 	for (s = sups)
 	difference(){
 		translate([0, 0, -kt/2 - ff])
 		linear_extrude(height = ztop + kt/2 + ff)
-		offset(r = 0.01)   // merges pieces that touch at a point, which CGAL cannot close
-		_sup_zone(zone)
+		// merges pieces that touch at a point, which CGAL cannot close; 8 sides is
+		// plenty at 0.01 mm and keeps the outline light. $fn is handed back to
+		// what is inside, or the fillets would be drawn with 8 sides too.
+		offset(r = 0.01, $fn = 8)
+		_sup_zone(zone, $fn = fn0)
 		_sup_footprint(s, c)
-		projection(cut = true) translate([0, 0, -zs]) children();
+		_sup_plastic(sups, zs) children();
 
 		if (c > 0)
 		_sup_bevel(s, ztop, c)
-		projection(cut = true) translate([0, 0, -zs]) children();
+		_sup_plastic(sups, zs) children();
 	}
 }
 
@@ -5957,7 +5976,8 @@ module keyguard_supports(cheat){
 module keyguard_supports_2d(){
 	sups = _sup_all("no", [-unequal_left_side_offset, -unequal_bottom_side_offset]);
 	children();
-	for (s = sups) _sup_footprint(s, 0) children();
+	// every bar counts as plastic, so crossing supports fillet each other
+	for (s = sups) _sup_footprint(s, 0) union(){ children(); for (t = sups) _sup_bar_2d(t); }
 }
 
 // The supports' highlight overlays: the bar alone, at its full thickness.

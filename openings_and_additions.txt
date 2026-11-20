@@ -51,8 +51,9 @@ tablet_openings=[
 /***********SUPPORTS
 A support is a flat bar that stiffens the keyguard across an opening. It never stands
 above the keyguard: it is exactly as thick as the keyguard where it lies. Where it meets
-plastic - the wall of each opening it crosses, and any plastic between them - it gets
-fillets, rounded corners whose radius is the support's corner value (0 for square).
+plastic - the wall of each opening it crosses, any plastic between them, and any other
+support it crosses - it gets fillets, rounded corners whose radius is the support's
+corner value (0 for square).
 Its top edges are beveled like the openings around it.
   width     how wide the bar is; 0 means 2 mm
   length    how long it is; 0 means 10 mm
