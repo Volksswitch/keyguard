@@ -143,6 +143,8 @@ These special variables can be used to locate screen openings relative to the (0
 	gh	grid height
 	gt 	grid top
 	gb	grid bottom
+	gl	grid left
+	gr	grid right
 
 	tp	top padding - specified in Grid Special Settings
 	bp	bottom padding - specified in Grid Special Settings

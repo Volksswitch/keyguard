@@ -548,7 +548,11 @@ screen_through_cut_overlap = 2.0; // [0.5:0.1:5]
 grid_is_hidden = (hide_screen_region=="yes" || hide_app_region=="yes" || hide_grid_region=="yes");
 if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, awm=awm, ahm=ahm, sat=sat, kt=kt, swp=swp, shp=shp, vpt=$vpt, vpr=$vpr, vpd=$vpd,
                            vrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? vrw : undef,
-                           hrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? hrw : undef);
+                           hrw=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? hrw : undef,
+                           // the grid's middle, in millimeters on the model, for the
+                           // web app's by-eye snapping (Ken, 20 Nov 2026)
+                           gcx=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_x0 + grid_width/2 : undef,
+                           gcy=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_y0 + grid_height/2 : undef);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
@@ -1319,6 +1323,11 @@ grid_y0 = app_y0 + bottom_padding + lmbhm + lcbhm;
 	gh = (!using_px) ? grid_height : grid_height * ppm;
 	gt = ucbb;  // grid top
 	gb = lmbt;  // grid bottom
+	// grid left and right (Ken, 20 Nov 2026): x positions of the grid's own edges,
+	// measured exactly as a screen opening's x is (from osx0, in the working unit),
+	// so gr - gl == gw
+	gl = (!using_px) ? grid_x0 - osx0 : (grid_x0 - osx0) * ppm;  // grid left
+	gr = gl + gw;  // grid right
 
 	// The app's own edges, for txt files, in the same working unit as the grid
 	// variables above. Without keyguard inset mode the app fills the screen and
@@ -1726,8 +1735,8 @@ ttao =
 // All variables that can be used in the openings an additions file called out here for Customizer parameters
 // Put this *above* where you parse user input.
 // Add every variable name you want resolvable.
-RESOLVE_NAMES  = ["ab","ah","at","aw","bcoh","bp","c_cr","c_h","c_w","ccr","ch","cloc","cmd","cmh","cmw","cocr","coh","cow","ctsd","cw","gb","gh","gt","gw","hbd","hbh","hbw","hloc","hor","hrw","kcr","kh","kw","lcbb","lcbh","lcow","lmbb","lmbh","lmbt","lp","mpp","nc","nr","ppm","r180","rp","sbb","sbh","sew","sh","shp","sw","swm","swp","sxo","syo","tcr","th","tor","tp","tw","ucbb","ucbh","umbb","umbh","vrw","xols","xors","yobs","yots"];
-RESOLVE_VALUES = [ab,ah,at,aw,bcoh,bp,c_cr,c_h,c_w,ccr,ch,cloc,cmd,cmh,cmw,cocr,coh,cow,ctsd,cw,gb,gh,gt,gw,hbd,hbh,hbw,hloc,hor,hrw,kcr,kh,kw,lcbb,lcbh,lcow,lmbb,lmbh,lmbt,lp,mpp,nc,nr,ppm,r180,rp,sbb,sbh,sew,sh,shp,sw,awm,swp,sxo,syo,tcr,th,tor,tp,tw,ucbb,ucbh,umbb,umbh,vrw,xols,xors,yobs,yots]; 
+RESOLVE_NAMES  = ["ab","ah","at","aw","bcoh","bp","c_cr","c_h","c_w","ccr","ch","cloc","cmd","cmh","cmw","cocr","coh","cow","ctsd","cw","gb","gh","gl","gr","gt","gw","hbd","hbh","hbw","hloc","hor","hrw","kcr","kh","kw","lcbb","lcbh","lcow","lmbb","lmbh","lmbt","lp","mpp","nc","nr","ppm","r180","rp","sbb","sbh","sew","sh","shp","sw","swm","swp","sxo","syo","tcr","th","tor","tp","tw","ucbb","ucbh","umbb","umbh","vrw","xols","xors","yobs","yots"];
+RESOLVE_VALUES = [ab,ah,at,aw,bcoh,bp,c_cr,c_h,c_w,ccr,ch,cloc,cmd,cmh,cmw,cocr,coh,cow,ctsd,cw,gb,gh,gl,gr,gt,gw,hbd,hbh,hbw,hloc,hor,hrw,kcr,kh,kw,lcbb,lcbh,lcow,lmbb,lmbh,lmbt,lp,mpp,nc,nr,ppm,r180,rp,sbb,sbh,sew,sh,shp,sw,awm,swp,sxo,syo,tcr,th,tor,tp,tw,ucbb,ucbh,umbb,umbh,vrw,xols,xors,yobs,yots]; 
 
 m_s_o = parse_user_vector(my_screen_openings, /*strict=*/true);
 m_c_o = parse_user_vector(my_case_openings, /*strict=*/true);
