@@ -356,6 +356,20 @@ It only needs to be present when this feature is in use.
   poked out below the sloped edge. `keyguard_underside_trim()` cuts them with the same
   cuts (lifted/spread by `ff` so trimmed ends stay inside the plastic). Through-cuts are
   deliberately NOT applied — a ridge over an opening still reaches down through it.
+- **Supports (Ken, 20 Nov 2026)** — the `"support"` shape, a flat bar across an opening,
+  built by `keyguard_supports()` from the keyguard AS CUT. Ken's decisions, not to be
+  "simplified": (1) it is exactly as thick as the keyguard where it lies, never proud;
+  (2) fillets come from the real shape — wherever it touches plastic, including every
+  opening and every piece of plastic between them along its length — never from assumed
+  wall positions at its ends; (3) the fillet radius is the row's corner value, stated, one
+  per support; (4) its top edges are beveled by the cell edge chamfer (keyguard edge
+  chamfer over a thicker border); (5) **right angles only** (0/90/180/270) — narrower than
+  a ridge on purpose; any other angle is skipped with a warning. Implementation traps
+  learned the hard way: grow its 2D outlines with `offset(r=…)`, never `delta` (a delta
+  offset draws slivers out into long spikes that notch nearby cells), and give every
+  outline that gets extruded an `offset(r=0.01)` (pieces touching at a point make CGAL
+  2021 fail with "mesh is not closed"). Cost: desktop F5 previews as slowly as F6, since
+  the support must see the cut keyguard.
 
 ---
 
