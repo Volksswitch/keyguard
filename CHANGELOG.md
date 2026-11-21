@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 100
 - The designer now tells the Keyguard Designer web app where the edges of the grid are, and where the lines that gt and gb measure lie, so that **Snap** on its “by eye” tab can line openings up with the grid's edges and write gl, gr, gt, gb, gw and gh into the openings it lines up. Nothing about the keyguard changes, and there is nothing different to see in OpenSCAD.
 
 ## Version 99
