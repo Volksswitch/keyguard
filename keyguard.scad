@@ -552,7 +552,13 @@ if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, awm=awm, ahm=ahm, sa
                            // the grid's middle, in millimeters on the model, for the
                            // web app's by-eye snapping (Ken, 20 Nov 2026)
                            gcx=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_x0 + grid_width/2 : undef,
-                           gcy=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_y0 + grid_height/2 : undef);
+                           gcy=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_y0 + grid_height/2 : undef,
+                           // and its edges — left, right, bottom, top — so Snap can line
+                           // openings up with them too (Ken, 20 Nov 2026)
+                           gx0=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_x0 : undef,
+                           gx1=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_x0 + grid_width : undef,
+                           gy0=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_y0 : undef,
+                           gy1=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_y0 + grid_height : undef);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
