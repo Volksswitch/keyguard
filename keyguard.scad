@@ -558,7 +558,14 @@ if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, awm=awm, ahm=ahm, sa
                            gx0=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_x0 : undef,
                            gx1=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_x0 + grid_width : undef,
                            gy0=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_y0 : undef,
-                           gy1=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_y0 + grid_height : undef);
+                           gy1=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? grid_y0 + grid_height : undef,
+                           // and where the lines that gt and gb name lie: the bottom of the
+                           // upper command bar and the top of the lower message bar. They are
+                           // the grid's top and bottom only when there is no top or bottom
+                           // padding, so the web app checks before it writes gt or gb into an
+                           // opening it has lined up (Ken, 20 Nov 2026)
+                           gty=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? app_y0 + ahm - sbhm - umbhm - ucbhm : undef,
+                           gby=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? app_y0 + lcbhm + lmbhm : undef);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
