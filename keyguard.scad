@@ -1587,6 +1587,17 @@ side_latches = snap_in_tabs_on_left_and_right_edges_of_keyguard=="yes" &&
                (mount_keyguard_with=="snap-in tabs" || posts_lower_bars);
 bottom_latch = snap_in_tab_on_bottom_edge_of_keyguard=="yes" && !posts_lower_bars;
 
+// The bottom counterpart of the top bar trim (Ken, 24 Nov 2026). Exposing a bottom bar
+// uncovers everything below it, as exposing a top bar uncovers everything above it, so a
+// keyguard on posts is cut off along the top of its highest exposed bottom bar. Without
+// that, the plastic beside the bar's window was left hanging below the grid as two thin
+// prongs. In screen coordinates, like the bar windows themselves; clamped to the keyguard's
+// own bottom edge. The side latches sit on the centre line, well above it.
+kg_lower_cl = max(-keyguard_height/2,
+                  (expose_lower_message_bar == "yes" && lmbhm > 0) ? -ahm/2+lcbhm+lmbhm :
+                  (expose_lower_command_bar == "yes" && lcbhm > 0) ? -ahm/2+lcbhm :
+                                                                      -keyguard_height/2);
+
 //Braille and cell insert variables
 bsm = Braille_size_multiplier/10; //Braille size multiplier
 braille_a = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -2464,6 +2475,11 @@ module keyguard(cheat){
 					translate(kg_slide)
 					trim_keyguard_to_bar();
 				}
+
+				// and below the highest exposed bottom bar (see kg_lower_cl)
+				if(posts_lower_bars){
+					trim_keyguard_to_lower_bar();
+				}
 										
 				//cut away the screen region
 				if (hide_screen_region == "yes"){
@@ -2953,6 +2969,16 @@ module trim_keyguard_to_bar(){
 
 	//remove top portion of keyguard
 	translate([0,50+post_cl,0])
+	cube([keyguard_width+10,100,kt+10],center=true);
+}
+
+
+// Cuts away the bottom portion of the keyguard below the top of its highest exposed bottom
+// bar, so the bar's window opens onto the bottom edge of the remaining keyguard body,
+// as trim_keyguard_to_bar() does at the top. The cut reaches post_overhang and more below
+// the keyguard, so it also takes the strip that fills the frame's bottom post notch.
+module trim_keyguard_to_lower_bar(){
+	translate([0,kg_lower_cl-50,0])
 	cube([keyguard_width+10,100,kt+10],center=true);
 }
 
