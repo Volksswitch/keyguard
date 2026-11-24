@@ -2784,23 +2784,35 @@ module keyguard_frame(cheat){
 			// opening, spanning ONLY the keyguard width (it stops short of the side post
 			// pockets, which remain pockets). It clears the post's protrusion above the
 			// keyguard edge along the keyguard width, opening the frame by hole_dia/2 past the
-			// top edge. The keyguard carries only a top post and is NOT rotated 180 degrees, so
-			// there is no mirrored bottom relief — that only opened the frame hole_dia/2 below
-			// the keyguard's bottom edge, leaving a gap there for a moderately thick keyguard.
+			// top edge. There is no mirrored bottom relief: it opened the frame hole_dia/2 below
+			// the keyguard's bottom edge, leaving a gap there for a moderately thick keyguard
+			// (removed 3 Jul 2026). A keyguard turned 180 degrees still seats in the bottom
+			// pockets below whenever its post line lies at least hole_dia/2 inside the opening,
+			// as it does when a top bar is exposed.
 			translate(kg_slide)
 			translate([0,post_cl,0])
 			add_keyguard_frame_post_relief(keyguard_width);
 
-			// Side post pockets that receive the post's protruding ends (both sides, at the
-			// keyguard's top edge). These are distinct pockets — the square edge relief above
-			// stops at the keyguard width and does not open them up. No mirrored bottom pockets
-			// (the 180-degree-rotation provision is removed along with the bottom relief).
+			// Side post pockets that receive the post's protruding ends: both sides at the
+			// keyguard's top edge, and the same pair mirrored to the bottom (-post_cl), so the
+			// keyguard can go in turned 180 degrees (Ken, 23 Nov 2026 — his original design
+			// had all four; the bottom pair was dropped with the bottom relief on 3 Jul 2026).
+			// These are distinct pockets — the square edge relief above stops at the keyguard
+			// width and does not open them up.
 			translate(kg_slide)
 			translate([keyguard_width/2+post_len/2-5,post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
 
 			translate(kg_slide)
+			translate([keyguard_width/2+post_len/2-5,-post_cl,-keyguard_frame_thickness/2-ff])
+			add_keyguard_frame_post_slots();
+
+			translate(kg_slide)
 			translate([-keyguard_width/2-post_len/2+5,post_cl,-keyguard_frame_thickness/2-ff])
+			add_keyguard_frame_post_slots();
+
+			translate(kg_slide)
+			translate([-keyguard_width/2-post_len/2+5,-post_cl,-keyguard_frame_thickness/2-ff])
 			add_keyguard_frame_post_slots();
 		}
 
@@ -3255,7 +3267,8 @@ module case_mounts(depth) {
 }
 
 // Places the 2D slide-in tab profiles on the horizontal and/or vertical edges of
-// the keyguard outline, ready to be extruded to the slide-in tab thickness.
+// the case opening, ready to be extruded to the slide-in tab thickness. That edge
+// is the keyguard's outline, or the frame's when there is a keyguard frame.
 module add_2d_slide_in_tabs() {
 	h_sitlen = horizontal_slide_in_tab_length_incl_acrylic;
 	v_sitlen = vertical_slide_in_tab_length_incl_acrylic;
@@ -3264,9 +3277,14 @@ module add_2d_slide_in_tabs() {
 	// if the length of tabs = 2 and the distance between them is 0 then the render step fails separateh them by ff
 	h_sitdist = (h_sitlen == 2 && distance_between_horizontal_slide_in_tabs == 0) ? distance_between_horizontal_slide_in_tabs + ff : distance_between_horizontal_slide_in_tabs;
 	v_sitdist = (v_sitlen == 2 && distance_between_vertical_slide_in_tabs == 0) ? distance_between_vertical_slide_in_tabs + ff : distance_between_vertical_slide_in_tabs;
-		
+	// the tabs stand on the case opening's edge, as raised tabs do. Without a frame kw/kh
+	// IS the case opening; with one it is only the keyguard inside the frame, which put
+	// the frame's tabs inside its own border, where they vanished (Ken, 23 Nov 2026)
+	edge_w = (has_case) ? cow : kw;
+	edge_h = (has_case) ? coh : kh;
+
 	if(slide_in_tab_locations == "horizontal only" || slide_in_tab_locations == "horizontal and vertical"){
-		left_slide_in_tab_offset = -kw/2+ff;
+		left_slide_in_tab_offset = -edge_w/2+ff;
 		
 		translate([left_slide_in_tab_offset,-h_sitdist/2-h_sitwid/2+ulbs])
 		mirror([1,0,0])
@@ -3276,7 +3294,7 @@ module add_2d_slide_in_tabs() {
 		mirror([1,0,0])
 		create_2D_slide_in_tab(h_sitlen,h_sitwid);
 		
-		right_slide_in_tab_offset = kw/2-ff;
+		right_slide_in_tab_offset = edge_w/2-ff;
 		
 		translate([right_slide_in_tab_offset,-h_sitdist/2-h_sitwid/2+ulbs])
 		create_2D_slide_in_tab(h_sitlen,h_sitwid);
@@ -3285,7 +3303,7 @@ module add_2d_slide_in_tabs() {
 		create_2D_slide_in_tab(h_sitlen,h_sitwid);
 	}
 	if(slide_in_tab_locations == "vertical only" || slide_in_tab_locations == "horizontal and vertical"){
-		bottom_slide_in_tab_offset = -kh/2+ff;
+		bottom_slide_in_tab_offset = -edge_h/2+ff;
 		
 		translate([-v_sitdist/2-v_sitwid/2+ulos, bottom_slide_in_tab_offset])
 		rotate([0,0,-90])
@@ -3295,7 +3313,7 @@ module add_2d_slide_in_tabs() {
 		rotate([0,0,-90])
 		create_2D_slide_in_tab(v_sitlen,v_sitwid);
 
-		top_slide_in_tab_offset = kh/2-ff;
+		top_slide_in_tab_offset = edge_h/2-ff;
 
 		translate([-v_sitdist/2-v_sitwid/2+ulos, top_slide_in_tab_offset])
 		rotate([0,0,90])
