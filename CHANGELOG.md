@@ -1,6 +1,8 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+
+## Version 101
 - **A keyguard frame now has its slide-in tabs.** With slide-in tabs as the mounting method, a keyguard frame came out with no tabs at all: they were being placed along the edges of the keyguard that sits inside the frame, where the frame's own border swallowed them. They now stand on the outside edge of the frame, just where they would be on a keyguard without a frame. If you made a keyguard frame with slide-in tabs, open the design again and export the frame once you have this version.
 - **A keyguard frame for a keyguard mounted on posts has its second pair of post openings back.** Since version 82, the frame had openings for the ends of the keyguard's post only at the top of the keyguard's opening. It now has a second pair at the bottom, turned 180 degrees from the first, as it did before version 82, so the keyguard can go into the frame either way round. A keyguard whose post sits on or near its own top edge, which is where the post goes when your design exposes no bar along the top of the screen, still fits only one way round, because the frame's opening has a notch for the post along its top edge only. If you made a keyguard frame for a keyguard on posts, open the design again and export the frame once you have this version.
 
