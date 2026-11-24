@@ -585,7 +585,7 @@ if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, awm=awm, ahm=ahm, sa
 //   tablet selection → screen/case geometry → grid geometry → bar geometry →
 //   cell geometry → opening/addition helpers → mounting geometry → text/SVG helpers
 
-keyguard_designer_version = 101; //*****************************
+keyguard_designer_version = 102; //*****************************
 
 
 // Boolean shorthands for the most-used string comparisons.
