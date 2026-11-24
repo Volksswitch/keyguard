@@ -346,6 +346,8 @@ snap_in_tabs_on_left_and_right_edges_of_keyguard = "yes"; // [yes,no]
 post_tightness_of_fit = 0; //[-10:10]
 post_extension_distance = 4; // [1:5]
 show_keyguard_with_frame = "no"; //[yes,no]
+//swings the keyguard shown with the frame up on its posts, in degrees, to see it go in and out (posts only)
+rotate_keyguard_on_posts = 0; // [0:15:120]
 //adjusts the keyguard height, the larger the number the tighter the fit
 keyguard_vertical_tightness_of_fit = 0; // [-1:.1:1]
 //adjusts the keyguard width, the larger the number the tighter the fit
@@ -2097,7 +2099,12 @@ else if (generate=="keyguard frame" && has_frame && !is_laser_cut){
 	// and it never gets baked into the solid frame or its STL export.
 	if (($preview || show_oa_highlights == "yes" || only_oa_highlights == "yes") && show_keyguard_with_frame == "yes")
 		translate([0,0,-(keyguard_frame_thickness/2-kt/2)])
+		swing_on_posts(rotate_keyguard_on_posts)
 		#keyguard("yes");
+
+	// says so in the Console when the keyguard, swung that far, would run into the frame
+	if (only_oa_highlights != "yes" && show_keyguard_with_frame == "yes")
+		warn_if_swing_hits_frame(rotate_keyguard_on_posts);
 
 	if (only_oa_highlights != "yes") {
 		if (include_screenshot=="yes"){
@@ -2972,6 +2979,62 @@ module trim_keyguard_to_bar(){
 	cube([keyguard_width+10,100,kt+10],center=true);
 }
 
+
+// Turns its children (the keyguard shown in its frame) up about the posts' axis by angle
+// degrees, front face rising, the way a keyguard on posts swings in and out of its frame
+// (Ken, 24 Nov 2026). Only for a keyguard on posts; anything else is left where it is.
+// Called in keyguard coordinates, where the posts' axis runs along x at
+// y = kg_slide[1] + kg_post_cl, z = 0.
+module swing_on_posts(angle){
+	axis_y = kg_slide[1] + kg_post_cl;
+	if (on_frame_posts && angle != 0){
+		translate([0,axis_y,0])
+		rotate([-angle,0,0])
+		translate([0,-axis_y,0])
+		children();
+	}
+	else children();
+}
+
+// Would the keyguard, swung angle degrees on its posts, run into the keyguard frame?
+// A side-on estimate, in the plane across the posts: the keyguard's cross-section (from the
+// posts' axis to its bottom edge, its full thickness) is turned about the axis and tested
+// against the frame's border above and below the opening. Chamfers are ignored, so the
+// answer errs towards warning. The latches are left out: they are meant to snap past the
+// frame. Values are relative to the axis, which sits kft/2 - kt/2 below the frame's centre.
+function _swing_hits(angle) =
+	let(
+		axis_y = kg_slide[1] + kg_post_cl,
+		bottom_y = kg_slide[1] - kh/2 - post_overhang,
+		low_y = (posts_lower_bars) ? max(kg_lower_cl, bottom_y) : bottom_y,
+		len_kg = axis_y - low_y,
+		top_open = max(keyguard_height/2, kg_post_cl + post_hole_dia/2),
+		bot_open = (post_overhang > 0) ? kg_post_cl + post_hole_dia/2 : keyguard_height/2,
+		y_top0 = kg_slide[1] + top_open - axis_y,      // frame's top border, from here...
+		y_top1 = fh/2 - axis_y,                        // ...to here
+		y_bot0 = kg_slide[1] - bot_open - axis_y,      // frame's bottom border, from here...
+		y_bot1 = -fh/2 - axis_y,                       // ...to here
+		z_top = keyguard_frame_thickness - kt/2,       // frame's front face
+		z_bot = -kt/2,                                 // frame's back face
+		c = cos(angle), s = sin(angle),
+		tol = 0.1
+	)
+	len([for (a = [0:0.5:len_kg], dz = [-kt/2:kt/4:kt/2])
+		let(y = -a*c + dz*s, z = a*s + dz*c)
+		if (z > z_bot + tol && z < z_top - tol &&
+		    ((y > y_top0 + tol && y < y_top1) || (y < y_bot0 - tol && y > y_bot1))) 1]) > 0;
+
+// The largest whole angle, up to 180, at which the swung keyguard still clears the frame.
+function _swing_clear_to(angle=0) =
+	(angle >= 180) ? 180 :
+	_swing_hits(angle + 1) ? angle : _swing_clear_to(angle + 1);
+
+module warn_if_swing_hits_frame(angle){
+	if (on_frame_posts && angle != 0 && _swing_hits(angle)){
+		echo(str("WARNING: swung ", angle, " degrees on its posts, the keyguard runs into the keyguard frame. ",
+		         "It clears the frame up to about ", _swing_clear_to(), " degrees."));
+	}
+}
 
 // Cuts away the bottom portion of the keyguard below the top of its highest exposed bottom
 // bar, so the bar's window opens onto the bottom edge of the remaining keyguard body,
@@ -9607,6 +9670,7 @@ module echo_settings(){
 		if (snap_in_tabs_on_left_and_right_edges_of_keyguard != "yes") echo(snap_in_tabs_on_left_and_right_edges_of_keyguard = snap_in_tabs_on_left_and_right_edges_of_keyguard);
 		if (post_tightness_of_fit != 0) echo(post_tightness_of_fit = post_tightness_of_fit);
 		if (post_extension_distance != 4) echo(post_extension_distance = post_extension_distance);
+		if (rotate_keyguard_on_posts != 0) echo(rotate_keyguard_on_posts = rotate_keyguard_on_posts);
 		if (keyguard_vertical_tightness_of_fit != 0) echo(keyguard_vertical_tightness_of_fit = keyguard_vertical_tightness_of_fit);
 		if (keyguard_horizontal_tightness_of_fit != 0) echo(keyguard_horizontal_tightness_of_fit = keyguard_horizontal_tightness_of_fit);
 		if (cut_cell_openings_and_bars_through_frame != "yes") echo(cut_cell_openings_and_bars_through_frame = cut_cell_openings_and_bars_through_frame);
