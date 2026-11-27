@@ -1580,14 +1580,24 @@ post_overhang = (on_frame_posts) ? max(0, kg_post_cl + post_hole_dia/2 - keyguar
 // Exposing a bottom bar cuts a window down through the keyguard's bottom edge, which can
 // leave nothing to carry the bottom latch: with a top bar also exposed it came out as a
 // loose sliver of plastic, attached to nothing (measured 24 Nov 2026). A keyguard on posts
-// then gets latches on its left and right edges instead, with matching grooves in the
-// frame's sides (Ken, 24 Nov 2026), and no bottom latch. The side latches sit on the
-// opening's centre line, so they line up whichever way round the keyguard goes.
+// then gets no bottom latch (Ken, 24 Nov 2026).
+//
+// Side latches follow their own setting alone, whatever the keyguard is mounted with
+// (Ken, 27 Nov 2026; until then a keyguard on posts got them only with a bottom bar
+// exposed). They sit on the opening's centre line, so they line up whichever way round
+// the keyguard goes. Posts sit on the top edge, so there is never a top latch on posts.
+//
+// The frame has a groove on an edge exactly when a latch meets that edge (Ken, 27 Nov
+// 2026; until then the top and bottom grooves were cut always, and the side grooves for
+// every snap-in-tab keyguard). A keyguard on posts goes into its frame either way round,
+// so its bottom latch can meet either edge and gets a groove at both.
 posts_lower_bars = on_frame_posts && ((expose_lower_message_bar=="yes" && lmbhm>0) ||
                                       (expose_lower_command_bar=="yes" && lcbhm>0));
-side_latches = snap_in_tabs_on_left_and_right_edges_of_keyguard=="yes" &&
-               (mount_keyguard_with=="snap-in tabs" || posts_lower_bars);
+side_latches = snap_in_tabs_on_left_and_right_edges_of_keyguard=="yes";
 bottom_latch = snap_in_tab_on_bottom_edge_of_keyguard=="yes" && !posts_lower_bars;
+top_latch    = snap_in_tab_on_top_edge_of_keyguard=="yes" && mount_keyguard_with=="snap-in tabs";
+top_groove    = top_latch    || (mount_keyguard_with=="posts" && bottom_latch);
+bottom_groove = bottom_latch;
 
 // The bottom counterpart of the top bar trim (Ken, 24 Nov 2026). Exposing a bottom bar
 // uncovers everything below it, as exposing a top bar uncovers everything above it, so a
@@ -9243,7 +9253,8 @@ module cut_grid(t=kt){
 }
 
 // Cuts the triangular snap-in grooves into the keyguard frame at the positions
-// where the inner keyguard's snap-in tabs will engage.
+// where the inner keyguard's snap-in tabs will engage — only on the edges a latch
+// meets (side_latches, top_groove, bottom_groove).
 // Grooves are centred on the screen area thickness (sat) so that they align with
 // the tabs when sat < kt (screen area thinner than the full keyguard body).
 module snap_in_tab_grooves(){
@@ -9251,7 +9262,7 @@ module snap_in_tab_grooves(){
 	// out to the far wall of the post notches (0 unless a keyguard on posts needs it)
 	edge_y = keyguard_height/2 + post_overhang;
 
-	if (mount_keyguard_with=="snap-in tabs" || side_latches){
+	if (side_latches){
 		translate([keyguard_width/2-ff,0,-keyguard_frame_thickness/2+sat/2])
 		make_snap_ins(groove_size,groove_width);
 
@@ -9266,19 +9277,23 @@ module snap_in_tab_grooves(){
 		cube([snap_in_size+.5,2,sat-.5],center=true);
 	}
 
-	translate([0,edge_y-ff,-keyguard_frame_thickness/2+sat/2])
-	rotate([0,0,90])
-	make_snap_ins(groove_size,groove_width);
+	if (top_groove){
+		translate([0,edge_y-ff,-keyguard_frame_thickness/2+sat/2])
+		rotate([0,0,90])
+		make_snap_ins(groove_size,groove_width);
 
-	translate([0,edge_y+.6,-keyguard_frame_thickness/2+sat/2-.05-ff])
-	cube([2,snap_in_size+.5,sat-.5],center=true);
+		translate([0,edge_y+.6,-keyguard_frame_thickness/2+sat/2-.05-ff])
+		cube([2,snap_in_size+.5,sat-.5],center=true);
+	}
 
-	translate([0,-edge_y+ff,-keyguard_frame_thickness/2+sat/2])
-	rotate([0,0,-90])
-	make_snap_ins(groove_size,groove_width);
+	if (bottom_groove){
+		translate([0,-edge_y+ff,-keyguard_frame_thickness/2+sat/2])
+		rotate([0,0,-90])
+		make_snap_ins(groove_size,groove_width);
 
-	translate([0,-edge_y-.6,-keyguard_frame_thickness/2+sat/2-.05-ff])
-	cube([2,snap_in_size+.5,sat-.5],center=true);
+		translate([0,-edge_y-.6,-keyguard_frame_thickness/2+sat/2-.05-ff])
+		cube([2,snap_in_size+.5,sat-.5],center=true);
+	}
 }
 
 
@@ -9313,7 +9328,7 @@ module add_snap_ins(){
 		}
 	}
 
-	if(snap_in_tab_on_top_edge_of_keyguard=="yes" && mount_keyguard_with=="snap-in tabs"){
+	if(top_latch){
 		translate([0,kh/2,tab_z])
 		rotate([0,0,90])
 		make_snap_ins(snap_in_size,snap_in_width);
