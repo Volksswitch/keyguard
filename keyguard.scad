@@ -1590,13 +1590,15 @@ post_overhang = (on_frame_posts) ? max(0, kg_post_cl + post_hole_dia/2 - keyguar
 // The frame has a groove on an edge exactly when a latch meets that edge (Ken, 27 Nov
 // 2026; until then the top and bottom grooves were cut always, and the side grooves for
 // every snap-in-tab keyguard). A keyguard on posts goes into its frame either way round,
-// so its bottom latch can meet either edge and gets a groove at both.
+// so its bottom latch can meet either edge and gets a groove at both — the top one only
+// while "snap in tab on top edge of keyguard" is "yes" (Ken, 27 Nov 2026).
 posts_lower_bars = on_frame_posts && ((expose_lower_message_bar=="yes" && lmbhm>0) ||
                                       (expose_lower_command_bar=="yes" && lcbhm>0));
 side_latches = snap_in_tabs_on_left_and_right_edges_of_keyguard=="yes";
 bottom_latch = snap_in_tab_on_bottom_edge_of_keyguard=="yes" && !posts_lower_bars;
 top_latch    = snap_in_tab_on_top_edge_of_keyguard=="yes" && mount_keyguard_with=="snap-in tabs";
-top_groove    = top_latch    || (mount_keyguard_with=="posts" && bottom_latch);
+top_groove    = top_latch    || (mount_keyguard_with=="posts" && bottom_latch &&
+                                  snap_in_tab_on_top_edge_of_keyguard=="yes");
 bottom_groove = bottom_latch;
 
 // The bottom counterpart of the top bar trim (Ken, 24 Nov 2026). Exposing a bottom bar
