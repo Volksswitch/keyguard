@@ -2739,7 +2739,10 @@ module keyguard_frame(cheat){
 			//depth); a value of 0 in the cut/build column cuts fully through the frame.
 			//translate(-trans) anchors them to the screen (see the additions above): the
 			//screen area does not move for an unequal case opening, only the frame does.
-			translate(-trans){
+			//They are cell and bar openings as far as the frame is concerned (Ken, 27 Nov
+			//2026): cut with the cell edge chamfer, and only when cells and bars are.
+			translate(-trans)
+			if(cut_cell_openings_and_bars_through_frame=="yes"){
 				if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
 					if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings,keyguard_frame_thickness,on_frame=true); else cut_screen_openings(screen_openings,keyguard_frame_thickness,on_frame=true);
 				}
@@ -5324,12 +5327,15 @@ module create_cell_insert(){
 // @param on_frame  When true, the openings are cut into the keyguard FRAME (at
 //                  keyguard_frame_thickness) rather than the screen recess — used
 //                  when a slid framed keyguard lets the frame cover part of the
-//                  screen. Forwards type "keyguard" (full-thickness z-placement and
-//                  kec chamfer) instead of "screen"; x/y/unit/starting-corner logic
-//                  is unchanged.
+//                  screen. Forwards type "keyguard_cell" (full-thickness z-placement
+//                  and cec chamfer, as the grid's cells and bars are cut through the
+//                  frame) instead of "screen"; x/y/unit/starting-corner logic is
+//                  unchanged.
 module cut_screen_openings(s_o,depth,hl=false,on_frame=false,as_keyguard=false){
 	// as_keyguard: cut from the keyguard's top surface, as a case opening is (see screen_openings_cut)
-	cut_region = (on_frame || as_keyguard) ? "keyguard" : "screen";
+	// on_frame: cut through the keyguard FRAME exactly as the grid's cells and bars are
+	// ("keyguard_cell": full-thickness placement, cell edge chamfer) — Ken, 27 Nov 2026.
+	cut_region = on_frame ? "keyguard_cell" : as_keyguard ? "keyguard" : "screen";
 	for(i = [0 : len(s_o)-1]){
 		opening = s_o[i]; //0:ID, 1:x, 2:y, 3:width,  4:height, 5:shape, 6:top slope, 7:bottom slope, 8:left slope, 9:right slope, 10:corner_radius, 11:other
 		opening_ID = opening[0];
@@ -5560,12 +5566,15 @@ function v2_parse_addition(r) =
 // @param s_o    Screen openings vector (V2 explicit 14-column format)
 // @param depth  Cut depth in mm; pass 0 for 2D laser-cut output
 // @param on_frame  When true, cut into the keyguard FRAME (at keyguard_frame_thickness)
-//                  rather than the screen recess — forwards type "keyguard"
-//                  (full-thickness z-placement and kec chamfer) instead of "screen".
+//                  rather than the screen recess — forwards type "keyguard_cell"
+//                  (full-thickness z-placement and cec chamfer, as the grid's cells
+//                  and bars are cut through the frame) instead of "screen".
 //                  See cut_screen_openings (V1) for the framed-keyguard rationale.
 module cut_screen_openings_v2(s_o, depth, hl=false, on_frame=false, as_keyguard=false) {
 	// as_keyguard: cut from the keyguard's top surface, as a case opening is (see screen_openings_cut)
-	cut_region = (on_frame || as_keyguard) ? "keyguard" : "screen";
+	// on_frame: cut through the keyguard FRAME exactly as the grid's cells and bars are
+	// ("keyguard_cell": full-thickness placement, cell edge chamfer) — Ken, 27 Nov 2026.
+	cut_region = on_frame ? "keyguard_cell" : as_keyguard ? "keyguard" : "screen";
 	for(i = [0 : len(s_o)-1]) {
 		r = s_o[i];
 		opening_ID = r[0];
@@ -8899,7 +8908,8 @@ module cut_manual_mount_pedestal_slots(c_a,hl=false){
 //               openings differently from keyguard(): everything at
 //               keyguard_frame_thickness, case openings inside the frame body's
 //               unequal-case-opening shift, screen openings anchored to the
-//               screen (outside that shift) with the "keyguard" cut region.
+//               screen (outside that shift) with the "keyguard_cell" cut region,
+//               and only when cut_cell_openings_and_bars_through_frame is "yes".
 //               Mirror that here, or the frame's "#" rows produce no overlay at
 //               all — which is what used to happen: the frame branch never
 //               called this module.
@@ -8912,18 +8922,23 @@ module render_oa_highlights(depth, sat_d, cheat="no", on_frame=false) {
 		: [-unequal_tablet_left_side_offset,-unequal_tablet_bottom_side_offset,0];
 
 	if (on_frame) {
-		// Screen openings cut through the frame (region "keyguard", frame depth).
+		// Screen openings cut through the frame (region "keyguard_cell", frame depth),
+		// only when cells and bars are (cut_cell_openings_and_bars_through_frame).
 		if(!is_undef(screen_openings) && len(screen_openings)>0 && type_of_tablet!="blank"){
-			if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings, depth, hl=true, on_frame=true);
-			else                       cut_screen_openings   (screen_openings, depth, hl=true, on_frame=true);
+			if(cut_cell_openings_and_bars_through_frame=="yes"){
+				if(is_v2(screen_openings)) cut_screen_openings_v2(screen_openings, depth, hl=true, on_frame=true);
+				else                       cut_screen_openings   (screen_openings, depth, hl=true, on_frame=true);
+			}
 			if(is_3d_printed){
 				if(is_v2(screen_openings)) adding_plastic_v2(screen_openings, "screen", hl=true, on_frame=true);
 				else                       adding_plastic   (screen_openings, "screen", hl=true, on_frame=true);
 			}
 		}
 		if(len(m_s_o)>0 && type_of_tablet!="blank"){
-			if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o, depth, hl=true, on_frame=true);
-			else             cut_screen_openings   (m_s_o, depth, hl=true, on_frame=true);
+			if(cut_cell_openings_and_bars_through_frame=="yes"){
+				if(is_v2(m_s_o)) cut_screen_openings_v2(m_s_o, depth, hl=true, on_frame=true);
+				else             cut_screen_openings   (m_s_o, depth, hl=true, on_frame=true);
+			}
 			if(is_3d_printed){
 				if(is_v2(m_s_o)) adding_plastic_v2(m_s_o, "screen", hl=true, on_frame=true);
 				else             adding_plastic   (m_s_o, "screen", hl=true, on_frame=true);

@@ -1,6 +1,7 @@
 # Keyguard Designer — Changelog
 
 ## Unreleased (next release)
+- **Screen openings cut through a keyguard frame are now treated just like the grid's cells and bars.** Where the frame covers part of the screen, an opening from Custom Openings, the "my screen openings" setting or the screen openings in `openings_and_additions.txt` was cut through the frame with the keyguard edge chamfer. It now gets the cell edge chamfer, as the cells and bars do, and it is no longer cut through the frame at all when "cut cell openings and bars through frame" is set to "no". Ridges, bumps and other raised shapes on the frame are unchanged. If you made a keyguard frame with screen openings, open the design again and export the frame once you have this version.
 
 ## Version 102
 - **A keyguard on posts with nothing exposed along the top of the screen now goes into its keyguard frame either way round.** Its post sits on the keyguard's own top edge, so the frame has a notch for the post along the top of the keyguard's opening, about half the keyguard's thickness deep. The frame now has the same notch along the bottom, and the keyguard is that much longer at the bottom to fill it, so it fits turned 180 degrees and its latch still reaches the frame either way. The opening in the frame ends up a few millimetres taller than the height you entered. Keyguards that expose a bar along the top of the screen already went in either way round and are unchanged. If you made a keyguard and frame like this, open the design again and export both once you have this version.
