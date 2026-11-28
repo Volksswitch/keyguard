@@ -1,9 +1,8 @@
 {
-  "version": 104,
-  "scad_filename": "keyguard_v104.scad",
+  "version": 105,
+  "scad_filename": "keyguard_v105.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "**A keyguard frame now has a groove only where the keyguard has a latch to click into it.** The frame used to have grooves along the top and bottom of the keyguard's opening whatever you chose, and grooves along both sides for any keyguard with snap-in tabs, even with \"snap in tabs on left and right edges of keyguard\" set to \"no\". Now each groove follows its latch: no latch on an edge, no groove there. A keyguard on posts has its latch on its bottom edge only, and the frame has a groove for it along the bottom of the opening. If \"snap in tab on top edge of keyguard\" is also set to \"yes\", the frame has a second groove along the top, so the keyguard can go into its frame turned 180 degrees.",
-    "**A keyguard on posts now has latches on its left and right edges whenever \"snap in tabs on left and right edges of keyguard\" is set to \"yes\"**, halfway up each side, with matching grooves in the sides of the keyguard frame. They used to appear only when your design exposed a bar along the bottom of the screen. This setting is \"yes\" unless you changed it, so if you made a keyguard and frame on posts, open the design again and export both once you have this version, or set it to \"no\" to keep them as they were."
+    "The designer now tells the Keyguard Designer web app where the edges of a keyguard made for a keyguard frame are, exactly as it builds the keyguard (including where a keyguard on posts is trimmed to an exposed bar), so that **Snap** on its “by eye” tab can line openings up with them. Nothing about the keyguard changes, and there is nothing different to see in OpenSCAD."
   ]
 }
