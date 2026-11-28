@@ -1,8 +1,8 @@
 {
-  "version": 105,
-  "scad_filename": "keyguard_v105.scad",
+  "version": 106,
+  "scad_filename": "keyguard_v106.scad",
   "scad_url": "https://raw.githubusercontent.com/Volksswitch/keyguard/main/keyguard.scad",
   "notes": [
-    "The designer now tells the Keyguard Designer web app where the edges of a keyguard made for a keyguard frame are, exactly as it builds the keyguard (including where a keyguard on posts is trimmed to an exposed bar), so that **Snap** on its “by eye” tab can line openings up with them. Nothing about the keyguard changes, and there is nothing different to see in OpenSCAD."
+    "The designer now tells the Keyguard Designer web app where the edges of a keyguard frame's opening for the keyguard are, exactly as it cuts them. On a keyguard on posts, the frame's notches for the post make that opening taller than the keyguard, and **Snap** on the app's “by eye” tab now lines openings up with its real top and bottom. Nothing about the keyguard or the frame changes, and there is nothing different to see in OpenSCAD."
   ]
 }
