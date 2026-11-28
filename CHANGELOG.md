@@ -2,6 +2,8 @@
 
 ## Unreleased (next release)
 
+- The designer now tells the Keyguard Designer web app where the edges of a keyguard frame's opening for the keyguard are, exactly as it cuts them. On a keyguard on posts, the frame's notches for the post make that opening taller than the keyguard, and **Snap** on the app's “by eye” tab now lines openings up with its real top and bottom. Nothing about the keyguard or the frame changes, and there is nothing different to see in OpenSCAD.
+
 ## Version 105
 
 - The designer now tells the Keyguard Designer web app where the edges of a keyguard made for a keyguard frame are, exactly as it builds the keyguard (including where a keyguard on posts is trimmed to an exposed bar), so that **Snap** on its “by eye” tab can line openings up with them. Nothing about the keyguard changes, and there is nothing different to see in OpenSCAD.

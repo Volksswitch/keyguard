@@ -582,7 +582,20 @@ if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, awm=awm, ahm=ahm, sa
                            kgy0=has_frame ? (posts_lower_bars ? max(kg_slide[1] - kh/2 - post_overhang, kg_lower_cl)
                                                               : kg_slide[1] - kh/2 - post_overhang) : undef,
                            kgy1=has_frame ? (on_frame_posts ? min(kg_slide[1] + kh/2, kg_slide[1] + kg_post_cl)
-                                                            : kg_slide[1] + kh/2) : undef);
+                                                            : kg_slide[1] + kh/2) : undef,
+                           // and the opening the frame houses that keyguard in, as
+                           // keyguard_frame() cuts it: keyguard_width by keyguard_height at
+                           // kg_slide, widened on posts by the notch along the post line
+                           // (add_keyguard_frame_post_relief, hole_dia tall) and, when the
+                           // keyguard is grown to fill it, by the same notch along the
+                           // bottom — the extents _swing_hits uses. So Snap lines openings
+                           // up with the plastic as it really is (Ken, 27 Nov 2026)
+                           kox0=has_frame ? kg_slide[0] - keyguard_width/2 : undef,
+                           kox1=has_frame ? kg_slide[0] + keyguard_width/2 : undef,
+                           koy0=has_frame ? kg_slide[1] - ((mount_keyguard_with=="posts" && post_overhang > 0)
+                                                           ? kg_post_cl + post_hole_dia/2 : keyguard_height/2) : undef,
+                           koy1=has_frame ? kg_slide[1] + ((mount_keyguard_with=="posts")
+                                                           ? max(keyguard_height/2, kg_post_cl + post_hole_dia/2) : keyguard_height/2) : undef);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
