@@ -567,7 +567,22 @@ if (echo_dims=="yes") echo("__KG_DIMS__", swm=swm, shm=shm, awm=awm, ahm=ahm, sa
                            // padding, so the web app checks before it writes gt or gb into an
                            // opening it has lined up (Ken, 20 Nov 2026)
                            gty=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? app_y0 + ahm - sbhm - umbhm - ucbhm : undef,
-                           gby=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? app_y0 + lcbhm + lmbhm : undef);
+                           gby=(column_count>0 && row_count>0 && grid_width>0 && grid_height>0 && !grid_is_hidden) ? app_y0 + lcbhm + lmbhm : undef,
+                           // the outline of a keyguard made for a keyguard frame — left,
+                           // right, bottom, top, in millimeters on the model — as
+                           // keyguard() builds it: kw by kh, slid by kg_slide, grown by
+                           // post_overhang along its bottom edge when it is on posts, and on
+                           // posts trimmed to the post line at the top
+                           // (trim_keyguard_to_bar) and to the highest exposed bottom bar
+                           // (trim_keyguard_to_lower_bar, in screen coordinates). The web
+                           // app's Snap lines shapes up with these edges; it cannot work out
+                           // the trims itself (Ken, 27 Nov 2026)
+                           kgx0=has_frame ? kg_slide[0] - kw/2 : undef,
+                           kgx1=has_frame ? kg_slide[0] + kw/2 : undef,
+                           kgy0=has_frame ? (posts_lower_bars ? max(kg_slide[1] - kh/2 - post_overhang, kg_lower_cl)
+                                                              : kg_slide[1] - kh/2 - post_overhang) : undef,
+                           kgy1=has_frame ? (on_frame_posts ? min(kg_slide[1] + kh/2, kg_slide[1] + kg_post_cl)
+                                                            : kg_slide[1] + kh/2) : undef);
 
 // IMPORTANT — DECLARATION ORDER IN THIS SECTION
 // ----------------------------------------------
